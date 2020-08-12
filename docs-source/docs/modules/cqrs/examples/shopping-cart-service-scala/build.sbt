@@ -1,14 +1,16 @@
 val AkkaVersion = "2.6.8"
-val AkkaPersistenceCassandraVersion = "1.0.0"
-val AkkaHttpVersion = "10.1.10"
+val AkkaPersistenceCassandraVersion = "1.0.1"
+val AkkaHttpVersion = "10.2.0"
 val AkkaProjectionVersion = "0.3"
+
+enablePlugins(AkkaGrpcPlugin)
 
 lazy val `shopping-cart-service-scala` = project
   .in(file("."))
   .settings(
     organization := "com.lightbend.akka.samples",
     version := "1.0",
-    scalaVersion := "2.13.1",
+    scalaVersion := "2.13.3",
     scalacOptions in Compile ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlog-reflective-calls", "-Xlint"),
     javacOptions in Compile ++= Seq("-Xlint:unchecked", "-Xlint:deprecation"),
     //tag::libraryDependencies[]
@@ -17,11 +19,12 @@ lazy val `shopping-cart-service-scala` = project
         "com.typesafe.akka" %% "akka-persistence-typed" % AkkaVersion,
         "com.typesafe.akka" %% "akka-persistence-query" % AkkaVersion,
         "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion,
+        "com.typesafe.akka" %% "akka-discovery" % AkkaVersion,
         "com.typesafe.akka" %% "akka-persistence-cassandra" % AkkaPersistenceCassandraVersion,
         "com.lightbend.akka" %% "akka-projection-eventsourced" % AkkaProjectionVersion,
         "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
         "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
-        "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
+        "com.typesafe.akka" %% "akka-http2-support" % AkkaHttpVersion,
         "com.typesafe.akka" %% "akka-slf4j" % AkkaVersion,
         "ch.qos.logback" % "logback-classic" % "1.2.3",
         "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion % Test,

@@ -27,26 +27,26 @@ object Main {
 
       case Some(portString) if portString.matches("""\d+""") =>
         val port = portString.toInt
-        val httpPort = ("80" + portString.takeRight(2)).toInt
-        startNode(port, httpPort)
+        val grpcPort = ("80" + portString.takeRight(2)).toInt
+        startNode(port, grpcPort)
 
       case None =>
         throw new IllegalArgumentException("port number, or cassandra required argument")
     }
   }
 
-  def startNode(port: Int, httpPort: Int): Unit = {
+  def startNode(port: Int, grpcPort: Int): Unit = {
     val system =
-      ActorSystem[Nothing](Guardian(), "Shopping", config(port, httpPort))
+      ActorSystem[Nothing](Guardian(), "Shopping", config(port, grpcPort))
 
     if (Cluster(system).selfMember.hasRole("read-model"))
       createTables(system)
   }
 
-  def config(port: Int, httpPort: Int): Config =
+  def config(port: Int, grpcPort: Int): Config =
     ConfigFactory.parseString(s"""
       akka.remote.artery.canonical.port = $port
-      shopping.http.port = $httpPort
+      shopping.grpc.port = $grpcPort
        """).withFallback(ConfigFactory.load())
 
   def createTables(system: ActorSystem[_]): Unit = {
@@ -108,7 +108,7 @@ object Guardian {
 
       val settings = EventProcessorSettings(system)
 
-      val httpPort = context.system.settings.config.getInt("shopping.http.port")
+      val grpcPort = context.system.settings.config.getInt("shopping.grpc.port")
 
       ShoppingCart.init(system, settings)
 
@@ -127,8 +127,7 @@ object Guardian {
           Some(ProjectionBehavior.Stop))
       }
 
-      val routes = new ShoppingCartRoutes()(context.system)
-      new ShoppingCartServer(routes.shopping, httpPort, context.system).start()
+      new ShoppingCartServer(grpcPort, context.system).start()
 
       Behaviors.empty
     }

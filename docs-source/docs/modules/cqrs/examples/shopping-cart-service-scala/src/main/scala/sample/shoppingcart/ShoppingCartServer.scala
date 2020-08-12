@@ -1,38 +1,32 @@
 package sample.shoppingcart
 
-import scala.concurrent.duration._
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 import scala.util.Failure
 import scala.util.Success
 
-import akka.actor.CoordinatedShutdown
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.Http
-import akka.http.scaladsl.server.Route
-import akka.Done
-import akka.{ actor => classic }
+import akka.http.scaladsl.model.HttpRequest
+import akka.http.scaladsl.model.HttpResponse
 
-class ShoppingCartServer(routes: Route, port: Int, system: ActorSystem[_]) {
-  import akka.actor.typed.scaladsl.adapter._
-  implicit val classicSystem: classic.ActorSystem = system.toClassic
-  private val shutdown = CoordinatedShutdown(classicSystem)
-
-  import system.executionContext
+class ShoppingCartServer(port: Int, system: ActorSystem[_]) {
+  private implicit val sys: ActorSystem[_] = system
+  private implicit val ec: ExecutionContext = system.executionContext
 
   def start(): Unit = {
-    Http().bindAndHandle(routes, "localhost", port).onComplete {
+
+    val service: HttpRequest => Future[HttpResponse] =
+      proto.ShoppingCartServiceHandler(new ShoppingCartServiceImpl())
+
+    val bound = Http().newServerAt(interface = "127.0.0.1", port).bind(service)
+
+    bound.onComplete {
       case Success(binding) =>
         val address = binding.localAddress
-        system.log.info("Shopping online at http://{}:{}/", address.getHostString, address.getPort)
-
-        shutdown.addTask(CoordinatedShutdown.PhaseServiceRequestsDone, "http-graceful-terminate") { () =>
-          binding.terminate(10.seconds).map { _ =>
-            system.log
-              .info("Shopping http://{}:{}/ graceful shutdown completed", address.getHostString, address.getPort)
-            Done
-          }
-        }
+        system.log.info("Shopping online at gRPC server {}:{}", address.getHostString, address.getPort)
       case Failure(ex) =>
-        system.log.error("Failed to bind HTTP endpoint, terminating system", ex)
+        system.log.error("Failed to bind gRPC endpoint, terminating system", ex)
         system.terminate()
     }
   }

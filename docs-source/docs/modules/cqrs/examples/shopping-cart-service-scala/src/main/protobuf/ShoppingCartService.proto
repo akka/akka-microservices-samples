@@ -1,0 +1,56 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "sample.shoppingcart.proto";
+option java_outer_classname = "ShoppingCartProto";
+
+package shoppingcart;
+
+service ShoppingCartService {
+    rpc AddItem (AddItemRequest) returns (AddItemResponse) {}
+    rpc UpdateItem (UpdateItemRequest) returns (UpdateItemResponse) {}
+    rpc Checkout (CheckoutRequest) returns (CheckoutResponse) {}
+    rpc GetCart (GetCartRequest) returns (Cart) {}
+}
+
+message AddItemRequest {
+    string cartId = 1;
+    string itemId = 2;
+    int32 quantity = 3;
+}
+
+message AddItemResponse {
+    Cart cart = 1;
+}
+
+message UpdateItemRequest {
+    string cartId = 1;
+    string itemId = 2;
+    int32 quantity = 3;
+}
+
+message UpdateItemResponse {
+    Cart cart = 1;
+}
+
+message CheckoutRequest {
+    string cartId = 1;
+}
+
+message CheckoutResponse {
+    Cart cart = 1;
+}
+
+message GetCartRequest {
+    string cartId = 1;
+}
+
+message Cart {
+    bool checkedOut = 1;
+    repeated Item items = 2;
+}
+
+message Item {
+    string itemId = 1;
+    int32 quantity = 2;
+}

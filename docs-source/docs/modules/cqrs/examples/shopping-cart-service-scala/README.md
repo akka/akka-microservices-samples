@@ -43,20 +43,20 @@ sbt -Dakka.cluster.roles.0=write-model "runMain sample.shoppingcart.Main 2553"
 sbt -Dakka.cluster.roles.0=read-model "runMain sample.shoppingcart.Main 2554"
 ```
 
-Try it with curl:
+Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
 
 ```
 # add item to cart
-curl -X POST -H "Content-Type: application/json" -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' http://127.0.0.1:8051/shopping/carts
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext -import-path src/main/protobuf -proto ShoppingCartService.proto 127.0.0.1:8051 shoppingcart.ShoppingCartService.AddItem
 
 # get cart
-curl http://127.0.0.1:8051/shopping/carts/cart1
+grpcurl -d '{"cartId":"cart1"}' -plaintext -import-path src/main/protobuf -proto ShoppingCartService.proto 127.0.0.1:8051 shoppingcart.ShoppingCartService.GetCart
 
 # update quantity of item
-curl -X PUT -H "Content-Type: application/json" -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' http://127.0.0.1:8051/shopping/carts
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext -import-path src/main/protobuf -proto ShoppingCartService.proto 127.0.0.1:8051 shoppingcart.ShoppingCartService.UpdateItem
 
 # check out cart
-curl -X POST -H "Content-Type: application/json" -d '{}' http://127.0.0.1:8051/shopping/carts/cart1/checkout
+grpcurl -d '{"cartId":"cart1"}' -plaintext -import-path src/main/protobuf -proto ShoppingCartService.proto 127.0.0.1:8051 shoppingcart.ShoppingCartService.Checkout
 ```
 
 or same `curl` commands to port 8052.
