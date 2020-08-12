@@ -17,15 +17,7 @@ Scala::
 --
 [source,xml]
 ----
-include::example$akka-sample-cqrs-scala/src/main/resources/application.conf[tag=cluster]
-----
---
-Java::
-+
---
-[source,xml]
-----
-include::example$akka-sample-cqrs-java/src/main/resources/application.conf[tag=cluster]
+include::example$shopping-cart-service-scala/src/main/resources/application.conf[tag=cluster]
 ----
 --
 
@@ -37,15 +29,8 @@ sbt::
 --
 [source,scala]
 ----
-include::example$akka-sample-cqrs-scala/build.sbt[tag=libraryDependencies]
+include::example$shopping-cart-service-scala/build.sbt[tag=libraryDependencies]
 ----
 --
-Maven::
-+
---
-[source,xml]
-----
-include::example$akka-sample-cqrs-java/pom.xml[tag=dependencies]
-----
---
+
 

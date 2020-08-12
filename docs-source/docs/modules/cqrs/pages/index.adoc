@@ -36,7 +36,8 @@ sbt::
 --
 [source,scala]
 ----
-include::example$akka-sample-cqrs-scala/build.sbt[tag=libraryDependencies]
+include::example$shopping-cart-service-scala/build.sbt[tag=libraryDependencies]
 ----
 --
+
 
