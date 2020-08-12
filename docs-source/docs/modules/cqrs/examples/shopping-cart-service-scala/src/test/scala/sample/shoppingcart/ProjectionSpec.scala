@@ -1,4 +1,4 @@
-package sample.cqrs
+package sample.shoppingcart
 
 import java.io.File
 

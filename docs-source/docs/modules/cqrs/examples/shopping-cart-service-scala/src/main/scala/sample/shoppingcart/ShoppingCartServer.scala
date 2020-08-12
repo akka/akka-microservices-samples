@@ -1,4 +1,4 @@
-package sample.cqrs
+package sample.shoppingcart
 
 import scala.concurrent.duration._
 import scala.util.Failure

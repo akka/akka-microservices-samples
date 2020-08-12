@@ -33,7 +33,7 @@ lazy val `shopping-cart-service-scala` = project
     //end::libraryDependencies[]
     fork in run := false,
     Global / cancelable := false, // ctrl-c
-    mainClass in (Compile, run) := Some("sample.cqrs.Main"),
+    mainClass in (Compile, run) := Some("sample.shoppingcart.Main"),
     // disable parallel tests
     parallelExecution in Test := false,
     // show full stack traces and test case durations

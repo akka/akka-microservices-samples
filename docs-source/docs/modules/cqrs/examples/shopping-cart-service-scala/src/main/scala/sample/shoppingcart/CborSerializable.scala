@@ -1,4 +1,4 @@
-package sample.cqrs
+package sample.shoppingcart
 
 /**
  * Marker trait for serialization with Jackson CBOR

@@ -1,4 +1,4 @@
-package sample.cqrs
+package sample.shoppingcart
 
 import scala.concurrent.Future
 import akka.actor.typed.ActorRef

@@ -1,4 +1,4 @@
-package sample.cqrs
+package sample.shoppingcart
 
 import java.io.File
 import java.util.concurrent.CountDownLatch
@@ -75,13 +75,13 @@ object Main {
     // TODO use real replication strategy in real application
     val keyspaceStmt =
       """
-      CREATE KEYSPACE IF NOT EXISTS akka_cqrs_sample
+      CREATE KEYSPACE IF NOT EXISTS shoppingcart
       WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 }
       """
 
     val offsetTableStmt =
       """
-      CREATE TABLE IF NOT EXISTS akka_cqrs_sample.offset_store (
+      CREATE TABLE IF NOT EXISTS shoppingcart.offset_store (
         projection_name text,
         partition int,
         projection_key text,
@@ -94,9 +94,9 @@ object Main {
 
     // ok to block here, main thread
     Await.ready(session.executeDDL(keyspaceStmt), 30.seconds)
-    system.log.info("Created akka_cqrs_sample keyspace")
+    system.log.info("Created shoppingcart keyspace")
     Await.ready(session.executeDDL(offsetTableStmt), 30.seconds)
-    system.log.info("Created akka_cqrs_sample.offset_store table")
+    system.log.info("Created shoppingcart.offset_store table")
 
   }
 

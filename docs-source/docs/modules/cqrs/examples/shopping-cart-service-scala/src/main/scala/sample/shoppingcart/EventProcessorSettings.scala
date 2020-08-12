@@ -1,4 +1,4 @@
-package sample.cqrs
+package sample.shoppingcart
 
 import akka.actor.typed.ActorSystem
 import com.typesafe.config.Config
