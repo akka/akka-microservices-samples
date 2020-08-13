@@ -7,9 +7,9 @@ option java_outer_classname = "ShoppingCartProto";
 package shoppingcart;
 
 service ShoppingCartService {
-    rpc AddItem (AddItemRequest) returns (AddItemResponse) {}
-    rpc UpdateItem (UpdateItemRequest) returns (UpdateItemResponse) {}
-    rpc Checkout (CheckoutRequest) returns (CheckoutResponse) {}
+    rpc AddItem (AddItemRequest) returns (Cart) {}
+    rpc UpdateItem (UpdateItemRequest) returns (Cart) {}
+    rpc Checkout (CheckoutRequest) returns (Cart) {}
     rpc GetCart (GetCartRequest) returns (Cart) {}
 }
 
@@ -19,26 +19,14 @@ message AddItemRequest {
     int32 quantity = 3;
 }
 
-message AddItemResponse {
-    Cart cart = 1;
-}
-
 message UpdateItemRequest {
     string cartId = 1;
     string itemId = 2;
     int32 quantity = 3;
 }
 
-message UpdateItemResponse {
-    Cart cart = 1;
-}
-
 message CheckoutRequest {
     string cartId = 1;
-}
-
-message CheckoutResponse {
-    Cart cart = 1;
 }
 
 message GetCartRequest {

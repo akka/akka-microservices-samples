@@ -23,16 +23,16 @@ class ShoppingCartServiceImpl()(implicit system: ActorSystem[_]) extends proto.S
 
   private val sharding = ClusterSharding(system)
 
-  override def addItem(in: proto.AddItemRequest): Future[proto.AddItemResponse] = {
+  override def addItem(in: proto.AddItemRequest): Future[proto.Cart] = {
     logger.info("addItem {} to cart {}", in.itemId, in.cartId)
     val entityRef = sharding.entityRefFor(ShoppingCart.EntityKey, in.cartId)
     val reply: Future[ShoppingCart.Summary] =
       entityRef.askWithStatus(ShoppingCart.AddItem(in.itemId, in.quantity, _))
-    val response = reply.map(cart => proto.AddItemResponse(Option(toProtoCart(cart))))
+    val response = reply.map(cart => toProtoCart(cart))
     convertError(response)
   }
 
-  override def updateItem(in: proto.UpdateItemRequest): Future[proto.UpdateItemResponse] = {
+  override def updateItem(in: proto.UpdateItemRequest): Future[proto.Cart] = {
     logger.info("updateItem {} to cart {}", in.itemId, in.cartId)
     val entityRef = sharding.entityRefFor(ShoppingCart.EntityKey, in.cartId)
 
@@ -43,16 +43,16 @@ class ShoppingCartServiceImpl()(implicit system: ActorSystem[_]) extends proto.S
         ShoppingCart.AdjustItemQuantity(in.itemId, in.quantity, replyTo)
 
     val reply: Future[ShoppingCart.Summary] = entityRef.askWithStatus(command(_))
-    val response = reply.map(cart => proto.UpdateItemResponse(Option(toProtoCart(cart))))
+    val response = reply.map(cart => toProtoCart(cart))
     convertError(response)
   }
 
-  override def checkout(in: proto.CheckoutRequest): Future[proto.CheckoutResponse] = {
+  override def checkout(in: proto.CheckoutRequest): Future[proto.Cart] = {
     logger.info("checkout {}", in.cartId)
     val entityRef = sharding.entityRefFor(ShoppingCart.EntityKey, in.cartId)
     val reply: Future[ShoppingCart.Summary] =
       entityRef.askWithStatus(ShoppingCart.Checkout(_))
-    val response = reply.map(cart => proto.CheckoutResponse(Option(toProtoCart(cart))))
+    val response = reply.map(cart => toProtoCart(cart))
     convertError(response)
   }
 
@@ -77,7 +77,7 @@ class ShoppingCartServiceImpl()(implicit system: ActorSystem[_]) extends proto.S
   private def convertError[T](response: Future[T]): Future[T] = {
     response.recoverWith {
       case _: TimeoutException =>
-        Future.failed(new GrpcServiceException(Status.DEADLINE_EXCEEDED))
+        Future.failed(new GrpcServiceException(Status.UNAVAILABLE.withDescription("Operation timed out")))
       case exc =>
         Future.failed(new GrpcServiceException(Status.INVALID_ARGUMENT.withDescription(exc.getMessage)))
     }

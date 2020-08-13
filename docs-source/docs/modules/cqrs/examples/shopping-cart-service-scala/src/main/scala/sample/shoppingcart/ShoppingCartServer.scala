@@ -7,6 +7,8 @@ import scala.util.Failure
 import scala.util.Success
 
 import akka.actor.typed.ActorSystem
+import akka.grpc.scaladsl.ServerReflection
+import akka.grpc.scaladsl.ServiceHandler
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.model.HttpResponse
@@ -18,7 +20,10 @@ class ShoppingCartServer(port: Int, system: ActorSystem[_]) {
   def start(): Unit = {
 
     val service: HttpRequest => Future[HttpResponse] =
-      proto.ShoppingCartServiceHandler(new ShoppingCartServiceImpl())
+      ServiceHandler.concatOrNotFound(
+        proto.ShoppingCartServiceHandler.partial(new ShoppingCartServiceImpl()),
+        // ServerReflection enabled to support grpcurl without import-path and proto parameters
+        ServerReflection.partial(List(proto.ShoppingCartService)))
 
     val bound =
       Http().newServerAt(interface = "127.0.0.1", port).bind(service).map(_.addToCoordinatedShutdown(3.seconds))

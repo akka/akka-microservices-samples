@@ -161,21 +161,22 @@ class IntegrationSpec
       val eventProbe3 = testKit3.createTestProbe[ShoppingCart.Event]()
       testKit3.system.eventStream ! EventStream.Subscribe(eventProbe3.ref)
 
-      // update from node1, consume event from node3
+      // add from client1, consume event on node3
       val response1 = client1.addItem(proto.AddItemRequest(cartId = "cart-1", itemId = "foo", quantity = 42))
-      val updatedCart1 = response1.futureValue.cart.get
+      val updatedCart1 = response1.futureValue
       updatedCart1.items.head.itemId should ===("foo")
       updatedCart1.items.head.quantity should ===(42)
       eventProbe3.expectMessage(ShoppingCart.ItemAdded("cart-1", "foo", 42))
 
-      // update from node2, consume event from node3
+      // add from client2, consume event on node3
       val response2 = client2.addItem(proto.AddItemRequest(cartId = "cart-2", itemId = "bar", quantity = 17))
-      val updatedCart2 = response2.futureValue.cart.get
+      val updatedCart2 = response2.futureValue
       updatedCart2.items.head.itemId should ===("bar")
       updatedCart2.items.head.quantity should ===(17)
 
+      // update from client2, consume event on node3
       val response3 = client2.updateItem(proto.UpdateItemRequest(cartId = "cart-2", itemId = "bar", quantity = 18))
-      val updatedCart3 = response3.futureValue.cart.get
+      val updatedCart3 = response3.futureValue
       updatedCart3.items.head.itemId should ===("bar")
       updatedCart3.items.head.quantity should ===(18)
 
@@ -200,9 +201,9 @@ class IntegrationSpec
         Cluster(testKit4.system).selfMember.status should ===(MemberStatus.Up)
       }
 
-      // update from node1, consume event from node4
+      // update from client1, consume event on node4
       val response1 = client1.addItem(proto.AddItemRequest(cartId = "cart-3", itemId = "abc", quantity = 43))
-      response1.futureValue.cart.get // success
+      response1.futureValue.items.head.itemId should ===("abc")
 
       // note that node4 is new, but continues reading from previous offset, i.e. not receiving events
       // that have already been consumed

@@ -47,16 +47,16 @@ Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
 
 ```
 # add item to cart
-grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext -import-path src/main/protobuf -proto ShoppingCartService.proto 127.0.0.1:8051 shoppingcart.ShoppingCartService.AddItem
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.AddItem
 
 # get cart
-grpcurl -d '{"cartId":"cart1"}' -plaintext -import-path src/main/protobuf -proto ShoppingCartService.proto 127.0.0.1:8051 shoppingcart.ShoppingCartService.GetCart
+grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.GetCart
 
 # update quantity of item
-grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext -import-path src/main/protobuf -proto ShoppingCartService.proto 127.0.0.1:8051 shoppingcart.ShoppingCartService.UpdateItem
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.UpdateItem
 
 # check out cart
-grpcurl -d '{"cartId":"cart1"}' -plaintext -import-path src/main/protobuf -proto ShoppingCartService.proto 127.0.0.1:8051 shoppingcart.ShoppingCartService.Checkout
+grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.Checkout
 ```
 
 or same `curl` commands to port 8052.
