@@ -12,7 +12,8 @@ object ProjectionSpec {
   private val keyspace = s"ProjectionSpec_${System.currentTimeMillis()}"
 
   def config =
-    ConfigFactory.parseString(s"""
+    ConfigFactory
+      .parseString(s"""
       akka.actor.provider=local
       akka.persistence.cassandra {		
          events-by-tag {		
@@ -35,7 +36,8 @@ object ProjectionSpec {
          basic.load-balancing-policy.local-datacenter = "datacenter1"		
        }
        akka.projection.cassandra.offset-store.keyspace = $keyspace
-    """).withFallback(ConfigFactory.load()) // re-use application.conf other settings
+    """)
+      .withFallback(ConfigFactory.load()) // re-use application.conf other settings
 }
 
 class ProjectionSpec

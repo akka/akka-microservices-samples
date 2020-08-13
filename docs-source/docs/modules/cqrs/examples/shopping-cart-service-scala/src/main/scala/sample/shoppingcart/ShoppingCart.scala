@@ -38,7 +38,7 @@ object ShoppingCart {
    */
   // tag::state[]
   final case class State(items: Map[String, Int], checkoutDate: Option[Instant]) extends CborSerializable {
-  // end::state[]
+    // end::state[]
 
     def isCheckedOut: Boolean =
       checkoutDate.isDefined
@@ -153,7 +153,7 @@ object ShoppingCart {
         // end::commandHandler[]
         // tag::evenHandler[]
         eventHandler = (state, event) => handleEvent(state, event))
-        // end::evenHandler[]
+      // end::evenHandler[]
       // tag::tagging[]
       .withTagger(_ => eventProcessorTags)
       // end::tagging[]

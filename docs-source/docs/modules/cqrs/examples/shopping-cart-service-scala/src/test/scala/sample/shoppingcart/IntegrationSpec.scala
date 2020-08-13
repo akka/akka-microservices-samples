@@ -28,7 +28,8 @@ import org.scalatest.wordspec.AnyWordSpecLike
 object IntegrationSpec {
   private val keyspace = s"IntegrationSpec_${System.currentTimeMillis()}"
 
-  val config: Config = ConfigFactory.parseString(s"""
+  val config: Config = ConfigFactory
+    .parseString(s"""
       akka.cluster {
          seed-nodes = []
       }
@@ -63,7 +64,8 @@ object IntegrationSpec {
       # For LoggingTestKit
       akka.actor.testkit.typed.filter-leeway = 5s
       akka.actor.testkit.typed.throw-on-shutdown-timeout = off
-    """).withFallback(ConfigFactory.load())
+    """)
+    .withFallback(ConfigFactory.load())
 }
 
 class IntegrationSpec

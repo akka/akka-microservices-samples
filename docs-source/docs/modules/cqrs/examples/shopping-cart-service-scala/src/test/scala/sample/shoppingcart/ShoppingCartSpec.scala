@@ -6,11 +6,13 @@ import akka.actor.testkit.typed.scaladsl.ScalaTestWithActorTestKit
 import akka.pattern.StatusReply
 import org.scalatest.wordspec.AnyWordSpecLike
 
-class ShoppingCartSpec extends ScalaTestWithActorTestKit(s"""
+class ShoppingCartSpec
+    extends ScalaTestWithActorTestKit(s"""
       akka.persistence.journal.plugin = "akka.persistence.journal.inmem"
       akka.persistence.snapshot-store.plugin = "akka.persistence.snapshot-store.local"
       akka.persistence.snapshot-store.local.dir = "target/snapshot-${UUID.randomUUID().toString}"
-    """) with AnyWordSpecLike {
+    """)
+    with AnyWordSpecLike {
 
   private var counter = 0
   def newCartId(): String = {

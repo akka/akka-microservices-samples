@@ -35,10 +35,12 @@ object Main {
   }
 
   def config(port: Int, grpcPort: Int): Config =
-    ConfigFactory.parseString(s"""
+    ConfigFactory
+      .parseString(s"""
       akka.remote.artery.canonical.port = $port
       shopping.grpc.port = $grpcPort
-       """).withFallback(ConfigFactory.load())
+       """)
+      .withFallback(ConfigFactory.load())
 
   def createTables(system: ActorSystem[_]): Unit = {
     // TODO: In production the keyspace and tables should not be created automatically.
