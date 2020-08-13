@@ -7,13 +7,13 @@ import scala.concurrent.duration._
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.eventstream.EventStream
 import akka.cluster.MemberStatus
-import akka.cluster.sharding.typed.scaladsl.ClusterSharding
 import akka.cluster.typed.Cluster
 import akka.cluster.typed.Join
-import akka.pattern.StatusReply
+import akka.grpc.GrpcClientSettings
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.Effect
 import akka.persistence.typed.scaladsl.EventSourcedBehavior
+import akka.testkit.SocketUtil
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.scalatest.BeforeAndAfterAll
@@ -55,9 +55,9 @@ object IntegrationSpec {
       }
       
       akka.projection.cassandra.offset-store.keyspace = $keyspace
-      shopping.event-processor {
-        keep-alive-interval = 1 seconds
-      }
+      
+      akka.http.server.preview.enable-http2 = on
+      
       akka.loglevel = DEBUG
       akka.actor.testkit.typed.single-expect-default = 5s
       # For LoggingTestKit
@@ -77,17 +77,36 @@ class IntegrationSpec
   implicit private val patience: PatienceConfig =
     PatienceConfig(3.seconds, Span(100, org.scalatest.time.Millis))
 
-  private def roleConfig(role: String): Config =
-    ConfigFactory.parseString(s"akka.cluster.roles = [$role]")
+  private def nodeConfig(role: String, grpcPort: Int): Config = {
+    ConfigFactory.parseString(s"""
+      akka.cluster.roles = [$role]
+      shopping.grpc.port = $grpcPort
+      """)
+  }
+
+  private val grpcPorts = SocketUtil.temporaryServerAddresses(4, "127.0.0.1").map(_.getPort)
 
   // one TestKit (ActorSystem) per cluster node
-  private val testKit1 = ActorTestKit("IntegrationSpec", roleConfig("write-model").withFallback(IntegrationSpec.config))
+  private val testKit1 =
+    ActorTestKit("IntegrationSpec", nodeConfig("write-model", grpcPorts(0)).withFallback(IntegrationSpec.config))
   private val testKit2 =
-    ActorTestKit("IntegrationSpec", roleConfig("write-model").withFallback(IntegrationSpec.config))
-  private val testKit3 = ActorTestKit("IntegrationSpec", roleConfig("read-model").withFallback(IntegrationSpec.config))
-  private val testKit4 = ActorTestKit("IntegrationSpec", roleConfig("read-model").withFallback(IntegrationSpec.config))
+    ActorTestKit("IntegrationSpec", nodeConfig("write-model", grpcPorts(1)).withFallback(IntegrationSpec.config))
+  private val testKit3 =
+    ActorTestKit("IntegrationSpec", nodeConfig("read-model", grpcPorts(2)).withFallback(IntegrationSpec.config))
+  private val testKit4 =
+    ActorTestKit("IntegrationSpec", nodeConfig("read-model", grpcPorts(3)).withFallback(IntegrationSpec.config))
 
   private val systems3 = List(testKit1.system, testKit2.system, testKit3.system)
+
+  private val clientSettings1 =
+    GrpcClientSettings.connectToServiceAt("127.0.0.1", grpcPorts(0))(testKit1.system).withTls(false)
+  private lazy val client1: proto.ShoppingCartService =
+    proto.ShoppingCartServiceClient(clientSettings1)(testKit1.system)
+
+  private val clientSettings2 =
+    GrpcClientSettings.connectToServiceAt("127.0.0.1", grpcPorts(1))(testKit2.system).withTls(false)
+  private lazy val client2: proto.ShoppingCartService =
+    proto.ShoppingCartServiceClient(clientSettings2)(testKit2.system)
 
   override protected def beforeAll(): Unit = {
     // avoid concurrent creation of keyspace and tables
@@ -138,31 +157,33 @@ class IntegrationSpec
       }
     }
 
-    "update and consume from different nodes" in {
-      val cart1 = ClusterSharding(testKit1.system).entityRefFor(ShoppingCart.EntityKey, "cart-1")
-      val probe1 = testKit1.createTestProbe[StatusReply[ShoppingCart.Summary]]
-
-      val cart2 = ClusterSharding(testKit2.system).entityRefFor(ShoppingCart.EntityKey, "cart-2")
-      val probe2 = testKit2.createTestProbe[StatusReply[ShoppingCart.Summary]]
-
+    "update and consume from different nodes via gRPC" in {
       val eventProbe3 = testKit3.createTestProbe[ShoppingCart.Event]()
       testKit3.system.eventStream ! EventStream.Subscribe(eventProbe3.ref)
 
       // update from node1, consume event from node3
-      cart1 ! ShoppingCart.AddItem("foo", 42, probe1.ref)
-      probe1.receiveMessage().isSuccess should ===(true)
+      val response1 = client1.addItem(proto.AddItemRequest(cartId = "cart-1", itemId = "foo", quantity = 42))
+      val updatedCart1 = response1.futureValue.cart.get
+      updatedCart1.items.head.itemId should ===("foo")
+      updatedCart1.items.head.quantity should ===(42)
       eventProbe3.expectMessage(ShoppingCart.ItemAdded("cart-1", "foo", 42))
 
       // update from node2, consume event from node3
-      cart2 ! ShoppingCart.AddItem("bar", 17, probe2.ref)
-      probe2.receiveMessage().isSuccess should ===(true)
-      cart2 ! ShoppingCart.AdjustItemQuantity("bar", 18, probe2.ref)
-      probe2.receiveMessage().isSuccess should ===(true)
+      val response2 = client2.addItem(proto.AddItemRequest(cartId = "cart-2", itemId = "bar", quantity = 17))
+      val updatedCart2 = response2.futureValue.cart.get
+      updatedCart2.items.head.itemId should ===("bar")
+      updatedCart2.items.head.quantity should ===(17)
+
+      val response3 = client2.updateItem(proto.UpdateItemRequest(cartId = "cart-2", itemId = "bar", quantity = 18))
+      val updatedCart3 = response3.futureValue.cart.get
+      updatedCart3.items.head.itemId should ===("bar")
+      updatedCart3.items.head.quantity should ===(18)
+
       eventProbe3.expectMessage(ShoppingCart.ItemAdded("cart-2", "bar", 17))
       eventProbe3.expectMessage(ShoppingCart.ItemQuantityAdjusted("cart-2", "bar", 18))
     }
 
-    "continue even processing from offset" in {
+    "continue event processing from offset" in {
       // give it time to write the offset before shutting down
       Thread.sleep(1000)
       testKit3.shutdownTestKit()
@@ -179,12 +200,10 @@ class IntegrationSpec
         Cluster(testKit4.system).selfMember.status should ===(MemberStatus.Up)
       }
 
-      val cart3 = ClusterSharding(testKit1.system).entityRefFor(ShoppingCart.EntityKey, "cart-3")
-      val probe3 = testKit1.createTestProbe[StatusReply[ShoppingCart.Summary]]
-
       // update from node1, consume event from node4
-      cart3 ! ShoppingCart.AddItem("abc", 43, probe3.ref)
-      probe3.receiveMessage().isSuccess should ===(true)
+      val response1 = client1.addItem(proto.AddItemRequest(cartId = "cart-3", itemId = "abc", quantity = 43))
+      response1.futureValue.cart.get // success
+
       // note that node4 is new, but continues reading from previous offset, i.e. not receiving events
       // that have already been consumed
       eventProbe4.expectMessage(ShoppingCart.ItemAdded("cart-3", "abc", 43))

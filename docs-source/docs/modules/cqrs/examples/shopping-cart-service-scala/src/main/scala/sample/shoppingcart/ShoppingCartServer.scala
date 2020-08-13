@@ -1,5 +1,6 @@
 package sample.shoppingcart
 
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.util.Failure
@@ -19,7 +20,8 @@ class ShoppingCartServer(port: Int, system: ActorSystem[_]) {
     val service: HttpRequest => Future[HttpResponse] =
       proto.ShoppingCartServiceHandler(new ShoppingCartServiceImpl())
 
-    val bound = Http().newServerAt(interface = "127.0.0.1", port).bind(service)
+    val bound =
+      Http().newServerAt(interface = "127.0.0.1", port).bind(service).map(_.addToCoordinatedShutdown(3.seconds))
 
     bound.onComplete {
       case Success(binding) =>
