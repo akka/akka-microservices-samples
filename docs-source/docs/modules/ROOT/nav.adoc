@@ -4,9 +4,9 @@ include::partial$include.adoc[]
 * xref:index.adoc[Overview]
 
 * xref:cqrs:index.adoc[Shopping Cart Sample]
+
 * xref:cqrs:services.adoc[What makes up a service?]
-*** xref:cqrs:grpc-services.adoc[gRPC services]
-*** xref:cqrs:rest-services.adoc[REST services]
+** xref:cqrs:grpc-services.adoc[gRPC services]
 ** xref:cqrs:service-clients.adoc[Service clients]
 
 * Writing persistent and clustered services
