@@ -1,0 +1,32 @@
+= Service clients
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+Communicating with another service requires the client to know the service's API, transport and location.
+
+Service discovery
+
+* Location Transparency
+* Akka Discovery via DNS
+* SRV records
+
+
+== gRPC
+
+link:grpc-services.adoc#_grpc_clients[See gRPC]
+
+== HTTP
+
+link:rest-services.adoc[See REST services]
+
+== Kafka
+
+link:https://github.com/edenhill/kafkacat[kafkacat]
+
+
+Integration testing
+
+* link:https://doc.akka.io/docs/alpakka-kafka/current/testing.htm#alternative-testing-libraries[Alpakka Kafka Testkit ]

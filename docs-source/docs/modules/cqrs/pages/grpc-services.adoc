@@ -1,0 +1,35 @@
+= gRPC services
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+== gRPC & Protobuf
+
+https://doc.akka.io/docs/akka-grpc/current/proto.html
+
+link:{akka-grpc}/server/walkthrough.html[Akka gRPC walk-through]
+
+link:{akka-grpc}/client/configuration.html#using-akka-discovery-for-endpoint-discovery[Service Discovery]
+
+Share data format through Protobuf files
+
+== gRPC clients
+
+=== Using grpccurl
+
+link:https://github.com/fullstorydev/grpcurl[gRPC curl repository]
+
+[source,bash]
+----
+$ grpcurl -plaintext -d '{"name":"Joseph"}' localhost:3000 helloworld.GreeterService.SayHello
+{
+  "message": "Good to see you, Joseph"
+}
+----
+
+=== With Akka gRPC
+
+link:{akka-grpc}/client/walkthrough.html[Client walk-through]
+
