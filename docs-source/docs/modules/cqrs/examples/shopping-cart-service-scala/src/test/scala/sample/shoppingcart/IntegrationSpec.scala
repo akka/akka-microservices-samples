@@ -5,7 +5,6 @@ import java.util.UUID
 import scala.concurrent.duration._
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
-import akka.actor.typed.eventstream.EventStream
 import akka.cluster.MemberStatus
 import akka.cluster.typed.Cluster
 import akka.cluster.typed.Join
@@ -77,7 +76,7 @@ class IntegrationSpec
     with Eventually {
 
   implicit private val patience: PatienceConfig =
-    PatienceConfig(3.seconds, Span(100, org.scalatest.time.Millis))
+    PatienceConfig(5.seconds, Span(100, org.scalatest.time.Millis))
 
   private def nodeConfig(role: String, grpcPort: Int): Config = {
     ConfigFactory.parseString(s"""
@@ -159,16 +158,12 @@ class IntegrationSpec
       }
     }
 
-    "update and consume from different nodes via gRPC" in {
-      val eventProbe3 = testKit3.createTestProbe[ShoppingCart.Event]()
-      testKit3.system.eventStream ! EventStream.Subscribe(eventProbe3.ref)
-
+    "update and project from different nodes via gRPC" in {
       // add from client1, consume event on node3
       val response1 = client1.addItem(proto.AddItemRequest(cartId = "cart-1", itemId = "foo", quantity = 42))
       val updatedCart1 = response1.futureValue
       updatedCart1.items.head.itemId should ===("foo")
       updatedCart1.items.head.quantity should ===(42)
-      eventProbe3.expectMessage(ShoppingCart.ItemAdded("cart-1", "foo", 42))
 
       // add from client2, consume event on node3
       val response2 = client2.addItem(proto.AddItemRequest(cartId = "cart-2", itemId = "bar", quantity = 17))
@@ -181,9 +176,6 @@ class IntegrationSpec
       val updatedCart3 = response3.futureValue
       updatedCart3.items.head.itemId should ===("bar")
       updatedCart3.items.head.quantity should ===(18)
-
-      eventProbe3.expectMessage(ShoppingCart.ItemAdded("cart-2", "bar", 17))
-      eventProbe3.expectMessage(ShoppingCart.ItemQuantityAdjusted("cart-2", "bar", 18, 17))
 
       // ItemPopularityProjection has consumed the events and updated db
       eventually {
@@ -204,9 +196,6 @@ class IntegrationSpec
       Thread.sleep(1000)
       testKit3.shutdownTestKit()
 
-      val eventProbe4 = testKit4.createTestProbe[ShoppingCart.Event]()
-      testKit4.system.eventStream ! EventStream.Subscribe(eventProbe4.ref)
-
       testKit4.spawn[Nothing](Guardian(), "guardian")
 
       Cluster(testKit4.system).manager ! Join(Cluster(testKit1.system).selfMember.address)
@@ -222,7 +211,6 @@ class IntegrationSpec
 
       // note that node4 is new, but continues reading from previous offset, i.e. not receiving events
       // that have already been consumed
-      eventProbe4.expectMessage(ShoppingCart.ItemAdded("cart-3", "abc", 43))
 
       // ItemPopularityProjection has consumed the events and updated db
       eventually {

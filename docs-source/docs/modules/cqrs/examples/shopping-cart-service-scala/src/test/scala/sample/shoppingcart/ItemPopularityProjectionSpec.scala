@@ -30,7 +30,7 @@ object ItemPopularityProjectionSpec {
   }
 }
 
-class ItemPopularityProjectionSpec extends ScalaTestWithActorTestKit(ProjectionSpec.config) with AnyWordSpecLike {
+class ItemPopularityProjectionSpec extends ScalaTestWithActorTestKit with AnyWordSpecLike {
   import ItemPopularityProjectionSpec.TestItemPopularityRepository
 
   private val projectionTestKit = ProjectionTestKit(testKit)

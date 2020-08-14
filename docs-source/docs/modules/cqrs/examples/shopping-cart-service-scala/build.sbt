@@ -1,5 +1,6 @@
 val AkkaVersion = "2.6.8"
 val AkkaPersistenceCassandraVersion = "1.0.1"
+val AlpakkaKafkaVersion = "2.0.4"
 val AkkaHttpVersion = "10.2.0"
 val AkkaProjectionVersion = "1.0.0-RC1"
 
@@ -23,6 +24,7 @@ lazy val `shopping-cart-service-scala` = project
         "com.typesafe.akka" %% "akka-persistence-cassandra" % AkkaPersistenceCassandraVersion,
         "com.lightbend.akka" %% "akka-projection-eventsourced" % AkkaProjectionVersion,
         "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
+        "com.typesafe.akka" %% "akka-stream-kafka" % AlpakkaKafkaVersion,
         "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
         "com.typesafe.akka" %% "akka-http2-support" % AkkaHttpVersion,
         "com.typesafe.akka" %% "akka-slf4j" % AkkaVersion,

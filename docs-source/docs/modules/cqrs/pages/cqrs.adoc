@@ -23,7 +23,7 @@ Our shopping cart events get tagged with a tag that contains an index so we can 
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/ShoppingCart.scala[tag=tagging]
+include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/ItemPopularityProjection.scala[tag=tagging]
 ----
 
 The projection defines a source provider which defines the events which should be projected to the read model. To do that it specifies the base class for the events it should provide (`ShoppingCart.Event`), that these events come from the Cassandra journal and event tag.
@@ -35,7 +35,7 @@ Each event will be passed to the event handler which should  update the read mod
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/EventProcessor.scala[tag=projection]
+include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/ItemPopularityProjection.scala[tag=projection]
 ----
 
 

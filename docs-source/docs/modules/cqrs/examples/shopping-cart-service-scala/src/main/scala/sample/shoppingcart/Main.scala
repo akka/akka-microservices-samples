@@ -77,7 +77,7 @@ object Guardian {
         new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext)
 
       if (Cluster(system).selfMember.hasRole("read-model")) {
-        EventProcessor.init(system, projectionParallelism)
+        PublishEventsProjection.init(system, projectionParallelism)
 
         ItemPopularityProjection.init(system, itemPopularityRepository, projectionParallelism)
       }

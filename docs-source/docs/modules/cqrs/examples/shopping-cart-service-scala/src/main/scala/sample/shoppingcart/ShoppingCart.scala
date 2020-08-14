@@ -140,12 +140,12 @@ object ShoppingCart {
   def init(system: ActorSystem[_], projectionParallelism: Int): Unit = {
     ClusterSharding(system).init(Entity(EntityKey) { entityContext =>
       val n = math.abs(entityContext.entityId.hashCode % projectionParallelism)
-      val eventProcessorTag = s"${ShoppingCart.TagPrefix}-$n"
-      ShoppingCart(entityContext.entityId, Set(eventProcessorTag))
+      val projectionTag = s"${ShoppingCart.TagPrefix}-$n"
+      ShoppingCart(entityContext.entityId, Set(projectionTag))
     }.withRole("write-model"))
   }
 
-  def apply(cartId: String, eventProcessorTags: Set[String]): Behavior[Command] = {
+  def apply(cartId: String, tags: Set[String]): Behavior[Command] = {
     // tag::tagging[]
     EventSourcedBehavior
       // end::tagging[]
@@ -163,7 +163,7 @@ object ShoppingCart {
         eventHandler = (state, event) => handleEvent(state, event))
       // end::evenHandler[]
       // tag::tagging[]
-      .withTagger(_ => eventProcessorTags)
+      .withTagger(_ => tags)
       // end::tagging[]
       .withRetention(RetentionCriteria.snapshotEvery(numberOfEvents = 100, keepNSnapshots = 3))
       .onPersistFailure(SupervisorStrategy.restartWithBackoff(200.millis, 5.seconds, 0.1))

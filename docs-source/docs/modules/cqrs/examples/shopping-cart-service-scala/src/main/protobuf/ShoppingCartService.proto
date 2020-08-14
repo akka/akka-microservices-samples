@@ -6,6 +6,8 @@ option java_outer_classname = "ShoppingCartProto";
 
 package shoppingcart;
 
+// gRPC definition for ShoppingCartService
+
 service ShoppingCartService {
     rpc AddItem (AddItemRequest) returns (Cart) {}
     rpc UpdateItem (UpdateItemRequest) returns (Cart) {}
