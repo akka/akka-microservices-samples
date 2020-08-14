@@ -3,6 +3,7 @@ package sample.shoppingcart
 import java.time.Instant
 
 import scala.concurrent.duration._
+
 import akka.actor.typed.ActorRef
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
@@ -118,21 +119,28 @@ object ShoppingCart {
     def cartId: String
   }
 
-  final case class ItemAdded(cartId: String, itemId: String, quantity: Int) extends Event
+  sealed trait ItemEvent extends Event {
+    def itemId: String
+  }
 
-  final case class ItemRemoved(cartId: String, itemId: String) extends Event
+  final case class ItemAdded(cartId: String, itemId: String, quantity: Int) extends ItemEvent
 
-  final case class ItemQuantityAdjusted(cartId: String, itemId: String, newQuantity: Int) extends Event
+  final case class ItemRemoved(cartId: String, itemId: String, oldQuantity: Int) extends ItemEvent
+
+  final case class ItemQuantityAdjusted(cartId: String, itemId: String, newQuantity: Int, oldQuantity: Int)
+      extends ItemEvent
 
   final case class CheckedOut(cartId: String, eventTime: Instant) extends Event
   // end::events[]
 
+  val TagPrefix = "carts-slice"
+
   val EntityKey: EntityTypeKey[Command] = EntityTypeKey[Command]("ShoppingCart")
 
-  def init(system: ActorSystem[_], eventProcessorSettings: EventProcessorSettings): Unit = {
+  def init(system: ActorSystem[_], projectionParallelism: Int): Unit = {
     ClusterSharding(system).init(Entity(EntityKey) { entityContext =>
-      val n = math.abs(entityContext.entityId.hashCode % eventProcessorSettings.parallelism)
-      val eventProcessorTag = eventProcessorSettings.tagPrefix + "-" + n
+      val n = math.abs(entityContext.entityId.hashCode % projectionParallelism)
+      val eventProcessorTag = ShoppingCart.TagPrefix + "-" + n
       ShoppingCart(entityContext.entityId, Set(eventProcessorTag))
     }.withRole("write-model"))
   }
@@ -178,7 +186,7 @@ object ShoppingCart {
       case RemoveItem(itemId, replyTo) =>
         if (state.hasItem(itemId))
           Effect
-            .persist(ItemRemoved(cartId, itemId))
+            .persist(ItemRemoved(cartId, itemId, state.items(itemId)))
             .thenReply(replyTo)(updatedCart => StatusReply.Success(updatedCart.toSummary))
         else
           Effect.reply(replyTo)(StatusReply.Success(state.toSummary)) // removing an item is idempotent
@@ -188,7 +196,7 @@ object ShoppingCart {
           Effect.reply(replyTo)(StatusReply.Error("Quantity must be greater than zero"))
         else if (state.hasItem(itemId))
           Effect
-            .persist(ItemQuantityAdjusted(cartId, itemId, quantity))
+            .persist(ItemQuantityAdjusted(cartId, itemId, quantity, state.items(itemId)))
             .thenReply(replyTo)(updatedCart => StatusReply.Success(updatedCart.toSummary))
         else
           Effect.reply(replyTo)(
@@ -224,10 +232,10 @@ object ShoppingCart {
 
   private def handleEvent(state: State, event: Event) = {
     event match {
-      case ItemAdded(_, itemId, quantity)            => state.updateItem(itemId, quantity)
-      case ItemRemoved(_, itemId)                    => state.removeItem(itemId)
-      case ItemQuantityAdjusted(_, itemId, quantity) => state.updateItem(itemId, quantity)
-      case CheckedOut(_, eventTime)                  => state.checkout(eventTime)
+      case ItemAdded(_, itemId, quantity)               => state.updateItem(itemId, quantity)
+      case ItemRemoved(_, itemId, _)                    => state.removeItem(itemId)
+      case ItemQuantityAdjusted(_, itemId, quantity, _) => state.updateItem(itemId, quantity)
+      case CheckedOut(_, eventTime)                     => state.checkout(eventTime)
     }
   }
   // end::evenHandler[]

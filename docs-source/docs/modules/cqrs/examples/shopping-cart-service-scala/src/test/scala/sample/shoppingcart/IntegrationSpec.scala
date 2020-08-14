@@ -13,6 +13,7 @@ import akka.grpc.GrpcClientSettings
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.Effect
 import akka.persistence.typed.scaladsl.EventSourcedBehavior
+import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
 import akka.testkit.SocketUtil
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
@@ -110,6 +111,11 @@ class IntegrationSpec
   private lazy val client2: proto.ShoppingCartService =
     proto.ShoppingCartServiceClient(clientSettings2)(testKit2.system)
 
+  private lazy val session =
+    CassandraSessionRegistry(testKit1.system).sessionFor("akka.projection.cassandra.session-config")
+  private lazy val itemPopularityProjectionRepository =
+    new ItemPopularityRepositoryImpl(session, IntegrationSpec.keyspace)(testKit1.system.executionContext)
+
   override protected def beforeAll(): Unit = {
     // avoid concurrent creation of keyspace and tables
     initializePersistence()
@@ -183,7 +189,13 @@ class IntegrationSpec
       updatedCart3.items.head.quantity should ===(18)
 
       eventProbe3.expectMessage(ShoppingCart.ItemAdded("cart-2", "bar", 17))
-      eventProbe3.expectMessage(ShoppingCart.ItemQuantityAdjusted("cart-2", "bar", 18))
+      eventProbe3.expectMessage(ShoppingCart.ItemQuantityAdjusted("cart-2", "bar", 18, 17))
+
+      // ItemPopularityProjection has consumed the events and updated db
+      eventually {
+        itemPopularityProjectionRepository.getItem("foo").futureValue should ===(Some(42))
+        itemPopularityProjectionRepository.getItem("bar").futureValue should ===(Some(18))
+      }
     }
 
     "continue event processing from offset" in {
@@ -210,6 +222,11 @@ class IntegrationSpec
       // note that node4 is new, but continues reading from previous offset, i.e. not receiving events
       // that have already been consumed
       eventProbe4.expectMessage(ShoppingCart.ItemAdded("cart-3", "abc", 43))
+
+      // ItemPopularityProjection has consumed the events and updated db
+      eventually {
+        itemPopularityProjectionRepository.getItem("abc").futureValue should ===(Some(43))
+      }
     }
 
   }

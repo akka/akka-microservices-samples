@@ -14,10 +14,10 @@ import akka.projection.eventsourced.scaladsl.EventSourcedProvider
 import akka.projection.scaladsl.AtLeastOnceProjection
 import akka.projection.scaladsl.SourceProvider
 
-object EventProcessor {
-
+object ItemPopularityProjection {
   def createProjectionFor(
       system: ActorSystem[_],
+      repository: ItemPopularityRepository,
       index: Int): AtLeastOnceProjection[Offset, EventEnvelope[ShoppingCart.Event]] = {
     val tag = s"${ShoppingCart.TagPrefix}-$index"
     // tag::projection[]
@@ -28,22 +28,22 @@ object EventProcessor {
         tag = tag)
 
     CassandraProjection.atLeastOnce(
-      projectionId = ProjectionId("shopping-carts", tag),
+      projectionId = ProjectionId("item-popularity", "tag"),
       sourceProvider,
-      handler = () => new ShoppingCartProjectionHandler(tag, system))
+      handler = () => new ItemPopularityProjectionHandler(tag, system, repository))
     // end::projection[]
   }
 
-  def init(system: ActorSystem[_], projectionParallelism: Int): Unit = {
+  def init(system: ActorSystem[_], repository: ItemPopularityRepository, projectionParallelism: Int): Unit = {
     // we only want to run the daemon processes on the read-model nodes
     val shardingSettings = ClusterShardingSettings(system)
     val shardedDaemonProcessSettings =
       ShardedDaemonProcessSettings(system).withShardingSettings(shardingSettings.withRole("read-model"))
 
     ShardedDaemonProcess(system).init(
-      name = "ShoppingCartProjection",
+      name = "ItemPopularityProjection",
       projectionParallelism,
-      n => ProjectionBehavior(createProjectionFor(system, n)),
+      n => ProjectionBehavior(createProjectionFor(system, repository, n)),
       shardedDaemonProcessSettings,
       Some(ProjectionBehavior.Stop))
   }

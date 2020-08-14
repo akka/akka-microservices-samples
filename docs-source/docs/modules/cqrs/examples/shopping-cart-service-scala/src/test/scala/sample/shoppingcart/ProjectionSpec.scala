@@ -45,7 +45,6 @@ class ProjectionSpec
     with AnyWordSpecLike
     with BeforeAndAfterAll {
   val projectionTestKit = ProjectionTestKit(testKit)
-  val settings = EventProcessorSettings(system)
 
   override protected def beforeAll(): Unit = {
     Main.createTables(system)
@@ -57,13 +56,13 @@ class ProjectionSpec
 
     "be published to the system event stream by the projection" in {
       val cartProbe = createTestProbe[Any]()
-      val cart = spawn(ShoppingCart("cart-1", Set(s"${settings.tagPrefix}-0")))
+      val cart = spawn(ShoppingCart("cart-1", Set(s"${ShoppingCart.TagPrefix}-0")))
       cart ! ShoppingCart.AddItem("25", 12, cartProbe.ref)
       cartProbe.expectMessageType[StatusReply[ShoppingCart.Summary]].isSuccess should ===(true)
 
       val eventProbe = createTestProbe[ShoppingCart.Event]()
       system.eventStream ! EventStream.Subscribe(eventProbe.ref)
-      projectionTestKit.run(EventProcessor.createProjectionFor(system, settings, 0)) {
+      projectionTestKit.run(EventProcessor.createProjectionFor(system, 0)) {
         val added = eventProbe.expectMessageType[ShoppingCart.ItemAdded]
         added.cartId should ===("cart-1")
         added.itemId should ===("25")
