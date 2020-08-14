@@ -81,7 +81,7 @@ class IntegrationSpec
   private def nodeConfig(role: String, grpcPort: Int): Config = {
     ConfigFactory.parseString(s"""
       akka.cluster.roles = [$role]
-      shopping.grpc.port = $grpcPort
+      shopping-cart.grpc.port = $grpcPort
       """)
   }
 

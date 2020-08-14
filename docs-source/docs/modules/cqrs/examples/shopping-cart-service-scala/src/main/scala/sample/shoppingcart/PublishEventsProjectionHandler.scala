@@ -8,6 +8,7 @@ import akka.actor.typed.ActorSystem
 import akka.kafka.scaladsl.SendProducer
 import akka.projection.eventsourced.EventEnvelope
 import akka.projection.scaladsl.Handler
+import com.google.protobuf.any.Any
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.LoggerFactory
 
@@ -34,16 +35,17 @@ class PublishEventsProjectionHandler(
   }
 
   private def serialize(event: ShoppingCart.Event): Array[Byte] = {
-    event match {
+    val protoMessage = event match {
       case ShoppingCart.ItemAdded(cartId, itemId, quantity) =>
-        proto.ItemAdded(cartId, itemId, quantity).toByteArray
+        proto.ItemAdded(cartId, itemId, quantity)
       case ShoppingCart.ItemQuantityAdjusted(cartId, itemId, quantity, _) =>
-        proto.ItemQuantityAdjusted(cartId, itemId, quantity).toByteArray
+        proto.ItemQuantityAdjusted(cartId, itemId, quantity)
       case ShoppingCart.ItemRemoved(cartId, itemId, _) =>
-        proto.ItemRemoved(cartId, itemId).toByteArray
+        proto.ItemRemoved(cartId, itemId)
       case ShoppingCart.CheckedOut(cartId, _) =>
-        proto.CheckedOut(cartId).toByteArray
+        proto.CheckedOut(cartId)
     }
-
+    // pack in Any so that type information is included for deserialization
+    Any.pack(protoMessage, "shopping-cart-service").toByteArray
   }
 }

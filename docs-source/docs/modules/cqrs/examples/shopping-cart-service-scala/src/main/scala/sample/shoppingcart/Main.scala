@@ -24,7 +24,7 @@ object Main {
         startNode(port, grpcPort)
 
       case None =>
-        throw new IllegalArgumentException("port number, or cassandra required argument")
+        throw new IllegalArgumentException("port number required argument")
     }
   }
 
@@ -40,7 +40,7 @@ object Main {
     ConfigFactory
       .parseString(s"""
       akka.remote.artery.canonical.port = $port
-      shopping.grpc.port = $grpcPort
+      shopping-cart.grpc.port = $grpcPort
        """)
       .withFallback(ConfigFactory.load())
 
@@ -65,8 +65,8 @@ object Guardian {
     Behaviors.setup[Nothing] { context =>
       val system = context.system
 
-      val grpcPort = context.system.settings.config.getInt("shopping.grpc.port")
-      val projectionParallelism = context.system.settings.config.getInt("shopping.projection-parallelism")
+      val grpcPort = context.system.settings.config.getInt("shopping-cart.grpc.port")
+      val projectionParallelism = context.system.settings.config.getInt("shopping-cart.projection-parallelism")
 
       ShoppingCart.init(system, projectionParallelism)
 

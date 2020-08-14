@@ -22,7 +22,7 @@ class ShoppingCartServiceImpl(itemPopularityRepository: ItemPopularityRepository
   private val logger = LoggerFactory.getLogger(getClass)
 
   implicit private val timeout: Timeout =
-    Timeout.create(system.settings.config.getDuration("shopping.askTimeout"))
+    Timeout.create(system.settings.config.getDuration("shopping-cart.askTimeout"))
 
   private val sharding = ClusterSharding(system)
 
