@@ -12,8 +12,11 @@ import akka.pattern.StatusReply
 import akka.util.Timeout
 import io.grpc.Status
 import org.slf4j.LoggerFactory
+import sample.shoppingcart.proto.GetItemPopularityRequest
+import sample.shoppingcart.proto.GetItemPopularityResponse
 
-class ShoppingCartServiceImpl()(implicit system: ActorSystem[_]) extends proto.ShoppingCartService {
+class ShoppingCartServiceImpl(itemPopularityRepository: ItemPopularityRepository)(implicit system: ActorSystem[_])
+    extends proto.ShoppingCartService {
   import system.executionContext
 
   private val logger = LoggerFactory.getLogger(getClass)
@@ -83,4 +86,10 @@ class ShoppingCartServiceImpl()(implicit system: ActorSystem[_]) extends proto.S
     }
   }
 
+  override def getItemPopularity(in: GetItemPopularityRequest): Future[GetItemPopularityResponse] = {
+    itemPopularityRepository.getItem(in.itemId).map {
+      case Some(count) => proto.GetItemPopularityResponse(in.itemId, count)
+      case None        => proto.GetItemPopularityResponse(in.itemId, 0L)
+    }
+  }
 }

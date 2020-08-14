@@ -13,7 +13,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.model.HttpResponse
 
-class ShoppingCartServer(port: Int, system: ActorSystem[_]) {
+class ShoppingCartServer(port: Int, system: ActorSystem[_], itemPopularityRepository: ItemPopularityRepository) {
   private implicit val sys: ActorSystem[_] = system
   private implicit val ec: ExecutionContext = system.executionContext
 
@@ -21,7 +21,7 @@ class ShoppingCartServer(port: Int, system: ActorSystem[_]) {
 
     val service: HttpRequest => Future[HttpResponse] =
       ServiceHandler.concatOrNotFound(
-        proto.ShoppingCartServiceHandler.partial(new ShoppingCartServiceImpl()),
+        proto.ShoppingCartServiceHandler.partial(new ShoppingCartServiceImpl(itemPopularityRepository)),
         // ServerReflection enabled to support grpcurl without import-path and proto parameters
         ServerReflection.partial(List(proto.ShoppingCartService)))
 

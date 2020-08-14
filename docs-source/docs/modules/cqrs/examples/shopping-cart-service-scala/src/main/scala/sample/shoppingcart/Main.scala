@@ -70,18 +70,19 @@ object Guardian {
 
       ShoppingCart.init(system, projectionParallelism)
 
+      val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config")
+      // use same keyspace for the item_popularity table as the offset store
+      val itemPopularityKeyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
+      val itemPopularityRepository =
+        new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext)
+
       if (Cluster(system).selfMember.hasRole("read-model")) {
         EventProcessor.init(system, projectionParallelism)
 
-        val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config")
-        // use same keyspace for the item_popularity table as the offset store
-        val itemPopularityKeyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
-        val itemPopularityRepository =
-          new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext)
         ItemPopularityProjection.init(system, itemPopularityRepository, projectionParallelism)
       }
 
-      new ShoppingCartServer(grpcPort, context.system).start()
+      new ShoppingCartServer(grpcPort, context.system, itemPopularityRepository).start()
 
       Behaviors.empty
     }

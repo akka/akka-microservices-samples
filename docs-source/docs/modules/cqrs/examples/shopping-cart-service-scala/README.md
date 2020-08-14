@@ -57,6 +57,9 @@ grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext 127.0
 
 # check out cart
 grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.Checkout
+
+# get item popularity
+grpcurl -d '{"itemId":"socks"}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.GetItemPopularity
 ```
 
 or same `curl` commands to port 8052.
