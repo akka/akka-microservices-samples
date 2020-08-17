@@ -8,7 +8,7 @@ import akka.actor.typed.ActorSystem
 import akka.kafka.scaladsl.SendProducer
 import akka.projection.eventsourced.EventEnvelope
 import akka.projection.scaladsl.Handler
-import com.google.protobuf.any.Any
+import com.google.protobuf.any.{ Any => ScalaPBAny }
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.slf4j.LoggerFactory
 
@@ -46,6 +46,6 @@ class PublishEventsProjectionHandler(
         proto.CheckedOut(cartId)
     }
     // pack in Any so that type information is included for deserialization
-    Any.pack(protoMessage, "shopping-cart-service").toByteArray
+    ScalaPBAny.pack(protoMessage, "shopping-cart-service").toByteArray
   }
 }

@@ -40,8 +40,7 @@ object PublishEventsProjection {
   }
 
   def init(system: ActorSystem[_], projectionParallelism: Int): Unit = {
-    val topic = "shopping_cart_events"
-
+    val topic = system.settings.config.getString("shopping-cart.kafka-topic")
     val bootstrapServers = system.settings.config.getString("shopping-cart.kafka-bootstrap-servers")
     val producerSettings =
       ProducerSettings(system, new StringSerializer, new ByteArraySerializer).withBootstrapServers(bootstrapServers)

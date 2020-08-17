@@ -13,7 +13,7 @@ import akka.kafka.Subscriptions
 import akka.kafka.scaladsl.Committer
 import akka.kafka.scaladsl.Consumer
 import akka.stream.scaladsl.RestartSource
-import com.google.protobuf.any.Any
+import com.google.protobuf.any.{ Any => ScalaPBAny }
 import org.apache.kafka.clients.consumer.ConsumerConfig
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
@@ -26,10 +26,10 @@ object ShoppingCartEventConsumer {
   private val log = LoggerFactory.getLogger("sample.shoppinganalytics.ShoppingCartEventConsumer")
 
   def init(system: ActorSystem[_]): Unit = {
-    val topic = "shopping_cart_events"
     implicit val sys: ActorSystem[_] = system
     implicit val ec: ExecutionContext = system.executionContext
 
+    val topic = system.settings.config.getString("shopping-analytics.shopping-cart-kafka-topic")
     val bootstrapServers = system.settings.config.getString("shopping-analytics.kafka-bootstrap-servers")
     val config = system.settings.config.getConfig("akka.kafka.consumer")
     val consumerSettings =
@@ -53,7 +53,7 @@ object ShoppingCartEventConsumer {
 
   private def handleRecord(record: ConsumerRecord[String, Array[Byte]]): Future[Done] = {
     val bytes = record.value()
-    val x = Any.parseFrom(bytes)
+    val x = ScalaPBAny.parseFrom(bytes)
     val typeUrl = x.typeUrl
     try {
       val inputBytes = x.value.newCodedInput()
