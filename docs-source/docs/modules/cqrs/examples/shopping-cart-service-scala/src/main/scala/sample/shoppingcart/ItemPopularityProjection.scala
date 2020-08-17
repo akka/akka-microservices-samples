@@ -15,7 +15,7 @@ import akka.projection.scaladsl.AtLeastOnceProjection
 import akka.projection.scaladsl.SourceProvider
 
 object ItemPopularityProjection {
-  def createProjectionFor(
+  private def createProjectionFor(
       system: ActorSystem[_],
       repository: ItemPopularityRepository,
       index: Int): AtLeastOnceProjection[Offset, EventEnvelope[ShoppingCart.Event]] = {
@@ -43,7 +43,7 @@ object ItemPopularityProjection {
     ShardedDaemonProcess(system).init(
       name = "ItemPopularityProjection",
       projectionParallelism,
-      n => ProjectionBehavior(createProjectionFor(system, repository, n)),
+      index => ProjectionBehavior(createProjectionFor(system, repository, index)),
       shardedDaemonProcessSettings,
       Some(ProjectionBehavior.Stop))
   }

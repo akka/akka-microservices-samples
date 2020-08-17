@@ -16,7 +16,7 @@ import akka.projection.scaladsl.SourceProvider
 
 object EventProcessor {
 
-  def createProjectionFor(
+  private def createProjectionFor(
       system: ActorSystem[_],
       index: Int): AtLeastOnceProjection[Offset, EventEnvelope[ShoppingCart.Event]] = {
     val tag = s"${ShoppingCart.TagPrefix}-$index"
@@ -43,7 +43,7 @@ object EventProcessor {
     ShardedDaemonProcess(system).init(
       name = "ShoppingCartProjection",
       projectionParallelism,
-      n => ProjectionBehavior(createProjectionFor(system, n)),
+      index => ProjectionBehavior(createProjectionFor(system, index)),
       shardedDaemonProcessSettings,
       Some(ProjectionBehavior.Stop))
   }
