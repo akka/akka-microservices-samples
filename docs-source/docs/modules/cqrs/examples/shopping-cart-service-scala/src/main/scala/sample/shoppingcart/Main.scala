@@ -28,9 +28,6 @@ object Main {
     }
   }
 
-  val writeSideRole = "write-side"
-  val readSideRole = "write-side"
-
   def startNode(port: Int, grpcPort: Int): Unit = {
     val system =
       ActorSystem[Nothing](Guardian(), "Shopping", config(port, grpcPort))

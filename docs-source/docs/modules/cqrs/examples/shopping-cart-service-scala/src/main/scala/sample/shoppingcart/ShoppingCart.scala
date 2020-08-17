@@ -140,7 +140,7 @@ object ShoppingCart {
   def init(system: ActorSystem[_], projectionParallelism: Int): Unit = {
     ClusterSharding(system).init(Entity(EntityKey) { entityContext =>
       val n = math.abs(entityContext.entityId.hashCode % projectionParallelism)
-      val eventProcessorTag = s"${ShoppingCart.TagPrefix}-n"
+      val eventProcessorTag = s"${ShoppingCart.TagPrefix}-$n"
       ShoppingCart(entityContext.entityId, Set(eventProcessorTag))
     }.withRole("write-model"))
   }
