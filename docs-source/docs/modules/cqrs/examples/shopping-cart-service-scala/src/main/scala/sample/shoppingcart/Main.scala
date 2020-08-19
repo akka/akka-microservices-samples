@@ -7,11 +7,13 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import akka.cluster.typed.Cluster
+import akka.grpc.GrpcClientSettings
 import akka.projection.cassandra.scaladsl.CassandraProjection
 import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
+import sample.shoppingorder.proto.ShoppingOrderServiceClient
 
 object Main {
 
@@ -65,8 +67,8 @@ object Guardian {
     Behaviors.setup[Nothing] { context =>
       val system = context.system
 
-      val grpcPort = context.system.settings.config.getInt("shopping-cart.grpc.port")
-      val projectionParallelism = context.system.settings.config.getInt("shopping-cart.projection-parallelism")
+      val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
+      val projectionParallelism = system.settings.config.getInt("shopping-cart.projection-parallelism")
 
       ShoppingCart.init(system, projectionParallelism)
 
@@ -80,9 +82,15 @@ object Guardian {
         PublishEventsProjection.init(system, projectionParallelism)
 
         ItemPopularityProjection.init(system, itemPopularityRepository, projectionParallelism)
+
+        val orderServiceGrpcPort = system.settings.config.getInt("shopping-order.grpc.port")
+        val orderServiceClientSettings =
+          GrpcClientSettings.connectToServiceAt("127.0.0.1", orderServiceGrpcPort)(system).withTls(false)
+        val orderServiceClient = ShoppingOrderServiceClient(orderServiceClientSettings)(system)
+        SendOrderProjection.init(system, projectionParallelism, orderServiceClient)
       }
 
-      new ShoppingCartServer(grpcPort, context.system, itemPopularityRepository).start()
+      new ShoppingCartServer(grpcPort, system, itemPopularityRepository).start()
 
       Behaviors.empty
     }
