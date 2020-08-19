@@ -22,7 +22,7 @@ This is implemented using [Akka Projections](https://doc.akka.io/docs/akka-proje
 
 ## Running the sample code
 
-1. Start a local Cassandra server on default port 9042 and a Kafka broker on port 9094. The included `docker-compose.yml` starts everything required for running locally.
+1. Start a local Cassandra server on default port 9042 and a Kafka broker on port 9092. The included `docker-compose.yml` starts everything required for running locally.
 
 ```
 docker-compose up -d
