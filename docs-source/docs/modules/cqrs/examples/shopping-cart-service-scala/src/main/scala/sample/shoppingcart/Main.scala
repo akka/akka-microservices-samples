@@ -5,6 +5,8 @@ import scala.concurrent.duration._
 
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
+import akka.actor.typed.scaladsl.AbstractBehavior
+import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 import akka.cluster.typed.Cluster
 import akka.grpc.GrpcClientSettings
@@ -13,6 +15,7 @@ import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
+import sample.shoppingorder.proto.ShoppingOrderService
 import sample.shoppingorder.proto.ShoppingOrderServiceClient
 
 object Main {
@@ -62,37 +65,45 @@ object Main {
 }
 
 object Guardian {
-
   def apply(): Behavior[Nothing] = {
-    Behaviors.setup[Nothing] { context =>
-      val system = context.system
-
-      val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
-      val projectionParallelism = system.settings.config.getInt("shopping-cart.projection-parallelism")
-
-      ShoppingCart.init(system, projectionParallelism)
-
-      val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config")
-      // use same keyspace for the item_popularity table as the offset store
-      val itemPopularityKeyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
-      val itemPopularityRepository =
-        new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext)
-
-      if (Cluster(system).selfMember.hasRole("read-model")) {
-        PublishEventsProjection.init(system, projectionParallelism)
-
-        ItemPopularityProjection.init(system, itemPopularityRepository, projectionParallelism)
-
-        val orderServiceGrpcPort = system.settings.config.getInt("shopping-order.grpc.port")
-        val orderServiceClientSettings =
-          GrpcClientSettings.connectToServiceAt("127.0.0.1", orderServiceGrpcPort)(system).withTls(false)
-        val orderServiceClient = ShoppingOrderServiceClient(orderServiceClientSettings)(system)
-        SendOrderProjection.init(system, projectionParallelism, orderServiceClient)
-      }
-
-      new ShoppingCartServer(grpcPort, system, itemPopularityRepository).start()
-
-      Behaviors.empty
-    }
+    Behaviors.setup[Nothing](context => new Guardian(context))
   }
+}
+
+class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
+  val system = context.system
+
+  val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
+  val projectionParallelism = system.settings.config.getInt("shopping-cart.projection-parallelism")
+
+  ShoppingCart.init(system, projectionParallelism)
+
+  val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config")
+  // use same keyspace for the item_popularity table as the offset store
+  val itemPopularityKeyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
+  val itemPopularityRepository =
+    new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext)
+
+  if (Cluster(system).selfMember.hasRole("read-model")) {
+    PublishEventsProjection.init(system, projectionParallelism)
+
+    ItemPopularityProjection.init(system, itemPopularityRepository, projectionParallelism)
+
+    val orderService = orderServiceClient(system)
+    SendOrderProjection.init(system, projectionParallelism, orderService)
+  }
+
+  // can be overridden in tests
+  protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
+    val orderServiceGrpcPort = system.settings.config.getInt("shopping-order.grpc.port")
+    val orderServiceClientSettings =
+      GrpcClientSettings.connectToServiceAt("127.0.0.1", orderServiceGrpcPort)(system).withTls(false)
+    val orderServiceClient = ShoppingOrderServiceClient(orderServiceClientSettings)(system)
+    orderServiceClient
+  }
+
+  new ShoppingCartServer(grpcPort, system, itemPopularityRepository).start()
+
+  override def onMessage(msg: Nothing): Behavior[Nothing] =
+    this
 }

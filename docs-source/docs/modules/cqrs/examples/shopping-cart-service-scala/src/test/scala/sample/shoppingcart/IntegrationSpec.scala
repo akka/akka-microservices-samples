@@ -2,10 +2,13 @@ package sample.shoppingcart
 
 import java.util.UUID
 
+import scala.concurrent.Future
 import scala.concurrent.duration._
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
+import akka.actor.typed.Behavior
+import akka.actor.typed.scaladsl.Behaviors
 import akka.cluster.MemberStatus
 import akka.cluster.typed.Cluster
 import akka.cluster.typed.Join
@@ -30,6 +33,9 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.Span
 import org.scalatest.wordspec.AnyWordSpecLike
+import sample.shoppingorder.proto.OrderRequest
+import sample.shoppingorder.proto.OrderResponse
+import sample.shoppingorder.proto.ShoppingOrderService
 
 object IntegrationSpec {
   private val uniqueQualifier = System.currentTimeMillis()
@@ -75,6 +81,43 @@ object IntegrationSpec {
       akka.actor.testkit.typed.throw-on-shutdown-timeout = off
     """)
     .withFallback(ConfigFactory.load())
+
+  private def nodeConfig(role: String, grpcPort: Int): Config =
+    ConfigFactory.parseString(s"""
+      akka.cluster.roles = [$role]
+      shopping-cart.grpc.port = $grpcPort
+      """)
+
+  class TestNodeFixture(role: String, grpcPort: Int) {
+    val testKit =
+      ActorTestKit("IntegrationSpec", nodeConfig(role, grpcPort).withFallback(IntegrationSpec.config))
+
+    def system: ActorSystem[_] = testKit.system
+
+    private val clientSettings =
+      GrpcClientSettings.connectToServiceAt("127.0.0.1", grpcPort)(testKit.system).withTls(false)
+    lazy val client: proto.ShoppingCartService =
+      proto.ShoppingCartServiceClient(clientSettings)(testKit.system)
+
+    // stub of the ShoppingOrderService
+    val orderServiceProbe = testKit.createTestProbe[OrderRequest]()
+    private val orderService: ShoppingOrderService = new ShoppingOrderService {
+      override def order(in: OrderRequest): Future[OrderResponse] = {
+        orderServiceProbe.ref ! in
+        Future.successful(OrderResponse(ok = true))
+      }
+    }
+
+    def guardian(): Behavior[Nothing] = {
+      Behaviors.setup[Nothing] { context =>
+        new Guardian(context) {
+          override protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
+            orderService
+          }
+        }
+      }
+    }
+  }
 }
 
 class IntegrationSpec
@@ -84,47 +127,27 @@ class IntegrationSpec
     with AnyWordSpecLike
     with ScalaFutures
     with Eventually {
+  import IntegrationSpec.TestNodeFixture
 
   implicit private val patience: PatienceConfig =
     PatienceConfig(5.seconds, Span(100, org.scalatest.time.Millis))
 
-  private def nodeConfig(role: String, grpcPort: Int): Config = {
-    ConfigFactory.parseString(s"""
-      akka.cluster.roles = [$role]
-      shopping-cart.grpc.port = $grpcPort
-      """)
-  }
-
   private val grpcPorts = SocketUtil.temporaryServerAddresses(4, "127.0.0.1").map(_.getPort)
 
   // one TestKit (ActorSystem) per cluster node
-  private val testKit1 =
-    ActorTestKit("IntegrationSpec", nodeConfig("write-model", grpcPorts(0)).withFallback(IntegrationSpec.config))
-  private val testKit2 =
-    ActorTestKit("IntegrationSpec", nodeConfig("write-model", grpcPorts(1)).withFallback(IntegrationSpec.config))
-  private val testKit3 =
-    ActorTestKit("IntegrationSpec", nodeConfig("read-model", grpcPorts(2)).withFallback(IntegrationSpec.config))
-  private val testKit4 =
-    ActorTestKit("IntegrationSpec", nodeConfig("read-model", grpcPorts(3)).withFallback(IntegrationSpec.config))
+  private val testNode1 = new TestNodeFixture("write-model", grpcPorts(0))
+  private val testNode2 = new TestNodeFixture("write-model", grpcPorts(1))
+  private val testNode3 = new TestNodeFixture("read-model", grpcPorts(2))
+  private val testNode4 = new TestNodeFixture("read-model", grpcPorts(3))
 
-  private val systems3 = List(testKit1.system, testKit2.system, testKit3.system)
+  private val systems3 = List(testNode1, testNode2, testNode3).map(_.testKit.system)
 
-  private val clientSettings1 =
-    GrpcClientSettings.connectToServiceAt("127.0.0.1", grpcPorts(0))(testKit1.system).withTls(false)
-  private lazy val client1: proto.ShoppingCartService =
-    proto.ShoppingCartServiceClient(clientSettings1)(testKit1.system)
-
-  private val clientSettings2 =
-    GrpcClientSettings.connectToServiceAt("127.0.0.1", grpcPorts(1))(testKit2.system).withTls(false)
-  private lazy val client2: proto.ShoppingCartService =
-    proto.ShoppingCartServiceClient(clientSettings2)(testKit2.system)
-
-  private val kafkaTopicProbe = testKit1.createTestProbe[Any]()
+  private val kafkaTopicProbe = testNode1.testKit.createTestProbe[Any]()
 
   override protected def beforeAll(): Unit = {
     // avoid concurrent creation of keyspace and tables
     initializePersistence()
-    Main.createTables(testKit1.system)
+    Main.createTables(testNode1.system)
 
     initializeKafkaTopicProbe()
 
@@ -134,21 +157,21 @@ class IntegrationSpec
   // FIXME use Akka's initializePlugins instead when released https://github.com/akka/akka/issues/28808
   private def initializePersistence(): Unit = {
     val persistenceId = PersistenceId.ofUniqueId(s"persistenceInit-${UUID.randomUUID()}")
-    val ref = testKit1.spawn(
+    val ref = testNode1.testKit.spawn(
       EventSourcedBehavior[String, String, String](
         persistenceId,
         "",
         commandHandler = (_, _) => Effect.stop(),
         eventHandler = (_, _) => ""))
     ref ! "start"
-    testKit1.createTestProbe().expectTerminated(ref, 10.seconds)
+    testNode1.testKit.createTestProbe().expectTerminated(ref, 10.seconds)
   }
 
   private def initializeKafkaTopicProbe(): Unit = {
-    implicit val sys: ActorSystem[_] = testKit1.system
-    val bootstrapServers = testKit1.system.settings.config.getString("shopping-cart.kafka-bootstrap-servers")
-    val config = testKit1.system.settings.config.getConfig("akka.kafka.consumer")
-    val topic = testKit1.system.settings.config.getString("shopping-cart.kafka-topic")
+    implicit val sys: ActorSystem[_] = testNode1.system
+    val bootstrapServers = sys.settings.config.getString("shopping-cart.kafka-bootstrap-servers")
+    val config = sys.settings.config.getConfig("akka.kafka.consumer")
+    val topic = sys.settings.config.getString("shopping-cart.kafka-topic")
     val groupId = UUID.randomUUID().toString
     val consumerSettings =
       ConsumerSettings(config, new StringDeserializer, new ByteArrayDeserializer)
@@ -182,21 +205,21 @@ class IntegrationSpec
   override protected def afterAll(): Unit = {
     super.afterAll()
 
-    testKit4.shutdownTestKit()
-    testKit3.shutdownTestKit()
-    testKit2.shutdownTestKit()
-    testKit1.shutdownTestKit()
+    testNode1.testKit.shutdownTestKit()
+    testNode2.testKit.shutdownTestKit()
+    testNode3.testKit.shutdownTestKit()
+    testNode4.testKit.shutdownTestKit()
   }
 
   "Shopping Cart application" should {
     "init and join Cluster" in {
-      testKit1.spawn[Nothing](Guardian(), "guardian")
-      testKit2.spawn[Nothing](Guardian(), "guardian")
-      testKit3.spawn[Nothing](Guardian(), "guardian")
+      testNode1.testKit.spawn[Nothing](testNode1.guardian(), "guardian")
+      testNode2.testKit.spawn[Nothing](testNode2.guardian(), "guardian")
+      testNode3.testKit.spawn[Nothing](testNode3.guardian(), "guardian")
       // node4 is initialized and joining later
 
       systems3.foreach { sys =>
-        Cluster(sys).manager ! Join(Cluster(testKit1.system).selfMember.address)
+        Cluster(sys).manager ! Join(Cluster(testNode1.system).selfMember.address)
       }
 
       // let the nodes join and become Up
@@ -209,7 +232,7 @@ class IntegrationSpec
 
     "update and project from different nodes via gRPC" in {
       // add from client1, consume event on node3
-      val response1 = client1.addItem(proto.AddItemRequest(cartId = "cart-1", itemId = "foo", quantity = 42))
+      val response1 = testNode1.client.addItem(proto.AddItemRequest(cartId = "cart-1", itemId = "foo", quantity = 42))
       val updatedCart1 = response1.futureValue
       updatedCart1.items.head.itemId should ===("foo")
       updatedCart1.items.head.quantity should ===(42)
@@ -220,25 +243,26 @@ class IntegrationSpec
       published1.quantity should ===(42)
 
       // add from client2, consume event on node3
-      val response2 = client2.addItem(proto.AddItemRequest(cartId = "cart-2", itemId = "bar", quantity = 17))
+      val response2 = testNode2.client.addItem(proto.AddItemRequest(cartId = "cart-2", itemId = "bar", quantity = 17))
       val updatedCart2 = response2.futureValue
       updatedCart2.items.head.itemId should ===("bar")
       updatedCart2.items.head.quantity should ===(17)
 
       // update from client2, consume event on node3
-      val response3 = client2.updateItem(proto.UpdateItemRequest(cartId = "cart-2", itemId = "bar", quantity = 18))
+      val response3 =
+        testNode2.client.updateItem(proto.UpdateItemRequest(cartId = "cart-2", itemId = "bar", quantity = 18))
       val updatedCart3 = response3.futureValue
       updatedCart3.items.head.itemId should ===("bar")
       updatedCart3.items.head.quantity should ===(18)
 
       // ItemPopularityProjection has consumed the events and updated db
       eventually {
-        client1
+        testNode1.client
           .getItemPopularity(proto.GetItemPopularityRequest(itemId = "foo"))
           .futureValue
           .popularityCount should ===(42)
 
-        client1
+        testNode1.client
           .getItemPopularity(proto.GetItemPopularityRequest(itemId = "bar"))
           .futureValue
           .popularityCount should ===(18)
@@ -253,24 +277,35 @@ class IntegrationSpec
       published3.cartId should ===("cart-2")
       published3.itemId should ===("bar")
       published3.quantity should ===(18)
+
+      val response4 = testNode2.client.checkout(proto.CheckoutRequest(cartId = "cart-2"))
+      response4.futureValue.checkedOut should ===(true)
+
+      val orderRequest = testNode3.orderServiceProbe.expectMessageType[OrderRequest]
+      orderRequest.cartId should ===("cart-2")
+      orderRequest.items.head.itemId should ===("bar")
+      orderRequest.items.head.quantity should ===(18)
+
+      val published4 = kafkaTopicProbe.expectMessageType[proto.CheckedOut]
+      published4.cartId should ===("cart-2")
     }
 
     "continue event processing from offset" in {
       // give it time to write the offset before shutting down
       Thread.sleep(1000)
-      testKit3.shutdownTestKit()
+      testNode3.testKit.shutdownTestKit()
 
-      testKit4.spawn[Nothing](Guardian(), "guardian")
+      testNode4.testKit.spawn[Nothing](Guardian(), "guardian")
 
-      Cluster(testKit4.system).manager ! Join(Cluster(testKit1.system).selfMember.address)
+      Cluster(testNode4.system).manager ! Join(Cluster(testNode1.system).selfMember.address)
 
       // let the node join and become Up
       eventually(PatienceConfiguration.Timeout(10.seconds)) {
-        Cluster(testKit4.system).selfMember.status should ===(MemberStatus.Up)
+        Cluster(testNode4.system).selfMember.status should ===(MemberStatus.Up)
       }
 
       // update from client1, consume event on node4
-      val response1 = client1.addItem(proto.AddItemRequest(cartId = "cart-3", itemId = "abc", quantity = 43))
+      val response1 = testNode1.client.addItem(proto.AddItemRequest(cartId = "cart-3", itemId = "abc", quantity = 43))
       response1.futureValue.items.head.itemId should ===("abc")
 
       // note that node4 is new, but continues reading from previous offset, i.e. not receiving events
@@ -278,7 +313,7 @@ class IntegrationSpec
 
       // ItemPopularityProjection has consumed the events and updated db
       eventually {
-        client1
+        testNode1.client
           .getItemPopularity(proto.GetItemPopularityRequest(itemId = "abc"))
           .futureValue
           .popularityCount should ===(43)
