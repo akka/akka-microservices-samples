@@ -1,8 +1,8 @@
 package sample.shoppingcart
 
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
+import scala.concurrent.duration._
 import scala.util.Failure
 import scala.util.Success
 
@@ -13,11 +13,11 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.model.HttpResponse
 
-class ShoppingCartServer(port: Int, system: ActorSystem[_], itemPopularityRepository: ItemPopularityRepository) {
-  private implicit val sys: ActorSystem[_] = system
-  private implicit val ec: ExecutionContext = system.executionContext
+object ShoppingCartServer {
 
-  def start(): Unit = {
+  def start(port: Int, system: ActorSystem[_], itemPopularityRepository: ItemPopularityRepository): Unit = {
+    implicit val sys: ActorSystem[_] = system
+    implicit val ec: ExecutionContext = system.executionContext
 
     val service: HttpRequest => Future[HttpResponse] =
       ServiceHandler.concatOrNotFound(

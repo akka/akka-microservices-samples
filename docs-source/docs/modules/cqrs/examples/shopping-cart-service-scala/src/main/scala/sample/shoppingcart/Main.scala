@@ -99,7 +99,7 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
     orderServiceClient
   }
 
-  new ShoppingCartServer(grpcPort, system, itemPopularityRepository).start()
+  ShoppingCartServer.start(grpcPort, system, itemPopularityRepository)
 
   override def onMessage(msg: Nothing): Behavior[Nothing] =
     this

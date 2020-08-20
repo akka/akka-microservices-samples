@@ -62,4 +62,4 @@ grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingC
 grpcurl -d '{"itemId":"socks"}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.GetItemPopularity
 ```
 
-or same `curl` commands to port 8052.
+or same `grpcurl` commands to port 8052.
