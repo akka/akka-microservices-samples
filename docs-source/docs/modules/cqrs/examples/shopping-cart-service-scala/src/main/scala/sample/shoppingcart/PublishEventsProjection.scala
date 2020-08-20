@@ -5,7 +5,7 @@ import akka.actor.typed.ActorSystem
 import akka.cluster.sharding.typed.ShardedDaemonProcessSettings
 import akka.cluster.sharding.typed.scaladsl.ShardedDaemonProcess
 import akka.kafka.ProducerSettings
-import akka.kafka.scaladsl.{DiscoverySupport, SendProducer}
+import akka.kafka.scaladsl.{ DiscoverySupport, SendProducer }
 import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
 import akka.persistence.query.Offset
 import akka.projection.ProjectionBehavior

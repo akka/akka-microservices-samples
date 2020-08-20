@@ -14,12 +14,12 @@ import akka.cluster.typed.Join
 import akka.grpc.GrpcClientSettings
 import akka.kafka.ConsumerSettings
 import akka.kafka.Subscriptions
-import akka.kafka.scaladsl.{Consumer, DiscoverySupport}
+import akka.kafka.scaladsl.{ Consumer, DiscoverySupport }
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.Effect
 import akka.persistence.typed.scaladsl.EventSourcedBehavior
 import akka.testkit.SocketUtil
-import com.google.protobuf.any.{Any => ScalaPBAny}
+import com.google.protobuf.any.{ Any => ScalaPBAny }
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
