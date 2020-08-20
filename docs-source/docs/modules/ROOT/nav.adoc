@@ -3,15 +3,6 @@ include::partial$include.adoc[]
 
 * xref:index.adoc[Overview]
 
-* xref:cqrs:index.adoc[Shopping Cart Sample]
+* xref:concepts:index.adoc[]
 
-* xref:cqrs:services.adoc[What makes up a service?]
-** xref:cqrs:grpc-services.adoc[gRPC services]
-** xref:cqrs:service-clients.adoc[Service clients]
-
-* Writing persistent and clustered services
-** xref:cqrs:event-sourcing.adoc[Event sourcing]
-** xref:cqrs:cqrs.adoc[Command Query Responsibility Segregation]
-
-* TODO
-** xref:cqrs:server.adoc[Server]
+* xref:cqrs:index.adoc[]

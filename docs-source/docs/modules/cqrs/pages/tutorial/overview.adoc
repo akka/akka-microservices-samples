@@ -10,6 +10,6 @@ TODO:
 
 * overview of the full example (end goal)
 
-This example evolves around a shopping cart to collect items a user is selecting and create an order of the items currently in the shopping cart. The shopping cart contents are persisted by xref:cqrs:event-sourcing.adoc[Event Sourcing] from the commands that make updates to the carts. The events are persisted to a Cassandra database as an "Event Journal".
+This example evolves around a shopping cart to collect items a user is selecting and create an order of the items currently in the shopping cart. The shopping cart contents are persisted by xref:concepts:event-sourcing.adoc[Event Sourcing] from the commands that make updates to the carts. The events are persisted to a Cassandra database as an "Event Journal".
 
 The service counts how often an item is added to any shopping cart to get a measure of popularity. This information is derived or "projected" from the contents of all shopping carts. Projecting data into a new representation from commands that update an Event Journal is supported by link:{akka-projection}/[Akka Projection]. This idea of creating a dependent projection of data is part of Command Query Responsibility Segregation (or CQRS).

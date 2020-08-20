@@ -1,0 +1,16 @@
+= Concept: Service discovery
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+
+ifdef::todo[(Lagom Service Descriptors https://www.lagomframework.com/documentation/1.6.x/java/ServiceDescriptors.html)]
+
+ifdef::todo[Transport information coordinates (URL, HTTP method, broker & topic), serialization]
+
+ifdef::todo[Service descriptor agnostic to transport?]
+
+ifdef::todo[Service discovery, Deployed services are announced as DNS SRV records by Kubernetes.]
+

@@ -1,6 +1,6 @@
 site:
-  title: "Akka Samples Site"
-  url: https://akka.io/akka-samples
+  title: "Akka Platform Guide"
+  url: https://akka.io/akka-platform-guide
   
 content:
   sources:

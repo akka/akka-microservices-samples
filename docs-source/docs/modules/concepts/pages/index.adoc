@@ -1,0 +1,18 @@
+= Concepts
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+This section of the Akka documentation explains some of the concepts that motivate Akka's take on things.
+
+* xref:clustering.adoc[]
+
+* xref:event-sourcing.adoc[]
+* xref:cqrs.adoc[]
+
+* xref:services.adoc[]
+** xref:service-discovery.adoc[]
+** xref:service-clients.adoc[]
+** xref:grpc-services.adoc[]

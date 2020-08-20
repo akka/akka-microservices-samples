@@ -5,19 +5,7 @@
 
 include::ROOT:partial$include.adoc[]
 
-This example illustrates how Akka Persistence enables Event sourcing and how Akka Projection simplifies CQRS for the event-sourced entities.
-
-== Video walk-throughs
-
-An eight-minute video demonstrating how to use Event Sourcing in Akka 2.6.
-
-Sample code from the Akka CQRS example project (Java or Scala). Including how to integrate with Cluster Sharding and Akka HTTP.
-
-link:https://www.youtube.com/watch?v=xWuOGqmR7ow[Watch on YouTube,role=yt-widget]
-
-This short video illustrates how to implement Command Query Responsibility Segregation (CQRS) with Akka 2.6. CQRS is a pattern for decoupling write operations from read operations.
-
-link:https://www.youtube.com/watch?v=6ECsFlNNIAM[Watch on YouTube ,role=yt-widget]
+This example illustrates how multiple small microservices can interact to implement a system. They use Akka Persistence to enables Event sourcing and Akka Projection to implement CQRS for the event-sourced entities.
 
 == Tutorial
 
