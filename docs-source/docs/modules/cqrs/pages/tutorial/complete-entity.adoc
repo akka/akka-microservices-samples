@@ -1,0 +1,16 @@
+= Part 4: Complete Event Sourced entity
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+
+TODO:
+
+* overview/purpose of this part
+* add all commands to the ShoppingCart EventSourcedBehavior
+* add unit tests
+* more operations in the gRPC ShoppingCartService
+* run locally, try with grpcurl
+* deploy to cloud

@@ -1,0 +1,16 @@
+= Part 7: Projection calling gRPC service
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+
+TODO:
+
+* overview/purpose of this part
+* SendOrderProjection
+* gRPC client and service discovery
+* ShoppingOrderService
+* run locally, try with grpcurl
+* deploy to cloud

@@ -1,0 +1,17 @@
+= Part 5: Projection for queries
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+
+TODO:
+
+* overview/purpose of this part
+* ItemPopularityProjection
+* tagging of events
+* unit test
+* add GetItemPopularity operation in ShoppingCartService
+* run locally, try with grpcurl
+* deploy to cloud

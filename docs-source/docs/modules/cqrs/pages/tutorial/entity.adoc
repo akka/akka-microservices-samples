@@ -1,0 +1,18 @@
+= Part 3: Event Sourced entity
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+
+TODO:
+
+* overview/purpose of this part
+* ShoppingCart EventSourcedBehavior, only with AddItem
+* unit test
+* Sharding.init
+* call from service
+* Cassandra
+* run locally, try with grpcurl
+* deploy to cloud

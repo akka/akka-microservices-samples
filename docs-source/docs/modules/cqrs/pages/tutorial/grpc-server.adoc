@@ -1,0 +1,17 @@
+= Part 3: First gRPC service
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+
+TODO:
+
+* overview/purpose of this part
+* proto ShoppingCartService, only with AddItem
+* compile to generate
+* impl service, just logging the call
+* server/main
+* run locally, try with grpcurl
+* deploy to cloud

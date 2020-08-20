@@ -1,0 +1,23 @@
+= Part 2: Development environment
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+== Build
+
+TODO:
+
+* sbt installation
+* sbt new (g8 template) to create empty project with build files (dependencies, plugins)
+* mvn for Java
+
+== IntelliJ IDEA
+
+TODO
+
+* installation
+* Scala plugin
+* import project
+

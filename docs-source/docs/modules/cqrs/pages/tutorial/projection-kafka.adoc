@@ -1,0 +1,16 @@
+= Part 6: Projection publishing to Kafka
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+
+TODO:
+
+* overview/purpose of this part
+* PublishEventsProjection
+* Kafka
+* ShoppingAnalyticsService
+* run locally, try with grpcurl
+* deploy to cloud
