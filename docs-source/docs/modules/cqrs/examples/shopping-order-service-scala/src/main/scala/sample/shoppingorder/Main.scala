@@ -41,8 +41,9 @@ object Guardian {
     Behaviors.setup[Nothing] { context =>
       val system = context.system
 
+      val grpcInterface = context.system.settings.config.getString("shopping-order.grpc.interface")
       val grpcPort = context.system.settings.config.getInt("shopping-order.grpc.port")
-      new ShoppingOrderServer(grpcPort, system).start()
+      new ShoppingOrderServer(grpcInterface, grpcPort, system).start()
 
       Behaviors.empty
     }

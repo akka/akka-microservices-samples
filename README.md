@@ -13,7 +13,9 @@ Example code
 
 The example projects used in the documentation are located at
 
-* [Akka Microservices (Event sourcing and CQRS) in Scala](docs-source/docs/modules/cqrs/examples/shopping-cart-service-scala)
+* [Shopping cart service in Scala](docs-source/docs/modules/cqrs/examples/shopping-cart-service-scala)
+* [Shopping cart analytics service in Scala](docs-source/docs/modules/cqrs/examples/shopping-analytics-service-scala)
+* [Order service in Scala](docs-source/docs/modules/cqrs/examples/shopping-order-service-scala)
 
 
 Antora-based Akka Documentation

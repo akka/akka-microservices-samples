@@ -15,7 +15,11 @@ import akka.http.scaladsl.model.HttpResponse
 
 object ShoppingCartServer {
 
-  def start(port: Int, system: ActorSystem[_], itemPopularityRepository: ItemPopularityRepository): Unit = {
+  def start(
+      interface: String,
+      port: Int,
+      system: ActorSystem[_],
+      itemPopularityRepository: ItemPopularityRepository): Unit = {
     implicit val sys: ActorSystem[_] = system
     implicit val ec: ExecutionContext = system.executionContext
 
@@ -26,7 +30,7 @@ object ShoppingCartServer {
         ServerReflection.partial(List(proto.ShoppingCartService)))
 
     val bound =
-      Http().newServerAt(interface = "127.0.0.1", port).bind(service).map(_.addToCoordinatedShutdown(3.seconds))
+      Http().newServerAt(interface, port).bind(service).map(_.addToCoordinatedShutdown(3.seconds))
 
     bound.onComplete {
       case Success(binding) =>

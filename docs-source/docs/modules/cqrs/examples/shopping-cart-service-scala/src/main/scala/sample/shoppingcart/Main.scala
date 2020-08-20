@@ -72,6 +72,7 @@ object Guardian {
 class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
+  val grpcInterface = system.settings.config.getString("shopping-cart.grpc.interface")
   val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
   val projectionParallelism = system.settings.config.getInt("shopping-cart.projection-parallelism")
 
@@ -99,7 +100,7 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
     orderServiceClient
   }
 
-  ShoppingCartServer.start(grpcPort, system, itemPopularityRepository)
+  ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository)
 
   override def onMessage(msg: Nothing): Behavior[Nothing] =
     this
