@@ -4,7 +4,6 @@ import java.util.UUID
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
-
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
@@ -15,12 +14,12 @@ import akka.cluster.typed.Join
 import akka.grpc.GrpcClientSettings
 import akka.kafka.ConsumerSettings
 import akka.kafka.Subscriptions
-import akka.kafka.scaladsl.Consumer
+import akka.kafka.scaladsl.{Consumer, DiscoverySupport}
 import akka.persistence.typed.PersistenceId
 import akka.persistence.typed.scaladsl.Effect
 import akka.persistence.typed.scaladsl.EventSourcedBehavior
 import akka.testkit.SocketUtil
-import com.google.protobuf.any.{ Any => ScalaPBAny }
+import com.google.protobuf.any.{Any => ScalaPBAny}
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
@@ -72,9 +71,13 @@ object IntegrationSpec {
       akka.projection.cassandra.offset-store.keyspace = $keyspace
       
       shopping-cart.kafka-topic = "shopping_cart_events_$uniqueQualifier"
-      
+
+      shopping-cart.test.kafka.consumer: $${akka.kafka.consumer} {
+        service-name = "shopping_kafka_service"
+      }
+
       akka.http.server.preview.enable-http2 = on
-      
+
       akka.loglevel = DEBUG
       akka.actor.testkit.typed.single-expect-default = 5s
       # For LoggingTestKit
@@ -85,12 +88,15 @@ object IntegrationSpec {
 
   private def nodeConfig(grpcPort: Int): Config =
     ConfigFactory.parseString(s"""
-      shopping-cart.grpc.port = $grpcPort
+      shopping-cart.grpc {
+        interface = "localhost"
+        port = $grpcPort
+      }
       """)
 
   class TestNodeFixture(grpcPort: Int) {
     val testKit =
-      ActorTestKit("IntegrationSpec", nodeConfig(grpcPort).withFallback(IntegrationSpec.config))
+      ActorTestKit("IntegrationSpec", nodeConfig(grpcPort).withFallback(IntegrationSpec.config).resolve())
 
     def system: ActorSystem[_] = testKit.system
 
@@ -169,13 +175,13 @@ class IntegrationSpec
 
   private def initializeKafkaTopicProbe(): Unit = {
     implicit val sys: ActorSystem[_] = testNode1.system
-    val bootstrapServers = sys.settings.config.getString("shopping-cart.kafka-bootstrap-servers")
-    val config = sys.settings.config.getConfig("akka.kafka.consumer")
     val topic = sys.settings.config.getString("shopping-cart.kafka-topic")
+    val config = sys.settings.config.getConfig("shopping-cart.test.kafka.consumer")
     val groupId = UUID.randomUUID().toString
+    import akka.actor.typed.scaladsl.adapter._ // FIXME might not be needed in later Alpakka Kafka version?
     val consumerSettings =
       ConsumerSettings(config, new StringDeserializer, new ByteArrayDeserializer)
-        .withBootstrapServers(bootstrapServers)
+        .withEnrichAsync(DiscoverySupport.consumerBootstrapServers(config)(sys.toClassic))
         .withGroupId(groupId)
     Consumer
       .plainSource(consumerSettings, Subscriptions.topics(topic))
