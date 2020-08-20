@@ -4,17 +4,15 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 import scala.concurrent.duration._
 import scala.util.control.NonFatal
-
 import akka.Done
 import akka.actor.typed.ActorSystem
+import akka.actor.typed.scaladsl.adapter._
 import akka.kafka.CommitterSettings
 import akka.kafka.ConsumerSettings
 import akka.kafka.Subscriptions
-import akka.kafka.scaladsl.Committer
-import akka.kafka.scaladsl.Consumer
+import akka.kafka.scaladsl.{Committer, Consumer, DiscoverySupport}
 import akka.stream.scaladsl.RestartSource
-import com.google.protobuf.any.{ Any => ScalaPBAny }
-import org.apache.kafka.clients.consumer.ConsumerConfig
+import com.google.protobuf.any.{Any => ScalaPBAny}
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.kafka.common.serialization.StringDeserializer
@@ -30,13 +28,11 @@ object ShoppingCartEventConsumer {
     implicit val ec: ExecutionContext = system.executionContext
 
     val topic = system.settings.config.getString("shopping-analytics.shopping-cart-kafka-topic")
-    val bootstrapServers = system.settings.config.getString("shopping-analytics.kafka-bootstrap-servers")
-    val config = system.settings.config.getConfig("akka.kafka.consumer")
+    val config = system.settings.config.getConfig("shopping-analytics.kafka.consumer")
     val consumerSettings =
       ConsumerSettings(config, new StringDeserializer, new ByteArrayDeserializer)
-        .withBootstrapServers(bootstrapServers)
+        .withEnrichAsync(DiscoverySupport.consumerBootstrapServers(config)(system.toClassic))
         .withGroupId("shopping-cart-analytics")
-        .withProperty(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest")
     val committerSettings = CommitterSettings(system)
 
     RestartSource
