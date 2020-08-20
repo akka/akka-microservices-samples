@@ -2,8 +2,10 @@ package sample.shoppingcart
 
 import java.util.UUID
 
+import scala.concurrent.Await
 import scala.concurrent.Future
 import scala.concurrent.duration._
+
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
@@ -14,10 +16,9 @@ import akka.cluster.typed.Join
 import akka.grpc.GrpcClientSettings
 import akka.kafka.ConsumerSettings
 import akka.kafka.Subscriptions
-import akka.kafka.scaladsl.{ Consumer, DiscoverySupport }
-import akka.persistence.typed.PersistenceId
-import akka.persistence.typed.scaladsl.Effect
-import akka.persistence.typed.scaladsl.EventSourcedBehavior
+import akka.kafka.scaladsl.Consumer
+import akka.kafka.scaladsl.DiscoverySupport
+import akka.persistence.testkit.scaladsl.PersistenceInit
 import akka.testkit.SocketUtil
 import com.google.protobuf.any.{ Any => ScalaPBAny }
 import com.typesafe.config.Config
@@ -152,25 +153,13 @@ class IntegrationSpec
 
   override protected def beforeAll(): Unit = {
     // avoid concurrent creation of keyspace and tables
-    initializePersistence()
+    val timeout = 10.seconds
+    Await.result(PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout), timeout)
     Main.createTables(testNode1.system)
 
     initializeKafkaTopicProbe()
 
     super.beforeAll()
-  }
-
-  // FIXME use Akka's initializePlugins instead when released https://github.com/akka/akka/issues/28808
-  private def initializePersistence(): Unit = {
-    val persistenceId = PersistenceId.ofUniqueId(s"persistenceInit-${UUID.randomUUID()}")
-    val ref = testNode1.testKit.spawn(
-      EventSourcedBehavior[String, String, String](
-        persistenceId,
-        "",
-        commandHandler = (_, _) => Effect.stop(),
-        eventHandler = (_, _) => ""))
-    ref ! "start"
-    testNode1.testKit.createTestProbe().expectTerminated(ref, 10.seconds)
   }
 
   private def initializeKafkaTopicProbe(): Unit = {
