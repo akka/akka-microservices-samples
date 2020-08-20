@@ -5,7 +5,7 @@ import akka.actor.typed.ActorSystem
 import akka.cluster.sharding.typed.ShardedDaemonProcessSettings
 import akka.cluster.sharding.typed.scaladsl.ShardedDaemonProcess
 import akka.kafka.ProducerSettings
-import akka.kafka.scaladsl.SendProducer
+import akka.kafka.scaladsl.{DiscoverySupport, SendProducer}
 import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
 import akka.persistence.query.Offset
 import akka.projection.ProjectionBehavior
@@ -40,10 +40,11 @@ object PublishEventsProjection {
 
   def init(system: ActorSystem[_], projectionParallelism: Int): Unit = {
     val topic = system.settings.config.getString("shopping-cart.kafka-topic")
-    val bootstrapServers = system.settings.config.getString("shopping-cart.kafka-bootstrap-servers")
-    val producerSettings =
-      ProducerSettings(system, new StringSerializer, new ByteArraySerializer).withBootstrapServers(bootstrapServers)
+    val config = system.settings.config.getConfig("shopping-cart.kafka.producer")
     import akka.actor.typed.scaladsl.adapter._ // FIXME might not be needed in later Alpakka Kafka version?
+    val producerSettings =
+      ProducerSettings(config, new StringSerializer, new ByteArraySerializer)
+        .withEnrichAsync(DiscoverySupport.producerBootstrapServers(config)(system.toClassic))
     val sendProducer = SendProducer(producerSettings)(system.toClassic)
 
     CoordinatedShutdown(system).addTask(CoordinatedShutdown.PhaseBeforeActorSystemTerminate, "close sendProducer") {
