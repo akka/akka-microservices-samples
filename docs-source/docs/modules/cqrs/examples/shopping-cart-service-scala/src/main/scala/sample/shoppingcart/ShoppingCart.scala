@@ -180,7 +180,9 @@ object ShoppingCart {
         else
           Effect
             .persist(ItemAdded(cartId, itemId, quantity)) // <2>
-            .thenReply(replyTo)(updatedCart => StatusReply.Success(updatedCart.toSummary))
+            .thenReply(replyTo) { updatedCart =>
+              StatusReply.Success(updatedCart.toSummary)
+            }
       // end::openShoppingCart[]
 
       case RemoveItem(itemId, replyTo) =>

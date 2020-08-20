@@ -5,14 +5,166 @@
 
 include::ROOT:partial$include.adoc[]
 
+In this part we will create the `ShoppingCart` entity that manages the state for each shopping cart. It is using Event Sourcing to persist events that represents changes to the state of the cart. At first it will handle the command to add items to the cart. In next part of the tutorial it will be expanded to handle more commands and events.
 
-TODO:
+You will learn how to:
 
-* overview/purpose of this part
-* ShoppingCart EventSourcedBehavior, only with AddItem
-* unit test
-* Sharding.init
-* call from service
-* Cassandra
-* run locally, try with grpcurl
-* deploy to cloud
+* implement an Event Sourced entity
+* unit test the entity
+* distribute the entities over the nodes in the Akka Cluster
+* send requests from the gRPC service implementation to the entities
+* update the deployment from the xref:cqrs:tutorial/grpc-server.adoc[previous step]
+
+TODO links to event sourcing and sharding concepts
+
+== Event Sourced entity
+
+This entity state can be changed only by sending commands to it. The commands are the "external" API of an entity. Commands request state changes, but they might lead to different events depending on the current state of the entity.
+
+Define a `ShoppingCart` object and the `AddItem` command and corresponding `ItemAdded` event:
+
+TODO commands and events code
+
+The state of the `ShoppingCart` contain a `Map` of items that have been added to the cart.
+
+TODO state code
+
+An Event Sourced entity is implemented with the `EventSourcedBehavior`.
+
+TODO code for EventSourcedBehavior, command and event handlers (only for AddItem)
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/ShoppingCart.scala[tag=openShoppingCart]
+----
+
+<1> Matching the `AddItem` command
+<2> Persisting the `ItemAdded` event and replying to the sender
+
+The returned `ReplyEffect` reacts on the commands by deciding which effect they should have on the entity.
+
+Our business logic allows only items to be added which are not in the cart yet and require a positive quantity. If an `AddItem` command is accepted, the `Effect.persist` applies an event to the cart's state and makes sure this event is stored before replying to the.
+
+If the validation fails we want to send back an error message. The reply can be a success or an error and that is the reason for using the `StatusReply`.
+
+See all available effects in the link:{akka}/typed/persistence.html#effects-and-side-effects[Akka reference documentation].
+
+The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands, other parts of the application may listen to the created events. Other parties can't send events.
+
+The events get continuously persisted to the Event Journal datastore, while the entity state is kept in memory. In case of a restart the latest state gets rebuilt by replaying the events from the Event Journal.
+
+Aligning with the command handler above, the entity's event handler reacts on events and updates the state. Notice that there are no decisions on events, they are applied without any checks.
+
+== Serialization
+
+The state, commands and events of the entity must be serializable because they are written to the datastore or sent between nodes within the Akka cluster. We will use the built-in CBOR serialization.
+
+The state, commands and events are marked as `CborSerializable` which is configured to use the built-in CBOR serialization.
+
+The template project includes this marker interface `CborSerializable`:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/CborSerializable.scala[]
+----
+
+The interface is configured in the `application.conf` file to enable CBOR serialization.
+
+[source,hocon]
+----
+include::example$shopping-cart-service-scala/src/main/resources/application.conf[tag=cbor]
+----
+
+== Unit testing
+
+To test the `ShoppingCart` entity you can write a unit test using the `EventSourcedBehaviorTestKit`.
+
+A test for the `AddItem` command looks like this:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/test/scala/sample/shoppingcart/ShoppingCartSpec.scala[]
+----
+
+Run the test with:
+
+----
+sbt test
+----
+
+You can learn more about the `EventSourcedBehaviorTestKit` in the link:{akka}/typed/persistence-testing.html#unit-testing[Akka reference documentation]
+
+== Sharding
+
+The entities are distributed over the nodes in the Akka Cluster with Cluster Sharding. To enable that we need to add some initialization code.
+
+TODO code for sharding init
+
+== Sending commands to the entities
+
+We want to send commands to the entities from the gRPC service implementation. In the xref:cqrs:tutorial/grpc-server.adoc[previous step] we wrote a dummy implementation of `addItem` in the `ShoppingCartServiceImpl`. You can now replace that with sending `ShoppingCart.AddItem` command from `ShoppingCartServiceImpl`.
+
+TODO code for entityRef.askWithStatus
+
+If the command was successful the entity replied with `StatusReply.Success` with the updated `ShoppingCart.Summary`. If the validation in the entity failed it replied with `StatusReply.Error`, which will fail the `Future` that is returned from `askWithStatus`.
+
+== Cassandra
+
+The events are stored in Cassandra and the configuration for that is included in the `persistence.conf` file.
+
+[source,hocon]
+----
+include::example$shopping-cart-service-scala/src/main/resources/persistence.conf[]
+----
+
+== Run
+
+First you need to start Cassandra with:
+
+----
+docker-compose up -d
+----
+
+Run the service with:
+
+----
+sbt "runMain sample.shoppingcart.Main 2551"
+----
+
+Try it with `grpcurl`. Add 3 socks to a cart:
+
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.AddItem
+----
+
+Try the validation logic by trying to add the same item again, which should result in an error:
+
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.AddItem
+----
+
+To verify that the events are actually saved and the state can be recovered from the events you can stop the service with `ctrl-c` and then start it again.
+
+Add 2 t-shirts to the same cart:
+
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.AddItem
+----
+
+Then the returned updated cart should still contain the 3 socks.
+
+Another fun experiment is to start several instances of the service on different ports (2552, 2553) and then interact with different carts via the different gRPC servers (gRPC ports 8051, 8052, 8053).
+
+You can stop the service with `ctrl-c`.
+
+You can leave Cassandra running or stop it with:
+
+----
+docker-compose down
+----
+
+== Deploy
+
+TODO deploy the updated version to the cloud and try it
+
+

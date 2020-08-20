@@ -13,6 +13,8 @@ TODO:
 * sbt new (g8 template) to create empty project with build files (dependencies, plugins)
 * mvn for Java
 
+sbt is an interactive shell and its most efficient to start it once with the `sbt` command and then repeatedly run tasks like `compile` and `test` in the sbt shell.
+
 == IntelliJ IDEA
 
 TODO

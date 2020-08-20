@@ -82,6 +82,8 @@ grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127
 
 Note the logging from the `ShoppingCartServiceImpl` in the console of the service.
 
+You can stop the service with `ctrl-c`.
+
 == Deploy
 
 TODO deploy to cloud and try it

@@ -14,3 +14,12 @@ TODO:
 * more operations in the gRPC ShoppingCartService
 * run locally, try with grpcurl
 * deploy to cloud
+
+== More commands
+
+Our example handles commands differently whether the shopping cart is checked out or not. This command handler implements the "external" API of our entity.
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/ShoppingCart.scala[tag=commandHandler]
+----
