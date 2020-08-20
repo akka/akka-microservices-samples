@@ -10,9 +10,9 @@ import akka.actor.typed.scaladsl.adapter._
 import akka.kafka.CommitterSettings
 import akka.kafka.ConsumerSettings
 import akka.kafka.Subscriptions
-import akka.kafka.scaladsl.{Committer, Consumer, DiscoverySupport}
+import akka.kafka.scaladsl.{ Committer, Consumer, DiscoverySupport }
 import akka.stream.scaladsl.RestartSource
-import com.google.protobuf.any.{Any => ScalaPBAny}
+import com.google.protobuf.any.{ Any => ScalaPBAny }
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.kafka.common.serialization.StringDeserializer

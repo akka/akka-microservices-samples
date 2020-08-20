@@ -25,15 +25,15 @@ jobs:
       env:
         DIR="docs-source/docs/modules/cqrs/examples/shopping-analytics-service-scala"
         CMD="Test/compile; scalafmtCheckAll"
-      name: "Compile and check code style."
+      name: "Shopping analytics service"
     - env:
         DIR="docs-source/docs/modules/cqrs/examples/shopping-cart-service-scala"
         CMD="Test/compile; scalafmtCheckAll"
-      name: "Compile and check code style."
+      name: "Shopping cart service"
     - env:
         DIR="docs-source/docs/modules/cqrs/examples/shopping-order-service-scala"
         CMD="Test/compile; scalafmtCheckAll"
-      name: "Compile and check code style."
+      name: "Shopping order service"
 
     - stage: site
       script:
