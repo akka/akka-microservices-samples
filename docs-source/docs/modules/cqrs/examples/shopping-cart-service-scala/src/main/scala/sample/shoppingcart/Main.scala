@@ -1,56 +1,25 @@
 package sample.shoppingcart
 
-import akka.actor.CoordinatedShutdown
-
-import scala.concurrent.Await
-import scala.concurrent.duration._
-import akka.actor.typed.ActorSystem
-import akka.actor.typed.Behavior
-import akka.actor.typed.scaladsl.AbstractBehavior
-import akka.actor.typed.scaladsl.ActorContext
-import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.{ ActorSystem, Behavior }
+import akka.actor.typed.scaladsl.{ AbstractBehavior, ActorContext, Behaviors }
 import akka.grpc.GrpcClientSettings
 import akka.management.scaladsl.AkkaManagement
 import akka.projection.cassandra.scaladsl.CassandraProjection
 import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
-import com.typesafe.config.Config
-import com.typesafe.config.ConfigFactory
 import org.slf4j.LoggerFactory
-import sample.shoppingorder.proto.ShoppingOrderService
-import sample.shoppingorder.proto.ShoppingOrderServiceClient
+import sample.shoppingorder.proto.{ ShoppingOrderService, ShoppingOrderServiceClient }
+
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 object Main {
 
   def main(args: Array[String]): Unit = {
-    args.headOption match {
-
-      case Some(portString) if portString.matches("""\d+""") =>
-        val port = portString.toInt
-        val managementPort = ("85" + portString.takeRight(2)).toInt
-        val grpcPort = ("80" + portString.takeRight(2)).toInt
-        startNode(port, grpcPort)
-
-      case None =>
-        throw new IllegalArgumentException("port number required argument")
+    val system = ActorSystem[Nothing](Guardian(), "Cart")
+    if (system.settings.config.getBoolean("shopping-cart.create-tables")) {
+      createTables(system)
     }
   }
-
-  def startNode(port: Int, grpcPort: Int): Unit = {
-    val system =
-      ActorSystem[Nothing](Guardian(), "Shopping", config(port, grpcPort))
-
-    if (port == 2551)
-      createTables(system)
-  }
-
-  def config(port: Int, managementPort: Int, grpcPort: Int): Config =
-    ConfigFactory
-      .parseString(s"""
-      akka.remote.artery.canonical.port = $port
-      akka.management.http.port = $managementPort
-      shopping-cart.grpc.port = $grpcPort
-       """)
-      .withFallback(ConfigFactory.load())
 
   def createTables(system: ActorSystem[_]): Unit = {
     // TODO: In production the keyspace and tables should not be created automatically.
@@ -77,12 +46,7 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
   val system = context.system
 
   // tag::management-init[]
-  val management = AkkaManagement(system)
-  management.start()
-  CoordinatedShutdown(system).addTask(CoordinatedShutdown.PhaseBeforeActorSystemTerminate, "akka-management-stop") {
-    () =>
-      management.stop()
-  }
+  AkkaManagement(system).start()
   // end::management-init[]
 
   val grpcInterface = system.settings.config.getString("shopping-cart.grpc.interface")

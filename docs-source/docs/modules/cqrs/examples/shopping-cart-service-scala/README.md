@@ -28,23 +28,23 @@ This is implemented using [Akka Projections](https://doc.akka.io/docs/akka-proje
 docker-compose up -d
 ```
 
-2. Start a node on port 2551:
+2. Start a first node:
 
 ```
-sbt "runMain sample.shoppingcart.Main 2551"
+sbt -Dconfig.resource=node1.conf run
 ```
 
-3. (Optional) Start another node on port 2552:
+3. (Optional) Start another node with different ports:
 
 ```
-sbt "runMain sample.shoppingcart.Main 2552"
+sbt -Dconfig.resource=node2.conf run
 ```
 
-4. (Optional) More can be started started by defining different ports:
+4. (Optional) More can be started:
 
 ```
-sbt "runMain sample.shoppingcart.Main 2553"
-sbt "runMain sample.shoppingcart.Main 2554"
+sbt -Dconfig.resource=node3.conf run
+sbt -Dconfig.resource=node4.conf run
 ```
 
 Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
