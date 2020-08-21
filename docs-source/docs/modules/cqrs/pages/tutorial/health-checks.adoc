@@ -1,0 +1,79 @@
+= Part ?: Check the service' health
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+Inspecting a services' proper functioning from the outside is an important feature to operate it.
+
+Health checks are generally distinguished into two categories:
+
+*Readiness checks*:: is the service ready to receive external traffic
+*Liveness checks*:: should the service be left running
+
+*Readiness checks* can be used to decide if a load balancer should route traffic whereas *liveness checks* can be used in environments which can restart a hung process.
+
+This matches Kubernetes Health checks. See link:https://blog.colinbreck.com/kubernetes-liveness-and-readiness-probes-how-to-avoid-shooting-yourself-in-the-foot/[Kubernetes Liveness and Readiness Probes: How to Avoid Shooting Yourself in the Foot] for a good overview of how to use readiness and liveness probes.
+
+== Using Akka Managment for health checks
+
+The link:https://doc.akka.io/docs/akka-management/current/[Akka Management] library includes support for exposing readiness and liveness checks via HTTP.
+
+Upon start Akka Management creates an HTTP endpoint that allows insight into the service. That endpoint is separate from the services HTTP endpoints an will in most cases use a different network interface.
+
+[source,hocon]
+----
+include::example$shopping-cart-service-scala/src/main/resources/application.conf[tag=management-init]
+----
+
+The management endpoint starts on the configured interface and port, on service shutdown it is stopped again by adding it to Akka's coordinated shutdown.
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/Main.scala[tag=management-init]
+----
+
+We consider our service ready for requests when it has joined the Akka Cluster and the database can be reached. Akka Management's "cluster HTTP" module includes an implementation of the cluster check.
+
+Akka Persistence Cassandra includes a check to validate connectivity, as the service can't operate at all if it can't persist the events that check becomes part of our readiness check.
+
+[source,hocon]
+----
+include::example$shopping-cart-service-scala/src/main/resources/application.conf[tag=management-checks]
+----
+
+Following Colin Breck's advice, we do not include Cassandra connectivity checks in oure liveness probe.
+
+== Inspecting Akka Cluster state
+
+The cluster HTTP module of Akka Management exposes even other cluster status information that we might be interested in to inspect.
+
+With simple HTTP requests we can see which nodes make up the current Akka Cluster.
+
+[source,shell script]
+----
+curl http://localhost:8558/cluster/members
+----
+
+With only one node started the response looks like this:
+[source,json]
+----
+{
+    "leader":"akka://Shopping@127.0.0.1:2551",
+    "members":[
+      {
+        "node":"akka://Shopping@127.0.0.1:2551",
+        "nodeUid":"1325710108960625550",
+        "roles":["dc-default"],
+        "status":"Up"
+      }
+    ],
+    "oldest":"akka://Shopping@127.0.0.1:2551",
+    "oldestPerRole":{"dc-default":"akka://Shopping@127.0.0.1:2551"},
+    "selfNode":"akka://Shopping@127.0.0.1:2551",
+    "unreachable":[]
+}
+----
+
+Other parts of this API are documented in the link:{akka-management}/cluster-http-management.html#api-definition[Akka Management reference documentation].

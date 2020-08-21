@@ -20,6 +20,9 @@ This example evolves around a shopping cart. The tutorial takes you through the 
 . xref:tutorial/projection-kafka.adoc[Projection publishing to Kafka]
 . xref:tutorial/projection-grpc-client.adoc[Projection calling gRPC service]
 
+How tos?
+. xref:tutorial/health-checks.adoc[Service health]
+
 == Dependencies
 
 This example project uses
