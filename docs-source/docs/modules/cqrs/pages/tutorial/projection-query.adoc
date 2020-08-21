@@ -67,7 +67,7 @@ include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/
 
 <1> `withTagger` to assign the projectionTag
 
-Here we use 5 tags. It's not easy to change this afterwards without system downtime. Before going live in production you should consider how many tags to use, see link:{akka-projection}/running.html[Akka Projection reference documentation] for more information.
+Here we use five different tags. The tagging is not easy to change later without system downtime. Before going live in production you should consider how many tags to use, see link:{akka-projection}/running.html[Akka Projection reference documentation] for more information.
 
 === Create Projection
 
@@ -114,7 +114,7 @@ Add a new `GetItemPopularity` operation to the `ShoppingCartService.proto`:
 include::example$shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[tag=GetItemPopularity]
 ----
 
-Generate code by compiling the project:
+Generate code from the new Protobuf specification by compiling the project:
 
 ----
 sbt compile
