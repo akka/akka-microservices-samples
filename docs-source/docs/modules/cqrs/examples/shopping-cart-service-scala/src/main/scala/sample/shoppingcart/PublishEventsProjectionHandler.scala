@@ -15,7 +15,7 @@ import org.slf4j.LoggerFactory
 class PublishEventsProjectionHandler(
     system: ActorSystem[_],
     topic: String,
-    sendProducer: SendProducer[String, Array[Byte]])
+    sendProducer: SendProducer[String, Array[Byte]]) // <1>
     extends Handler[EventEnvelope[ShoppingCart.Event]] {
   private val log = LoggerFactory.getLogger(getClass)
   private implicit val ec: ExecutionContext = system.executionContext
@@ -26,7 +26,7 @@ class PublishEventsProjectionHandler(
     // using the cartId as the key and `DefaultPartitioner` will select partition based on the key
     // so that events for same cart always ends up in same partition
     val key = event.cartId
-    val producerRecord = new ProducerRecord(topic, key, serialize(event))
+    val producerRecord = new ProducerRecord(topic, key, serialize(event)) // <2>
     val result = sendProducer.send(producerRecord).map { recordMetadata =>
       log.info("Published event [{}] to topic/partition {}/{}", event, topic, recordMetadata.partition)
       Done
@@ -46,6 +46,6 @@ class PublishEventsProjectionHandler(
         proto.CheckedOut(cartId)
     }
     // pack in Any so that type information is included for deserialization
-    ScalaPBAny.pack(protoMessage, "shopping-cart-service").toByteArray
+    ScalaPBAny.pack(protoMessage, "shopping-cart-service").toByteArray // <3>
   }
 }

@@ -35,21 +35,21 @@ object ShoppingCartEventConsumer {
         .withGroupId("shopping-cart-analytics")
     val committerSettings = CommitterSettings(system)
 
-    RestartSource
+    RestartSource // <3>
       .onFailuresWithBackoff(minBackoff = 1.second, maxBackoff = 30.seconds, randomFactor = 0.1) { () =>
         Consumer
-          .committableSource(consumerSettings, Subscriptions.topics(topic))
+          .committableSource(consumerSettings, Subscriptions.topics(topic)) // <1>
           .mapAsync(1) { msg =>
             handleRecord(msg.record).map(_ => msg.committableOffset)
           }
-          .via(Committer.flow(committerSettings))
+          .via(Committer.flow(committerSettings)) // <2>
       }
       .run()
   }
 
   private def handleRecord(record: ConsumerRecord[String, Array[Byte]]): Future[Done] = {
     val bytes = record.value()
-    val x = ScalaPBAny.parseFrom(bytes)
+    val x = ScalaPBAny.parseFrom(bytes) // <4>
     val typeUrl = x.typeUrl
     try {
       val inputBytes = x.value.newCodedInput()
@@ -69,9 +69,9 @@ object ShoppingCartEventConsumer {
 
       event match {
         case proto.ItemAdded(cartId, itemId, quantity, _) =>
-          log.info("ItemAdded: {} of {} to cart {}", quantity, itemId, cartId)
+          log.info("ItemAdded: {} {} to cart {}", quantity, itemId, cartId)
         case proto.ItemQuantityAdjusted(cartId, itemId, quantity, _) =>
-          log.info("ItemQuantityAdjusted: {} of {} to cart {}", quantity, itemId, cartId)
+          log.info("ItemQuantityAdjusted: {} {} to cart {}", quantity, itemId, cartId)
         case proto.ItemRemoved(cartId, itemId, _) =>
           log.info("ItemQuantityAdjusted: {} removed from cart {}", itemId, cartId)
         case proto.CheckedOut(cartId, _) =>

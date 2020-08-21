@@ -11,14 +11,14 @@ This example illustrates how multiple small microservices can interact to implem
 
 This example evolves around a shopping cart. The tutorial takes you through the following steps to build the services from scratch, and adding piece by piece with deployment to the cloud for each step.
 
-. xref:cqrs:tutorial/dev-env.adoc[Development environment]
-. xref:cqrs:tutorial/overview.adoc[Overview of the example]
-. xref:cqrs:tutorial/grpc-server.adoc[First gRPC service]
-. xref:cqrs:tutorial/entity.adoc[Event Sourced entity]
-. xref:cqrs:tutorial/complete-entity.adoc[Complete Event Sourced entity]
-. xref:cqrs:tutorial/projection-query.adoc[Projection for queries]
-. xref:cqrs:tutorial/projection-kafka.adoc[Projection publishing to Kafka]
-. xref:cqrs:tutorial/projection-grpc-client.adoc[Projection calling gRPC service]
+. xref:tutorial/dev-env.adoc[Development environment]
+. xref:tutorial/overview.adoc[Overview of the example]
+. xref:tutorial/grpc-server.adoc[First gRPC service]
+. xref:tutorial/entity.adoc[Event Sourced entity]
+. xref:tutorial/complete-entity.adoc[Complete Event Sourced entity]
+. xref:tutorial/projection-query.adoc[Projection for queries]
+. xref:tutorial/projection-kafka.adoc[Projection publishing to Kafka]
+. xref:tutorial/projection-grpc-client.adoc[Projection calling gRPC service]
 
 == Dependencies
 

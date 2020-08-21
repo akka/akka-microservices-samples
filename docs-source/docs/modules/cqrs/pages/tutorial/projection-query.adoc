@@ -90,7 +90,7 @@ include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/
 
 <6> Creating the Projection `Handler` that we wrote in the beginning of this part.
 
-Then you need to call this `init` from the `Guardian` in `Main.scala`:
+Then you need to call the `ItemPopularityProjection.init` from the `Guardian` in `Main.scala`:
 
 [source,scala]
 ----

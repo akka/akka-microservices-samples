@@ -87,7 +87,9 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
   ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
   // end::ItemPopularityProjection[]
 
+  // tag::PublishEventsProjection[]
   PublishEventsProjection.init(system)
+  // end::PublishEventsProjection[]
 
   val orderService = orderServiceClient(system)
   SendOrderProjection.init(system, orderService)

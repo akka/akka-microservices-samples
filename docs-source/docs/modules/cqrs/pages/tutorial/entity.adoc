@@ -13,7 +13,7 @@ You will learn how to:
 * unit test the entity
 * distribute the entities over the nodes in the Akka Cluster
 * send requests from the gRPC service implementation to the entities
-* update the deployment from the xref:cqrs:tutorial/grpc-server.adoc[previous step]
+* update the deployment from the xref:tutorial/grpc-server.adoc[previous step]
 
 TODO links to event sourcing and sharding concepts
 
@@ -102,7 +102,7 @@ TODO code for sharding init
 
 == Sending commands to the entities
 
-We want to send commands to the entities from the gRPC service implementation. In the xref:cqrs:tutorial/grpc-server.adoc[previous step] we wrote a dummy implementation of `addItem` in the `ShoppingCartServiceImpl`. You can now replace that with sending `ShoppingCart.AddItem` command from `ShoppingCartServiceImpl`.
+We want to send commands to the entities from the gRPC service implementation. In the xref:tutorial/grpc-server.adoc[previous step] we wrote a dummy implementation of `addItem` in the `ShoppingCartServiceImpl`. You can now replace that with sending `ShoppingCart.AddItem` command from `ShoppingCartServiceImpl`.
 
 TODO code for entityRef.askWithStatus
 
