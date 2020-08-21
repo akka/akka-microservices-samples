@@ -26,6 +26,7 @@ object Main {
 
       case Some(portString) if portString.matches("""\d+""") =>
         val port = portString.toInt
+        val managementPort = ("85" + portString.takeRight(2)).toInt
         val grpcPort = ("80" + portString.takeRight(2)).toInt
         startNode(port, grpcPort)
 
@@ -42,10 +43,11 @@ object Main {
       createTables(system)
   }
 
-  def config(port: Int, grpcPort: Int): Config =
+  def config(port: Int, managementPort: Int, grpcPort: Int): Config =
     ConfigFactory
       .parseString(s"""
       akka.remote.artery.canonical.port = $port
+      akka.management.http.port = $managementPort
       shopping-cart.grpc.port = $grpcPort
        """)
       .withFallback(ConfigFactory.load())

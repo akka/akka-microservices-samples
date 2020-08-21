@@ -34,7 +34,7 @@ The management endpoint starts on the configured interface and port, on service 
 include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/Main.scala[tag=management-init]
 ----
 
-We consider our service ready for requests when it has joined the Akka Cluster and the database can be reached. Akka Management's "cluster HTTP" module includes an implementation of the cluster check.
+We consider our service ready for requests when it has joined the Akka Cluster and the database can be reached. Akka Management's "cluster HTTP" module automatically enables a check for cluster membership.
 
 Akka Persistence Cassandra includes a check to validate connectivity, as the service can't operate at all if it can't persist the events that check becomes part of our readiness check.
 
