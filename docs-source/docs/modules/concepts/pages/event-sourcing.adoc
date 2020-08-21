@@ -25,11 +25,10 @@ To update an entity's state we use commands from the outside and events on the i
 
 === Commands
 
-This entity state can be changed only via commands to it. The commands are the "external" API of an entity. Commands request state changes, but they might lead to different events on the entity depending on the entities current state.
+The state of the entity can be changed only by sending commands to it. The commands are the "external" API of an entity. Commands request state changes, but they might lead to different events depending on the current state of the entity.
 
 === Events
 
 The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands, other parts of the application may listen to the created events. Other parties can't send events.
 
-The events get continuously persisted to the Event Journal datastore, while the entity state is kept in memory. In case of a restart the latest state gets rebuilt by replaying the events from the Event Journal.
-
+The events are continuously persisted to the Event Journal datastore, while the entity state is kept in memory. In case of a restart the latest state gets rebuilt by replaying the events from the Event Journal.
