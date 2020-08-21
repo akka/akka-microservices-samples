@@ -54,7 +54,7 @@ class ItemPopularityProjectionSpec extends ScalaTestWithActorTestKit with AnyWor
           createEnvelope(ShoppingCart.CheckedOut("0d12d", Instant.parse("2020-01-01T12:05:00.00Z")), 6L))
 
       val repository = new TestItemPopularityRepository
-      val projectionId = ProjectionId("item-popularity", s"{${ShoppingCart.TagPrefix}-0}")
+      val projectionId = ProjectionId("item-popularity", "carts-0")
       val sourceProvider =
         TestSourceProvider[Offset, EventEnvelope[ShoppingCart.Event]](events, extractOffset = env => env.offset)
       // FIXME different signature in Projections 1.0.0
@@ -64,7 +64,7 @@ class ItemPopularityProjectionSpec extends ScalaTestWithActorTestKit with AnyWor
           projectionId,
           sourceProvider,
           Offset.noOffset,
-          new ItemPopularityProjectionHandler(s"${ShoppingCart.TagPrefix}-0", system, repository))
+          new ItemPopularityProjectionHandler("carts-0", system, repository))
 
       projectionTestKit.run(projection) {
         repository.counts shouldBe Map("bowling shoes" -> 2, "akka t-shirt" -> 1, "skis" -> 0)

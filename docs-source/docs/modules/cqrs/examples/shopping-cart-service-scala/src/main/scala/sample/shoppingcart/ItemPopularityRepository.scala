@@ -18,7 +18,7 @@ object ItemPopularityRepositoryImpl {
   def createItemPopularityTable(session: CassandraSession, keyspace: String): Future[Done] = {
     session.executeDDL(s"""CREATE TABLE IF NOT EXISTS $keyspace.$popularityTable (
       item_id text,
-      count counter,
+      count counter, // <1>
       PRIMARY KEY (item_id))
       """)
   }

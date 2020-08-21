@@ -20,25 +20,7 @@ import org.apache.kafka.common.serialization.StringSerializer
 
 object PublishEventsProjection {
 
-  private def createProjectionFor(
-      system: ActorSystem[_],
-      topic: String,
-      sendProducer: SendProducer[String, Array[Byte]],
-      index: Int): AtLeastOnceProjection[Offset, EventEnvelope[ShoppingCart.Event]] = {
-    val tag = s"${ShoppingCart.TagPrefix}-$index"
-    val sourceProvider: SourceProvider[Offset, EventEnvelope[ShoppingCart.Event]] =
-      EventSourcedProvider.eventsByTag[ShoppingCart.Event](
-        system = system,
-        readJournalPluginId = CassandraReadJournal.Identifier,
-        tag = tag)
-
-    CassandraProjection.atLeastOnce(
-      projectionId = ProjectionId("cart-events", tag),
-      sourceProvider,
-      handler = () => new PublishEventsProjectionHandler(system, topic, sendProducer))
-  }
-
-  def init(system: ActorSystem[_], projectionParallelism: Int): Unit = {
+  def init(system: ActorSystem[_]): Unit = {
     val topic = system.settings.config.getString("shopping-cart.kafka-topic")
     val config = system.settings.config.getConfig("shopping-cart.kafka.producer")
     import akka.actor.typed.scaladsl.adapter._ // FIXME might not be needed in later Alpakka Kafka version?
@@ -54,10 +36,28 @@ object PublishEventsProjection {
 
     ShardedDaemonProcess(system).init(
       name = "PublishEventsProjection",
-      projectionParallelism,
+      ShoppingCart.tags.size,
       index => ProjectionBehavior(createProjectionFor(system, topic, sendProducer, index)),
       ShardedDaemonProcessSettings(system),
       Some(ProjectionBehavior.Stop))
+  }
+
+  private def createProjectionFor(
+      system: ActorSystem[_],
+      topic: String,
+      sendProducer: SendProducer[String, Array[Byte]],
+      index: Int): AtLeastOnceProjection[Offset, EventEnvelope[ShoppingCart.Event]] = {
+    val tag = ShoppingCart.tags(index)
+    val sourceProvider: SourceProvider[Offset, EventEnvelope[ShoppingCart.Event]] =
+      EventSourcedProvider.eventsByTag[ShoppingCart.Event](
+        system = system,
+        readJournalPluginId = CassandraReadJournal.Identifier,
+        tag = tag)
+
+    CassandraProjection.atLeastOnce(
+      projectionId = ProjectionId("cart-events", tag),
+      sourceProvider,
+      handler = () => new PublishEventsProjectionHandler(system, topic, sendProducer))
   }
 
 }

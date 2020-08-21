@@ -15,15 +15,15 @@ object ItemPopularityProjectionHandler {
 }
 
 class ItemPopularityProjectionHandler(tag: String, system: ActorSystem[_], repo: ItemPopularityRepository)
-    extends Handler[EventEnvelope[ShoppingCart.Event]]() {
+    extends Handler[EventEnvelope[ShoppingCart.Event]]() { // <1>
 
   private var logCounter: Int = 0
   private val log = LoggerFactory.getLogger(getClass)
   private implicit val ec: ExecutionContext = system.executionContext
 
-  override def process(envelope: EventEnvelope[ShoppingCart.Event]): Future[Done] = {
+  override def process(envelope: EventEnvelope[ShoppingCart.Event]): Future[Done] = { // <2>
     logItemCount(envelope.event)
-    val processed = envelope.event match {
+    val processed = envelope.event match { // <3>
       case ShoppingCart.ItemAdded(_, itemId, quantity) =>
         repo.update(itemId, quantity)
 

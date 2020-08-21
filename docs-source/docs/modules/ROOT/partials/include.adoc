@@ -25,3 +25,4 @@
 :akka-management:  https://doc.akka.io/docs/akka-management/current
 :akka-persistence-cassandra:  https://doc.akka.io/docs/akka-persistence-cassandra/current
 :akka-projection:  https://doc.akka.io/docs/akka-projection/current
+:alpakka:  https://doc.akka.io/docs/alpakka/current/

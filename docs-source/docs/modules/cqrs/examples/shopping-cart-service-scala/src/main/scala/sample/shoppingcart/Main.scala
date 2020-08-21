@@ -74,22 +74,23 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
 
   val grpcInterface = system.settings.config.getString("shopping-cart.grpc.interface")
   val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
-  val projectionParallelism = system.settings.config.getInt("shopping-cart.projection-parallelism")
 
-  ShoppingCart.init(system, projectionParallelism)
+  ShoppingCart.init(system)
 
-  val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config")
+  // tag::ItemPopularityProjection[]
+  val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config") // <1>
   // use same keyspace for the item_popularity table as the offset store
   val itemPopularityKeyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
   val itemPopularityRepository =
-    new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext)
+    new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext) // <2>
 
-  PublishEventsProjection.init(system, projectionParallelism)
+  ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
+  // end::ItemPopularityProjection[]
 
-  ItemPopularityProjection.init(system, itemPopularityRepository, projectionParallelism)
+  PublishEventsProjection.init(system)
 
   val orderService = orderServiceClient(system)
-  SendOrderProjection.init(system, projectionParallelism, orderService)
+  SendOrderProjection.init(system, orderService)
 
   // can be overridden in tests
   protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {

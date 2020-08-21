@@ -86,10 +86,12 @@ class ShoppingCartServiceImpl(itemPopularityRepository: ItemPopularityRepository
     }
   }
 
+  // tag::getItemPopularity[]
   override def getItemPopularity(in: GetItemPopularityRequest): Future[GetItemPopularityResponse] = {
     itemPopularityRepository.getItem(in.itemId).map {
       case Some(count) => proto.GetItemPopularityResponse(in.itemId, count)
       case None        => proto.GetItemPopularityResponse(in.itemId, 0L)
     }
   }
+  // end::getItemPopularity[]
 }

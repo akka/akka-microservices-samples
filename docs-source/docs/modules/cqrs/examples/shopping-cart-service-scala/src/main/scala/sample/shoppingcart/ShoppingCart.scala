@@ -133,22 +133,23 @@ object ShoppingCart {
   final case class CheckedOut(cartId: String, eventTime: Instant) extends Event
   // end::events[]
 
-  val TagPrefix = "carts-slice"
+  // tag::tagging[]
+  val tags = Vector("carts-0", "carts-1", "carts-2", "carts-3", "carts-4")
 
   val EntityKey: EntityTypeKey[Command] = EntityTypeKey[Command]("ShoppingCart")
 
-  def init(system: ActorSystem[_], projectionParallelism: Int): Unit = {
+  def init(system: ActorSystem[_]): Unit = {
     ClusterSharding(system).init(Entity(EntityKey) { entityContext =>
-      val n = math.abs(entityContext.entityId.hashCode % projectionParallelism)
-      val projectionTag = s"${ShoppingCart.TagPrefix}-$n"
-      ShoppingCart(entityContext.entityId, Set(projectionTag))
+      val i = math.abs(entityContext.entityId.hashCode % tags.size)
+      val selectedTag = tags(i)
+      ShoppingCart(entityContext.entityId, selectedTag)
     })
   }
+  // end::tagging[]
 
-  def apply(cartId: String, tags: Set[String]): Behavior[Command] = {
-    // tag::tagging[]
+  // tag::withTagger[]
+  def apply(cartId: String, projectionTag: String): Behavior[Command] = {
     EventSourcedBehavior
-      // end::tagging[]
       .withEnforcedReplies[Command, Event, State](
         PersistenceId(EntityKey.name, cartId),
         State.empty,
@@ -162,12 +163,11 @@ object ShoppingCart {
         // tag::evenHandler[]
         eventHandler = (state, event) => handleEvent(state, event))
       // end::evenHandler[]
-      // tag::tagging[]
-      .withTagger(_ => tags)
-      // end::tagging[]
+      .withTagger(_ => Set(projectionTag)) // <1>
       .withRetention(RetentionCriteria.snapshotEvery(numberOfEvents = 100, keepNSnapshots = 3))
       .onPersistFailure(SupervisorStrategy.restartWithBackoff(200.millis, 5.seconds, 0.1))
   }
+  // end::withTagger[]
 
   // tag::openShoppingCart[]
   private def openShoppingCart(cartId: String, state: State, command: Command): ReplyEffect[Event, State] =

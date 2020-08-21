@@ -19,7 +19,7 @@ TODO links to event sourcing and sharding concepts
 
 == Event Sourced entity
 
-This entity state can be changed only by sending commands to it. The commands are the "external" API of an entity. Commands request state changes, but they might lead to different events depending on the current state of the entity.
+The state of the entity can be changed only by sending commands to it. The commands are the "external" API of an entity. Commands request state changes, but they might lead to different events depending on the current state of the entity.
 
 Define a `ShoppingCart` object and the `AddItem` command and corresponding `ItemAdded` event:
 
@@ -43,7 +43,7 @@ include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/
 
 The returned `ReplyEffect` reacts on the commands by deciding which effect they should have on the entity.
 
-Our business logic allows only items to be added which are not in the cart yet and require a positive quantity. If an `AddItem` command is accepted, the `Effect.persist` applies an event to the cart's state and makes sure this event is stored before replying to the.
+Our business logic allows only items to be added which are not in the cart yet and require a positive quantity. If an `AddItem` command is accepted, the `Effect.persist` applies an event to the cart's state and makes sure this event is stored before replying to the command.
 
 If the validation fails we want to send back an error message. The reply can be a success or an error and that is the reason for using the `StatusReply`.
 
@@ -51,7 +51,7 @@ See all available effects in the link:{akka}/typed/persistence.html#effects-and-
 
 The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands, other parts of the application may listen to the created events. Other parties can't send events.
 
-The events get continuously persisted to the Event Journal datastore, while the entity state is kept in memory. In case of a restart the latest state gets rebuilt by replaying the events from the Event Journal.
+The events are continuously persisted to the Event Journal datastore, while the entity state is kept in memory. In case of a restart the latest state gets rebuilt by replaying the events from the Event Journal.
 
 Aligning with the command handler above, the entity's event handler reacts on events and updates the state. Notice that there are no decisions on events, they are applied without any checks.
 

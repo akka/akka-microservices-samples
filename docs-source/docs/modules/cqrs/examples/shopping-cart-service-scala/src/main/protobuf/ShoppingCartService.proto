@@ -8,14 +8,18 @@ package shoppingcart;
 
 // gRPC definition for ShoppingCartService
 
+// tag::GetItemPopularity[]
 service ShoppingCartService {
+// end::GetItemPopularity
     rpc AddItem (AddItemRequest) returns (Cart) {}
     rpc UpdateItem (UpdateItemRequest) returns (Cart) {}
     rpc Checkout (CheckoutRequest) returns (Cart) {}
     rpc GetCart (GetCartRequest) returns (Cart) {}
 
+    // tag::GetItemPopularity
     rpc GetItemPopularity(GetItemPopularityRequest) returns (GetItemPopularityResponse) {}
 }
+// end::GetItemPopularity[]
 
 message AddItemRequest {
     string cartId = 1;
@@ -47,6 +51,7 @@ message Item {
     int32 quantity = 2;
 }
 
+// tag::GetItemPopularity[]
 message GetItemPopularityRequest {
     string itemId = 1;
 }
@@ -55,3 +60,4 @@ message GetItemPopularityResponse {
     string itemId = 1;
     int64 popularityCount = 2;
 }
+// end::GetItemPopularity[]

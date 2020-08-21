@@ -14,32 +14,33 @@ import akka.projection.scaladsl.AtLeastOnceProjection
 import akka.projection.scaladsl.SourceProvider
 
 object ItemPopularityProjection {
+  def init(system: ActorSystem[_], repository: ItemPopularityRepository): Unit = {
+    ShardedDaemonProcess(system).init( // <1>
+      name = "ItemPopularityProjection",
+      ShoppingCart.tags.size,
+      index => ProjectionBehavior(createProjectionFor(system, repository, index)),
+      ShardedDaemonProcessSettings(system),
+      Some(ProjectionBehavior.Stop))
+  }
+
   private def createProjectionFor(
       system: ActorSystem[_],
       repository: ItemPopularityRepository,
       index: Int): AtLeastOnceProjection[Offset, EventEnvelope[ShoppingCart.Event]] = {
-    val tag = s"${ShoppingCart.TagPrefix}-$index"
+    val tag = ShoppingCart.tags(index) // <2>
     // tag::projection[]
-    val sourceProvider: SourceProvider[Offset, EventEnvelope[ShoppingCart.Event]] =
+    val sourceProvider: SourceProvider[Offset, EventEnvelope[ShoppingCart.Event]] = // <3>
       EventSourcedProvider.eventsByTag[ShoppingCart.Event](
         system = system,
-        readJournalPluginId = CassandraReadJournal.Identifier,
+        readJournalPluginId = CassandraReadJournal.Identifier, // <4>
         tag = tag)
 
-    CassandraProjection.atLeastOnce(
+    CassandraProjection.atLeastOnce( // <5>
       projectionId = ProjectionId("item-popularity", tag),
       sourceProvider,
-      handler = () => new ItemPopularityProjectionHandler(tag, system, repository))
+      handler = () => new ItemPopularityProjectionHandler(tag, system, repository)
+    ) // <6>
     // end::projection[]
-  }
-
-  def init(system: ActorSystem[_], repository: ItemPopularityRepository, projectionParallelism: Int): Unit = {
-    ShardedDaemonProcess(system).init(
-      name = "ItemPopularityProjection",
-      projectionParallelism,
-      index => ProjectionBehavior(createProjectionFor(system, repository, index)),
-      ShardedDaemonProcessSettings(system),
-      Some(ProjectionBehavior.Stop))
   }
 
 }

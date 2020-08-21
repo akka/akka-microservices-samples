@@ -26,7 +26,7 @@ class ShoppingCartSpec
   private val eventSourcedTestKit =
     EventSourcedBehaviorTestKit[ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State](
       system,
-      ShoppingCart(cartId, Set.empty))
+      ShoppingCart(cartId, "carts-0"))
 
   override protected def beforeEach(): Unit = {
     super.beforeEach()

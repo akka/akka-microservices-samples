@@ -16,11 +16,20 @@ import sample.shoppingorder.proto.ShoppingOrderService
 
 object SendOrderProjection {
 
+  def init(system: ActorSystem[_], orderService: ShoppingOrderService): Unit = {
+    ShardedDaemonProcess(system).init(
+      name = "SendOrderProjection",
+      ShoppingCart.tags.size,
+      index => ProjectionBehavior(createProjectionFor(system, orderService, index)),
+      ShardedDaemonProcessSettings(system),
+      Some(ProjectionBehavior.Stop))
+  }
+
   private def createProjectionFor(
       system: ActorSystem[_],
       orderService: ShoppingOrderService,
       index: Int): AtLeastOnceProjection[Offset, EventEnvelope[ShoppingCart.Event]] = {
-    val tag = s"${ShoppingCart.TagPrefix}-$index"
+    val tag = ShoppingCart.tags(index)
     val sourceProvider: SourceProvider[Offset, EventEnvelope[ShoppingCart.Event]] =
       EventSourcedProvider.eventsByTag[ShoppingCart.Event](
         system = system,
@@ -31,15 +40,6 @@ object SendOrderProjection {
       projectionId = ProjectionId("orders", tag),
       sourceProvider,
       handler = () => new SendOrderProjectionHandler(system, orderService))
-  }
-
-  def init(system: ActorSystem[_], projectionParallelism: Int, orderService: ShoppingOrderService): Unit = {
-    ShardedDaemonProcess(system).init(
-      name = "SendOrderProjection",
-      projectionParallelism,
-      index => ProjectionBehavior(createProjectionFor(system, orderService, index)),
-      ShardedDaemonProcessSettings(system),
-      Some(ProjectionBehavior.Stop))
   }
 
 }
