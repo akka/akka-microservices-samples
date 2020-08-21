@@ -8,31 +8,18 @@ import akka.kafka.ProducerSettings
 import akka.kafka.scaladsl.{ DiscoverySupport, SendProducer }
 import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
 import akka.persistence.query.Offset
-import akka.projection.ProjectionBehavior
-import akka.projection.ProjectionId
 import akka.projection.cassandra.scaladsl.CassandraProjection
 import akka.projection.eventsourced.EventEnvelope
 import akka.projection.eventsourced.scaladsl.EventSourcedProvider
-import akka.projection.scaladsl.AtLeastOnceProjection
-import akka.projection.scaladsl.SourceProvider
-import org.apache.kafka.common.serialization.ByteArraySerializer
-import org.apache.kafka.common.serialization.StringSerializer
+import akka.projection.scaladsl.{ AtLeastOnceProjection, SourceProvider }
+import akka.projection.{ ProjectionBehavior, ProjectionId }
+import org.apache.kafka.common.serialization.{ ByteArraySerializer, StringSerializer }
 
 object PublishEventsProjection {
 
   def init(system: ActorSystem[_]): Unit = {
+    val sendProducer = createProducer(system)
     val topic = system.settings.config.getString("shopping-cart.kafka-topic")
-    val config = system.settings.config.getConfig("shopping-cart.kafka.producer")
-    import akka.actor.typed.scaladsl.adapter._ // FIXME might not be needed in later Alpakka Kafka version?
-    val producerSettings =
-      ProducerSettings(config, new StringSerializer, new ByteArraySerializer)
-        .withEnrichAsync(DiscoverySupport.producerBootstrapServers(config)(system.toClassic))
-    val sendProducer = SendProducer(producerSettings)(system.toClassic)
-
-    CoordinatedShutdown(system).addTask(CoordinatedShutdown.PhaseBeforeActorSystemTerminate, "close sendProducer") {
-      () =>
-        sendProducer.close()
-    }
 
     ShardedDaemonProcess(system).init(
       name = "PublishEventsProjection",
@@ -40,6 +27,20 @@ object PublishEventsProjection {
       index => ProjectionBehavior(createProjectionFor(system, topic, sendProducer, index)),
       ShardedDaemonProcessSettings(system),
       Some(ProjectionBehavior.Stop))
+  }
+
+  private def createProducer(system: ActorSystem[_]) = {
+    val config = system.settings.config.getConfig("shopping-cart.kafka.producer")
+    import akka.actor.typed.scaladsl.adapter._ // FIXME might not be needed in later Alpakka Kafka version?
+    val producerSettings =
+      ProducerSettings(config, new StringSerializer, new ByteArraySerializer)
+        .withEnrichAsync(DiscoverySupport.producerBootstrapServers(config)(system.toClassic))
+    val sendProducer = SendProducer(producerSettings)(system.toClassic)
+    CoordinatedShutdown(system).addTask(CoordinatedShutdown.PhaseBeforeActorSystemTerminate, "close-sendProducer") {
+      () =>
+        sendProducer.close()
+    }
+    sendProducer
   }
 
   private def createProjectionFor(

@@ -1,14 +1,16 @@
 package sample.shoppingcart
 
+import akka.actor.CoordinatedShutdown
+
 import scala.concurrent.Await
 import scala.concurrent.duration._
-
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 import akka.grpc.GrpcClientSettings
+import akka.management.scaladsl.AkkaManagement
 import akka.projection.cassandra.scaladsl.CassandraProjection
 import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
 import com.typesafe.config.Config
@@ -71,6 +73,13 @@ object Guardian {
 
 class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
   val system = context.system
+
+  val management = AkkaManagement(system)
+  management.start()
+  CoordinatedShutdown(system).addTask(CoordinatedShutdown.PhaseBeforeActorSystemTerminate, "akka-management-stop") {
+    () =>
+      management.stop()
+  }
 
   val grpcInterface = system.settings.config.getString("shopping-cart.grpc.interface")
   val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
