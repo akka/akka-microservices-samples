@@ -45,9 +45,7 @@ object Guardian {
 class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
-  // tag::management-init[]
   AkkaManagement(system).start()
-  // end::management-init[]
 
   val grpcInterface = system.settings.config.getString("shopping-cart.grpc.interface")
   val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")

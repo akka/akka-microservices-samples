@@ -3,6 +3,7 @@ package sample.shoppinganalytics
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
+import akka.management.scaladsl.AkkaManagement
 
 object Main {
 
@@ -16,6 +17,8 @@ object Guardian {
   def apply(): Behavior[Nothing] = {
     Behaviors.setup[Nothing] { context =>
       val system = context.system
+
+      AkkaManagement(system).start()
 
       ShoppingCartEventConsumer.init(system)
 

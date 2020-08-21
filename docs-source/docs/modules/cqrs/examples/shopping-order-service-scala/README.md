@@ -1,12 +1,20 @@
 
 ## Running the sample code
 
-```
-sbt "runMain sample.shoppingorder.Main 4551"
-```
+1. Start a node
 
-Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
+    ```
+    sbt -Dconfig.resource=node1.conf run
+    ```
 
-```
-grpcurl -d '{"cartId":"cart1", "items":[{"itemId":"socks", "quantity":3}, {"itemId":"t-shirt", "quantity":2}]}' -plaintext 127.0.0.1:9051 shoppingorder.ShoppingOrderService.Order
-```
+2. Check for service readiness
+
+    ```
+    curl http://localhost:9301/ready
+    ```
+
+3. Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
+
+    ```
+    grpcurl -d '{"cartId":"cart1", "items":[{"itemId":"socks", "quantity":3}, {"itemId":"t-shirt", "quantity":2}]}' -plaintext 127.0.0.1:8301 shoppingorder.ShoppingOrderService.Order
+    ```

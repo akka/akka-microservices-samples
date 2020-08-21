@@ -1,4 +1,4 @@
-= Implementing Event sourcing and CQRS with Akka
+= Implementing Microservices with Akka
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2
@@ -20,17 +20,15 @@ This example evolves around a shopping cart. The tutorial takes you through the 
 . xref:tutorial/projection-kafka.adoc[Projection publishing to Kafka]
 . xref:tutorial/projection-grpc-client.adoc[Projection calling gRPC service]
 
-How tos?
-. xref:tutorial/health-checks.adoc[Service health]
-
 == Dependencies
 
 This example project uses
 
-- link:{akka}/typed/cluster-sharding.html[Akka Cluster Sharding]
-- link:{akka-persistence-cassandra}/[Akka Persistence Cassandra]
-- link:{akka-projection}/[Akka Projection]
-- link:{akka-grpc}/[Akka gRPC]
+- link:{akka}/typed/cluster-sharding.html[Akka Cluster Sharding] to distribute processing
+- link:{akka-persistence-cassandra}/[Akka Persistence Cassandra] to use Event Sourcing
+- link:{akka-projection}/[Akka Projection] to enable CQRS
+- link:{akka-grpc}/[Akka gRPC] to implement a gRPC service API
+- link:{akka-management}/[Akka Management] for health checks
 
 The exact dependencies are shown below:
 
@@ -43,6 +41,8 @@ sbt::
 include::example$shopping-cart-service-scala/build.sbt[tag=libraryDependencies]
 ----
 --
+
+Akka gRPC requires an sbt plugin.
 
 [.tabset]
 sbt::

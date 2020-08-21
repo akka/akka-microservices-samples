@@ -1,4 +1,4 @@
-= Part ?: Check the service' health
+= How to inspect the service' health
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2
@@ -16,22 +16,40 @@ Health checks are generally distinguished into two categories:
 
 This matches Kubernetes Health checks. See link:https://blog.colinbreck.com/kubernetes-liveness-and-readiness-probes-how-to-avoid-shooting-yourself-in-the-foot/[Kubernetes Liveness and Readiness Probes: How to Avoid Shooting Yourself in the Foot] for a good overview of how to use readiness and liveness probes.
 
-== Using Akka Managment for health checks
+== Using Akka Management for health checks
 
-The link:https://doc.akka.io/docs/akka-management/current/[Akka Management] library includes support for exposing readiness and liveness checks via HTTP.
+The link:{akka-management}/[Akka Management] library includes support for exposing readiness and liveness checks via HTTP.
 
-Upon start Akka Management creates an HTTP endpoint that allows insight into the service. That endpoint is separate from the services HTTP endpoints an will in most cases use a different network interface.
+The depedencies for Akka Management include the core module and the cluster HTTP module for cluster inspection. As Akka Management uses Spray JSON internally, make sure to add that dependency of the exact same version as other Akka HTTP libraries.
+
+[source,sbt]
+----
+val AkkaManagementVersion = "1.0.8"
+
+libraryDependencies ++= Seq(
+  "com.lightbend.akka.management" %% "akka-management" % AkkaManagementVersion,
+  "com.lightbend.akka.management" %% "akka-management-cluster-http" % AkkaManagementVersion,
+  "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
+)
+----
+
+Upon start Akka Management creates an HTTP endpoint that allows insight into the service. That endpoint is separate from the service's HTTP endpoints and will in most cases use a different network interface.
 
 [source,hocon]
 ----
-include::example$shopping-cart-service-scala/src/main/resources/application.conf[tag=management-init]
+akka.management {
+  http {
+    hostname = "127.0.0.1"
+    port = 9101
+  }
+}
 ----
 
-The management endpoint starts on the configured interface and port, on service shutdown it is stopped again by adding it to Akka's coordinated shutdown.
+The management endpoint starts on the configured interface and port.
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/sample/shoppingcart/Main.scala[tag=management-init]
+AkkaManagement(system).start()
 ----
 
 We consider our service ready for requests when it has joined the Akka Cluster and the database can be reached. Akka Management's "cluster HTTP" module automatically enables a check for cluster membership.
@@ -40,10 +58,28 @@ Akka Persistence Cassandra includes a check to validate connectivity, as the ser
 
 [source,hocon]
 ----
-include::example$shopping-cart-service-scala/src/main/resources/application.conf[tag=management-checks]
+akka.management {
+  health-checks {
+    readiness-checks {
+      akka-persistence-cassandra = "akka.persistence.cassandra.healthcheck.CassandraHealthCheck"
+    }
+  }
+}
 ----
 
 Following Colin Breck's advice, we do not include Cassandra connectivity checks in oure liveness probe.
+
+Try the readiness check with `curl`
+
+[source,shell script]
+----
+curl http://localhost:9101/ready
+----
+
+Should result in
+----
+OK
+----
 
 == Inspecting Akka Cluster state
 
@@ -53,27 +89,27 @@ With simple HTTP requests we can see which nodes make up the current Akka Cluste
 
 [source,shell script]
 ----
-curl http://localhost:8558/cluster/members
+curl http://localhost:9101/cluster/members
 ----
 
 With only one node started the response looks like this:
 [source,json]
 ----
 {
-    "leader":"akka://Shopping@127.0.0.1:2551",
+    "leader":"akka://Cart@127.0.0.1:2551",
     "members":[
       {
-        "node":"akka://Shopping@127.0.0.1:2551",
+        "node":"akka://Cart@127.0.0.1:2551",
         "nodeUid":"1325710108960625550",
         "roles":["dc-default"],
         "status":"Up"
       }
     ],
-    "oldest":"akka://Shopping@127.0.0.1:2551",
-    "oldestPerRole":{"dc-default":"akka://Shopping@127.0.0.1:2551"},
-    "selfNode":"akka://Shopping@127.0.0.1:2551",
+    "oldest":"akka://Cart@127.0.0.1:2551",
+    "oldestPerRole":{"dc-default":"akka://Cart@127.0.0.1:2551"},
+    "selfNode":"akka://Cart@127.0.0.1:2551",
     "unreachable":[]
 }
 ----
 
-Other parts of this API are documented in the link:{akka-management}/cluster-http-management.html#api-definition[Akka Management reference documentation].
+The link:{akka-management}/cluster-http-management.html#api-definition[Akka Management reference documentation] shows other parts of this API.

@@ -1,0 +1,8 @@
+= How to ... with Akka
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+* xref:health-checks.adoc[]
