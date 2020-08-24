@@ -4,7 +4,7 @@
 1. Start a node
 
     ```
-    sbt -Dconfig.resource=node1.conf run
+    sbt -Dconfig.resource=local1.conf run
     ```
 
 2. Check for service readiness

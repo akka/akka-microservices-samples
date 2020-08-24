@@ -9,23 +9,29 @@
 2. Start a first node:
 
     ```
-    sbt -Dconfig.resource=node1.conf run
+    sbt -Dconfig.resource=local1.conf run
     ```
 
 3. (Optional) Start another node with different ports:
 
     ```
-    sbt -Dconfig.resource=node2.conf run
+    sbt -Dconfig.resource=local2.conf run
     ```
 
 4. (Optional) More can be started:
 
     ```
-    sbt -Dconfig.resource=node3.conf run
-    sbt -Dconfig.resource=node4.conf run
+    sbt -Dconfig.resource=local3.conf run
+    sbt -Dconfig.resource=local4.conf run
     ```
 
-5. Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
+5. Check for service readiness
+
+    ```
+    curl http://localhost:9101/ready
+    ```
+
+6. Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
 
     ```
     # add item to cart
@@ -35,7 +41,7 @@
     grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
     
     # update quantity of item
-    grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.UpdateItem
+    grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.UpdateItem
     
     # check out cart
     grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.Checkout
