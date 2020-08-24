@@ -68,11 +68,11 @@ Add the following to `src/main/resources/kafka.conf`, which is included from `ap
 include::example$shopping-cart-service-scala/src/main/resources/kafka.conf[]
 ----
 
-And the following to `src/main/resources/discovery.conf`, which is included from `application.conf`:
+And for local development add the following to `src/main/resources/local-shared.conf`, which is loaded when running locally:
 
 [source,conf]
 ----
-include::example$shopping-cart-service-scala/src/main/resources/discovery.conf[tag=kafka]
+include::example$shopping-cart-service-scala/src/main/resources/local-shared.conf[tag=kafka]
 ----
 
 Then you need to call the `PublishEventsProjection.init` from the `Guardian` in `Main.scala`:
