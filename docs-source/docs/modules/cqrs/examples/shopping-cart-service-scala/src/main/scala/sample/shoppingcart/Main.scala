@@ -45,7 +45,7 @@ object Guardian {
 class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
-  AkkaManagement(system).start()
+  startAkkaManagement()
 
   val grpcInterface = system.settings.config.getString("shopping-cart.grpc.interface")
   val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
@@ -80,6 +80,11 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
   // end::SendOrderProjection[]
 
   ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository)
+
+  // can be overridden in tests
+  protected def startAkkaManagement(): Unit = {
+    AkkaManagement(system).start()
+  }
 
   override def onMessage(msg: Nothing): Behavior[Nothing] =
     this

@@ -47,6 +47,8 @@ object IntegrationSpec {
          seed-nodes = []
          jmx.multi-mbeans-in-same-jvm = on
       }
+      
+      akka.remote.artery.canonical.port = 0
 
       akka.persistence.cassandra {
         events-by-tag {
@@ -76,10 +78,18 @@ object IntegrationSpec {
       shopping-cart.test.kafka.consumer: $${akka.kafka.consumer} {
         service-name = "shopping-kafka-broker"
       }
+      
+      akka.discovery.method = config
 
-      akka.http.server.preview.enable-http2 = on
-
-      akka.loglevel = DEBUG
+      akka.discovery.config.services = {
+        // The Kafka broker's bootstrap servers
+        "shopping-kafka-broker" = {
+          endpoints = [
+            { host = "localhost", port = 9092 }
+          ]
+        }
+      }
+      
       akka.actor.testkit.typed.single-expect-default = 5s
       # For LoggingTestKit
       akka.actor.testkit.typed.filter-leeway = 5s
@@ -147,6 +157,7 @@ class IntegrationSpec
         override protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
           testOrderService
         }
+        override protected def startAkkaManagement(): Unit = ()
       }
     }
   }
