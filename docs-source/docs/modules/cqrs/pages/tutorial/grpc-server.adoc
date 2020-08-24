@@ -63,7 +63,7 @@ sbt "runMain sample.shoppingcart.Main 2551"
 Note the log output from the `ShoppingCartServer`
 
 ----
-Shopping online at gRPC server 127.0.0.1:8051
+Shopping online at gRPC server 127.0.0.1:8101
 ----
 
 Try it with link:https://github.com/fullstorydev/grpcurl[grpcurl].
@@ -71,13 +71,13 @@ Try it with link:https://github.com/fullstorydev/grpcurl[grpcurl].
 Add 3 socks to a cart:
 
 ----
-grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.AddItem
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
 Add 2 t-shirts to the same cart:
 
 ----
-grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.AddItem
+grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
 Note the logging from the `ShoppingCartServiceImpl` in the console of the service.
