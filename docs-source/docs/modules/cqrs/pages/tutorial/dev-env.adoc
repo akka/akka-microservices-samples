@@ -28,4 +28,6 @@ TODO
 link:https://github.com/fullstorydev/grpcurl[grpcurl] is useful for making gRPC calls from the command line. It is used in the tutorial and it's recommended that you link:https://github.com/fullstorydev/grpcurl#installation[install] it.
 
 
+== Config for local development
 
+* explain our use of `-Dconfig.resource=local1.cong`
