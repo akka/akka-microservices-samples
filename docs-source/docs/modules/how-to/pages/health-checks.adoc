@@ -67,13 +67,30 @@ akka.management {
 }
 ----
 
-Following Colin Breck's advice, we do not include Cassandra connectivity checks in oure liveness probe.
+Following Colin Breck's advice, we do not include Cassandra connectivity checks in oue liveness probe.
 
 Try the readiness check with `curl`
 
 [source,shell script]
 ----
 curl http://localhost:9101/ready
+----
+
+If Cassandra is not started, the check will report:
+----
+Not Healthy: Check [akka.persistence.cassandra.healthcheck.CassandraHealthCheck] not ok
+----
+
+After starting Cassandra, later readiness check will result in
+----
+OK
+----
+
+We haven't added anything application-specific to the liveness check, but we can try it with `curl`
+
+[source,shell script]
+----
+curl http://localhost:9101/alive
 ----
 
 Should result in
