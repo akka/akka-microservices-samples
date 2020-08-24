@@ -74,7 +74,7 @@ object IntegrationSpec {
       shopping-cart.kafka-topic = "shopping_cart_events_$uniqueQualifier"
 
       shopping-cart.test.kafka.consumer: $${akka.kafka.consumer} {
-        service-name = "shopping_kafka_service"
+        service-name = "shopping-kafka-broker"
       }
 
       akka.http.server.preview.enable-http2 = on
