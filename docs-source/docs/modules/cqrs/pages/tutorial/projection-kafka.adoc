@@ -133,13 +133,13 @@ docker-compose up -d
 Run the `shopping-cart-service` with:
 
 ----
-sbt "runMain sample.shoppingcart.Main 2551"
+sbt -Dconfig.resource=local1.conf run
 ----
 
 Run the new `shopping-analytics-service` with:
 
 ----
-sbt "runMain sample.shoppinganalytics.Main 3551"
+sbt -Dconfig.resource=local1.conf run
 ----
 
 Try it with `grpcurl`. Add 1 pencil to a cart:

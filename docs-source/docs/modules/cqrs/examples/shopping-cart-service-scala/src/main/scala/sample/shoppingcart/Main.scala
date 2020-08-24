@@ -66,6 +66,7 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
   PublishEventsProjection.init(system)
   // end::PublishEventsProjection[]
 
+  // tag::SendOrderProjection[]
   val orderService = orderServiceClient(system)
   SendOrderProjection.init(system, orderService)
 
@@ -76,6 +77,7 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
     val orderServiceClient = ShoppingOrderServiceClient(orderServiceClientSettings)(system)
     orderServiceClient
   }
+  // end::SendOrderProjection[]
 
   ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository)
 

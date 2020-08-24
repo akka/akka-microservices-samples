@@ -14,7 +14,7 @@ import sample.shoppingorder.proto.Item
 import sample.shoppingorder.proto.OrderRequest
 import sample.shoppingorder.proto.ShoppingOrderService
 
-class SendOrderProjectionHandler(system: ActorSystem[_], orderService: ShoppingOrderService)
+class SendOrderProjectionHandler(system: ActorSystem[_], orderService: ShoppingOrderService) // <1>
     extends Handler[EventEnvelope[ShoppingCart.Event]] {
   private val log = LoggerFactory.getLogger(getClass)
   private implicit val ec: ExecutionContext = system.executionContext
@@ -37,13 +37,13 @@ class SendOrderProjectionHandler(system: ActorSystem[_], orderService: ShoppingO
 
   private def sendOrder(checkout: ShoppingCart.CheckedOut): Future[Done] = {
     val entityRef = sharding.entityRefFor(ShoppingCart.EntityKey, checkout.cartId)
-    entityRef.ask(ShoppingCart.Get).flatMap { cart =>
+    entityRef.ask(ShoppingCart.Get).flatMap { cart => // <2>
       val items = cart.items.iterator.map {
         case (itemId, quantity) => Item(itemId, quantity)
       }.toList
       log.info("Sending order of {} items for cart {}.", items.size, checkout.cartId)
       val orderReq = OrderRequest(checkout.cartId, items)
-      orderService.order(orderReq).map(_ => Done)
+      orderService.order(orderReq).map(_ => Done) // <3>
     }
   }
 

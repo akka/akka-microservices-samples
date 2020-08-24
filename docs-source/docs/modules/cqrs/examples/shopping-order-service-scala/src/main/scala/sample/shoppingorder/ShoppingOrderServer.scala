@@ -13,11 +13,14 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.HttpRequest
 import akka.http.scaladsl.model.HttpResponse
 
-class ShoppingOrderServer(interface: String, port: Int, system: ActorSystem[_]) {
-  private implicit val sys: ActorSystem[_] = system
-  private implicit val ec: ExecutionContext = system.executionContext
+object ShoppingOrderServer {
 
-  def start(): Unit = {
+  def start(
+    interface: String,
+    port: Int,
+    system: ActorSystem[_]) {
+    implicit val sys: ActorSystem[_] = system
+    implicit val ec: ExecutionContext = system.executionContext
 
     val service: HttpRequest => Future[HttpResponse] =
       ServiceHandler.concatOrNotFound(
