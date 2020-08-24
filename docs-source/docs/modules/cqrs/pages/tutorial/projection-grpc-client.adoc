@@ -119,7 +119,7 @@ Run the `shopping-order-service` with:
 sbt -Dconfig.resource=local1.conf run
 ----
 
-Try it with `grpcurl`:
+Try the new order service directly with `grpcurl`:
 
 ----
 grpcurl -d '{"cartId":"cart1", "items":[{"itemId":"socks", "quantity":3}, {"itemId":"t-shirt", "quantity":2}]}' -plaintext 127.0.0.1:8301 shoppingorder.ShoppingOrderService.Order
@@ -133,7 +133,7 @@ Keep the `shopping-order-service` running, and in another terminal run the `shop
 sbt -Dconfig.resource=local1.conf run
 ----
 
-Try it with `grpcurl` (note different port):
+Use the checkout in the shopping cart service with `grpcurl` (note the different port):
 
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"scissors", "quantity":1}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
