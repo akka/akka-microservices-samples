@@ -2,12 +2,11 @@ package sample.shoppingorder
 
 import scala.concurrent.Future
 
-import akka.actor.typed.ActorSystem
 import org.slf4j.LoggerFactory
 import sample.shoppingorder.proto.OrderRequest
 import sample.shoppingorder.proto.OrderResponse
 
-class ShoppingOrderServiceImpl(implicit system: ActorSystem[_]) extends proto.ShoppingOrderService {
+class ShoppingOrderServiceImpl extends proto.ShoppingOrderService {
 
   private val logger = LoggerFactory.getLogger(getClass)
 

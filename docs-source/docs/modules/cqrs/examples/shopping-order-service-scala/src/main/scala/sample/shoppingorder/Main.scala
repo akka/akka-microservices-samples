@@ -23,7 +23,7 @@ object Guardian {
 
       val grpcInterface = context.system.settings.config.getString("shopping-order.grpc.interface")
       val grpcPort = context.system.settings.config.getInt("shopping-order.grpc.port")
-      new ShoppingOrderServer(grpcInterface, grpcPort, system).start()
+      ShoppingOrderServer.start(grpcInterface, grpcPort, system)
 
       Behaviors.empty
     }
