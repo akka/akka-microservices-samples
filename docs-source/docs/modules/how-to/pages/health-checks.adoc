@@ -1,4 +1,4 @@
-= How to inspect the service' health
+= How to inspect the service's health
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2
