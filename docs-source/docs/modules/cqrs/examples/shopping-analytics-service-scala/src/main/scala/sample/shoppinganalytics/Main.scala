@@ -23,9 +23,14 @@ object Guardian {
 class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
-  AkkaManagement(system).start()
+  startAkkaManagement()
 
   ShoppingCartEventConsumer.init(system)
+
+  // can be overridden in tests
+  protected def startAkkaManagement(): Unit = {
+    AkkaManagement(system).start()
+  }
 
   override def onMessage(msg: Nothing): Behavior[Nothing] =
     this
