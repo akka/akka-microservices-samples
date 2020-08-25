@@ -15,18 +15,13 @@ import akka.http.scaladsl.model.HttpResponse
 
 object ShoppingCartServer {
 
-  def start(
-      interface: String,
-      port: Int,
-      system: ActorSystem[_],
-      itemPopularityRepository: ItemPopularityRepository): Unit = {
+  def start(interface: String, port: Int, system: ActorSystem[_]): Unit = {
     implicit val sys: ActorSystem[_] = system
-    // tag::start-grpc[]
     implicit val ec: ExecutionContext = system.executionContext
 
     val service: HttpRequest => Future[HttpResponse] =
       ServiceHandler.concatOrNotFound(
-        proto.ShoppingCartServiceHandler.partial(new ShoppingCartServiceImpl(system, itemPopularityRepository)),
+        proto.ShoppingCartServiceHandler.partial(new ShoppingCartServiceImpl),
         // ServerReflection enabled to support grpcurl without import-path and proto parameters
         ServerReflection.partial(List(proto.ShoppingCartService)))
 
@@ -40,7 +35,6 @@ object ShoppingCartServer {
       case Failure(ex) =>
         system.log.error("Failed to bind gRPC endpoint, terminating system", ex)
         system.terminate()
-      // end::start-grpc[]
     }
   }
 

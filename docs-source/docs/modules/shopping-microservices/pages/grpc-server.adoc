@@ -27,11 +27,11 @@ First you should define the interface of the service in a protobuf service descr
 
 [source,protobuf]
 ----
-include::example$shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[]
+include::example$01-shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[]
 ----
 
-<1> Defines the requests a client may send to the service in the serivce definition
-<2> Describes the request to add an item to the shopping cart
+<1> Defines the requests a client may send to the service in the serivce definition.
+<2> Describes the request to add an item to the shopping cart.
 <3> For simplicity, most requests share a common response, for easier evolution of an interface, separate responses are often a better choice (See xref:how-to:evolve-grpc-apis.adoc[] for details).
 
 == Generate code
@@ -48,7 +48,7 @@ Let's implement the `ShoppingCart` trait. Create a `ShoppingCartServiceImpl` cla
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=addItem]
+include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[]
 ----
 
 == Server
@@ -57,20 +57,19 @@ The service implementation is running by an Akka HTTP server. Add the following 
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[]
+include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServer.scala[]
 ----
 
 == Main
 
 To run the service as a Java application we need a class with a `main` method. Add a `Main` class that is initializing the `ActorSystem` and the `ShoppingCartServer` like this:
 
-ifdef::todo:[this source is a blend from multiple files:]
-
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=start-grpc]
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServer.scala[tag=start-grpc]
+include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[]
 ----
+
+ifdef::todo:[describe grpc.port configuration]
 
 == Run
 

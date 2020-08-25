@@ -16,7 +16,7 @@ import shopping.cart.proto.GetItemPopularityRequest
 import shopping.cart.proto.GetItemPopularityResponse
 
 // tag::addItem[]
-class ShoppingCartServiceImpl(itemPopularityRepository: ItemPopularityRepository)(implicit system: ActorSystem[_])
+class ShoppingCartServiceImpl(system: ActorSystem[_], itemPopularityRepository: ItemPopularityRepository)
     extends proto.ShoppingCartService {
 // end::addItem[]
   import system.executionContext
@@ -50,7 +50,8 @@ class ShoppingCartServiceImpl(itemPopularityRepository: ItemPopularityRepository
       else
         ShoppingCart.AdjustItemQuantity(in.itemId, in.quantity, replyTo)
 
-    val reply: Future[ShoppingCart.Summary] = entityRef.askWithStatus(command(_))
+    val reply: Future[ShoppingCart.Summary] =
+      entityRef.askWithStatus(command(_))
     val response = reply.map(cart => toProtoCart(cart))
     convertError(response)
   }
@@ -80,7 +81,9 @@ class ShoppingCartServiceImpl(itemPopularityRepository: ItemPopularityRepository
   private def toProtoCart(cart: ShoppingCart.Summary): proto.Cart = {
     proto.Cart(
       cart.checkedOut,
-      cart.items.iterator.map { case (itemId, quantity) => proto.Item(itemId, quantity) }.toSeq)
+      cart.items.iterator.map {
+        case (itemId, quantity) => proto.Item(itemId, quantity)
+      }.toSeq)
   }
 
   private def convertError[T](response: Future[T]): Future[T] = {
