@@ -21,7 +21,7 @@ The example application used in the documentation is composed of 3 three microse
 Antora-based Akka Documentation
 -------------------------------
 
-This folder contains the sources for parts of the [Akka web site](https://akka.io/akka-microservices-samples).
+This folder contains the sources for parts of the [Akka web site](https://akka.io/akka-platform-guide).
 
 This folder is structured as follows:
 - The root directory contains the `Makefile` for the documentation generation process.
@@ -68,4 +68,3 @@ License
 -------
 
 Akka is Open Source and available under the Apache 2 License.
-
