@@ -31,7 +31,7 @@ object PublishEventsProjection {
 
   private def createProducer(system: ActorSystem[_]): SendProducer[String, Array[Byte]] = {
     val config = system.settings.config.getConfig("shopping-cart.kafka.producer")
-    import akka.actor.typed.scaladsl.adapter._ // FIXME might not be needed in later Alpakka Kafka version?
+    import akka.actor.typed.scaladsl.adapter._ // TODO might not be needed in later Alpakka Kafka version?
     val producerSettings =
       ProducerSettings(config, new StringSerializer, new ByteArraySerializer)
         .withEnrichAsync(DiscoverySupport.producerBootstrapServers(config)(system.toClassic))

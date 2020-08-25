@@ -19,23 +19,24 @@ import akka.persistence.typed.scaladsl.EventSourcedBehavior
 import akka.persistence.typed.scaladsl.ReplyEffect
 
 /**
- * This is an event sourced actor. It has a state, [[ShoppingCart.State]], which
- * stores the current shopping cart items and whether it's checked out.
+ * This is an event sourced actor (`EventSourcedBehavior`). An entity managed by Cluster Sharding.
  *
- * Event sourced actors are interacted with by sending them commands,
+ * It has a state, [[ShoppingCart.State]], which holds the current shopping cart items
+ * and whether it's checked out.
+ *
+ * You interact with event sourced actors by sending commands to them,
  * see classes implementing [[ShoppingCart.Command]].
  *
- * Commands get translated to events, see classes implementing [[ShoppingCart.Event]].
- * It's the events that get persisted by the entity. Each event will have an event handler
- * registered for it, and an event handler updates the current state based on the event.
- * This will be done when the event is first created, and it will also be done when the entity is
+ * The command handler validates and translates commands to events, see classes implementing [[ShoppingCart.Event]].
+ * It's the events that are persisted by the `EventSourcedBehavior`. The event handler updates the current
+ * state based on the event. This is done when the event is first created, and when the entity is
  * loaded from the database - each event will be replayed to recreate the state
  * of the entity.
  */
 object ShoppingCart {
 
   /**
-   * The current state held by the persistent entity.
+   * The current state held by the `EventSourcedBehavior`.
    */
   // tag::state[]
   final case class State(items: Map[String, Int], checkoutDate: Option[Instant]) extends CborSerializable {
@@ -72,14 +73,14 @@ object ShoppingCart {
 
   // tag::commands[]
   /**
-   * This interface defines all the commands that the ShoppingCart persistent actor supports.
+   * This interface defines all the commands (messages) that the ShoppingCart actor supports.
    */
   sealed trait Command extends CborSerializable // <1>
 
   /**
    * A command to add an item to the cart.
    *
-   * It can reply with `StatusReply[Summary]`, which is sent back to the caller when
+   * It replies with `StatusReply[Summary]`, which is sent back to the caller when
    * all the events emitted by this command are successfully persisted.
    */
   final case class AddItem(itemId: String, quantity: Int, replyTo: ActorRef[StatusReply[Summary]]) extends Command

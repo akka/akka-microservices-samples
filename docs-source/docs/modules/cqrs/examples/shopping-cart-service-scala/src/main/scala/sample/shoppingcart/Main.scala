@@ -51,9 +51,6 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
 
   startAkkaManagement()
 
-  val grpcInterface = system.settings.config.getString("shopping-cart.grpc.interface")
-  val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
-
   ShoppingCart.init(system)
 
   // tag::ItemPopularityProjection[]
@@ -74,6 +71,13 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
   val orderService = orderServiceClient(system)
   SendOrderProjection.init(system, orderService)
 
+  // end::SendOrderProjection[]
+
+  val grpcInterface = system.settings.config.getString("shopping-cart.grpc.interface")
+  val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
+  ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository)
+
+  // tag::SendOrderProjection[]
   // can be overridden in tests
   protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
     val orderServiceClientSettings =
@@ -82,8 +86,6 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
     orderServiceClient
   }
   // end::SendOrderProjection[]
-
-  ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository)
 
   // can be overridden in tests
   protected def startAkkaManagement(): Unit = {

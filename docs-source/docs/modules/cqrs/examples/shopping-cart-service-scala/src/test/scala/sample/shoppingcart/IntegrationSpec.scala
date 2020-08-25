@@ -48,7 +48,10 @@ object IntegrationSpec {
          jmx.multi-mbeans-in-same-jvm = on
       }
       
-      akka.remote.artery.canonical.port = 0
+      akka.remote.artery.canonical {
+        hostname = "127.0.0.1"
+        port = 0
+      }
 
       akka.persistence.cassandra {
         events-by-tag {
