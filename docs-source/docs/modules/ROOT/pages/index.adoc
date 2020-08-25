@@ -13,7 +13,7 @@ xref:concepts:index.adoc[]
 
 xref:cqrs:index.adoc[Microservices based on Event sourcing and CQRS example]
 
-This example illustrates how Akka Persistence enables Event sourcing and how Akka Projection simplifies CQRS for the event-sourced entities.
+This example illustrates how to implement Event sourcing with Akka Persistence and CQRS using Akka Projections.
 
 
 **This documentation was last published: {localdate}**

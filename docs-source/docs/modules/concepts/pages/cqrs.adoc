@@ -11,6 +11,6 @@ The idea of CQRS is to establish specific data representations suited to answer 
 
 == Akka Projection
 
-link:{akka-projection}/[Akka Projection] is designed to listen to a stream of events and built up data in a different representation, a projection.
+link:{akka-projection}/[Akka Projection] is designed to listen to a stream of events and build up data in a different representation, a projection.
 
 The entry-point to its API is the `EventSourcedProvider` which listens to the events of an entity which are marked with a tag. The tag has to be attached to the entity when it is created.

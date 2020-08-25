@@ -7,7 +7,7 @@ include::ROOT:partial$include.adoc[]
 
 TODO
 
-The server of this service consists of JVMs that are connected by Akka to build an Akka cluster. Each node run's its own `ActorSystem` which is configured to look out for other cluster nodes.
+The server of this service consists of JVMs in an Akka cluster. Each node run's its own `ActorSystem` which is configured to look out for other cluster nodes.
 
 == Akka Cluster
 

@@ -5,7 +5,8 @@
 
 include::ROOT:partial$include.adoc[]
 
-This section of the Akka documentation explains some of the concepts that motivate Akka's take on things.
+This section explains some of the concepts that motivate Akka's take on how to implement microservices using Event
+sourcing and CQRS.
 
 * xref:clustering.adoc[]
 
