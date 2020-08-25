@@ -10,9 +10,10 @@ Sourcing and CQRS.
 
 * xref:clustering.adoc[]
 
+* xref:concepts-traditional-architecture.adoc[]
 * xref:event-sourcing.adoc[]
 * xref:internal-and-external-communication.adoc[]
-* xref:shopping-microservices.adoc[]
+* xref:cqrs.adoc[]
 
 * xref:services.adoc[]
 ** xref:service-discovery.adoc[]
