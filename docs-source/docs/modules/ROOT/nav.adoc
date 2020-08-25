@@ -14,5 +14,4 @@ include::partial$include.adoc[]
 . xref:shopping-microservices:projection-kafka.adoc[Projection publishing to Kafka]
 . xref:shopping-microservices:projection-grpc-client.adoc[Projection calling gRPC service]
 
-
 * xref:how-to:index.adoc[]

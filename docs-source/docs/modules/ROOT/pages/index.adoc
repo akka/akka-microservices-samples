@@ -1,19 +1,20 @@
 = Akka Platform Guide
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 2
-:description: Examples projects to illustrate features of Akka
+:description: Example projects to illustrate features of Akka
 
 include::ROOT:partial$include.adoc[]
 
 :imagesdir: assets/images
 
-xref:concepts:index.adoc[]
+=== xref:concepts:index.adoc[]
 
+This section covers multiple concepts around software architecture and Akka features.
 
-xref:shopping-microservices:index.adoc[Microservices based on Event sourcing and CQRS example]
+=== xref:shopping-microservices:index.adoc[Microservices based on Event Sourcing and CQRS example]
 
-This example illustrates how to implement Event sourcing with Akka Persistence and CQRS using Akka Projections.
+This example illustrates how to implement Event Sourcing with Akka Persistence and CQRS using Akka Projections.
 
+=== * xref:how-to:index.adoc[]
+
+A collection of HOWTO guides to help you introduce a new feature or architectural improvement on an existing codebase.
 
 **This documentation was last published: {localdate}**
