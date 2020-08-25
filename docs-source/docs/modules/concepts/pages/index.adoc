@@ -11,7 +11,7 @@ sourcing and CQRS.
 * xref:clustering.adoc[]
 
 * xref:event-sourcing.adoc[]
-* xref:shopping-microservices.adoc[]
+* xref:cqrs.adoc[]
 
 * xref:services.adoc[]
 ** xref:service-discovery.adoc[]
