@@ -6,11 +6,12 @@
 include::ROOT:partial$include.adoc[]
 
 This section explains some of the concepts that motivate Akka's take on how to implement microservices using Event
-sourcing and CQRS.
+Sourcing and CQRS.
 
 * xref:clustering.adoc[]
 
 * xref:event-sourcing.adoc[]
+* xref:internal-and-external-communication.adoc[]
 * xref:shopping-microservices.adoc[]
 
 * xref:services.adoc[]
