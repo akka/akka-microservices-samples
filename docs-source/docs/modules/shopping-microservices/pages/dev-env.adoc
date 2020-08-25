@@ -5,23 +5,66 @@
 
 include::ROOT:partial$include.adoc[]
 
-== Build
+== sbt
 
-TODO:
+For Scala we will use `sbt` as the build tool.
 
-* sbt installation
-* sbt new (g8 template) to create empty project with build files (dependencies, plugins)
-* mvn for Java
+https://www.scala-sbt.org/download.html[Install sbt] if you haven't already.
 
-sbt is an interactive shell and its most efficient to start it once with the `sbt` command and then repeatedly run tasks like `compile` and `test` in the sbt shell.
+`sbt` is an interactive shell and its most efficient to start it once with the `sbt` command and then repeatedly run tasks like `compile` and `test` in the sbt shell.
+
+In the tutorial we use the full command for clarity, such as:
+
+----
+sbt compile
+----
+
+This works, but it's faster to leave the `sbt` shell running and only enter the tasks:
+
+----
+$ sbt
+...
+sbt:shopping-cart-service> compile
+...
+sbt:shopping-cart-service> test
+...
+----
+
+== Template project
+
+Open a console and run the following command to create a project with build and configuration files for Akka Microservices. This build is the starting point for the tutorial:
+
+----
+sbt new akka/akka-microservices-scala.g8
+----
+
+TODO: this template doesn't exist yet
+
+This template will prompt for the naming of the project. Enter the following for the first service:
+
+1. `shopping-cart-service` as the project name
+2. `shopping.cart` as the package name
+
+Change directory to the new `shopping-cart-service` project and try to build it with:
+
+----
+sbt compile
+----
+
+== Download example source
+
+We encourage that you to enter the code described in the tutorial. If you are stuck or prefer to skip over some parts you can download a zip file containing the complete source code for each part of the tutorial.
+
+TODO: download link
 
 == IntelliJ IDEA
 
-TODO
+You can use any code editor you prefer for this tutorial. We recommend [IntelliJ](https://www.jetbrains.com/idea/) from JetBrains.
 
-* installation
-* Scala plugin
-* import project
+1. https://www.jetbrains.com/idea/download/[install IntelliJ]
+2. add the Scala plugin from __Preferences__ menu
+3. open the `shopping-cart-service/build.sbt` from __File > Open__.
+4. select __Open as project__
 
 == grpcurl
 
@@ -30,4 +73,93 @@ link:https://github.com/fullstorydev/grpcurl[grpcurl] is useful for making gRPC 
 
 == Config for local development
 
-* explain our use of `-Dconfig.resource=local1.cong`
+The <<Template project>> comes with configuration for running the application locally. By default, when using `sbt run` the `Main` class will start an `ActorSystem` with the default `application.conf`. When running locally some configuration properties must be overridden. Those local configuration properties are placed in the `local1.conf` file and you can run the application with this configuration with:
+
+----
+sbt -Dconfig.resource=local1.conf run
+----
+
+The `local1.conf` includes the `application.conf`. There are also `local2.conf`, `local3.conf`, and so on. Those define settings for additional Akka Cluster nodes. For example, a second node can be started with:
+
+----
+sbt -Dconfig.resource=local2.conf run
+----
+
+When you develop several services you have to adjust the port numbers in those files. Each node (`ActorSystem`) must use unique ports when running several on the same machine.
+
+The example projects are using the following ports.
+
+.shopping-cart-service ports
+|===
+|Node |Akka Cluster |Akka Management HTTP |Akka gRPC
+
+|local1.conf
+|2551
+|9101
+|8101
+
+|local2.conf
+|2552
+|9102
+|8102
+
+|local3.conf
+|2553
+|9103
+|8103
+
+|local4.conf
+|2554
+|9104
+|8104
+|===
+
+.shopping-analytics-service ports
+|===
+|Node |Akka Cluster |Akka Management HTTP |Akka gRPC
+
+|local1.conf
+|3551
+|9201
+|-
+
+|local2.conf
+|3552
+|9202
+|-
+
+|local3.conf
+|3553
+|9203
+|-
+
+|local4.conf
+|3554
+|9204
+|-
+|===
+
+.shopping-order-service ports
+|===
+|Node |Akka Cluster |Akka Management HTTP |Akka gRPC
+
+|local1.conf
+|4551
+|9301
+|8301
+
+|local2.conf
+|4552
+|9302
+|8302
+
+|local3.conf
+|4553
+|9303
+|8303
+
+|local4.conf
+|4554
+|9304
+|8304
+|===
