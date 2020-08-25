@@ -23,23 +23,42 @@ TODO links to event sourcing and sharding concepts
 
 == Event Sourced entity
 
+=== Commands
+
 The state of the entity can be changed only by sending commands to it. The commands are the "external" API of an entity. Commands request state changes, but they might lead to different events depending on the current state of the entity.
 
-Define a `ShoppingCart` object and the `AddItem` command and corresponding `ItemAdded` event:
-
-TODO commands and events code
-
-The state of the `ShoppingCart` contain a `Map` of items that have been added to the cart.
-
-TODO state code
-
-An Event Sourced entity is implemented with the `EventSourcedBehavior`.
-
-TODO code for EventSourcedBehavior, command and event handlers (only for AddItem)
+Define a `ShoppingCart` object and the `AddItem` command:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=openShoppingCart]
+include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;commands]
+----
+
+=== Events
+
+The corresponding `ItemAdded` event:
+
+[source,scala]
+----
+include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;events]
+----
+
+=== State
+
+The state of the `ShoppingCart` contain a `Map` of items that have been added to the cart.
+
+[source,scala]
+----
+include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;state]
+----
+
+=== Command handler
+
+An Event Sourced entity is implemented with the `EventSourcedBehavior` and defines command handlers:
+
+[source,scala]
+----
+include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;commandHandler]
 ----
 
 <1> Matching the `AddItem` command
@@ -53,11 +72,42 @@ If the validation fails we want to send back an error message. The reply can be 
 
 See all available effects in the link:{akka}/typed/persistence.html#effects-and-side-effects[Akka reference documentation].
 
+=== Event handler
+
 The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands, other parts of the application may listen to the created events. Other parties can't send events.
 
 The events are continuously persisted to the Event Journal datastore, while the entity state is kept in memory. In case of a restart the latest state gets rebuilt by replaying the events from the Event Journal.
 
 Aligning with the command handler above, the entity's event handler reacts on events and updates the state. Notice that there are no decisions on events, they are applied without any checks.
+
+[source,scala]
+----
+include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;eventHandler]
+----
+
+=== Initialization
+
+To put this together we need some initialization code:
+
+[source,scala]
+----
+include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;init]
+----
+
+<1> The entities are distributed over the nodes in the Akka Cluster with Cluster Sharding.
+
+<2> Command and event handler are defined with the `EventSourcedBehavior`
+
+<3> Snapshotting is an optimization to reduce recovery when the entity is started.
+
+<4> Restarting with backoff in case of failures.
+
+Then you need to call the `ShoppingCart.init` from the `Guardian` in `Main.scala`:
+
+[source,scala]
+----
+include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=ShoppingCart]
+----
 
 == Serialization
 
@@ -87,7 +137,7 @@ A test for the `AddItem` command looks like this:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[]
+include::example$02-shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[]
 ----
 
 Run the test with:
@@ -98,27 +148,31 @@ sbt test
 
 You can learn more about the `EventSourcedBehaviorTestKit` in the link:{akka}/typed/persistence-testing.html#unit-testing[Akka reference documentation]
 
-== Sharding
-
-The entities are distributed over the nodes in the Akka Cluster with Cluster Sharding. To enable that we need to add some initialization code.
-
-TODO code for sharding init
-
 == Sending commands to the entities
 
 We want to send commands to the entities from the gRPC service implementation. In the xref:grpc-server.adoc[previous step] we wrote a dummy implementation of `addItem` in the `ShoppingCartServiceImpl`. You can now replace that with sending `ShoppingCart.AddItem` command from `ShoppingCartServiceImpl`.
 
-TODO code for entityRef.askWithStatus
+[source,scala]
+----
+include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[]
+----
 
 If the command was successful the entity replied with `StatusReply.Success` with the updated `ShoppingCart.Summary`. If the validation in the entity failed it replied with `StatusReply.Error`, which will fail the `Future` that is returned from `askWithStatus`.
 
 == Cassandra
 
-The events are stored in Cassandra and the configuration for that is included in the `persistence.conf` file.
+The events are stored in Cassandra and you have to add the configuration for that in `src/main/resources/persistence.conf` file:
 
 [source,hocon]
 ----
 include::example$shopping-cart-service-scala/src/main/resources/persistence.conf[]
+----
+
+Also, include `persistence.conf` in `application.conf`:
+
+[source,hocon]
+----
+include::example$02-shopping-cart-service-scala/src/main/resources/application.conf[tag=persistenceInclude]
 ----
 
 == Run

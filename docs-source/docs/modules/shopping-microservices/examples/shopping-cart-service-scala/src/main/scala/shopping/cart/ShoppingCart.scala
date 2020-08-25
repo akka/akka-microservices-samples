@@ -35,12 +35,11 @@ import akka.persistence.typed.scaladsl.ReplyEffect
  */
 object ShoppingCart {
 
+  // tag::state[]
   /**
    * The current state held by the `EventSourcedBehavior`.
    */
-  // tag::state[]
   final case class State(items: Map[String, Int], checkoutDate: Option[Instant]) extends CborSerializable {
-    // end::state[]
 
     def isCheckedOut: Boolean =
       checkoutDate.isDefined
@@ -70,6 +69,7 @@ object ShoppingCart {
   object State {
     val empty = State(items = Map.empty, checkoutDate = None)
   }
+  // end::state[]
 
   // tag::commands[]
   /**
@@ -152,13 +152,14 @@ object ShoppingCart {
   def apply(cartId: String, projectionTag: String): Behavior[Command] = {
     EventSourcedBehavior
       .withEnforcedReplies[Command, Event, State](
-        PersistenceId(EntityKey.name, cartId),
-        State.empty,
+        persistenceId = PersistenceId(EntityKey.name, cartId),
+        emptyState = State.empty,
         // tag::commandHandler[]
         commandHandler = (state, command) =>
           //The shopping cart behavior changes if it's checked out or not.
           // The commands are handled differently for each case.
-          if (state.isCheckedOut) checkedOutShoppingCart(cartId, state, command) // <1>
+          if (state.isCheckedOut)
+            checkedOutShoppingCart(cartId, state, command) // <1>
           else openShoppingCart(cartId, state, command),
         // end::commandHandler[]
         // tag::evenHandler[]
@@ -235,10 +236,11 @@ object ShoppingCart {
 
   private def handleEvent(state: State, event: Event) = {
     event match {
-      case ItemAdded(_, itemId, quantity)               => state.updateItem(itemId, quantity)
-      case ItemRemoved(_, itemId, _)                    => state.removeItem(itemId)
-      case ItemQuantityAdjusted(_, itemId, quantity, _) => state.updateItem(itemId, quantity)
-      case CheckedOut(_, eventTime)                     => state.checkout(eventTime)
+      case ItemAdded(_, itemId, quantity) => state.updateItem(itemId, quantity)
+      case ItemRemoved(_, itemId, _)      => state.removeItem(itemId)
+      case ItemQuantityAdjusted(_, itemId, quantity, _) =>
+        state.updateItem(itemId, quantity)
+      case CheckedOut(_, eventTime) => state.checkout(eventTime)
     }
   }
   // end::evenHandler[]

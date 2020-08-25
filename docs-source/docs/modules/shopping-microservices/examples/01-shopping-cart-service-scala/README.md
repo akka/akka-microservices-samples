@@ -6,14 +6,9 @@
     sbt -Dconfig.resource=local1.conf run
     ```
 
-2. (Optional) Start another node with different ports:
+2. Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
 
     ```
-    sbt -Dconfig.resource=local2.conf run
-    ```
-
-2. Check for service readiness
-
-    ```
-    curl http://localhost:9101/ready
+    # add item to cart
+    grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
     ```
