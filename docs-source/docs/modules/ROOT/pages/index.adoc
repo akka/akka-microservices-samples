@@ -11,7 +11,7 @@ include::ROOT:partial$include.adoc[]
 xref:concepts:index.adoc[]
 
 
-xref:cqrs:index.adoc[Microservices based on Event sourcing and CQRS example]
+xref:shopping-microservices:index.adoc[Microservices based on Event sourcing and CQRS example]
 
 This example illustrates how to implement Event sourcing with Akka Persistence and CQRS using Akka Projections.
 

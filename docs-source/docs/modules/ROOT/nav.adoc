@@ -5,14 +5,14 @@ include::partial$include.adoc[]
 
 * xref:concepts:index.adoc[]
 
-* xref:cqrs:index.adoc[Example: Microservices]
-. xref:cqrs:tutorial/overview.adoc[]
-. xref:cqrs:tutorial/grpc-server.adoc[First gRPC service]
-. xref:cqrs:tutorial/entity.adoc[Event Sourced entity]
-. xref:cqrs:tutorial/complete-entity.adoc[Complete Event Sourced entity]
-. xref:cqrs:tutorial/projection-query.adoc[Projection for queries]
-. xref:cqrs:tutorial/projection-kafka.adoc[Projection publishing to Kafka]
-. xref:cqrs:tutorial/projection-grpc-client.adoc[Projection calling gRPC service]
+* xref:shopping-microservices:index.adoc[Example: Microservices]
+. xref:shopping-microservices:overview.adoc[]
+. xref:shopping-microservices:grpc-server.adoc[First gRPC service]
+. xref:shopping-microservices:entity.adoc[Event Sourced entity]
+. xref:shopping-microservices:complete-entity.adoc[Complete Event Sourced entity]
+. xref:shopping-microservices:projection-query.adoc[Projection for queries]
+. xref:shopping-microservices:projection-kafka.adoc[Projection publishing to Kafka]
+. xref:shopping-microservices:projection-grpc-client.adoc[Projection calling gRPC service]
 
 
 * xref:how-to:index.adoc[]

@@ -1,0 +1,125 @@
+= Part 4: Complete Event Sourced entity
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+In this part, we will complete the `ShoppingCart` entity with more commands and events. The `ShoppingCart` is using Event Sourcing to persist events that represents changes to the state of the cart.
+
+You will learn how to:
+
+* implement an Event Sourced entity by expanding the xref:entity.adoc[previous step]
+
+== More commands and events
+
+.This part of the xref:overview.adoc[full example] will focus on the shopping cart entity.
+[caption=""]
+image::example-entity.png[Example entity]
+
+Add the following commands to the `ShoppingCart`:
+
+* `RemoveItem` - remove an item from the cart
+* `AdjustItemQuantity` - adjust the quantity of an item in the cart
+* `Checkout` - checkout the shopping cart
+* `Get` - get the current state of the shopping cart
+
+and corresponding events:
+
+* `ItemRemoved`
+* `ItemQuantityAdjusted`
+* `CheckedOut`
+
+Adding those commands, events and adjusting the `State` is very similar to the `AddItem` command and `ItemAdded` event in the xref:entity.adoc[previous step], which means that this is a good exercise for you to solidify your knowledge of how to implement an `EventSourcedBehavior`. If you like, you can start with <<Expand the unit test>> for a test driven approach.
+
+When you have completed your code you can compare it with:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[]
+----
+
+<1> handles commands differently whether the shopping cart is checked out or not
+
+== Expand the unit test
+
+Add unit tests for the new commands in `ShoppingCartSpec`:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[]
+----
+
+Run the test with:
+
+----
+sbt test
+----
+
+== Add to ShoppingCartService
+
+Let's add corresponding operations as the commands in `ShoppingCartService.proto`:
+
+[source,protobuf]
+----
+include::example$shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[]
+----
+
+Generate code by compiling the project:
+
+----
+sbt compile
+----
+
+Then you can add implementations of the new operations in `ShoppingCartServiceImpl` in the same way as `addItem`:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=moreOperations]
+----
+
+== Run
+
+Start Cassandra, unless it's already running:
+
+----
+docker-compose up -d
+----
+
+Run the service with:
+
+----
+sbt -Dconfig.resource=local1.conf run
+----
+
+Try it with `grpcurl`.
+
+Add item to cart:
+----
+grpcurl -d '{"cartId":"cart2", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
+----
+
+Get cart:
+----
+grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
+----
+
+Update quantity of item:
+----
+grpcurl -d '{"cartId":"cart2", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.UpdateItem
+----
+
+Get cart again:
+----
+grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
+----
+
+Check out cart:
+----
+grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.Checkout
+----
+
+
+== Deploy
+
+TODO deploy the updated version to the cloud and try it
