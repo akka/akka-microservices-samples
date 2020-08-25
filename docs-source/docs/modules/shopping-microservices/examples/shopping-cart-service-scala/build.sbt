@@ -1,8 +1,10 @@
-val AkkaVersion = "2.6.8"
+// FIXME once akka 2.6.9 is released
+val AkkaVersion = "2.6.8+71-57fb9e90"
 val AkkaPersistenceCassandraVersion = "1.0.1"
 val AlpakkaKafkaVersion = "2.0.4"
 val AkkaHttpVersion = "10.2.0"
-val AkkaManagementVersion = "1.0.8"
+// FIXME once akka management 1.0.9 is released
+val AkkaManagementVersion = "1.0.8+35-9feaa689+20200825-1429"
 val AkkaProjectionVersion = "1.0.0-RC1"
 
 enablePlugins(AkkaGrpcPlugin)
@@ -13,6 +15,11 @@ version := "1.0"
 organization := "com.lightbend.akka.samples"
 organizationHomepage := Some(url("https://akka.io"))
 licenses := Seq(("CC0", url("https://creativecommons.org/publicdomain/zero/1.0")))
+
+// For akka management snapshot
+resolvers += Resolver.bintrayRepo("akka", "snapshots")
+// For akka nightlies
+resolvers += "Akka Snapshots" at "https://repo.akka.io/snapshots/"
 
 Compile / scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlog-reflective-calls", "-Xlint")
 Compile / javacOptions ++= Seq("-Xlint:unchecked", "-Xlint:deprecation")

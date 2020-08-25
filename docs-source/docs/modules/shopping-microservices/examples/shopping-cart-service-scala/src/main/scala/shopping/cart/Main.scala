@@ -66,7 +66,18 @@ class Guardian(context: ActorContext[SelfUp]) extends AbstractBehavior[SelfUp](c
   val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
   ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository)
 
-  initialize()
+  ShoppingCart.init(system)
+  // tag::ItemPopularityProjection[]
+  ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
+  // end::ItemPopularityProjection[]
+
+  // tag::PublishEventsProjection[]
+  PublishEventsProjection.init(system)
+  // end::PublishEventsProjection[]
+
+  val orderService = orderServiceClient(system)
+  SendOrderProjection.init(system, orderService)
+  // end::SendOrderProjection[]
 
   // can be overridden in tests
   protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
@@ -80,23 +91,6 @@ class Guardian(context: ActorContext[SelfUp]) extends AbstractBehavior[SelfUp](c
   protected def startAkkaManagement(): Unit = {
     AkkaManagement(system).start()
     ClusterBootstrap(system).start()
-  }
-
-  private def initialize(): Unit = {
-    ShoppingCart.init(system)
-    // tag::ItemPopularityProjection[]
-    ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
-    // end::ItemPopularityProjection[]
-
-    // tag::PublishEventsProjection[]
-    PublishEventsProjection.init(system)
-    // end::PublishEventsProjection[]
-
-    // tag::SendOrderProjection[]
-    val orderService = orderServiceClient(system)
-    SendOrderProjection.init(system, orderService)
-    // end::SendOrderProjection[]
-    this
   }
 
   override def onMessage(msg: SelfUp): Behavior[SelfUp] = {
