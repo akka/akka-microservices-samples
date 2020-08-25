@@ -1,13 +1,15 @@
 package sample.shoppingcart
 
-import akka.actor.typed.{ ActorSystem, Behavior }
-import akka.actor.typed.scaladsl.{ AbstractBehavior, ActorContext, Behaviors }
+import akka.actor.typed.{ActorSystem, Behavior}
+import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
+import akka.cluster.typed.{Cluster, SelfUp, Subscribe}
 import akka.grpc.GrpcClientSettings
+import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
 import akka.projection.cassandra.scaladsl.CassandraProjection
 import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
 import org.slf4j.LoggerFactory
-import sample.shoppingorder.proto.{ ShoppingOrderService, ShoppingOrderServiceClient }
+import sample.shoppingorder.proto.{ShoppingOrderService, ShoppingOrderServiceClient}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -37,21 +39,22 @@ object Main {
   }
 
 }
+
 // tag::start-grpc[]
 
 object Guardian {
   def apply(): Behavior[Nothing] = {
-    Behaviors.setup[Nothing](context => new Guardian(context))
+    Behaviors.setup[SelfUp](context => new Guardian(context)).narrow[Nothing]
   }
 }
 
-class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
+class Guardian(context: ActorContext[SelfUp]) extends AbstractBehavior[SelfUp](context) {
   val system = context.system
-// end::start-grpc[]
+  // end::start-grpc[]
 
   startAkkaManagement()
 
-  ShoppingCart.init(system)
+  Cluster(system).subscriptions ! Subscribe[SelfUp](context.self, classOf[SelfUp])
 
   // tag::ItemPopularityProjection[]
   val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config") // <1>
@@ -60,18 +63,6 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
   val itemPopularityRepository =
     new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext) // <2>
 
-  ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
-  // end::ItemPopularityProjection[]
-
-  // tag::PublishEventsProjection[]
-  PublishEventsProjection.init(system)
-  // end::PublishEventsProjection[]
-
-  // tag::SendOrderProjection[]
-  val orderService = orderServiceClient(system)
-  SendOrderProjection.init(system, orderService)
-
-  // end::SendOrderProjection[]
 
   val grpcInterface = system.settings.config.getString("shopping-cart.grpc.interface")
   val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
@@ -85,13 +76,30 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
     val orderServiceClient = ShoppingOrderServiceClient(orderServiceClientSettings)(system)
     orderServiceClient
   }
+
   // end::SendOrderProjection[]
 
   // can be overridden in tests
   protected def startAkkaManagement(): Unit = {
     AkkaManagement(system).start()
+    ClusterBootstrap(system).start()
   }
 
-  override def onMessage(msg: Nothing): Behavior[Nothing] =
+  override def onMessage(msg: SelfUp): Behavior[SelfUp] = {
+    ShoppingCart.init(system)
+    ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
+    // end::ItemPopularityProjection[]
+
+    // tag::PublishEventsProjection[]
+    PublishEventsProjection.init(system)
+    // end::PublishEventsProjection[]
+
+    // tag::SendOrderProjection[]
+    val orderService = orderServiceClient(system)
+    SendOrderProjection.init(system, orderService)
+
+    // end::SendOrderProjection[]
+
     this
+  }
 }
