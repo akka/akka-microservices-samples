@@ -1,15 +1,15 @@
 package sample.shoppingcart
 
-import akka.actor.typed.{ActorSystem, Behavior}
-import akka.actor.typed.scaladsl.{AbstractBehavior, ActorContext, Behaviors}
-import akka.cluster.typed.{Cluster, SelfUp, Subscribe}
+import akka.actor.typed.{ ActorSystem, Behavior }
+import akka.actor.typed.scaladsl.{ AbstractBehavior, ActorContext, Behaviors }
+import akka.cluster.typed.{ Cluster, SelfUp, Subscribe }
 import akka.grpc.GrpcClientSettings
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
 import akka.projection.cassandra.scaladsl.CassandraProjection
 import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
 import org.slf4j.LoggerFactory
-import sample.shoppingorder.proto.{ShoppingOrderService, ShoppingOrderServiceClient}
+import sample.shoppingorder.proto.{ ShoppingOrderService, ShoppingOrderServiceClient }
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -56,19 +56,18 @@ class Guardian(context: ActorContext[SelfUp]) extends AbstractBehavior[SelfUp](c
 
   Cluster(system).subscriptions ! Subscribe[SelfUp](context.self, classOf[SelfUp])
 
-  // tag::ItemPopularityProjection[]
   val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config") // <1>
   // use same keyspace for the item_popularity table as the offset store
   val itemPopularityKeyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
   val itemPopularityRepository =
     new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext) // <2>
 
-
   val grpcInterface = system.settings.config.getString("shopping-cart.grpc.interface")
   val grpcPort = system.settings.config.getInt("shopping-cart.grpc.port")
   ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository)
 
-  // tag::SendOrderProjection[]
+  initialize()
+
   // can be overridden in tests
   protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
     val orderServiceClientSettings =
@@ -77,16 +76,15 @@ class Guardian(context: ActorContext[SelfUp]) extends AbstractBehavior[SelfUp](c
     orderServiceClient
   }
 
-  // end::SendOrderProjection[]
-
   // can be overridden in tests
   protected def startAkkaManagement(): Unit = {
     AkkaManagement(system).start()
     ClusterBootstrap(system).start()
   }
 
-  override def onMessage(msg: SelfUp): Behavior[SelfUp] = {
+  private def initialize(): Unit = {
     ShoppingCart.init(system)
+    // tag::ItemPopularityProjection[]
     ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
     // end::ItemPopularityProjection[]
 
@@ -97,9 +95,11 @@ class Guardian(context: ActorContext[SelfUp]) extends AbstractBehavior[SelfUp](c
     // tag::SendOrderProjection[]
     val orderService = orderServiceClient(system)
     SendOrderProjection.init(system, orderService)
-
     // end::SendOrderProjection[]
+    this
+  }
 
+  override def onMessage(msg: SelfUp): Behavior[SelfUp] = {
     this
   }
 }

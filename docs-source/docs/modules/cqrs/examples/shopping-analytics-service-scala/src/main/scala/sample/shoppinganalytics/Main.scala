@@ -5,6 +5,7 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.AbstractBehavior
 import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
+import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
 
 object Main {
@@ -30,6 +31,7 @@ class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing]
   // can be overridden in tests
   protected def startAkkaManagement(): Unit = {
     AkkaManagement(system).start()
+    ClusterBootstrap(system).start()
   }
 
   override def onMessage(msg: Nothing): Behavior[Nothing] =
