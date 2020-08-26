@@ -5,14 +5,7 @@
 
 include::ROOT:partial$include.adoc[]
 
-Microservices should be isolated and autonomous:
-
-* "*Isolation* is a prerequisite for resilience and elasticity and requires asynchronous communication between service boundaries ..."
-* "An *autonomous service* can only *promise* its own behaviour by publishing its protocol/API." and "For a service to become location transparent, it needs to be addressable."
-* "What is needed is that each Microservice take sole responsibility for their own state and the persistence thereof."
-
-
-(quotes extracted from https://info.lightbend.com/COLL-20XX-Reactive-Microservices-Architecture-RES-LP.html[*Reactive Microservices Architecture: Design Principles for Distributed Systems*])
+Microservices should be xref:isolation.adoc[isolated] and xref:autonomy.adoc[autonomous].
 
 Mulitple services communicate with each other (*inter-service*) by sending messages over a network. To achieve performance and resilience, you will often run multiple instances of the same service, typically on different nodes, and such *intra-service* communication also goes over the network. In addition, third-party and/or legacy systems might also consume or provide information for your microservice system.
 
