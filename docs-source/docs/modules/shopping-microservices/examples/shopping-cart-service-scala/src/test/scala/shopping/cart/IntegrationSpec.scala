@@ -2,14 +2,14 @@ package shopping.cart
 
 import java.util.UUID
 
-import scala.concurrent.{ ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 import scala.concurrent.duration._
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import akka.cluster.MemberStatus
-import akka.cluster.typed.{Cluster, Join}
+import akka.cluster.typed.{ Cluster, Join }
 import akka.grpc.GrpcClientSettings
 import akka.kafka.ConsumerSettings
 import akka.kafka.Subscriptions
@@ -17,7 +17,7 @@ import akka.kafka.scaladsl.Consumer
 import akka.kafka.scaladsl.DiscoverySupport
 import akka.persistence.testkit.scaladsl.PersistenceInit
 import akka.testkit.SocketUtil
-import com.google.protobuf.any.{Any => ScalaPBAny}
+import com.google.protobuf.any.{ Any => ScalaPBAny }
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
@@ -117,11 +117,7 @@ object IntegrationSpec {
   }
 }
 
-class IntegrationSpec extends AnyWordSpec
-    with Matchers
-    with BeforeAndAfterAll
-    with ScalaFutures
-    with Eventually {
+class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with ScalaFutures with Eventually {
   import IntegrationSpec.TestNodeFixture
 
   private val logger = LoggerFactory.getLogger(classOf[IntegrationSpec])
@@ -175,7 +171,6 @@ class IntegrationSpec extends AnyWordSpec
     logger.error("SETUP init kafka topic probe")
     initializeKafkaTopicProbe()
     logger.error("SETUP inited kafka topic probe")
-
 
   }
 
