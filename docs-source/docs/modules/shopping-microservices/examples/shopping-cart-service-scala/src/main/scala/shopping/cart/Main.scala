@@ -2,7 +2,6 @@ package shopping.cart
 
 import akka.actor.typed.{ ActorSystem, Behavior }
 import akka.actor.typed.scaladsl.{ AbstractBehavior, ActorContext, Behaviors }
-import akka.cluster.typed.{ Cluster, SelfUp, Subscribe }
 import akka.grpc.GrpcClientSettings
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
@@ -44,17 +43,15 @@ object Main {
 
 object Guardian {
   def apply(): Behavior[Nothing] = {
-    Behaviors.setup[SelfUp](context => new Guardian(context)).narrow[Nothing]
+    Behaviors.setup[Nothing](context => new Guardian(context))
   }
 }
 
-class Guardian(context: ActorContext[SelfUp]) extends AbstractBehavior[SelfUp](context) {
+class Guardian(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
   val system = context.system
   // end::start-grpc[]
 
   startAkkaManagement()
-
-  Cluster(system).subscriptions ! Subscribe[SelfUp](context.self, classOf[SelfUp])
 
   val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config") // <1>
   // use same keyspace for the item_popularity table as the offset store
@@ -93,7 +90,7 @@ class Guardian(context: ActorContext[SelfUp]) extends AbstractBehavior[SelfUp](c
     ClusterBootstrap(system).start()
   }
 
-  override def onMessage(msg: SelfUp): Behavior[SelfUp] = {
+  override def onMessage(msg: Nothing): Behavior[Nothing] = {
     this
   }
 }
