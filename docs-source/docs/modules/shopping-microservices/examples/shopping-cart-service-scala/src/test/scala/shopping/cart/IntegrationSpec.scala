@@ -10,7 +10,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import akka.cluster.MemberStatus
-import akka.cluster.typed.{Cluster, Join}
+import akka.cluster.typed.{ Cluster, Join }
 import akka.grpc.GrpcClientSettings
 import akka.kafka.ConsumerSettings
 import akka.kafka.Subscriptions
@@ -18,7 +18,7 @@ import akka.kafka.scaladsl.Consumer
 import akka.kafka.scaladsl.DiscoverySupport
 import akka.persistence.testkit.scaladsl.PersistenceInit
 import akka.testkit.SocketUtil
-import com.google.protobuf.any.{Any => ScalaPBAny}
+import com.google.protobuf.any.{ Any => ScalaPBAny }
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
