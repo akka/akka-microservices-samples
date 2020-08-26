@@ -166,10 +166,17 @@ class IntegrationSpec
   override protected def beforeAll(): Unit = {
     // avoid concurrent creation of keyspace and tables
     val timeout = 10.seconds
+    testNode1.system.log.info("SETUP creating default plugins")
     Await.result(PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout), timeout)
-    Main.createTables(testNode1.system)
+    testNode1.system.log.info("SETUP created default plugins")
 
+    testNode1.system.log.info("SETUP creating tables")
+    Main.createTables(testNode1.system)
+    testNode1.system.log.info("SETUP created tables")
+
+    testNode1.system.log.info("SETUP init kafka topic probe")
     initializeKafkaTopicProbe()
+    testNode1.system.log.info("SETUP inited kafka topic probe")
 
     super.beforeAll()
   }
