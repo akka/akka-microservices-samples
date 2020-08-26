@@ -21,7 +21,9 @@ TODO link to synchronous communication concepts
 
 Let's add another service that is responsible for the orders of the shopping carts.
 
-Create a project named `shopping-order-service` in a separate directory in the same way as the `shopping-cart-service` was created. See xref:dev-env.adoc[Build].
+Create a project named `shopping-order-service` in a separate directory in the same way as the `shopping-cart-service` was created. See xref:dev-env.adoc#_template_project[Template project].
+
+Adjust the port numbers in the `local1.conf`, `local2.conf`, `local3.conf`, and `local4.conf` files according to the ports defined in xref:dev-env.adoc#_config_for_local_development[Config for local development].
 
 First, define the interface of the service in a protobuf service descriptor. It should be located in the `src/main/protobuf/ShoppingOrderService.proto` in the new `shopping-order-service` project.
 
