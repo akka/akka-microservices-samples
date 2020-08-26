@@ -27,18 +27,18 @@ object Main {
   def createTables(system: ActorSystem[_]): Unit = {
     // TODO: In production the keyspace and tables should not be created automatically.
     // ok to block here, main thread
-    system.log.info("SETUP: Creating offset table")
+    system.log.error("SETUP: Creating offset table")
     Await.result(CassandraProjection.createOffsetTableIfNotExists()(system), 30.seconds)
-    system.log.info("SETUP: Created offset table")
+    system.log.error("SETUP: Created offset table")
 
     // use same keyspace for the item_popularity table as the offset store
     val keyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
     val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config")
-    system.log.info("SETUP: Creating popularity table")
+    system.log.error("SETUP: Creating popularity table")
     Await.result(ItemPopularityRepositoryImpl.createItemPopularityTable(session, keyspace), 30.seconds)
-    system.log.info("SETUP: Created popularity table")
+    system.log.error("SETUP: Created popularity table")
 
-    LoggerFactory.getLogger("shopping.cart.Main").info("Created keyspace [{}] and tables", keyspace)
+    LoggerFactory.getLogger("shopping.cart.Main").error("Created keyspace [{}] and tables", keyspace)
   }
 
 }

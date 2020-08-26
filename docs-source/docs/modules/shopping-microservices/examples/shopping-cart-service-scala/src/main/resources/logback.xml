@@ -7,7 +7,6 @@
 
 
     <logger name="com.datastax.oss.driver" level="WARN"/>
-    <logger name="com.codahale.metrics" level="INFO"/>
 
     <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>8192</queueSize>

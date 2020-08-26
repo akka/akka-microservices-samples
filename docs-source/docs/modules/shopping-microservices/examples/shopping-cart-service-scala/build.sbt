@@ -55,7 +55,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-persistence-testkit" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
   "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
-  "org.scalatest" %% "scalatest" % "3.1.3" % Test)
+  "org.scalatest" %% "scalatest" % "3.1.2" % Test)
 //end::libraryDependencies[]
 
 run / fork := false

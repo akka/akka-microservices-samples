@@ -2,14 +2,14 @@ package shopping.cart
 
 import java.util.UUID
 
-import scala.concurrent.{ Await, ExecutionContext, Future }
+import scala.concurrent.{ ExecutionContext, Future}
 import scala.concurrent.duration._
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import akka.cluster.MemberStatus
-import akka.cluster.typed.{ Cluster, Join }
+import akka.cluster.typed.{Cluster, Join}
 import akka.grpc.GrpcClientSettings
 import akka.kafka.ConsumerSettings
 import akka.kafka.Subscriptions
@@ -17,19 +17,18 @@ import akka.kafka.scaladsl.Consumer
 import akka.kafka.scaladsl.DiscoverySupport
 import akka.persistence.testkit.scaladsl.PersistenceInit
 import akka.testkit.SocketUtil
-import com.google.protobuf.any.{ Any => ScalaPBAny }
+import com.google.protobuf.any.{Any => ScalaPBAny}
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
 import org.apache.kafka.common.serialization.StringDeserializer
 import org.scalatest.BeforeAndAfterAll
-import org.scalatest.TestSuite
 import org.scalatest.concurrent.Eventually
 import org.scalatest.concurrent.PatienceConfiguration
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.Span
-import org.scalatest.wordspec.AnyWordSpecLike
+import org.scalatest.wordspec.AnyWordSpec
 import org.slf4j.LoggerFactory
 import shopping.order.proto.OrderRequest
 import shopping.order.proto.OrderResponse
@@ -118,11 +117,9 @@ object IntegrationSpec {
   }
 }
 
-class IntegrationSpec
-    extends TestSuite
+class IntegrationSpec extends AnyWordSpec
     with Matchers
     with BeforeAndAfterAll
-    with AnyWordSpecLike
     with ScalaFutures
     with Eventually {
   import IntegrationSpec.TestNodeFixture
@@ -164,21 +161,22 @@ class IntegrationSpec
   }
 
   override protected def beforeAll(): Unit = {
+    super.beforeAll()
     // avoid concurrent creation of keyspace and tables
     val timeout = 10.seconds
-    testNode1.system.log.info("SETUP creating default plugins")
-    Await.result(PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout), timeout)
-    testNode1.system.log.info("SETUP created default plugins")
+    logger.error("SETUP creating default plugins")
+    PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout).futureValue
+    logger.error("SETUP created default plugins")
 
-    testNode1.system.log.info("SETUP creating tables")
+    logger.error("SETUP creating tables")
     Main.createTables(testNode1.system)
-    testNode1.system.log.info("SETUP created tables")
+    logger.error("SETUP created tables")
 
-    testNode1.system.log.info("SETUP init kafka topic probe")
+    logger.error("SETUP init kafka topic probe")
     initializeKafkaTopicProbe()
-    testNode1.system.log.info("SETUP inited kafka topic probe")
+    logger.error("SETUP inited kafka topic probe")
 
-    super.beforeAll()
+
   }
 
   private def initializeKafkaTopicProbe(): Unit = {
@@ -224,14 +222,18 @@ class IntegrationSpec
 
   override protected def afterAll(): Unit = {
     super.afterAll()
-
     testNode3.testKit.shutdownTestKit()
+    logger.error("Shut down node 3")
     testNode2.testKit.shutdownTestKit()
+    logger.error("Shut down node 2")
     testNode1.testKit.shutdownTestKit()
+    logger.error("Shut down node 1")
   }
 
   "Shopping Cart application" should {
     "init and join Cluster" in {
+      logger.error("init and join Cluster")
+
       testNode1.testKit.spawn[Nothing](guardian(), "guardian")
       testNode2.testKit.spawn[Nothing](guardian(), "guardian")
       testNode3.testKit.spawn[Nothing](guardian(), "guardian")
@@ -250,6 +252,7 @@ class IntegrationSpec
 
     "update and project from different nodes via gRPC" in {
       // add from client1, consume event on node3
+      logger.error("update and project")
       val response1 = testNode1.client.addItem(proto.AddItemRequest(cartId = "cart-1", itemId = "foo", quantity = 42))
       val updatedCart1 = response1.futureValue
       updatedCart1.items.head.itemId should ===("foo")

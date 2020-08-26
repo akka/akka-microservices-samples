@@ -6,15 +6,10 @@
         </encoder>
     </appender>
 
-    <logger name="akka.actor" level="DEBUG"/>
-    <logger name="akka.cluster" level="DEBUG"/>
-    <logger name="akka.http" level="INFO"/>
     <logger name="akka.http.impl" level="WARN"/>
-    <logger name="akka.persistence" level="DEBUG"/>
-    <logger name="akka.persistence.cassandra" level="DEBUG"/>
     <logger name="akka.serialization" level="WARN"/>
+    <logger name="akka.cluster" level="ERROR"/>
 
-    <logger name="com.codahale.metrics" level="INFO"/>
     <logger name="com.datastax.oss.driver" level="WARN"/>
     <logger name="com.fasterxml.jackson" level="WARN"/>
     <logger name="io.netty" level="WARN"/>
@@ -22,7 +17,7 @@
     <logger name="org.apache.cassandra" level="ERROR"/>
     <logger name="org.apache.kafka" level="WARN"/>
 
-    <root level="DEBUG">
+    <root level="ERROR">
         <appender-ref ref="STDOUT"/>
     </root>
 
