@@ -84,7 +84,11 @@ class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](con
   // can be overridden in tests
   protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
     val orderServiceClientSettings =
-      GrpcClientSettings.usingServiceDiscovery("order-service-grpc")(system).withTls(false)
+      GrpcClientSettings
+        .connectToServiceAt(
+          system.settings.config.getString("order-service.host"),
+          system.settings.config.getInt("order-service.port"))(system)
+        .withTls(false)
     val orderServiceClient =
       ShoppingOrderServiceClient(orderServiceClientSettings)(system)
     orderServiceClient
