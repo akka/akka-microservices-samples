@@ -123,7 +123,7 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
   private val logger = LoggerFactory.getLogger(classOf[IntegrationSpec])
 
   implicit private val patience: PatienceConfig =
-    PatienceConfig(20.seconds, Span(100, org.scalatest.time.Millis))
+    PatienceConfig(5.seconds, Span(100, org.scalatest.time.Millis))
 
   private val grpcPorts = SocketUtil.temporaryServerAddresses(3, "127.0.0.1").map(_.getPort)
 
@@ -160,18 +160,9 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
     super.beforeAll()
     // avoid concurrent creation of keyspace and tables
     val timeout = 10.seconds
-    logger.error("SETUP creating default plugins")
     PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout).futureValue
-    logger.error("SETUP created default plugins")
-
-    logger.error("SETUP creating tables")
     Main.createTables(testNode1.system)
-    logger.error("SETUP created tables")
-
-    logger.error("SETUP init kafka topic probe")
     initializeKafkaTopicProbe()
-    logger.error("SETUP inited kafka topic probe")
-
   }
 
   private def initializeKafkaTopicProbe(): Unit = {
@@ -218,17 +209,12 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
   override protected def afterAll(): Unit = {
     super.afterAll()
     testNode3.testKit.shutdownTestKit()
-    logger.error("Shut down node 3")
     testNode2.testKit.shutdownTestKit()
-    logger.error("Shut down node 2")
     testNode1.testKit.shutdownTestKit()
-    logger.error("Shut down node 1")
   }
 
   "Shopping Cart application" should {
     "init and join Cluster" in {
-      logger.error("init and join Cluster")
-
       testNode1.testKit.spawn[Nothing](guardian(), "guardian")
       testNode2.testKit.spawn[Nothing](guardian(), "guardian")
       testNode3.testKit.spawn[Nothing](guardian(), "guardian")
@@ -247,7 +233,6 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
 
     "update and project from different nodes via gRPC" in {
       // add from client1, consume event on node3
-      logger.error("update and project")
       val response1 = testNode1.client.addItem(proto.AddItemRequest(cartId = "cart-1", itemId = "foo", quantity = 42))
       val updatedCart1 = response1.futureValue
       updatedCart1.items.head.itemId should ===("foo")
