@@ -5,12 +5,12 @@
 
 include::ROOT:partial$include.adoc[]
 
-xref:isolation.adoc[Isolation] is a prerequisite for autonomy. Only when services are isolated can they be fully autonomous and make decisions independ‐ ently, act independently, and cooperate and coordinate with others to solve problems.
+xref:isolation.adoc[Isolation] is a prerequisite for autonomy. Only when services are isolated can they be fully autonomous and make decisions independently, act independently, and cooperate and coordinate with others to solve problems.
 
-An https://en.wikipedia.org/wiki/Service_autonomy_principle[autonomous service] can only promise its own behaviour by publishing its protocol/API. Embracing this simple yet fundamental fact has profound impact on how we can understand and model collabo‐ rative systems with autonomous services.
+An https://en.wikipedia.org/wiki/Service_autonomy_principle[autonomous service] can only promise its own behaviour by publishing its protocol/API. Embracing this simple yet fundamental fact has profound impact on how we can understand and model collaborative systems with autonomous services.
 
-Another aspect of autonomy is that if a service only can make prom‐ ises about its own behavior, then all information needed to resolve a conflict or to repair under failure scenarios are available within the service itself, removing the need for communication and coordina‐ tion.
+Another aspect of autonomy is that if a service only can make promises about its own behavior, then all information needed to resolve a conflict or to repair under failure scenarios are available within the service itself, removing the need for communication and coordination.
 
-Working with autonomous services opens up flexibility around ser‐ vice orchestration, workflow management and collaborative behav‐ ior, as well as scalability, availability and runtime management, at the cost of putting more thought into well-defined and composable APIs that can make communication—and consensus—a bit more challenging—something we will discuss shortly.
+Working with autonomous services opens up flexibility around service orchestration, workflow management and collaborative behavior, as well as scalability, availability and runtime management, at the cost of putting more thought into well-defined and composable APIs that can make communication—and consensus—a bit more challenging—something we will discuss shortly.
 
 include::partial$reactive-microservices-ebook.adoc[]
