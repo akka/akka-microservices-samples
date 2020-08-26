@@ -4,7 +4,7 @@ site:
   
 content:
   sources:
-  - url: git@github.com:akka/akka-microservices-samples.git
+  - url: git@github.com:akka/akka-platform-guide.git
     start-paths:
     - docs-source/docs
     branches: [main]

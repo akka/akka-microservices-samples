@@ -1,0 +1,163 @@
+= Part 6: Projection publishing to Kafka
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+In this part, we will add another Projection from the events of the `ShoppingCart` entity. This Projection publishes the events to a Kafka message broker. We will also add another service, the `ShoppingAnalyticsService` that consumes the events from the Kafka topic.
+
+.This part of the xref:overview.adoc[full example] will focus on the Kafka producer in the `PublishEventsProjection` and Kafka consumer in `ShoppingAnalyticsService`.
+[caption=""]
+image::example-projection-kafka.png[Example Kafka]
+
+You will learn how to:
+
+* send messages to a Kafka topic from a Projection
+* consume messages from a Kafka topic
+
+TODO link to asynchronous communication concepts
+
+== External representation of the events
+
+For external APIs of a service, such as a Kafka topic that is consumed by other services, it is good to have a well defined format of the data. Therefore we define that in Protobuf, rather than using the internal representation of the events. This also makes it easier to evolve representation over time without breaking downstream consumers.
+
+Add a new `ShoppingCartEvents.proto` with the specification of the events:
+
+[source,proto]
+----
+include::example$shopping-cart-service-scala/src/main/protobuf/ShoppingCartEvents.proto[]
+----
+
+Generate code by compiling the project:
+
+----
+sbt compile
+----
+
+== Sending to Kafka from a Projection
+
+The new Projection will be similar to what we developed in the xref:projection-query.adoc[previous step], but it will send the events to a Kafka topic instead of updating a database.
+
+Add a `PublishEventsProjectionHandler` class that is the Projection `Handler` for processing the events:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjectionHandler.scala[]
+----
+
+<1> `SendProducer` comes from the Kafka connector in Alpakka.
+<2> The events are serialized to Protobuf and sent to the given topic.
+<3> Wrap in Protobuf `Any` to include type information.
+
+The serialization converts the `ShoppingCart.Event` classes to the Protobuf representation. Since several types of messages are sent to the same topic we must include some type information that the consumers of the topic can use when deserializing the messages. Protobuf provides a built-in type called `Any` for this purpose. That is why it is wrapped with `ScalaPBAny.pack`.
+
+== Initialize the Projection
+
+The tagging of the events is already in place from the xref:projection-query.adoc#_tagging[previous step].
+
+Place the initialization code of the Projection in an `PublishEventsProjection` object:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjection.scala[]
+----
+
+The `SendProducer` is initialized using some configuration that you need to add. It defines how to connect to the Kafka broker.
+
+Add the following to `src/main/resources/kafka.conf`, which is included from `application.conf`:
+
+[source,conf]
+----
+include::example$shopping-cart-service-scala/src/main/resources/kafka.conf[]
+----
+
+And for local development add the following to `src/main/resources/local-shared.conf`, which is loaded when running locally:
+
+[source,conf]
+----
+include::example$shopping-cart-service-scala/src/main/resources/local-shared.conf[tag=kafka]
+----
+
+Then you need to call the `PublishEventsProjection.init` from the `Guardian` in `Main.scala`:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=PublishEventsProjection]
+----
+
+== Consuming the events
+
+Let's add another service that consumes the events from the Kafka topic.
+
+Create a project named `shopping-analytics-service` in a separate directory in the same way as the `shopping-cart-service` was created. See xref:dev-env.adoc[Build].
+
+This service will receive the events in the Protobuf format defined in the `ShoppingCartEvents.proto` from the `shopping-cart-service`. Copy that file to the `shopping-analytics-service/src/main/protobuf` and generate code by compiling the project:
+
+----
+sbt compile
+----
+
+Note that different services should not share code, but the Protobuf specification can be copied since that is the published interface of the service.
+
+Create a `ShoppingCartEventConsumer` object that runs an Akka Stream with a Kafka `Consumer.committableSource` from Alpakka Kafka.
+
+[source,scala]
+----
+include::example$shopping-analytics-service-scala/src/main/scala/shopping/analytics/ShoppingCartEventConsumer.scala[]
+----
+
+<1> Kafka Consumer stream.
+
+<2> Offset is committed to Kafka when records have been processed.
+
+<3> `RestartSource` will restart the stream in case of failures.
+
+<4> Protobuf `Any` for type information.
+
+Note how the deserialization is using the type information from the Protobuf `Any` to decide which type of event to deserialize.
+
+To run the new service we also need a `Main` class, which calls the initialization of the `ShoppingCartEventConsumer`.
+
+[source,scala]
+----
+include::example$shopping-analytics-service-scala/src/main/scala/shopping/analytics/Main.scala[]
+----
+
+== Run
+
+In addition to Cassandra we now also need Kafka. Kafka is also started by the `docker-compose` script.
+
+Start Cassandra and Kafka, unless it's already running:
+
+----
+docker-compose up -d
+----
+
+Run the `shopping-cart-service` with:
+
+----
+sbt -Dconfig.resource=local1.conf run
+----
+
+Run the new `shopping-analytics-service` with:
+
+----
+sbt -Dconfig.resource=local1.conf run
+----
+
+Try it with `grpcurl`. Add 1 pencil to a cart:
+
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"pencil", "quantity":1}' -plaintext 127.0.0.1:8051 shoppingcart.ShoppingCartService.AddItem
+----
+
+Look at the log output in the terminal of the `shopping-analytics-service`. There you should see the logging from the ``:
+
+----
+ItemAdded: 1 pencil to cart cart1
+----
+
+== Deploy
+
+TODO deploy the updated shopping-cart-service and the new shopping-analytics-service to the cloud and try it
