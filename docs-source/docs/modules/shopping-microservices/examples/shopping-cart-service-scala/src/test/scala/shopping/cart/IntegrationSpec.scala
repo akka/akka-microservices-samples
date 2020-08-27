@@ -67,6 +67,8 @@ object IntegrationSpec {
       datastax-java-driver {
         basic.contact-points = ["127.0.0.1:9042"]
         basic.load-balancing-policy.local-datacenter = "datacenter1"
+        # lots of ActorSystems in the same JVM
+        advanced.session-leak.threshold = 10
       }
       
       akka.projection.cassandra.offset-store.keyspace = $keyspace
@@ -121,7 +123,7 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
   private val logger = LoggerFactory.getLogger(classOf[IntegrationSpec])
 
   implicit private val patience: PatienceConfig =
-    PatienceConfig(5.seconds, Span(100, org.scalatest.time.Millis))
+    PatienceConfig(10.seconds, Span(100, org.scalatest.time.Millis))
 
   private val grpcPorts = SocketUtil.temporaryServerAddresses(3, "127.0.0.1").map(_.getPort)
 
