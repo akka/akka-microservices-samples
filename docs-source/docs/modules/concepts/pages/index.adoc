@@ -12,25 +12,62 @@ link:{reactive-manifesto}[Reactive System] and are often called Reactive Microsy
 Read the xref:introduction-traditional-architecture.adoc[introduction] for an explanation of the motivation for
 Reactive Microsystems, and a high level overview of the key concepts that power Reactive Microsystems.
 
-== In-depth concepts
+== Properties of Reactive Microsystems
 
 * xref:isolation.adoc[]
 * xref:autonomy.adoc[]
 * xref:mobility.adoc[]
+* Single Responsibility
+* Event-Driven
+* State Ownership
 
+== Patterns and techniques recommended for Reactive Microsystems
 
 * xref:event-sourcing.adoc[]
-* xref:internal-and-external-communication.adoc[]
 * xref:cqrs.adoc[]
+* Message Driven
+* Events and Commands - Event Storming
+* Memory Image Pattern
+* Circuit Breakers
+* Reactive Programming
+* Reactive Streams
+** Backpressure
+* Brief Summary of DDD concepts
+** Bounded Context
+** Stateful Aggregate
+** Consistency Boundaries
+** Anti-Corruption Layer
+** Events-First DDD
 
-ifdef::todo[(TODO: this last item ("What makes up a service?") is out of place, needs a new section)]
+
+== Implementation Concepts
+
+We strongly recommend building your Reactive Microsystems using the link:{akka}[Akka] toolkit. Following is an
+overview of some features in the Akka toolkit you are likely to use:
+
+* Actor model
+* Supervision
+* Akka Streams
+* xref:clustering.adoc[]
+** Sharding
+** Distributed Data
+** SBR
+* Akka Persistence
+* Akka Projection
+
+
+== Deployment Concerns
 
 * xref:services.adoc[]
 ** xref:service-discovery.adoc[]
 ** xref:service-clients.adoc[]
 ** xref:grpc-services.adoc[]
-
-== Akka Overview
-
-* xref:clustering.adoc[]
+* xref:internal-and-external-communication.adoc[]
+* Akka Management
+** Management
+** Bootstrap
+** Service Discovery
+* Docker
+* Kubernetes
+* Helm
 

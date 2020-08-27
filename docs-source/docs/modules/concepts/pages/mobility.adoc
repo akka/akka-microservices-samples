@@ -3,7 +3,7 @@
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
-include::ROOT:partial$include.adoc[]
+include::partial$include.adoc[]
 
 
 With the advent of cloud computing, virtualization, and Docker containers, we have a lot of power at our disposal to efficiently manage hardware resources. The problem is that none of this matters if our Microservices and its underlying platform cannot make efficient use of it. What we need are services that are mobile, allowing them to be elastic.
