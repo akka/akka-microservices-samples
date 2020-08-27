@@ -2,7 +2,7 @@ package shopping.cart
 
 import java.util.UUID
 
-import scala.concurrent.{ ExecutionContext, Future }
+import scala.concurrent.{ Await, ExecutionContext, Future }
 import scala.concurrent.duration._
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
@@ -160,7 +160,7 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
     super.beforeAll()
     // avoid concurrent creation of keyspace and tables
     val timeout = 10.seconds
-    PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout).futureValue
+    Await.result(PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout), timeout)
     Main.createTables(testNode1.system)
     initializeKafkaTopicProbe()
   }
