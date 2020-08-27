@@ -131,7 +131,7 @@ object ShoppingCart {
   val EntityKey: EntityTypeKey[Command] = EntityTypeKey[Command]("ShoppingCart")
 
   // tag::tagging[]
-  val tags = Vector("carts-0", "carts-1", "carts-2", "carts-3", "carts-4")
+  val tags = Vector.tabulate(5)(i => s"carts-$i")
 
   def init(system: ActorSystem[_]): Unit = {
     ClusterSharding(system).init(Entity(EntityKey) { entityContext =>
