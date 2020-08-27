@@ -1,4 +1,4 @@
-= Concept: Isolation
+= Isolation
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2

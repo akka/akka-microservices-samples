@@ -1,4 +1,4 @@
-= Concept: Command Query Responsibility Segregation (CQRS)
+= Command Query Responsibility Segregation (CQRS)
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2

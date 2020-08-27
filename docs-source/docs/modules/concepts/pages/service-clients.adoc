@@ -3,13 +3,13 @@
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
-include::ROOT:partial$include.adoc[]
+include::partial$include.adoc[]
 
 Communicating with another service requires the client to know the service's API, transport and location.
 
 Service discovery
 
-* Location Transparency
+* link:{location-transparency}[Location Transparency]
 * Akka Discovery via DNS
 * SRV records
 

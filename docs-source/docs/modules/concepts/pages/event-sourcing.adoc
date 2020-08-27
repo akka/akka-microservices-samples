@@ -1,4 +1,4 @@
-= Concept: Event Sourcing
+= Event Sourcing
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2

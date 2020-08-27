@@ -1,4 +1,4 @@
-= Concept: Internal and External Communication
+= Internal and External Communication
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2

@@ -1,4 +1,4 @@
-= Concept: gRPC services
+= gRPC services
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2

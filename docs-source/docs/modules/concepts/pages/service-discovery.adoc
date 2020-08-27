@@ -1,4 +1,4 @@
-= Concept: Service discovery
+= Service discovery
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2

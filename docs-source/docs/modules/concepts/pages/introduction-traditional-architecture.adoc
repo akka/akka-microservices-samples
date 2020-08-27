@@ -1,4 +1,4 @@
-= Traditional architectures versus Reactive microservices
+= Overview: Traditional architectures versus Reactive Microservices
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 3
@@ -22,7 +22,7 @@ When designed with Reactive Principles, microservices have the following charact
 * Mobility (and addressability), where a microservice can be moved at runtime but can be reached in the same way regardless of its location.
 * Own their state exclusively by managing and persisting their own state in the way that best suits its own needs.
 
-== Isolation and autonomy
+== xref:isolation.adoc[Isolation] and xref:autonomy.adoc[Autonomy]
 
 From the early days of object oriented programming and service-oriented architectures, experts have recognized the benefits of encapsulation and of loose coupling between modules. Reactive microservices offer isolation and autonomy at a level that traditional architectures cannot. When each microservice has one reason to exist and owns its own state and behavior, it gains the advantages of a https://en.wikipedia.org/wiki/Shared-nothing_architecture[Shared Nothing Architecture, window="shared_nothing"]. 
 

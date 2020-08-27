@@ -1,4 +1,4 @@
-= Concept: Autonomy
+= Autonomy
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2

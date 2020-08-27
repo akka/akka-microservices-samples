@@ -1,0 +1,33 @@
+:page-partial:
+include::ROOT:partial$include.adoc[]
+
+
+// Concept module attributes
+
+// link shortcuts for `link:{akka}/typed/index.html` notation
+:responsive-reactive-manifesto: https://www.reactivemanifesto.org/
+:resilient-reactive-manifesto:  https://www.reactivemanifesto.org/
+:elastic-reactive-manifesto:  https://www.reactivemanifesto.org/
+:message-driven-reactive-manifesto:  https://www.reactivemanifesto.org/
+:reacive-manifesto: https://www.reactivemanifesto.org/
+
+
+:asynchronous: https://www.reactivemanifesto.org/glossary#Asynchronous
+:back-pressure: https://www.reactivemanifesto.org/glossary#Back-Pressure
+:batching: https://www.reactivemanifesto.org/glossary#Batching
+:component: https://www.reactivemanifesto.org/glossary#Component
+:delegation: https://www.reactivemanifesto.org/glossary#Delegation
+:failure: https://www.reactivemanifesto.org/glossary#Failure
+:error: https://www.reactivemanifesto.org/glossary#Failure
+:isolation: https://www.reactivemanifesto.org/glossary#Isolation
+:location-transparency: https://www.reactivemanifesto.org/glossary#Location-Transparency
+:message-driven: https://www.reactivemanifesto.org/glossary#Message-Driven
+:non-blocking: https://www.reactivemanifesto.org/glossary#Non-Blocking
+:protocol: https://www.reactivemanifesto.org/glossary#Protocol
+:replication: https://www.reactivemanifesto.org/glossary#Replication
+:resource: https://www.reactivemanifesto.org/glossary#Resource
+:scalability: https://www.reactivemanifesto.org/glossary#Scalability
+:system: https://www.reactivemanifesto.org/glossary#System
+:user: https://www.reactivemanifesto.org/glossary#User
+
+
