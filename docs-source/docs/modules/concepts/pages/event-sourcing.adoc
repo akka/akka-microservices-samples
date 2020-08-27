@@ -3,7 +3,7 @@
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
-include::ROOT:partial$include.adoc[]
+include::partial$include.adoc[]
 
 See an link:https://docs.microsoft.com/en-us/previous-versions/msp-n-p/jj591559(v=pandp.10)?redirectedfrom=MSDN[introduction to EventSourcing] at MSDN.
 

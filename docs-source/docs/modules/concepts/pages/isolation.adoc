@@ -3,11 +3,11 @@
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
-include::ROOT:partial$include.adoc[]
+include::partial$include.adoc[]
 
-NOTE: This concept is related to https://www.reactivemanifesto.org/[resilience] and https://www.reactivemanifesto.org/[elasticity] which are two properties of https://www.reactivemanifesto.org/[Reactive Systems].
+NOTE: This concept is related to link:{reactive-manifesto}[resilience] and link:{reactive-manifesto}[elasticity] which are two properties of link:{reactive-manifesto}[Reactive Systems].
 
-Isolation is a prerequisite for https://www.reactivemanifesto.org/[resilience] and https://www.reactivemanifesto.org/[elasticity] and requires https://www.reactivemanifesto.org/glossary#Asynchronous[asynchronous communication] boundaries between services to decouple them in:
+Isolation is a prerequisite for link:{reactive-manifesto}[resilience] and link:{reactive-manifesto}[elasticity] and requires link:{reactive-manifesto}glossary#Asynchronous[asynchronous communication] boundaries between services to decouple them in:
 
 - _Time_: Allowing concurrency
 
@@ -15,7 +15,7 @@ Isolation is a prerequisite for https://www.reactivemanifesto.org/[resilience] a
 
 When adopting Microservices, it is also essential to eliminate shared mutable state and thereby minimize coordination, contention and coherency cost, as defined in the Universal Scalability Law by embracing a Share-Nothing Architecture.
 
-https://www.reactivemanifesto.org/[Resilience]—the ability to heal from failure—depends on compartmentalization and containment of failure, and can only be achieved by breaking free from the strong coupling of synchronous communication. Microservices communicating over a process boundary using asynchronous message-passing enable the level of indirection and decoupling necessary to capture and manage failure, orthogonally to the regular workflow, using service supervision.
+link:{reactive-manifesto}[Resilience]—the ability to heal from failure—depends on compartmentalization and containment of failure, and can only be achieved by breaking free from the strong coupling of synchronous communication. Microservices communicating over a process boundary using asynchronous message-passing enable the level of indirection and decoupling necessary to capture and manage failure, orthogonally to the regular workflow, using service supervision.
 
 
 Isolation also makes it easier to scale each service, as well as allowing them to be monitored, debugged and tested independently—something that is very hard if the services are all tangled up in the big bulky mess of a monolith.

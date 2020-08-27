@@ -5,7 +5,7 @@ include::ROOT:partial$include.adoc[]
 // Concept module attributes
 
 // link shortcuts for `link:{akka}/typed/index.html` notation
-:reacive-manifesto: https://www.reactivemanifesto.org/
+:reactive-manifesto: https://www.reactivemanifesto.org/
 
 
 :glossary-asynchronous: https://www.reactivemanifesto.org/glossary#Asynchronous

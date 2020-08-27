@@ -3,7 +3,7 @@
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
-include::ROOT:partial$include.adoc[]
+include::partial$include.adoc[]
 
 Microservices should be xref:isolation.adoc[isolated] and xref:autonomy.adoc[autonomous].
 

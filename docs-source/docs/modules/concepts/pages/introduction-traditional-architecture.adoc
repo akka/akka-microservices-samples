@@ -3,6 +3,8 @@
 :toc-title: ON THIS PAGE
 :toclevels: 3
 
+include::partial$include.adoc[]
+
 Enterprise development has changed drastically from the early days of public internet use. Now, instead of satisfying the needs of thousands or tens of thousands, applications can serve millions of users — and potentially even more devices. To remain competitive, businesses must innovate in ever shorter cycles. This rapid increase in the pace and volume of demand motivates a different approach; one that takes full advantage of cloud and hybrid environments and enables nimble development response to changing business needs.
 
 Because traditional architectures were not designed to run in a highly distributed environment, many organizations have run into issues trying to modernize them. Microservices have arisen as a pattern for dealing with these challenges. However, more than a technical solution, microservices offer a way of organizing development organizations to enhance productivity. Each team takes responsibility for one or more independent services that expose data and functionality through service interfaces. When well-managed, this supports faster iteration and less risky deployments.
@@ -11,7 +13,7 @@ If you are new to microservices, we recommend reading https://martinfowler.com/a
 
 == Reactive principles
 
-For systems with demanding requirements, Lightbend recommends Reactive Principles as the best way to design a system that copes well with uncertainty. Reactive Principles, as defined in the https://www.reactivemanifesto.org/[Reactive Manifesto, window="reactive_manifesto"], include the properties of being responsive, resilient, elastic, and message-driven. Akka Platform has delivered the technical and organizational benefits of microservices for demanding applications across a variety of industries. 
+For systems with demanding requirements, Lightbend recommends Reactive Principles as the best way to design a system that copes well with uncertainty. Reactive Principles, as defined in the link:{reactive-manifesto}[Reactive Manifesto, window="reactive_manifesto"], include the properties of being responsive, resilient, elastic, and message-driven. Akka Platform has delivered the technical and organizational benefits of microservices for demanding applications across a variety of industries.
 
 When designed with Reactive Principles, microservices have the following characteristics:
 
