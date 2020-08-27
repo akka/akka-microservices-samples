@@ -21,7 +21,9 @@ Reactive Microsystems, and a high level overview of the key concepts that power 
 * xref:internal-and-external-communication.adoc[]
 * xref:cqrs.adoc[]
 
-* xref:services.adoc[] (TODO: this item on the list is a bit out of place)
+ifdef::todo[(TODO: this last item ("What makes up a service?") is out of place, needs a new section)]
+
+* xref:services.adoc[]
 ** xref:service-discovery.adoc[]
 ** xref:service-clients.adoc[]
 ** xref:grpc-services.adoc[]
