@@ -9,7 +9,7 @@ Communicating with another service requires the client to know the service's API
 
 Service discovery
 
-* link:{location-transparency}[Location Transparency]
+* link:{glossary-location-transparency}[Location Transparency]
 * Akka Discovery via DNS
 * SRV records
 
