@@ -1,4 +1,4 @@
-= Overview: Traditional architectures versus Reactive Microservices
+= Introduction: Traditional architectures versus Reactive Microsystems
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 3
@@ -15,12 +15,12 @@ For systems with demanding requirements, Lightbend recommends Reactive Principle
 
 When designed with Reactive Principles, microservices have the following characteristics:
 
-* Isolation, where each microservice is completely decoupled so that its lifecycle, including failure, has no impact on other microservices in the system.
-* Autonomy, where each microservice acts and makes decisions independently and publishes its behavior through an API.
+* xref:isolation.adoc[], where each microservice is completely decoupled so that its lifecycle, including failure, has no impact on other microservices in the system.
+* xref:autonomy.adoc[], where each microservice acts and makes decisions independently and publishes its behavior through an API.
 * Single responsibility, where each microservice does one thing and does it well.
 * Event-driven, where a microservice produces, consumes and reacts to events.
-* Mobility (and addressability), where a microservice can be moved at runtime but can be reached in the same way regardless of its location.
-* Own their state exclusively by managing and persisting their own state in the way that best suits its own needs.
+* xref:mobility.adoc[], where a microservice can be moved at runtime but can be reached in the same way regardless of its location.
+* State ownership, where each microservice owns their state exclusively by managing and persisting their own state in the way that best suits its own needs.
 
 == xref:isolation.adoc[Isolation] and xref:autonomy.adoc[Autonomy]
 
@@ -34,7 +34,7 @@ Rather than interacting by remote invocation, microservices publish their capabi
 - Microservices can scale up and down and in and out, by simply adding and removing instances. 
 - When failures bring down one microservice instance, the node on which it is running, or the network, failure does not cascade through the system. 
 
-These deployment patterns require mobility and addressability. Microservices should be location independent so that instances of a particular microservice can be deployed on any available node. When the number of instances and location change dynamically, a level of indirection shields clients and other services from what is going on behind the scenes. Service discovery mechanisms allow third parties to find and communicate with a microservice without being aware of how many instances are running or where they are running. 
+These deployment patterns require xref:mobility.adoc[mobility and addressability]. Microservices should be location independent so that instances of a particular microservice can be deployed on any available node. When the number of instances and location change dynamically, a level of indirection shields clients and other services from what is going on behind the scenes. Service discovery mechanisms allow third parties to find and communicate with a microservice without being aware of how many instances are running or where they are running.
 
 Drilling down into failure scenarios, Reactive microservices have resilience at both an individual and a system level. A cluster of microservice instances can deployed in different JVMs, if a single instance fails, the others are still available. If a cluster of a particular microservice fails, the rest of the system can continue, although possibly with diminished capability. With supervision and coordination, a system can even become self-healing by restarting failed microservices and clusters. Platforms such as Kubernetes provide cluster services such as scaling and auto restart. However, since the platform cannot be aware of application-specifics, developers are responsible for making sure that microservices are designed and deployed in a Reactive way.
 

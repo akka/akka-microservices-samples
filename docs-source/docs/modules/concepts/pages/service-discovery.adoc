@@ -1,4 +1,4 @@
-= Service discovery
+= Service Discovery
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2

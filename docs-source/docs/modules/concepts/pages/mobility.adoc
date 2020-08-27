@@ -1,0 +1,30 @@
+= Mobility and Addressability
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+
+With the advent of cloud computing, virtualization, and Docker containers, we have a lot of power at our disposal to efficiently man‐ age hardware resources. The problem is that none of this matters if our Microservices and its underlying platform cannot make efficient use of it. What we need are services that are mobile, allowing them to be elastic.
+
+We have talked about asynchronous message-passing, and that it provides decoupling in time and space. The latter, decoupling in space, is what we call link:{glossary-location-transparency}[Location Transparency], the ability to, at run‐ time, dynamically scale the Microservice—either on multiple cores or on multiple nodes—without changing the code. This is service distribution that enables elasticity and mobility; it is needed to take full advantage of cloud computing and its pay-as-you-go models.
+
+For a service to become location transparent it needs to be addressa‐ ble. But what does that really mean?
+
+First, addresses need to be stable in the sense that they can be used to refer to the service indefinitely, regardless of where it is currently located. This should hold true if the service is running, has been stopped, is suspended, is being upgraded, has crashed, and so on. The address should always work (Figure 2-8). This means a client can always send messages to an address. In practice they might sometimes be queued up, resubmitted, delegated, logged, or sent to a dead letter queue.
+
+Second, an address needs to be virtual in the sense that it can, and often does, represent not just one, but a whole set of runtime instan‐ ces that together defines the service. Reasons this can be advanta‐ geous include:
+
+- _Load-balancing between instances of a stateless service_: If a service is stateless then it does not matter to which instance a particular request is sent and a wide variety of routing algo‐ rithms can be employed, such as round-robin, broadcast or metrics-based.
+
+- _Active-Passive state replication between instances of a stateful service_: If a service is stateful then sticky routing needs to be used— sending every request to a particular instance. This scheme also requires each state change to be made available to the passive instances of the service—the replicas—each one ready to take over serving the requests in case of failover.
+
+- _Relocation of a stateful service_: It can be beneficial to move a service instance from one location to another in order to improve locality of reference21 or resource efficiency.
+
+Using virtual addresses means that the client can stay oblivious to all of these low-level runtime concerns—it communicates with a ser‐ vice through an address and does not have to care about how and where the service is currently configured to operate.
+
+include::partial$reactive-microservices-ebook.adoc[]
+
+
+See also xref:service-discovery.adoc[].

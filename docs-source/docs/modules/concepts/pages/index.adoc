@@ -14,7 +14,9 @@ Reactive Microsystems, and a high level overview of the key concepts that power 
 
 == In-depth concepts
 
-* xref:isolation.adoc[] and xref:autonomy.adoc[]
+* xref:isolation.adoc[]
+* xref:autonomy.adoc[]
+* xref:mobility.adoc[]
 
 
 * xref:event-sourcing.adoc[]
