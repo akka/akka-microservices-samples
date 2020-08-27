@@ -6,18 +6,11 @@
         </encoder>
     </appender>
 
-    <logger name="akka.http.impl" level="WARN"/>
-    <logger name="akka.serialization" level="WARN"/>
-    <logger name="akka.cluster" level="ERROR"/>
-
     <logger name="com.datastax.oss.driver" level="WARN"/>
-    <logger name="com.fasterxml.jackson" level="WARN"/>
-    <logger name="io.netty" level="WARN"/>
-    <logger name="io.grpc.netty.shaded" level="WARN"/>
     <logger name="org.apache.cassandra" level="ERROR"/>
-    <logger name="org.apache.kafka" level="WARN"/>
+    <logger name="com.codahale.metrics" level="INFO"/>
 
-    <root level="ERROR">
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
 

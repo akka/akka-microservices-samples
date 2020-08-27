@@ -89,8 +89,6 @@ object IntegrationSpec {
       akka.actor.testkit.typed {
         single-expect-default = 5s
         filter-leeway = 5s
-        system-shutdown-default = 30s
-        throw-on-shutdown-timeout = off
       }
     """)
     .withFallback(ConfigFactory.load())
