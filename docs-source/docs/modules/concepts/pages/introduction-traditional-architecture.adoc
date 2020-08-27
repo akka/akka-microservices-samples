@@ -50,11 +50,11 @@ Events provide a record of what happens to each entity and when it happened. A m
 
 For more information about DDD and Events-First design, take the free, self paced https://cognitiveclass.ai/courses/reactive-architecture-introduction/[Introduction to Reactive Architecture] course.
 
-== Eventual consistency
+== Eventual Consistency
 
-In a traditional n-tiered architecture where functionality was tightly coupled and associated with a single database it was possible to maintain strong consistency. In a distributed system however, strong consistency limits scalability, availability, and throughput. The model of eventual consistency provides a tradeoff to achieve Reactive characteristics. Eventual consistency means that indeterminate amount of time elapses before every component in the system sees a particular change. A microservice design needs to identify where strong consistency is necessary--usually within a microservice--and where consistency can be relaxed. 
+In a traditional n-tiered architecture where functionality was tightly coupled and associated with a single database it was possible to maintain strong consistency. In a distributed system however, strong consistency limits scalability, availability, and throughput. The model of eventual consistency provides a tradeoff to achieve Reactive characteristics. Eventual Consistency means that indeterminate amount of time elapses before every component in the system sees a particular change. A microservice design needs to identify where strong consistency is necessary--usually within a microservice--and where consistency can be relaxed.
 
-Eventual consistency accurately reflects how the world works. The things we observe have already happened. And, workflows and state machines are common development practices that fit an event model. Focusing on events and accepting eventual consistency allows for a variety of communication patterns in a microservices system.
+Eventual Consistency accurately reflects how the world works. The things we observe have already happened. And, workflows and state machines are common development practices that fit an event model. Focusing on events and accepting eventual consistency allows for a variety of communication patterns in a microservices system.
 
 == Microservice communication patterns
 
@@ -88,7 +88,7 @@ When designing a reactive microservice system, you want to choose the best messa
 
 image::query-command-event.png[Query Command Event]
 
-Asynchronous messaging provides a simple scalable pattern that you should take advantage of whenever possible. However, synchronous messaging can--and should--be accomplished as efficiently as possible. For example, the sender might wait for a simple acknowledgement from the receiver and continue its work, expecting a reply from the receiver with the answer at some future point. This requires acceptance that it is OK for the system to achieve a consistent state eventually, rather than immediately, as described in <<Eventual consistency>>.
+Asynchronous messaging provides a simple scalable pattern that you should take advantage of whenever possible. However, synchronous messaging can--and should--be accomplished as efficiently as possible. For example, the sender might wait for a simple acknowledgement from the receiver and continue its work, expecting a reply from the receiver with the answer at some future point. This requires acceptance that it is OK for the system to achieve a consistent state eventually, rather than immediately, as described in <<Eventual Consistency>>.
 
 At the system level, Reactive Microservices should be mobile and addressable to keep communication flowing in spite of failures. You should be able to deploy instances of a particular microservice on any available node. When the number of instances and their locations change dynamically, a level of indirection is necessary to shield clients and other services from what is going on behind the scenes. Service discovery mechanisms meet this need by allowing third parties to find and communicate with a microservice without being aware of how many instances are running or where they are running. 
 
@@ -102,11 +102,11 @@ One solution is to use an additional event stream to propagate events to a third
 
 The focus on events during system design opens up possibilities of persisting data in different ways. The facts generated at runtime offer a natural resource that can be easily tapped. For example, think about persistence in the model of a bookkeeping ledger, where all events are recorded. Rather than overwriting an existing entry with a new value (the CRUD model), a bookkeeper creates a new entry that represents the changed value. Microservice systems can imitate this by keeping a log of events in the order in which they come in. 
 
-An event log provides reliable auditing and simplifies debugging. When the log is provided by a messaging service, other microservices and legacy applications can subscribe to events of interest. And, in the case of failure, it is possible to replay the log at any time. This pattern is referred to as https://martinfowler.com/eaaDev/EventSourcing.html[Event sourcing].
+An event log provides reliable auditing and simplifies debugging. When the log is provided by a messaging service, other microservices and legacy applications can subscribe to events of interest. And, in the case of failure, it is possible to replay the log at any time. This pattern is referred to as xref:event-sourcing.adoc[Event Sourcing].
 
 image::event-sourcing.png[Event Sourcing]
 
-Event sourcing can provide insights that are lost in traditional systems where data is overwritten. For example, on an ecommerce website, you could track which products are most often put in the cart and then removed. This information would not be available in shopping carts implemented as simple update in place persistence.
+Event Sourcing can provide insights that are lost in traditional systems where data is overwritten. For example, on an ecommerce website, you could track which products are most often put in the cart and then removed. This information would not be available in shopping carts implemented as simple update in place persistence.
 
 In a complex microservices system, queries often need to join data in ways not supported by the initial domain model. This is especially true when the model is event sourced. The Command Query Responsibility Segregation (CQRS) pattern separates the read and write models of a system. 
 

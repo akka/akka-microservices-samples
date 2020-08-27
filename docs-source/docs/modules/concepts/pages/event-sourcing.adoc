@@ -12,6 +12,8 @@ link:https://hackernoon.com/events-as-first-class-citizens-8633e8479493[Events A
 
 Event Sourcing documentation in the link:{akka}/typed/persistence.html#introduction[Akka Reference documentation for Akka Persistence].
 
+See also link:https://martinfowler.com/eaaDev/EventSourcing.html[Martin Fowler's introduction to Event Sourcing].
+
 == Describing entities
 
 A difference to persistence based on Create-Read-Update-Delete (CRUD) data-stores is that we don't need to map our imagined entities to a database model up-front. Instead, we model the entities and the events that affect their state.
