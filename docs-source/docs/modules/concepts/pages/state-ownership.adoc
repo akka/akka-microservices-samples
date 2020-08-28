@@ -1,0 +1,18 @@
+= State Ownership
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 3
+
+include::partial$include.adoc[]
+
+
+Microservices are often stateful entities: they encapsulate state and behavior, in similar fashion to an Object or an Actor, and isolation most certainly applies to state and requires that you treat state and behavior as a single unit.
+
+Unfortunately, ignoring the problem by calling the architecture “stateless”—by having “stateless” controller-style services that are pushing their state down into a big shared database, like many web frameworks do—won’t help as much as you would like and only delegate the problem to a third-party, making it harder to control— both in terms of data integrity guarantees as well as scalability and availability guarantees.
+
+What is needed is that each Microservice take sole responsibility for their own state and the persistence thereof. Modeling each service as a xref:ddd.adoc##_bounded_context[Bounded Context] can be helpful since each service usually defines its own domain, each with its own xref:ddd.adoc#_ubiquitous_language[Ubiquitous Language]. Both these techniques are taken from the Domain-Driven Design (xref:ddd.adoc[DDD]) toolkit of modeling tools. Of all the new concepts introduced here, consider DDD a good place to start learning. Microservices are heavily influenced by DDD and many of the terms you hear in context of Microservices come from DDD.
+
+When communicating with another Microservice, across Bounded Contexts, you can only ask politely for its state—you can’t force it to reveal it. Each service responds to a request at its own will, with immutable data (facts) derived from its current state, and never exposes its mutable state directly.
+
+
+include::partial$reactive-microservices-ebook.adoc[]

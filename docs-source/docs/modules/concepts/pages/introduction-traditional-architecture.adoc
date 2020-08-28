@@ -17,12 +17,12 @@ For systems with demanding requirements, Lightbend recommends Reactive Principle
 
 When designed with Reactive Principles, microservices have the following characteristics:
 
-* xref:isolation.adoc[], where each microservice is completely decoupled so that its lifecycle, including failure, has no impact on other microservices in the system.
-* xref:autonomy.adoc[], where each microservice acts and makes decisions independently and publishes its behavior through an API.
+* xref:isolation.adoc[Isolation], where each microservice is completely decoupled so that its lifecycle, including failure, has no impact on other microservices in the system.
+* xref:autonomy.adoc[Autonomy], where each microservice acts and makes decisions independently and publishes its behavior through an API.
 * Single responsibility, where each microservice does one thing and does it well.
-* Event-driven, where a microservice produces, consumes and reacts to events.
-* xref:mobility.adoc[], where a microservice can be moved at runtime but can be reached in the same way regardless of its location.
-* State ownership, where each microservice owns their state exclusively by managing and persisting their own state in the way that best suits its own needs.
+* xref:message-driven-event-driven.adoc[Event-driven], where a microservice produces, consumes and reacts to events.
+* xref:mobility.adoc[Mobility and Addressability], where a microservice can be moved at runtime but can be reached in the same way regardless of its location.
+* xref:state-ownership.adoc[State ownership], where each microservice owns their state exclusively by managing and persisting their own state in the way that best suits its own needs.
 
 == Isolation and Autonomy
 

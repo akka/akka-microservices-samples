@@ -1,0 +1,17 @@
+= DDD
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 3
+
+include::partial$include.adoc[]
+
+ifdef::todo[TODO: x-link to https://en.wikipedia.org/wiki/Domain-driven_design (?)]
+
+ifdef::todo[TODO: below is list of possible sections for this page]
+
+== Bounded Context
+== Ubiquitous Language
+== Consistency Boundaries
+== Stateful Aggregate
+== Anti-Corruption Layer
+== Events-First DDD

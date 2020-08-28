@@ -19,7 +19,7 @@ Reactive Microsystems, and a high level overview of the key concepts that power 
 * xref:mobility.adoc[]
 * Single Responsibility
 * xref:message-driven-event-driven.adoc[Event-Driven]
-* State Ownership
+* xref:state-ownership.adoc[]
 
 == Patterns and techniques recommended for Reactive Microsystems
 
@@ -32,12 +32,7 @@ Reactive Microsystems, and a high level overview of the key concepts that power 
 * Reactive Programming
 * Reactive Streams
 ** Backpressure
-* Brief Summary of DDD concepts
-** Bounded Context
-** Stateful Aggregate
-** Consistency Boundaries
-** Anti-Corruption Layer
-** Events-First DDD
+* xref:ddd.adoc[Brief Summary of DDD concepts]
 
 
 == Implementation Concepts
