@@ -5,7 +5,7 @@
 
 include::ROOT:partial$include.adoc[]
 
-This example illustrates how multiple small microservices can interact to implement a system. They use Akka Persistence to enables Event Sourcing and Akka Projection to implement CQRS for the event-sourced entities.
+This example illustrates how multiple microservices can interact to implement a system. They use Akka Persistence for Event Sourcing and Akka Projections to implement CQRS for the event-sourced entities.
 
 == Tutorial
 

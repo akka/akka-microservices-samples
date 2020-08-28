@@ -22,15 +22,10 @@ object Main {
 class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
-  startAkkaManagement()
+  AkkaManagement(system).start()
+  ClusterBootstrap(system).start()
 
   ShoppingCartEventConsumer.init(system)
-
-  // can be overridden in tests
-  protected def startAkkaManagement(): Unit = {
-    AkkaManagement(system).start()
-    ClusterBootstrap(system).start()
-  }
 
   override def onMessage(msg: Nothing): Behavior[Nothing] =
     this

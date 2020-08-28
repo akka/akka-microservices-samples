@@ -62,7 +62,7 @@ include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 == Main
 
-To run the service as a Java application we need a class with a `main` method. Edit the `Main` class that is included from the template project. It should initialize the `ActorSystem` and the `ShoppingCartServer` like this:
+To run the service we need a class with a `main` method. Edit the `Main` class that is included from the template project. It should initialize the `ActorSystem` and the `ShoppingCartServer` like this:
 
 [source,scala]
 ----

@@ -40,10 +40,7 @@ object IntegrationSpec {
 
   val config: Config = ConfigFactory
     .parseString(s"""
-      akka.cluster {
-         seed-nodes = []
-         jmx.multi-mbeans-in-same-jvm = on
-      }
+      akka.cluster.jmx.multi-mbeans-in-same-jvm = on
       
       akka.remote.artery.canonical {
         hostname = "127.0.0.1"
@@ -97,19 +94,32 @@ object IntegrationSpec {
         system-shutdown-default = 30s
       }
     """)
-    .withFallback(ConfigFactory.load())
+    .withFallback(
+      ConfigFactory.load("local1")
+    ) // pick up local configuration to test it, dynamic ports have been overridden
 
-  private def nodeConfig(grpcPort: Int): Config =
+  private def nodeConfig(grpcPort: Int, managementPorts: Seq[Int], managementPortIndex: Int): Config =
     ConfigFactory.parseString(s"""
       shopping-cart-service.grpc {
         interface = "localhost"
         port = $grpcPort
       }
+      akka.management.http.port = ${managementPorts(managementPortIndex)}
+      akka.discovery.config.services {
+        "integrationspec" {
+          endpoints = [
+            {host = "127.0.0.1", port = ${managementPorts(0)}},
+            {host = "127.0.0.1", port = ${managementPorts(1)}}
+          ]
+        }
+      }
       """)
 
-  class TestNodeFixture(grpcPort: Int) {
+  class TestNodeFixture(grpcPort: Int, managementPorts: Seq[Int], managementPortIndex: Int) {
     val testKit =
-      ActorTestKit("IntegrationSpec", nodeConfig(grpcPort).withFallback(IntegrationSpec.config).resolve())
+      ActorTestKit(
+        "IntegrationSpec",
+        nodeConfig(grpcPort, managementPorts, managementPortIndex).withFallback(IntegrationSpec.config).resolve())
 
     def system: ActorSystem[_] = testKit.system
 
@@ -129,12 +139,13 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
   implicit private val patience: PatienceConfig =
     PatienceConfig(10.seconds, Span(100, org.scalatest.time.Millis))
 
-  private val grpcPorts = SocketUtil.temporaryServerAddresses(3, "127.0.0.1").map(_.getPort)
+  private val (grpcPorts, managementPorts) =
+    SocketUtil.temporaryServerAddresses(6, "127.0.0.1").map(_.getPort).splitAt(3)
 
   // one TestKit (ActorSystem) per cluster node
-  private val testNode1 = new TestNodeFixture(grpcPorts(0))
-  private val testNode2 = new TestNodeFixture(grpcPorts(1))
-  private val testNode3 = new TestNodeFixture(grpcPorts(2))
+  private val testNode1 = new TestNodeFixture(grpcPorts(0), managementPorts, 0)
+  private val testNode2 = new TestNodeFixture(grpcPorts(1), managementPorts, 1)
+  private val testNode3 = new TestNodeFixture(grpcPorts(2), managementPorts, 2)
 
   private val systems3 = List(testNode1, testNode2, testNode3).map(_.testKit.system)
 
@@ -155,7 +166,6 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
         override protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
           testOrderService
         }
-        override protected def startAkkaManagement(): Unit = ()
       }
     }
   }
@@ -221,10 +231,6 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
       testNode1.testKit.spawn[Nothing](mainBehavior(), "guardian")
       testNode2.testKit.spawn[Nothing](mainBehavior(), "guardian")
       testNode3.testKit.spawn[Nothing](mainBehavior(), "guardian")
-
-      systems3.foreach { sys =>
-        Cluster(sys).manager ! Join(Cluster(testNode1.system).selfMember.address)
-      }
 
       // let the nodes join and become Up
       eventually(PatienceConfiguration.Timeout(15.seconds)) {
