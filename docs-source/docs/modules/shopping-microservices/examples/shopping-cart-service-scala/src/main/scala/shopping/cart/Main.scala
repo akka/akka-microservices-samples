@@ -86,8 +86,8 @@ class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](con
     val orderServiceClientSettings =
       GrpcClientSettings
         .connectToServiceAt(
-          system.settings.config.getString("order-service.host"),
-          system.settings.config.getInt("order-service.port"))(system)
+          system.settings.config.getString("shopping-order-service.host"),
+          system.settings.config.getInt("shopping-order-service.port"))(system)
         .withTls(false)
     val orderServiceClient =
       ShoppingOrderServiceClient(orderServiceClientSettings)(system)

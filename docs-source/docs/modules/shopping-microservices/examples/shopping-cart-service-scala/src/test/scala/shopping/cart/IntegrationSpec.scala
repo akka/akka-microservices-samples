@@ -9,7 +9,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.scaladsl.Behaviors
 import akka.cluster.MemberStatus
-import akka.cluster.typed.{ Cluster, Join }
+import akka.cluster.typed.Cluster
 import akka.grpc.GrpcClientSettings
 import akka.kafka.ConsumerSettings
 import akka.kafka.Subscriptions
