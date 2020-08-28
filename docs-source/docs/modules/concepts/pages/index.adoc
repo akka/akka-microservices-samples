@@ -42,18 +42,17 @@ Reactive Microsystems, and a high level overview of the key concepts that power 
 
 == Implementation Concepts
 
-We strongly recommend building your Reactive Microsystems using the link:{akka}[Akka] toolkit. Following is an
+We recommend building your Reactive Microsystems using the link:{akka}[Akka] toolkit. Following is an
 overview of some features in the Akka toolkit you are likely to use:
 
 * Actor model
-* Supervision
+** Supervision
 * Akka Streams
 * xref:clustering.adoc[]
 ** Sharding
-** Distributed Data
 ** SBR
 * Akka Persistence
-* Akka Projection
+* Akka Projections
 
 
 == Deployment Concerns
