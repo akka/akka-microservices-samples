@@ -25,6 +25,9 @@ Nodes of a single service (collectively called a cluster) require less decouplin
 
 This diagram illustrates each of these types of inter- and intra-service communication in a Lagom system distributed across three servers. In the example, the Order service publishes to one or more Kafka topics, while the User service subscribes to consume the information. The User service communicates with other User service instances (cluster members) using Akka remoting. The Shipping service and User service exchange information by streaming it in service calls.
 
+
+[#internal-and-external-communication]
+.Example of Internal and External Communications
 [caption=""]
 image::concepts/internal-and-external-communication.png[Internal and External Communication]
 

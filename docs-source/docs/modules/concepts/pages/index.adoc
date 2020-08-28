@@ -28,7 +28,7 @@ Reactive Microsystems, and a high level overview of the key concepts that power 
 * xref:message-driven-event-driven.adoc[Message Driven]
 * Commands and Events - Event Storming
 * Memory Image Pattern
-* Circuit Breakers
+* xref:circuit-breakers.adoc[Circuit Breakers]
 * Reactive Programming
 * Reactive Streams
 ** Backpressure
