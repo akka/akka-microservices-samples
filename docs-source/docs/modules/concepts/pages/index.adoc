@@ -18,15 +18,15 @@ Reactive Microsystems, and a high level overview of the key concepts that power 
 * xref:autonomy.adoc[]
 * xref:mobility.adoc[]
 * Single Responsibility
-* Event-Driven
+* xref:message-driven-event-driven.adoc[Event-Driven]
 * State Ownership
 
 == Patterns and techniques recommended for Reactive Microsystems
 
 * xref:event-sourcing.adoc[]
 * xref:cqrs.adoc[]
-* Message Driven
-* Events and Commands - Event Storming
+* xref:message-driven-event-driven.adoc[Message Driven]
+* Commands and Events - Event Storming
 * Memory Image Pattern
 * Circuit Breakers
 * Reactive Programming
