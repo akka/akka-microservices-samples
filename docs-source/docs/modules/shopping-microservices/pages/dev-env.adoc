@@ -35,7 +35,7 @@ sbt:shopping-cart-service> test
 Open a console and run the following command to create a project with build and configuration files for Akka Microservices. This build is the starting point for the tutorial:
 
 ----
-sbt new akka/akka-microservices-seed.g8
+sbt new akka/akka-microservices-seed-scala.g8
 ----
 
 This template will prompt for the naming of the project. Enter the following for the first service:
