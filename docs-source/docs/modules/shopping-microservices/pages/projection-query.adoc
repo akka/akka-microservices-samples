@@ -185,3 +185,11 @@ grpcurl -d '{"itemId":"hoodie"}' -plaintext 127.0.0.1:8101 shoppingcart.Shopping
 == Deploy
 
 ifdef::todo[TODO: deploy the updated version to the cloud and try it]
+
+== Learn more
+
+* In xref:projection-kafka.adoc[**next step**] of the tutorial you will add a Projection for publishing events to Kafka.
+* Revisit the Event Sourced entity in xref:complete-entity.adoc[previous step].
+* xref:concepts:cqrs.adoc[CQRS concepts].
+* link:{akka-projection}/[Akka Projection reference documentation].
+* link:{akka}/typed/cluster-sharded-daemon-process.html[Akka Sharded Daemon Process reference documentation].

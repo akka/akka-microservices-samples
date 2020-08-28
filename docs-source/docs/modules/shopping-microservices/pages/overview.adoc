@@ -17,7 +17,7 @@ image::example-overview.png[Example overview]
 The tutorial takes you through the following steps to build the services from scratch, and adding piece by piece with deployment to the cloud for each step.
 
 . xref:overview.adoc[Overview of the example] (this page)
-. xref:dev-env.adoc[Development environment]
+. xref:dev-env.adoc[**Development environment**] (next)
 . xref:grpc-server.adoc[First gRPC service]
 . xref:entity.adoc[Event Sourced entity]
 . xref:complete-entity.adoc[Complete Event Sourced entity]

@@ -106,3 +106,10 @@ You can stop the service with `ctrl-c`.
 == Deploy
 
 ifdef::todo[TODO: deploy to cloud and try it]
+
+== Learn more
+
+* In xref:entity.adoc[**next step**] of the tutorial you will add an Event Sourced entity.
+* Revisit the development environment in xref:dev-env.adoc[previous step].
+* xref:concepts:grpc-services.adoc[gRPC concepts]
+* link:{akka-grpc}/server/index.html[Akka gRPC server reference documentation].

@@ -149,3 +149,8 @@ The example projects are using the following ports.
 |8303
 
 |===
+
+== Learn more
+
+* In xref:grpc-server.adoc[**next step**] of the tutorial you will create the first gRPC service.
+* Revisit the overview in xref:overview.adoc[previous step].

@@ -193,3 +193,10 @@ ItemAdded: 1 pencil to cart cart1
 == Deploy
 
 ifdef::todo[TODO: deploy the updated shopping-cart-service and the new shopping-analytics-service to the cloud and try it]
+
+== Learn more
+
+* In xref:projection-grpc-client.adoc[**next step**] of the tutorial you will add a Projection calling a gRPC service.
+* Revisit the Projection for queries in xref:projection-query.adoc[previous step].
+* xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts].
+* link:{akka-projection}/[Akka Projection reference documentation].
