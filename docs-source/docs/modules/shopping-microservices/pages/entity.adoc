@@ -122,11 +122,11 @@ The template project includes this marker interface `CborSerializable`:
 include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/CborSerializable.scala[]
 ----
 
-The interface is configured in the `application.conf` file to enable CBOR serialization.
+The interface is configured in the `serialization.conf` file to enable CBOR serialization. `serialization.conf` is included in `application.conf`.
 
 [source,hocon]
 ----
-include::example$shopping-cart-service-scala/src/main/resources/application.conf[tag=cbor]
+include::example$shopping-cart-service-scala/src/main/resources/serialization.conf[]
 ----
 
 == Unit testing

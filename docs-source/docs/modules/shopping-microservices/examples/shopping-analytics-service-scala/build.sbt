@@ -3,6 +3,7 @@ val AkkaVersion = "2.6.8+71-57fb9e90"
 val AkkaPersistenceCassandraVersion = "1.0.1"
 val AlpakkaKafkaVersion = "2.0.4"
 val AkkaHttpVersion = "10.2.0"
+// FIXME once akka management 1.0.9 is released
 val AkkaManagementVersion = "1.0.8+35-9feaa689+20200825-1429"
 val AkkaProjectionVersion = "1.0.0-RC1"
 
@@ -53,7 +54,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-persistence-testkit" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
   "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
-  "org.scalatest" %% "scalatest" % "3.1.3" % Test)
+  "org.scalatest" %% "scalatest" % "3.1.2" % Test)
 
 run / fork := false
 Global / cancelable := false // ctrl-c

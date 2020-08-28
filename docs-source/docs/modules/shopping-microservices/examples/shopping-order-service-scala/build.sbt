@@ -12,14 +12,14 @@ enablePlugins(AkkaGrpcPlugin)
 name := "shopping-order-service-scala"
 version := "1.0"
 
+organization := "com.lightbend.akka.samples"
+organizationHomepage := Some(url("https://akka.io"))
+licenses := Seq(("CC0", url("https://creativecommons.org/publicdomain/zero/1.0")))
+
 // For akka management snapshot
 resolvers += Resolver.bintrayRepo("akka", "snapshots")
 // For akka nightlies
 resolvers += "Akka Snapshots" at "https://repo.akka.io/snapshots/"
-
-organization := "com.lightbend.akka.samples"
-organizationHomepage := Some(url("https://akka.io"))
-licenses := Seq(("CC0", url("https://creativecommons.org/publicdomain/zero/1.0")))
 
 Compile / scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlog-reflective-calls", "-Xlint")
 Compile / javacOptions ++= Seq("-Xlint:unchecked", "-Xlint:deprecation")
@@ -54,7 +54,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-persistence-testkit" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
   "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
-  "org.scalatest" %% "scalatest" % "3.1.3" % Test)
+  "org.scalatest" %% "scalatest" % "3.1.2" % Test)
 
 run / fork := false
 Global / cancelable := false // ctrl-c
