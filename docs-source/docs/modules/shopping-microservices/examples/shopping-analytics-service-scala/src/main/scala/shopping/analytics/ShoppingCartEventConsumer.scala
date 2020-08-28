@@ -31,7 +31,7 @@ object ShoppingCartEventConsumer {
     val config = system.settings.config.getConfig("shopping-analytics-service.kafka.consumer")
     val consumerSettings =
       ConsumerSettings(config, new StringDeserializer, new ByteArrayDeserializer)
-        .withEnrichAsync(DiscoverySupport.consumerBootstrapServers(config)(system.toClassic))
+        .withBootstrapServers(system.settings.config.getString("shopping-analytics-service.kafka.bootstrap-servers"))
         .withGroupId("shopping-cart-analytics")
     val committerSettings = CommitterSettings(system)
 
