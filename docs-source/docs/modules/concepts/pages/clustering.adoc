@@ -5,7 +5,7 @@
 
 include::partial$include.adoc[]
 
-TODO
+ifdef::todo[TODO: this page is WIP]
 
 The server of this service consists of JVMs in an Akka cluster. Each node run's its own `ActorSystem` which is configured to look out for other cluster nodes.
 

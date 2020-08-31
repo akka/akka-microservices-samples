@@ -64,7 +64,7 @@ The WAR and JAR monolithic deployments of traditional architectures were based o
 
 In distributed systems, there are no assurances that the service you want to invoke will be running, whether a network issue will prevent a request from arriving, or whether the response will ever come. This dynamic nature of distributed systems makes it important to deal with communication failures as normal occurrences. Messages provide a resilient way of communicating between instances of the same microservice and other microservices in the system.
 
-Messaging does not need to be point-to-point. Use of messaging can, and often does, mean adopting an event-driven architecture, which can bring additional benefits. Event-driven systems promote autonomy and decoupling, allowing the development organization and the resulting system to scale more easily. They provide good options for managing consistency and persistence. 
+Messaging does not need to be point-to-point. Use of messaging can, and often does, mean adopting an xref:message-driven-event-driven.adoc[event-driven] architecture, which can bring additional benefits. Event-driven systems promote autonomy and decoupling, allowing the development organization and the resulting system to scale more easily. They provide good options for managing consistency and persistence. 
 
 Messages offer a real world model that allow you to reason logically about requirements. For example, if one of your workmates is away from their desk and you have a question for them, you could leave a note. You don't know when they might respond: they could be on vacation, or even have left the company. This leaves you a limited number of options: 
 
@@ -78,7 +78,7 @@ In contrast, with asynchronous messaging, the requestor simply sends a message a
 
 image::async-sync.png[Synchronous vs Ascynchronous]
 
-If the message is important, you need some way of persisting it to make sure it will be dealt with at some point in time. An event-driven architecture offers several ways of handling this. For example, in a microservices system, you could use a message broker with delivery guarantees, or write such messages to a database or log. If a reply is required, the sender could just wait for an acknowledgement that the request was received and continue its work, expecting the answer to the question later.
+If the message is important, you need some way of persisting it to make sure it will be dealt with at some point in time. An xref:message-driven-event-driven.adoc[event-driven] architecture offers several ways of handling this. For example, in a microservices system, you could use a message broker with delivery guarantees, or write such messages to a database or log. If a reply is required, the sender could just wait for an acknowledgement that the request was received and continue its work, expecting the answer to the question later.
 
 == Choosing the right message for the job 
 

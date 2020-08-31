@@ -5,6 +5,9 @@
 
 include::partial$include.adoc[]
 
+ifdef::todo[TODO: this page is WIP]
+
+
 See an link:https://docs.microsoft.com/en-us/previous-versions/msp-n-p/jj591559(v=pandp.10)?redirectedfrom=MSDN[introduction to EventSourcing] at MSDN.
 
 Another excellent article about “thinking in Events” is

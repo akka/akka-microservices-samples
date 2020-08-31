@@ -5,6 +5,9 @@
 
 include::partial$include.adoc[]
 
+ifdef::todo[TODO: this page is WIP]
+
+
 CQRS documentation in the link:{akka-projection}/use-cases.html[Akka Projections documentation].
 
 The idea of CQRS is to establish specific data representations suited to answer the queries we want to handle. These representations (or "projections", or "read-side models") are built up by listening to the stream of events that update the entities.

@@ -5,6 +5,9 @@
 
 include::partial$include.adoc[]
 
+ifdef::todo[TODO: WIP]
+
+
 Communicating with another service requires the client to know the service's API, transport and location.
 
 Service discovery
@@ -16,7 +19,7 @@ Service discovery
 
 == gRPC
 
-link:grpc-services.adoc#_grpc_clients[See gRPC]
+xref:grpc-services.adoc#_grpc_clients[See gRPC]
 
 == Kafka
 
