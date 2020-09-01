@@ -5,9 +5,22 @@ include::ROOT:partial$include.adoc[]
 
 :imagesdir: assets/images
 
-== xref:concepts:index.adoc[]
+ifdef::review[Authors: you shouldn't need to define the imagesdir unless it is somewhere outside of the default. Antora allows you to put it in ./assets/images, which used to be the default, or in just ./images now.]
 
-This section covers multiple concepts around software architecture and Akka features.
+ifdef::review[Authors: as a reader, when I land on this page, I want to first reassure myself that I'm in the right place. For example, I want to see mention of the problems I'm trying to solve and a brief description of how this guide (and Akka Platform) can help me do that. It doesn't need to go that deep, but should motivate me to want to go on and read concepts or try one of the examples, etc. Probably also useful would be a section on how to get the most out of this guide, what audience it is intended for etc. I would put the x-refs to the other sections in that section. I've added this below and revised the description for concepts so that you can get an idea of what I mean]
+
+ifdef::review[Authors, in light of the findings of this usability study: http://sigdoc.acm.org/cdq/how-developers-use-api-documentation-an-observation-study/, we might want to reconsider renaming "Concepts" and breaking it up into top level titles that might be more meaningful to readers, such as "Why Reactive", "What's Reactive" -- just brainstorming here.]
+
+== How to get the most out of this guide
+
+If this is your first experience with Reactive frameworks or with Akka, we recommend that you first read the xref:concepts:index.adoc[Concepts]. There you will learn:
+
+* The challenges that Reactive Architecture can help you overcome
+* A summary of Reactive Principles
+* The benefits of using Akka
+* ...
+
+
 
 == xref:shopping-microservices:index.adoc[Microservices based on Event Sourcing and CQRS example]
 
