@@ -1,9 +1,9 @@
-= How to inspect the service's health
+= How to inspect the health of a service
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
-include::ROOT:partial$include.adoc[]
+include::partial$include.adoc[]
 
 Inspecting a services' proper functioning from the outside is an important feature to operate it.
 
@@ -22,7 +22,8 @@ The link:{akka-management}/[Akka Management] library includes support for exposi
 
 The depedencies for Akka Management include the core module and the cluster HTTP module for cluster inspection. As Akka Management uses Spray JSON internally, make sure to add that dependency of the exact same version as other Akka HTTP libraries.
 
-[source,sbt]
+.build.sbt
+[source,scala]
 ----
 val AkkaManagementVersion = "1.0.8"
 
@@ -35,6 +36,7 @@ libraryDependencies ++= Seq(
 
 Upon start Akka Management creates an HTTP endpoint that allows insight into the service. That endpoint is separate from the service's HTTP endpoints and will in most cases use a different network interface.
 
+.src/main/resources/application.conf
 [source,hocon]
 ----
 akka.management {
@@ -56,6 +58,7 @@ We consider our service ready for requests when it has joined the Akka Cluster a
 
 Akka Persistence Cassandra includes a check to validate connectivity, as the service can't operate at all if it can't persist the events that check becomes part of our readiness check.
 
+.src/main/resources/application.conf
 [source,hocon]
 ----
 akka.management {

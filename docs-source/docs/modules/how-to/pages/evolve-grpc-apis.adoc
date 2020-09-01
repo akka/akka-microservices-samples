@@ -3,5 +3,6 @@
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
-include::ROOT:partial$include.adoc[]
+include::partial$include.adoc[]
 
+ifdef::todo[TODO: this page is WIP] 

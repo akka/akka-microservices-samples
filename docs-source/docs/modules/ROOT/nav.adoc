@@ -5,7 +5,7 @@ include::partial$include.adoc[]
 
 * xref:concepts:index.adoc[]
 
-* xref:shopping-microservices:index.adoc[Example: Microservices]
+* xref:shopping-microservices:index.adoc[Tutorial: Microservices]
 . xref:shopping-microservices:overview.adoc[]
 . xref:shopping-microservices:grpc-server.adoc[First gRPC service]
 . xref:shopping-microservices:entity.adoc[Event Sourced entity]

@@ -6,3 +6,6 @@
 include::ROOT:partial$include.adoc[]
 
 * xref:health-checks.adoc[]
+* xref:evolve-grpc-apis.adoc[]
+* xref:enable-TLS.adoc[]
+* How to scale command-side and query-side independently

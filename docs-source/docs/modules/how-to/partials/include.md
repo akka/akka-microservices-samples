@@ -1,0 +1,2 @@
+:page-partial:
+include::ROOT:partial$include.adoc[]
