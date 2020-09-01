@@ -22,10 +22,11 @@ Note that since gRPC requires HTTP/2, when you enable TLS for gRPC you also need
 See also: link:{akka-http}/current/server-side/http2.html#use-newserverat-bind-and-https[Use `newServerAt(...).bind()` and HTTPS].
 ---
 
+== Consume gRPC services over TLS
+
+When consuming a gRPC that's served over an encrypted (non `plaintext`) connection, you must setup the `GrpcClientSettings` to enable TLS and, optionally, reconfigure the `ssl-provider` if you want to fine tune what implementation to use. See the link:{akka-grpc}/client/configuration.html[documentation for gRPC Client Configuration] for all the details.
 
 == Advanced configurations
 
 If you want to link:{}/server-side/server-https-support.html#running-both-http-and-https[run both HTTP and HTTPS side by side] you must create two `Http` instances and bind each instance to a different port. Both instances should share a single `Route` instance.
-
-
 
