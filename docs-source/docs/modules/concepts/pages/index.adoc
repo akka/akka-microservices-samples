@@ -1,7 +1,8 @@
-= Concepts
+
+= Introduction: Traditional architectures versus Reactive Microsystems
 :toc:
 :toc-title: ON THIS PAGE
-:toclevels: 2
+:toclevels: 3
 
 include::partial$include.adoc[]
 
@@ -9,61 +10,113 @@ This section explains the concepts that motivate Akka's take on how to implement
 Sourcing and CQRS. Microservices built using Event Sourcing and CQRS adhere to the properties of a
 {reactive-manifesto}[Reactive System] {reactive-manifesto}[{tab-icon}, window="tab"]  and are often called Reactive Microsystems.
 
-Read the xref:introduction-traditional-architecture.adoc[introduction] for an explanation of the motivation for
-Reactive Microsystems, and a high level overview of the key concepts that power Reactive Microsystems.
+== Introduction
 
-== Properties of Reactive Microsystems
+Enterprise development has changed drastically from the early days of public internet use. Now, instead of satisfying the needs of thousands or tens of thousands, applications can serve millions of users — and potentially even more devices. To remain competitive, businesses must innovate in ever shorter cycles. This rapid increase in the pace and volume of demand motivates a different approach; one that takes full advantage of cloud and hybrid environments and enables nimble development response to changing business needs.
 
-* xref:isolation.adoc[]
-* xref:autonomy.adoc[]
-* xref:mobility.adoc[]
-* Single Responsibility
-* xref:message-driven-event-driven.adoc[Event-Driven]
-* xref:state-ownership.adoc[]
+Because traditional architectures were not designed to run in a highly distributed environment, many organizations have run into issues trying to modernize them. Microservices have arisen as a pattern for dealing with these challenges. However, more than a technical solution, microservices offer a way of organizing development organizations to enhance productivity. Each team takes responsibility for one or more independent services that expose data and functionality through service interfaces. When well-managed, this supports faster iteration and less risky deployments.
 
-== Patterns and techniques recommended for Reactive Microsystems
+If you are new to microservices, we recommend reading https://martinfowler.com/articles/microservices.html[Martin Fowler’s description]. He discusses the architectural style of developing applications as suites of lightweight services and the organizational impacts of doing so. 
 
-* xref:event-sourcing.adoc[]
-* xref:cqrs.adoc[]
-* xref:message-driven-event-driven.adoc[Message Driven]
-* Commands and Events - Event Storming
-* Memory Image Pattern
-* xref:circuit-breakers.adoc[Circuit Breakers]
-* Reactive Programming
-* Reactive Streams
-** Backpressure
-* xref:ddd.adoc[Brief Summary of DDD concepts]
+== Reactive principles
 
+For systems with demanding requirements, Lightbend recommends Reactive Principles as the best way to design a system that copes well with uncertainty. Reactive Principles, as defined in the link:{reactive-manifesto}[Reactive Manifesto, window="reactive_manifesto"], include the properties of being responsive, resilient, elastic, and message-driven. Akka Platform has delivered the technical and organizational benefits of microservices for demanding applications across a variety of industries.
 
-== Implementation Concepts
+When designed with Reactive Principles, microservices have the following characteristics:
 
-ifdef::review[AUTHORS: I strongly recommend not organizing around features, but rather around the benefits they give you. This allows you to cover multiple features together when they interact. The Akka documentation does a good job of documenting by feature, but what the reader really wants to know is what are these features going to do for me? Ditto for the organization of deployment concerns. This will probably require combining and reorganizing the great content you've compiled and added to pages in this module. I am not going to comment on them because I think we need to identify the best top-down flow first. We might get ideas from the user experience work that James has organized. He has defined some personas and we should shortly have some ideas about the pain points and goals of the users we are addressing in this document.]
+* xref:isolation.adoc[Isolation], where each microservice is completely decoupled so that its lifecycle, including failure, has no impact on other microservices in the system.
+* xref:autonomy.adoc[Autonomy], where each microservice acts and makes decisions independently and publishes its behavior through an API.
+* Single responsibility, where each microservice does one thing and does it well.
+* xref:message-driven-event-driven.adoc[Event-driven], where a microservice produces, consumes and reacts to events.
+* xref:mobility.adoc[Mobility and Addressability], where a microservice can be moved at runtime but can be reached in the same way regardless of its location.
+* xref:state-ownership.adoc[State ownership], where each microservice owns their state exclusively by managing and persisting their own state in the way that best suits its own needs.
 
-We recommend building your Reactive Microsystems using the {akka}[Akka toolkit] {akka}[{tab-icon}, window="tab"]. Following is an
-overview of some features in the Akka toolkit you are likely to use:
+== Isolation and Autonomy
 
-* Actor model
-** Supervision
-* Akka Streams
-* xref:clustering.adoc[]
-** Sharding
-** SBR
-* Akka Persistence
-* Akka Projections
+From the early days of object oriented programming and service-oriented architectures, experts have recognized the benefits of encapsulation and of loose coupling between modules. Reactive microservices offer isolation and autonomy at a level that traditional architectures cannot. When each microservice has one reason to exist and owns its own state and behavior, it gains the advantages of a https://en.wikipedia.org/wiki/Shared-nothing_architecture[Shared Nothing Architecture, window="shared_nothing"]. 
 
+Rather than interacting by remote invocation, microservices publish their capabilities through a protocol. Communication is asynchronous to increase concurrency. Microservices cooperate and collaborate without being tightly coupled. Isolation and autonomy enables new development and deployment patterns:
 
-== Deployment Concerns
+- Small, independent teams can be each be responsible for one microservice. 
+- Microservices can be monitored, tested, and debugged independently. 
+- Microservices can be upgraded frequently without impacting the other services in the system, supporting continuous integration.
+- Microservices can scale up and down and in and out, by simply adding and removing instances. 
+- When failures bring down one microservice instance, the node on which it is running, or the network, failure does not cascade through the system. 
 
-* xref:services.adoc[]
-** xref:service-discovery.adoc[]
-** xref:service-clients.adoc[]
-** xref:grpc-services.adoc[]
-* xref:internal-and-external-communication.adoc[]
-* Akka Management
-** Management
-** Bootstrap
-** Service Discovery
-* Docker
-* Kubernetes
-* Helm
+These deployment patterns require xref:mobility.adoc[mobility and addressability]. Microservices should be location independent so that instances of a particular microservice can be deployed on any available node. When the number of instances and location change dynamically, a level of indirection shields clients and other services from what is going on behind the scenes. Service discovery mechanisms allow third parties to find and communicate with a microservice without being aware of how many instances are running or where they are running.
 
+Drilling down into failure scenarios, Reactive microservices have resilience at both an individual and a system level. A cluster of microservice instances can deployed in different JVMs, if a single instance fails, the others are still available. If a cluster of a particular microservice fails, the rest of the system can continue, although possibly with diminished capability. With supervision and coordination, a system can even become self-healing by restarting failed microservices and clusters. Platforms such as Kubernetes provide cluster services such as scaling and auto restart. However, since the platform cannot be aware of application-specifics, developers are responsible for making sure that microservices are designed and deployed in a Reactive way.
+
+== Modeling Reactive systems
+
+Domain-Driven Design (DDD) is a proven modeling pattern in which business and technical experts cooperate to design the system around business needs. DDD offers a realistic way to establish boundaries and contexts for individual microservices. However, what has proved to be difficult for many is modeling the space in between microservices. 
+
+https://www.oreilly.com/library/view/reactive-microsystems/9781491994368/ch04.html[Events-First Domain Driven Design] has emerged as modification of DDD that makes it easier to model data dependencies and communication across the system. Events are facts, things that happen in the running system. For example, in an ordering system, the finalization of an order is an important event. During https://blog.redelastic.com/corporate-arts-crafts-modelling-reactive-systems-with-event-storming-73c6236f5dd7[Event Storming], you would explore what leads up to that event. That might include, for example, queries about sales tax rates, selection of a shipping method, and validation of payment. This will help you identify the entities involved and draw the correct boundaries around them.
+
+image::events-first.png[Events First]
+
+Events provide a record of what happens to each entity and when it happened. A microservice can publish events to durable storage, a so-called event log. Other microservices or external systems can then access those events. This decouples microservices from each other. The event log supports recovery with a history that can be replayed. It also provides an excellent basis for auditing and debugging. 
+
+For more information about DDD and Events-First design, take the free, self paced https://cognitiveclass.ai/courses/reactive-architecture-introduction/[Introduction to Reactive Architecture] course.
+
+== Eventual Consistency
+
+In a traditional n-tiered architecture where functionality was tightly coupled and associated with a single database it was possible to maintain strong consistency. In a distributed system however, strong consistency limits scalability, availability, and throughput. The model of eventual consistency provides a tradeoff to achieve Reactive characteristics. Eventual Consistency means that indeterminate amount of time elapses before every component in the system sees a particular change. A microservice design needs to identify where strong consistency is necessary--usually within a microservice--and where consistency can be relaxed.
+
+Eventual Consistency accurately reflects how the world works. The things we observe have already happened. And, workflows and state machines are common development practices that fit an event model. Focusing on events and accepting eventual consistency allows for a variety of communication patterns in a microservices system.
+
+== Microservice communication patterns
+
+The WAR and JAR monolithic deployments of traditional architectures were based on assumptions about the availability of objects. In most cases, requests and responses could be treated as if they were simply local method invocations. While simple, this pattern obscures the network and pretends that it is reliable. 
+
+In distributed systems, there are no assurances that the service you want to invoke will be running, whether a network issue will prevent a request from arriving, or whether the response will ever come. This dynamic nature of distributed systems makes it important to deal with communication failures as normal occurrences. Messages provide a resilient way of communicating between instances of the same microservice and other microservices in the system.
+
+Messaging does not need to be point-to-point. Use of messaging can, and often does, mean adopting an event-driven architecture, which can bring additional benefits. Event-driven systems promote autonomy and decoupling, allowing the development organization and the resulting system to scale more easily. They provide good options for managing consistency and persistence. 
+
+Messages offer a real world model that allow you to reason logically about requirements. For example, if one of your workmates is away from their desk and you have a question for them, you could leave a note. You don't know when they might respond: they could be on vacation, or even have left the company. This leaves you a limited number of options: 
+
+- For an immediate response, you might find someone else who is available to answer.
+- If the response is necessary--but not time sensitive--you might tape the note to the desk to make sure it doesn't get lost and try again if you don’t get a response.
+- If the message has value for a limited time and is not critical (such as lunch invitation, which has no value once the lunch is over) you might just leave the note and forget it.
+
+The desired outcome determines how you handle the message. Effectively, you need to choose between synchronous and asynchronous messaging. In synchronous messaging, a requestor passes a message to another service and expects a timely response, so the requestor waits. This is the familiar pattern often seen in HTTP calls between a client and server. 
+
+In contrast, with asynchronous messaging, the requestor simply sends a message and continues with its business. Since microservices depend on the health of their host and network connections, asynchronous messaging offers an obvious advantage. The illustration below illustrates how processing requests asynchronously can speed up execution.
+
+image::async-sync.png[Synchronous vs Ascynchronous]
+
+If the message is important, you need some way of persisting it to make sure it will be dealt with at some point in time. An event-driven architecture offers several ways of handling this. For example, in a microservices system, you could use a message broker with delivery guarantees, or write such messages to a database or log. If a reply is required, the sender could just wait for an acknowledgement that the request was received and continue its work, expecting the answer to the question later.
+
+== Choosing the right message for the job 
+
+When designing a reactive microservice system, you want to choose the best messaging pattern for the purpose. To analyze message needs, it is helpful to categorize the contents as queries, commands, or facts: 
+
+- Queries often require a response in timely fashion. For example, Fred uses an ATM to find the balance on his checking account. He expects a response and if he doesn't receive one, he wants to know why. Synchronous messaging meets this objective. 
+- Commands are requests for another service to do something, where the requestor usually needs an answer or an acknowledgement. For example, Fred initiates an ATM withdrawal of one hundred dollars from his checking account. He wants his money now, and if it isn't forthcoming, he again wants to know why. A slightly different case might be when Fred changes his PIN number online, he needs to know whether it succeeded. Both of these use cases also motivate some type of synchronous communication. 
+- Events carry or represent historical facts that cannot be changed. Asynchronous messaging is the most efficient and robust way to communicate them. To continue our example, when Fred receives his money, it is a fact that he withdrew one hundred dollars from his checking account. He can redeposit the money, spend it or lose it, but that doesn't change the withdrawal event.
+
+image::query-command-event.png[Query Command Event]
+
+Asynchronous messaging provides a simple scalable pattern that you should take advantage of whenever possible. However, synchronous messaging can--and should--be accomplished as efficiently as possible. For example, the sender might wait for a simple acknowledgement from the receiver and continue its work, expecting a reply from the receiver with the answer at some future point. This requires acceptance that it is OK for the system to achieve a consistent state eventually, rather than immediately, as described in <<Eventual Consistency>>.
+
+At the system level, Reactive Microservices should be mobile and addressable to keep communication flowing in spite of failures. You should be able to deploy instances of a particular microservice on any available node. When the number of instances and their locations change dynamically, a level of indirection is necessary to shield clients and other services from what is going on behind the scenes. Service discovery mechanisms meet this need by allowing third parties to find and communicate with a microservice without being aware of how many instances are running or where they are running. 
+
+== Options for persistence
+
+The transactional CRUD update-in-place approach has served most enterprise use cases well for decades. CRUD can still be a reasonable option within a microservice that owns its data exclusively or for services that act as endpoints where data is mainly read, such as an email service. 
+
+However, with a variety of microservices handling what used to be contained within one monolith writing to one database, how can you persist state safely without throttling performance or risking unavailability? You can’t easily do joins across services to get a consistent view of the data, and transactions can't span hosts without coordination. Distributed transactions incur high latency with increased possibility of failures--the opposite of microservice goals. In addition, operations that block all the way down to the database often do not take full advantage of multi-core architectures.  
+
+One solution is to use an additional event stream to propagate events to a third-party service. The third-party service can do joins of information from multiple services and satisfy read-only queries. This avoids tight coupling resulting from trying to enforce consistency across microservices. 
+
+The focus on events during system design opens up possibilities of persisting data in different ways. The facts generated at runtime offer a natural resource that can be easily tapped. For example, think about persistence in the model of a bookkeeping ledger, where all events are recorded. Rather than overwriting an existing entry with a new value (the CRUD model), a bookkeeper creates a new entry that represents the changed value. Microservice systems can imitate this by keeping a log of events in the order in which they come in. 
+
+An event log provides reliable auditing and simplifies debugging. When the log is provided by a messaging service, other microservices and legacy applications can subscribe to events of interest. And, in the case of failure, it is possible to replay the log at any time. This pattern is referred to as xref:event-sourcing.adoc[Event Sourcing].
+
+image::event-sourcing.png[Event Sourcing]
+
+Event Sourcing can provide insights that are lost in traditional systems where data is overwritten. For example, on an ecommerce website, you could track which products are most often put in the cart and then removed. This information would not be available in shopping carts implemented as simple update in place persistence.
+
+In a complex microservices system, queries often need to join data in ways not supported by the initial domain model. This is especially true when the model is event sourced. The Command Query Responsibility Segregation (CQRS) pattern separates the read and write models of a system. 
+
+CQRS decouples the microservice writing an event from readers that might be performing some action in response to the event. This increases reliability, stability, and availability of the system. The read and write sides can then be scaled independently, taking best advantage of the available resources.

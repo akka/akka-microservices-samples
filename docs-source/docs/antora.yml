@@ -3,3 +3,6 @@ version: "snapshot"
 title: Akka Platform Guide
 nav:
 - modules/ROOT/nav.adoc
+- modules/concepts/nav.adoc
+- modules/shopping-microservices/nav.adoc
+- modules/how-to/nav.adoc

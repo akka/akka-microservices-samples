@@ -1,17 +1,1 @@
-include::partial$include.adoc[]
-.Akka Platform Guide
-
 * xref:index.adoc[Overview]
-
-* xref:concepts:index.adoc[]
-
-* xref:shopping-microservices:index.adoc[Tutorial: Microservices]
-. xref:shopping-microservices:overview.adoc[]
-. xref:shopping-microservices:grpc-server.adoc[First gRPC service]
-. xref:shopping-microservices:entity.adoc[Event Sourced entity]
-. xref:shopping-microservices:complete-entity.adoc[Complete Event Sourced entity]
-. xref:shopping-microservices:projection-query.adoc[Projection for queries]
-. xref:shopping-microservices:projection-kafka.adoc[Projection publishing to Kafka]
-. xref:shopping-microservices:projection-grpc-client.adoc[Projection calling gRPC service]
-
-* xref:how-to:index.adoc[]

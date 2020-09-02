@@ -1,0 +1,45 @@
+.xref:index.adoc[Concepts]
+* Properties of Reactive Microsystems
+** xref:isolation.adoc[]
+** xref:autonomy.adoc[]
+** xref:mobility.adoc[]
+** Single Responsibility
+** xref:message-driven-event-driven.adoc[Event-Driven]
+** xref:state-ownership.adoc[]
+
+* Patterns and techniques recommended for Reactive Microsystems
+** xref:event-sourcing.adoc[]
+** xref:cqrs.adoc[]
+** xref:message-driven-event-driven.adoc[Message Driven]
+** Commands and Events - Event Storming
+** Memory Image Pattern
+** Circuit Breakers
+** Reactive Programming
+** Reactive Streams
+*** Backpressure
+** xref:ddd.adoc[Brief Summary of DDD concepts]
+
+* Implementation Concepts
+** Actor model
+*** Supervision
+** Akka Streams
+** xref:clustering.adoc[]
+*** Sharding
+*** SBR
+** Akka Persistence
+** Akka Projections
+
+* Deployment Concerns
+** xref:services.adoc[]
+*** xref:service-discovery.adoc[]
+*** xref:service-clients.adoc[]
+*** xref:grpc-services.adoc[]
+** xref:internal-and-external-communication.adoc[]
+** Akka Management
+*** Management
+*** Bootstrap
+*** Service Discovery
+** Docker
+** Kubernetes
+** Helm
+
