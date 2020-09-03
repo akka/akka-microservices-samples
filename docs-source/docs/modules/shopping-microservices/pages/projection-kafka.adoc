@@ -199,4 +199,4 @@ ifdef::todo[TODO: deploy the updated shopping-cart-service and the new shopping-
 * In xref:projection-grpc-client.adoc[**next step**] of the tutorial you will add a Projection calling a gRPC service.
 * Revisit the Projection for queries in xref:projection-query.adoc[previous step].
 * xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts].
-* {akka-projection}/[Akka Projection reference documentation].
+* {akka-projection}/[Akka Projection reference documentation] {akka-projection}/[{tab-icon}, window="tab"].

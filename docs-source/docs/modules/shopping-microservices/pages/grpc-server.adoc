@@ -19,7 +19,7 @@ You will learn how to:
 * interact with the service from the command line
 * deploy for the first time to the cloud
 
-The motivation for using gRPC as inter-service protocol is explained in the {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?"] documentation.
+The motivation for using gRPC as inter-service protocol is explained in the {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?"] {akka-grpc}/whygrpc.html[{tab-icon}, window="tab"] documentation.
 
 == Service definition
 
@@ -112,4 +112,4 @@ ifdef::todo[TODO: deploy to cloud and try it]
 * In xref:entity.adoc[**next step**] of the tutorial you will add an Event Sourced entity.
 * Revisit the development environment in xref:dev-env.adoc[previous step].
 * xref:concepts:grpc-services.adoc[gRPC concepts]
-* {akka-grpc}/server/index.html[Akka gRPC server reference documentation].
+* {akka-grpc}/server/index.html[Akka gRPC server reference documentation] {akka-grpc}/server/index.html[{tab-icon}, window="tab"].

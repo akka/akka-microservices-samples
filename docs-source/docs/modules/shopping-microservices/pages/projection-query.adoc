@@ -5,7 +5,7 @@
 
 include::ROOT:partial$include.adoc[]
 
-In this part, we will create an {akka-projection}/[Akka Projection] from the events of the `ShoppingCart` entity. The Projection updates counts in the database to keep track of how popular the items are. The database can be queried for how popular an item is, which is a query that the `ShoppingCart` entities themselves can't answer since they can only be addressed by individual cart identifiers.
+In this part, we will create an {akka-projection}/[Akka Projection] {akka-projection}/[{tab-icon}, window="tab"] from the events of the `ShoppingCart` entity. The Projection updates counts in the database to keep track of how popular the items are. The database can be queried for how popular an item is, which is a query that the `ShoppingCart` entities themselves can't answer since they can only be addressed by individual cart identifiers.
 
 .This part of the xref:overview.adoc[full example] will focus on the `ItemPopularityProjection` and a query representation in the database.
 [caption=""]
@@ -43,7 +43,7 @@ include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPo
 
 The `CassandraSession` comes from the Cassandra connector in Alpakka and provides an asynchronous API for executing __CQL__ statements to Cassandra. In the initialization code, introduced later, we will see how to get access to a `CassandraSession`.
 
-You can learn more about the `CassandraSession` in the {alpakka}/cassandra.html[Alpakka reference documentation].
+You can learn more about the `CassandraSession` in the {alpakka}/cassandra.html[Alpakka reference documentation] {alpakka}/cassandra.html[{tab-icon}, window="tab"].
 
 == Initialize the Projection
 
@@ -71,7 +71,7 @@ include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Shoppi
 
 <1> `withTagger` to assign the projectionTag
 
-Here we use five different tags. The tagging is not easy to change later without system downtime. Before going live in production you should consider how many tags to use, see {akka-projection}/running.html[Akka Projections reference documentation] for more information.
+Here we use five different tags. The tagging is not easy to change later without system downtime. Before going live in production you should consider how many tags to use, see {akka-projection}/running.html[Akka Projections reference documentation] {akka-projection}/running.html[{tab-icon}, window="tab"] for more information.
 
 === Create Projection
 
@@ -191,5 +191,5 @@ ifdef::todo[TODO: deploy the updated version to the cloud and try it]
 * In xref:projection-kafka.adoc[**next step**] of the tutorial you will add a Projection for publishing events to Kafka.
 * Revisit the Event Sourced entity in xref:complete-entity.adoc[previous step].
 * xref:concepts:cqrs.adoc[CQRS concepts].
-* {akka-projection}/[Akka Projection reference documentation].
-* {akka}/typed/cluster-sharded-daemon-process.html[Akka Sharded Daemon Process reference documentation].
+* {akka-projection}/[Akka Projection reference documentation] {akka-projection}/[{tab-icon}, window="tab"].
+* {akka}/typed/cluster-sharded-daemon-process.html[Akka Sharded Daemon Process reference documentation] {akka}/typed/cluster-sharded-daemon-process.html[{tab-icon}, window="tab"].

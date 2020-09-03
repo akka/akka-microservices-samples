@@ -24,11 +24,11 @@ This example evolves around a shopping cart. The tutorial takes you through the 
 
 This example project uses
 
-- {akka}/typed/cluster-sharding.html[Akka Cluster Sharding] to distribute processing
-- {akka-persistence-cassandra}/[Akka Persistence Cassandra] to use Event Sourcing
-- {akka-projection}/[Akka Projections] to enable CQRS
-- {akka-grpc}/[Akka gRPC] to implement a gRPC service API
-- {akka-management}/[Akka Management] for health checks
+- {akka}/typed/cluster-sharding.html[Akka Cluster Sharding] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"] to distribute processing
+- {akka-persistence-cassandra}/[Akka Persistence Cassandra] {akka-persistence-cassandra}/[{tab-icon}, window="tab"] to use Event Sourcing
+- {akka-projection}/[Akka Projections] {akka-projection}/[{tab-icon}, window="tab"] to enable CQRS
+- {akka-grpc}/[Akka gRPC] {akka-grpc}/[{tab-icon}, window="tab"] to implement a gRPC service API
+- {akka-management}/[Akka Management] {akka-management}/[{tab-icon}, window="tab"] for health checks
 
 The exact dependencies are shown below:
 
