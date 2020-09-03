@@ -5,7 +5,7 @@
 :minimum-openshift-platform-version:       3.11
 :minimum-platform-version-major-dot-minor: 3.11
 
-// link shortcuts for `link:{akka}/typed/index.html` notation
+// link shortcuts for `{akka}/typed/index.html` notation
 :akka:  https://doc.akka.io/docs/akka/current
 :akka-http:  https://doc.akka.io/docs/akka-http/current
 :akka-grpc:  https://doc.akka.io/docs/akka-grpc/current

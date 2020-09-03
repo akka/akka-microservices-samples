@@ -69,4 +69,4 @@ The following diagram illustrates the Finite State Machine described above:
 [caption=""]
 image::concepts/circuit-breaker-states.png[States of a Circuit Breaker]
 
-For more information, including code examples in Akka, see link:{akka}/common/circuitbreaker.html#examples[].
+For more information, including code examples in Akka, see {akka}/common/circuitbreaker.html#examples[].

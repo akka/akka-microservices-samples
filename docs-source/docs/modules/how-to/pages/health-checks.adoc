@@ -14,11 +14,11 @@ Health checks are generally distinguished into two categories:
 
 *Readiness checks* can be used to decide if a load balancer should route traffic whereas *liveness checks* can be used in environments which can restart a hung process.
 
-This matches Kubernetes Health checks. See link:https://blog.colinbreck.com/kubernetes-liveness-and-readiness-probes-how-to-avoid-shooting-yourself-in-the-foot/[Kubernetes Liveness and Readiness Probes: How to Avoid Shooting Yourself in the Foot] for a good overview of how to use readiness and liveness probes.
+This matches Kubernetes Health checks. See https://blog.colinbreck.com/kubernetes-liveness-and-readiness-probes-how-to-avoid-shooting-yourself-in-the-foot/[Kubernetes Liveness and Readiness Probes: How to Avoid Shooting Yourself in the Foot] for a good overview of how to use readiness and liveness probes.
 
 == Using Akka Management for health checks
 
-The link:{akka-management}/[Akka Management] library includes support for exposing readiness and liveness checks via HTTP.
+The {akka-management}/[Akka Management] library includes support for exposing readiness and liveness checks via HTTP.
 
 The depedencies for Akka Management include the core module and the cluster HTTP module for cluster inspection. As Akka Management uses Spray JSON internally, make sure to add that dependency of the exact same version as other Akka HTTP libraries.
 
@@ -132,4 +132,4 @@ With only one node started the response looks like this:
 }
 ----
 
-The link:{akka-management}/cluster-http-management.html#api-definition[Akka Management reference documentation] shows other parts of this API.
+The {akka-management}/cluster-http-management.html#api-definition[Akka Management reference documentation] shows other parts of this API.

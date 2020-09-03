@@ -12,7 +12,7 @@ Communicating with another service requires the client to know the service's API
 
 Service discovery
 
-* link:{glossary-location-transparency}[Location Transparency]
+* {glossary-location-transparency}[Location Transparency]
 * Akka Discovery via DNS
 * SRV records
 
@@ -23,9 +23,9 @@ xref:grpc-services.adoc#_grpc_clients[See gRPC]
 
 == Kafka
 
-link:https://github.com/edenhill/kafkacat[kafkacat]
+https://github.com/edenhill/kafkacat[kafkacat]
 
 
 Integration testing
 
-* link:https://doc.akka.io/docs/alpakka-kafka/current/testing.htm#alternative-testing-libraries[Alpakka Kafka Testkit ]
+* https://doc.akka.io/docs/alpakka-kafka/current/testing.htm#alternative-testing-libraries[Alpakka Kafka Testkit ]

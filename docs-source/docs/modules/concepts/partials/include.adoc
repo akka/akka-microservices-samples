@@ -4,7 +4,7 @@ include::ROOT:partial$include.adoc[]
 
 // Concept module attributes
 
-// link shortcuts for `link:{akka}/typed/index.html` notation
+// link shortcuts for `{akka}/typed/index.html` notation
 :reactive-manifesto: https://www.reactivemanifesto.org/
 
 

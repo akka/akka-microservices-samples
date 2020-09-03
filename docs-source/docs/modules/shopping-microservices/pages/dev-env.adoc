@@ -9,7 +9,7 @@ include::ROOT:partial$include.adoc[]
 
 For Scala we will use `sbt` as the build tool.
 
-link:https://www.scala-sbt.org/download.html[Install sbt] if you haven't already.
+https://www.scala-sbt.org/download.html[Install sbt] if you haven't already.
 
 `sbt` is an interactive shell and it is most efficient to start it once with the `sbt` command and then repeatedly run tasks like `compile` and `test` in the sbt shell.
 
@@ -57,16 +57,16 @@ TODO: download link
 
 == IntelliJ IDEA
 
-You can use any code editor you prefer for this tutorial. We recommend link:https://www.jetbrains.com/idea/[IntelliJ] from JetBrains.
+You can use any code editor you prefer for this tutorial. We recommend https://www.jetbrains.com/idea/[IntelliJ] from JetBrains.
 
-1. link:https://www.jetbrains.com/idea/download/[install IntelliJ]
+1. https://www.jetbrains.com/idea/download/[install IntelliJ]
 2. add the Scala plugin from __Preferences__ menu
 3. open the `shopping-cart-service/build.sbt` from __File > Open__.
 4. select __Open as project__
 
 == grpcurl
 
-link:https://github.com/fullstorydev/grpcurl[grpcurl] is useful for making gRPC calls from the command line. It is used in the tutorial and it's recommended that you link:https://github.com/fullstorydev/grpcurl#installation[install] it.
+https://github.com/fullstorydev/grpcurl[grpcurl] is useful for making gRPC calls from the command line. It is used in the tutorial and it's recommended that you https://github.com/fullstorydev/grpcurl#installation[install] it.
 
 
 == Config for local development

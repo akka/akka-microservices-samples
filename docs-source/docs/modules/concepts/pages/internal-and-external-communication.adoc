@@ -13,13 +13,13 @@ Mulitple services communicate with each other (*inter-service*) by sending messa
 
 Inter-service communication must use loosely-coupled protocols and message formats to maintain isolation and autonomy. Coordinating change between different services can be difficult and costly. You can achieve this in your system by taking advantage of the following:
 
-* link:{akka-grpc}[Akka gRPC], either unary or streaming, allow services to communicate with each other using published APIs and standard protocols.
+* {akka-grpc}[Akka gRPC], either unary or streaming, allow services to communicate with each other using published APIs and standard protocols.
 
 * Publishing messages to a broker, such as Apache Kafka, decouples communication even further.  If a new instance starts publishing information, its messages are added to events previously emitted. If a new instance subscribes to a topic, they will receive all events, past, present, and future (as long as they are subscribed).
 
 Nodes of a single service (collectively called a cluster) require less decoupling. They share the same code and are managed together, as a set, by a single team or individual. For this reason, intra-service communication can take advantage of mechanisms that have less overhead and better performance.
 
-* link:{akka}/typed/index-cluster.html[Akka Cluster] provides multiple features (pub-sub, distribute-data, sharding, distributed streams,...) for intra-service communication.
+* {akka}/typed/index-cluster.html[Akka Cluster] provides multiple features (pub-sub, distribute-data, sharding, distributed streams,...) for intra-service communication.
 
 * Databases and other persistent storage can be seen as another way that nodes of a service communicate. For microservices that use persistent entities, we encourage xref:event-sourcing.adoc[Event Sourcing] , which also takes advantage of asynchronous communication and provides guarantees via an event log.
 

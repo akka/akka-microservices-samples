@@ -12,9 +12,9 @@ ifdef::todo[TODO: this page is WIP]
 
 https://doc.akka.io/docs/akka-grpc/current/proto.html
 
-link:{akka-grpc}/server/walkthrough.html[Akka gRPC walk-through]
+{akka-grpc}/server/walkthrough.html[Akka gRPC walk-through]
 
-link:{akka-grpc}/client/configuration.html#using-akka-discovery-for-endpoint-discovery[Service Discovery]
+{akka-grpc}/client/configuration.html#using-akka-discovery-for-endpoint-discovery[Service Discovery]
 
 Share data format through Protobuf files
 
@@ -22,7 +22,7 @@ Share data format through Protobuf files
 
 === Using grpccurl
 
-link:https://github.com/fullstorydev/grpcurl[gRPC curl repository]
+https://github.com/fullstorydev/grpcurl[gRPC curl repository]
 
 [source,bash]
 ----
@@ -34,5 +34,5 @@ $ grpcurl -plaintext -d '{"name":"Joseph"}' localhost:3000 helloworld.GreeterSer
 
 === With Akka gRPC
 
-link:{akka-grpc}/client/walkthrough.html[Client walk-through]
+{akka-grpc}/client/walkthrough.html[Client walk-through]
 

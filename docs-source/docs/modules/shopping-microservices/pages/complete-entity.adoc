@@ -142,5 +142,5 @@ ifdef::todo[TODO: deploy the updated version to the cloud and try it]
 * In xref:projection-query.adoc[**next step**] of the tutorial you will add a Projection for queries.
 * Revisit the Event Sourced entity in xref:entity.adoc[previous step].
 * xref:concepts:event-sourcing.adoc[Event Sourcing concepts].
-* link:{akka}/typed/persistence.html[Akka Event Sourcing reference documentation].
-* link:{akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation].
+* {akka}/typed/persistence.html[Akka Event Sourcing reference documentation].
+* {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation].
