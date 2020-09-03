@@ -5,7 +5,7 @@ val AlpakkaKafkaVersion = "2.0.4"
 val AkkaHttpVersion = "10.2.0"
 // FIXME once akka management 1.0.9 is released
 val AkkaManagementVersion = "1.0.8+35-9feaa689+20200825-1429"
-val AkkaProjectionVersion = "1.0.0-RC1"
+val AkkaProjectionVersion = "1.0.0-RC3"
 
 enablePlugins(AkkaGrpcPlugin)
 
