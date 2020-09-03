@@ -3,11 +3,11 @@
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
-include::ROOT:partial$include.adoc[]
+include::partial$include.adoc[]
 
 ifdef::review[REVIEWERS, this is a great use-case based section, looking forward to it!]
 
 * xref:health-checks.adoc[]
 * xref:evolve-grpc-apis.adoc[]
 * xref:enable-TLS.adoc[]
-* How to scale command-side and query-side independently
+* xref:scale-independently.adoc[]

@@ -1,0 +1,99 @@
+= How to scale command-side and query-side independently
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::partial$include.adoc[]
+
+
+
+Not all nodes in an Akka Cluster need to be identical. When starting each process you can add some metadata to it to give that instance a special purpose. {akka}/typed/cluster.html#node-roles[Node Roles] {akka}/typed/cluster.html#node-roles[{tab-icon}, window="tab"] in Akka Cluster will handle that metadata.
+
+This feature can be used to scale portions of your application indenpendently. Let's take for example the shopping cart microservice from the xref:shopping-microservices:index.adoc[tutorial]:
+
+[#e-commerce-app]
+.An e-Commerce application built with 3 microservices
+[caption=""]
+image::shopping-microservices:example-overview.png[An e-Commerce application built with 3 microservices]
+
+A single process running the `shopping-cart-service` (the dotted blue box in the diagram), has multiple sub-components. It:
+
+* serves gRPC traffic,
+* hosts `Cart Entity` 's (that is, {akka}/typed/persistence.html[`EventSourcedBehavior` 's] {akka}/typed/persistence.html[{tab-icon}, window="tab"])
+* runs three different {akka-projection}[projections] {akka-projection}[{tab-icon}, window="tab"].
+
+If there is a spike in traffic, the number of `Cart Entity` 's in memory may increase (or it may even be a high volume in regular traffic situations) so we would like to scale up the cluster. But, if the persistent entity is the bulk of the process load, it will be more efficient if the new nodes have fewer responsibilities.
+
+For example:
+[#node-for-eventsourcing]
+.Node dedicated to event sourcing
+[caption=""]
+image::shopping-microservices:example-entity.png[Node dedicated to event sourcing]
+
+This type of node, would not run the projections. Alternatively, we could also have nodes dedicated to only run projections and no persistent entities.
+
+== Tuning the Write-Side
+
+To scale the persistent entities independently you need make two changes:
+
+. configure the sharding, so it only uses nodes with a certain role
+. set up the role in some nodes and deploy
+
+Let's see these two changes in more detail.
+
+==== Configure the sharding
+
+When you initialize the sharding of a persistent entity, as described in the xref:shopping-microservices:entity.adoc#_initialization[tutorial], you may specify a role. Take for example the final code on the initialization of the persistent entity (from the tutorial):
+
+[source,scala]
+----
+include::shopping-microservices:example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=howto-read-side-without-role]
+----
+
+You can {akka}/typed/cluster-sharding.html[specify a role when declaring the entity] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"]:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=read-side-with-role]
+----
+
+==== Set up the role in some nodes
+
+Then, when you deploy this new code you must make sure some nodes on your deployment include the role `eventsourcing`. These are the only nodes where the `ShoppingCart` entity will be run on. You can either deploy each node with a custom `application-eventsourcing.conf`:
+
+[source,conf]
+----
+include::example$shopping-cart-service-scala/src/main/resources/application-eventsourcing.conf[tag=roles-in-conf]
+----
+
+And use that from the command line:
+
+[source]
+----
+... -Dconfig.resource=application-eventsourcing.conf
+----
+
+Or you can set the property `akka.cluster.roles` from the command line:
+
+[source]
+----
+... -Dakka.cluster.roles.0=eventsourcing ...
+----
+
+
+== Tuning the Read-Side
+
+To scale the projections independently you need make two changes:
+
+. configure the sharding, so it only uses nodes with a certain role
+. set up the role in some nodes and deploy
+
+Let's see these two changes in more detail.
+
+==== Configure the sharding
+
+TODO
+
+==== Set up the role in some nodes
+
+TODO

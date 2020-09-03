@@ -8,15 +8,17 @@ import akka.actor.typed.ActorRef
 import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.actor.typed.SupervisorStrategy
+import akka.cluster.sharding.typed.ShardingEnvelope
 import akka.cluster.sharding.typed.scaladsl.ClusterSharding
 import akka.cluster.sharding.typed.scaladsl.Entity
+import akka.cluster.sharding.typed.scaladsl.EntityContext
 import akka.cluster.sharding.typed.scaladsl.EntityTypeKey
 import akka.pattern.StatusReply
 import akka.persistence.typed.PersistenceId
-import akka.persistence.typed.scaladsl.RetentionCriteria
 import akka.persistence.typed.scaladsl.Effect
 import akka.persistence.typed.scaladsl.EventSourcedBehavior
 import akka.persistence.typed.scaladsl.ReplyEffect
+import akka.persistence.typed.scaladsl.RetentionCriteria
 
 /**
  * This is an event sourced actor (`EventSourcedBehavior`). An entity managed by Cluster Sharding.
@@ -133,13 +135,17 @@ object ShoppingCart {
   // tag::tagging[]
   val tags = Vector.tabulate(5)(i => s"carts-$i")
 
+  // tag::howto-read-side-without-role[]
   def init(system: ActorSystem[_]): Unit = {
-    ClusterSharding(system).init(Entity(EntityKey) { entityContext =>
+    val behaviorFactory: EntityContext[Command] => Behavior[Command] = { entityContext =>
       val i = math.abs(entityContext.entityId.hashCode % tags.size)
       val selectedTag = tags(i)
       ShoppingCart(entityContext.entityId, selectedTag)
-    })
+    }
+    val entity: Entity[Command, ShardingEnvelope[Command]] = Entity(EntityKey)(behaviorFactory)
+    ClusterSharding(system).init(entity)
   }
+  // end::howto-read-side-without-role[]
   // end::tagging[]
 
   // tag::withTagger[]

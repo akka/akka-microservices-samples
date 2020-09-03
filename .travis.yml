@@ -36,6 +36,11 @@ jobs:
         CMD="test; scalafmtCheckAll"
       name: "Shopping order service"
 
+    - env:
+        DIR="docs-source/docs/modules/how-to/examples/shopping-cart-service-scala"
+        CMD="test; scalafmtCheckAll"
+      name: "Howto example code"
+
     - stage: site
       script:
         - make html-author-mode
