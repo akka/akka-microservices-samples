@@ -13,7 +13,7 @@ Mulitple services communicate with each other (*inter-service*) by sending messa
 
 Inter-service communication must use loosely-coupled protocols and message formats to maintain isolation and autonomy. Coordinating change between different services can be difficult and costly. You can achieve this in your system by taking advantage of the following:
 
-* {akka-grpc}[Akka gRPC], either unary or streaming, allow services to communicate with each other using published APIs and standard protocols.
+* {akka-grpc}[Akka gRPC] {akka-grpc}[{tab-icon}, window="tab"], either unary or streaming, allow services to communicate with each other using published APIs and standard protocols.
 
 * Publishing messages to a broker, such as Apache Kafka, decouples communication even further.  If a new instance starts publishing information, its messages are added to events previously emitted. If a new instance subscribes to a topic, they will receive all events, past, present, and future (as long as they are subscribed).
 

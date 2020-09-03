@@ -13,7 +13,7 @@ If you are new to microservices, we recommend reading https://martinfowler.com/a
 
 == Reactive principles
 
-For systems with demanding requirements, Lightbend recommends Reactive Principles as the best way to design a system that copes well with uncertainty. Reactive Principles, as defined in the {reactive-manifesto}[Reactive Manifesto, window="reactive_manifesto"], include the properties of being responsive, resilient, elastic, and message-driven. Akka Platform has delivered the technical and organizational benefits of microservices for demanding applications across a variety of industries.
+For systems with demanding requirements, Lightbend recommends Reactive Principles as the best way to design a system that copes well with uncertainty. Reactive Principles, as defined in the {reactive-manifesto}[Reactive Manifesto, window="reactive_manifesto"] {reactive-manifesto}[{tab-icon}, window="tab"], include the properties of being responsive, resilient, elastic, and message-driven. Akka Platform has delivered the technical and organizational benefits of microservices for demanding applications across a variety of industries.
 
 When designed with Reactive Principles, microservices have the following characteristics:
 

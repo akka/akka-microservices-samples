@@ -7,7 +7,7 @@ include::partial$include.adoc[]
 
 This section explains the concepts that motivate Akka's take on how to implement microservices using Event
 Sourcing and CQRS. Microservices built using Event Sourcing and CQRS adhere to the properties of a
-{reactive-manifesto}[Reactive System] {reactive-manifesto}[{tab-icon}, window="tab"]   and are often called Reactive Microsystems.
+{reactive-manifesto}[Reactive System] {reactive-manifesto}[{tab-icon}, window="tab"]  and are often called Reactive Microsystems.
 
 Read the xref:introduction-traditional-architecture.adoc[introduction] for an explanation of the motivation for
 Reactive Microsystems, and a high level overview of the key concepts that power Reactive Microsystems.
@@ -39,7 +39,7 @@ Reactive Microsystems, and a high level overview of the key concepts that power 
 
 ifdef::review[AUTHORS: I strongly recommend not organizing around features, but rather around the benefits they give you. This allows you to cover multiple features together when they interact. The Akka documentation does a good job of documenting by feature, but what the reader really wants to know is what are these features going to do for me? Ditto for the organization of deployment concerns. This will probably require combining and reorganizing the great content you've compiled and added to pages in this module. I am not going to comment on them because I think we need to identify the best top-down flow first. We might get ideas from the user experience work that James has organized. He has defined some personas and we should shortly have some ideas about the pain points and goals of the users we are addressing in this document.]
 
-We recommend building your Reactive Microsystems using the {akka}[Akka toolkit]. {akka}[{tab-icon}, window="tab"] Following is an
+We recommend building your Reactive Microsystems using the {akka}[Akka toolkit] {akka}[{tab-icon}, window="tab"]. Following is an
 overview of some features in the Akka toolkit you are likely to use:
 
 * Actor model
