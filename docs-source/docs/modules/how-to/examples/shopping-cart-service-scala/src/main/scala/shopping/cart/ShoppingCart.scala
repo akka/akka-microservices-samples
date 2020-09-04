@@ -11,11 +11,15 @@ import akka.cluster.sharding.typed.scaladsl.EntityTypeKey
 object ShoppingCart {
 
   sealed trait Command
+
+  sealed trait Event {
+    def cartId: String
+  }
   val EntityKey: EntityTypeKey[Command] = ???
   def apply(cartId: String, projectionTag: String): Behavior[Command] = ???
   val tags: Seq[String] = ???
 
-  // tag::read-side-with-role[]
+  // tag::write-side-with-role[]
   def init(system: ActorSystem[_]): Unit = {
     val behaviorFactory: EntityContext[Command] => Behavior[Command] = { entityContext =>
       val i = math.abs(entityContext.entityId.hashCode % tags.size)
@@ -26,7 +30,7 @@ object ShoppingCart {
       Entity(EntityKey)(behaviorFactory).withRole("eventsourcing")
     ClusterSharding(system).init(entity)
   }
-  // end::read-side-with-role[]
+  // end::write-side-with-role[]
 
 
 }

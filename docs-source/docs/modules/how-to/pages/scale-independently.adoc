@@ -41,39 +41,45 @@ To scale the persistent entities independently you need make two changes:
 
 Let's see these two changes in more detail.
 
-==== Configure the sharding
+=== Configure the sharding
 
 When you initialize the sharding of a persistent entity, as described in the xref:shopping-microservices:entity.adoc#_initialization[tutorial], you may specify a role. Take for example the final code on the initialization of the persistent entity (from the tutorial):
 
 [source,scala]
 ----
-include::shopping-microservices:example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=howto-read-side-without-role]
+include::shopping-microservices:example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=howto-write-side-without-role]
 ----
 
 You can {akka}/typed/cluster-sharding.html[specify a role when declaring the entity] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"]:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=read-side-with-role]
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=write-side-with-role]
 ----
 
-==== Set up the role in some nodes
+=== Set up the role in some nodes
 
-Then, when you deploy this new code you must make sure some nodes on your deployment include the role `eventsourcing`. These are the only nodes where the `ShoppingCart` entity will be run on. You can either deploy each node with a custom `application-eventsourcing.conf`:
+Then, when you deploy this new code you must make sure some nodes on your deployment include the role `eventsourcing`. These are the only nodes where the `ShoppingCart` entity will be run on. You can either
+
+[start=1]
+. deploy each node with a custom `application-eventsourcing.conf`:
 
 [source,conf]
 ----
 include::example$shopping-cart-service-scala/src/main/resources/application-eventsourcing.conf[tag=roles-in-conf]
 ----
 
-And use that from the command line:
+and use that from the command line:
 
 [source]
 ----
 ... -Dconfig.resource=application-eventsourcing.conf
 ----
 
-Or you can set the property `akka.cluster.roles` from the command line:
+Or
+
+[start=2]
+. you can set the property `akka.cluster.roles` from the command line:
 
 [source]
 ----
@@ -90,10 +96,72 @@ To scale the projections independently you need make two changes:
 
 Let's see these two changes in more detail.
 
-==== Configure the sharding
+=== Configure the sharding
 
-TODO
+When you initialize the sharded daemon processes for the projections, as described in the xref:shopping-microservices:projection-query.html#_create_projection[tutorial], you may specify a role. Take for example the final code on the initialization of the sharded daemon process for the popularity projection (from the tutorial):
 
-==== Set up the role in some nodes
+[source,scala]
+----
+include::shopping-microservices:example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[tag=howto-read-side-without-role]
+----
 
-TODO
+You can {akka}/typed/cluster-sharding.html[specify a role when declaring the entity] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"]:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[tag=read-side-with-role]
+----
+
+=== Set up the role in some nodes
+
+Then, when you deploy this new code you must make sure some nodes on your deployment include the role `projections`. These are the only nodes where the `ItemPopularityProjection` projection daemon processes will be run on. You can either
+
+[start=1]
+. deploy each node with a custom `application-projections.conf`:
+
+[source,conf]
+----
+include::example$shopping-cart-service-scala/src/main/resources/application-projections.conf[tag=roles-in-conf]
+----
+
+and use that from the command line:
+
+[source]
+----
+... -Dconfig.resource=application-projections.conf
+----
+
+Or
+
+[start=2]
+. you can set the property `akka.cluster.roles` from the command line:
+
+[source]
+----
+... -Dakka.cluster.roles.0=projections ...
+----
+
+== Fine-grained tuning
+
+The sections above describe how to scale the write-side or scaling all the projections separately. But roles can be used in a more fine grained setup. Imagine for example you wanted the persistent entities ran on the same nodes where the popularity projection runs (but only that projection).
+
+You can use a dedicated role for each of your projections:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[tag=read-side-with-dedicated-role]
+----
+
+And then set multiple roles into the nodes:
+
+[source,conf]
+----
+include::example$shopping-cart-service-scala/src/main/resources/application-fine-tuned.conf[tag=roles-in-conf]
+----
+
+Or, using the JVM arguments syntax:
+
+[source]
+----
+... -Dakka.cluster.roles.0=eventsourcing -Dakka.cluster.roles.1=projections-popularity ...
+----

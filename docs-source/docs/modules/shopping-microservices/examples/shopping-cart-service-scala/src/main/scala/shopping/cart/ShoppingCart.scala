@@ -135,7 +135,7 @@ object ShoppingCart {
   // tag::tagging[]
   val tags = Vector.tabulate(5)(i => s"carts-$i")
 
-  // tag::howto-read-side-without-role[]
+  // tag::howto-write-side-without-role[]
   def init(system: ActorSystem[_]): Unit = {
     val behaviorFactory: EntityContext[Command] => Behavior[Command] = { entityContext =>
       val i = math.abs(entityContext.entityId.hashCode % tags.size)
@@ -145,7 +145,7 @@ object ShoppingCart {
     val entity: Entity[Command, ShardingEnvelope[Command]] = Entity(EntityKey)(behaviorFactory)
     ClusterSharding(system).init(entity)
   }
-  // end::howto-read-side-without-role[]
+  // end::howto-write-side-without-role[]
   // end::tagging[]
 
   // tag::withTagger[]
