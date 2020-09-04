@@ -14,7 +14,7 @@ This feature can be used to scale portions of your application indenpendently. L
 [#e-commerce-app]
 .An e-Commerce application built with 3 microservices
 [caption=""]
-image::shopping-microservices:example-overview.png[An e-Commerce application built with 3 microservices]
+image::shopping-cart-service.png[An e-Commerce application built with 3 microservices]
 
 A single process running the `shopping-cart-service` (the dotted blue box in the diagram), has multiple sub-components. It:
 
