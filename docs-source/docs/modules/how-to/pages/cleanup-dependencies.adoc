@@ -52,6 +52,11 @@ Optionally, you may also remove the dependency to the Akka HTTP artifact that ad
 include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-optional]
 ----
 
+[NOTE]
+====
+Disabling the Akka gRPC plugin also removes the code generators to de/serialize using protobuf. If you want to use protobuf serializers (for either external or internal communication), you can either keep the Akka-gRPC plugin or use other sbt plugins specific to protobuf.
+====
+
 == Replace the Persistence plugin
 
 The project produced with the {akka-microservices-seed-scala}[Akka Microservices template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] assumes the application will use the {akka-persistence-cassandra}[Akka Persistence Cassandra plugin] {akka-persistence-cassandra}[{tab-icon}, window="tab"]. You can opt out from using that plugin and use the {akka-persistence-jdbc}[Akka Persistence JDBC] {akka-persistence-jdbc}[{tab-icon}, window="tab"] or {akka-persistence-couchbase}[Akka Persistence Couchbase] {akka-persistence-couchbase}[{tab-icon}, window="tab"] plugins instead.
