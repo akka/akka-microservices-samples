@@ -1,2 +1,5 @@
 :page-partial:
+
 include::ROOT:partial$include.adoc[]
+
+:akka-microservices-seed-scala:  https://githum.com/akka/akka-microservices-seed-scala.g8

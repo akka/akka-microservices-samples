@@ -1,0 +1,74 @@
+= How to reduce the build
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::partial$include.adoc[]
+
+This guide will help you clean up the build scripts, so your build only includes the dependencies, plugins, and settings you need.
+
+This guide assumes you created a new project using the {akka-microservices-seed-scala}[Akka Microservicies template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] with the following command:
+
+[source]
+----
+sbt new akka/akka-microservices-seed-scala.g8
+----
+
+The project created with the command above uses sbt as a build tool. The build is split in two files:
+
+. `build.sbt`
+. `project/plugins.sbt`
+
+Because the template adds all the dependencies, plugins, and settings required to build the full application used in the xref:shopping-microservices:index.adoc[microservices tutorial] it is likely you can remove some bits.
+
+== Remove support for gRPC
+
+If you don't need to serve gRPC traffic (because you implement a consumer-only service) or because you serve other types of traffic (e.g. REST-JSON), then you must remove two parts:
+
+[start=1]
+. the Akka gRPC plugin dependency
+
+[source,scala]
+.project/plugins.sbt
+----
+include::example$cleanup-dependencies-project/project/plugins.sbt[tag=remove-grpc-plugin]
+----
+
+[start=2]
+. the Akka gRPC plugin activation
+
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-plugin]
+----
+
+Optionally, you may also remove the dependency to the Akka HTTP artifact that adds support for HTTP/2:
+
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-optional]
+----
+
+== Replace Persistence plugin
+
+TODO (remove Cassandra, use jdbc or other... for the Journal and the Snapshots)
+
+== Remove support for Kafka
+
+TODO (remove projection to Kafka)
+TODO (remove consuming from Kafka)
+
+== Remove projections altogether
+
+TODO (remove projection artifacts, including the testkit)
+
+== Remove persistence (keep kafka projections)
+
+TODO (remove persistence artifacts, including the testkit)
+TODO (remove http2 and gRPC)
+
+== Remove Health-checks
+
+TODO (unlikely but 🤷🏼‍♂️)
