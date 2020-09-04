@@ -32,5 +32,4 @@ object ShoppingCart {
   }
   // end::write-side-with-role[]
 
-
 }
