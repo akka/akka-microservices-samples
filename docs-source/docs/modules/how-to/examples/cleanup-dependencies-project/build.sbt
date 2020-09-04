@@ -1,6 +1,14 @@
 // FIXME once akka 2.6.9 is released
 val AkkaVersion = "2.6.8+71-57fb9e90"
+// tag::remove-akka-persistence-cassandra-version[]
 val AkkaPersistenceCassandraVersion = "1.0.1"
+// end::remove-akka-persistence-cassandra-version[]
+
+
+// tag::add-akka-persistence-jdbc-version[]
+val AkkaPersistenceJdbcVersion = "4.0.0"
+// end::add-akka-persistence-jdbc-version[]
+
 val AlpakkaKafkaVersion = "2.0.4"
 val AkkaHttpVersion = "10.2.0"
 // FIXME once akka management 1.0.9 is released
@@ -35,9 +43,23 @@ scalaVersion := "2.13.3"
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-cluster-sharding-typed" % AkkaVersion,
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
+  // tag::remove-akka-persistence-cassandra[]
   "com.typesafe.akka" %% "akka-persistence-cassandra" % AkkaPersistenceCassandraVersion,
+  // end::remove-akka-persistence-cassandra[]
+
+  // tag::add-akka-persistence-jdbc[]
+  "com.lightbend.akka" %% "akka-persistence-jdbc" % AkkaPersistenceJdbcVersion,
+  // end::add-akka-persistence-jdbc[]
+
   "com.lightbend.akka" %% "akka-projection-eventsourced" % AkkaProjectionVersion,
   "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
+  "com.lightbend.akka" %% "akka-projection-jdbc" % AkkaProjectionVersion,
+  /*
+  // tag::replace-offset-store-for-projections[]
+-  "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
++  "com.lightbend.akka" %% "akka-projection-jdbc" % AkkaProjectionVersion,
+  // end::replace-offset-store-for-projections[]
+   */
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
   // tag::remove-grpc-optional[]
   "com.typesafe.akka" %% "akka-http2-support" % AkkaHttpVersion,
@@ -59,7 +81,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-persistence-testkit" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
   "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
-  "org.scalatest" %% "scalatest" % "3.1.2" % Test)
+  "org.scalatest" %% "scalatest" % "3.1.2" % Test
+)
 
 run / fork := false
 Global / cancelable := false // ctrl-c

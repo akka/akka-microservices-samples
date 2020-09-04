@@ -43,6 +43,7 @@ include::example$cleanup-dependencies-project/project/plugins.sbt[tag=remove-grp
 include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-plugin]
 ----
 
+[start=3]
 Optionally, you may also remove the dependency to the Akka HTTP artifact that adds support for HTTP/2:
 
 [source,scala]
@@ -51,9 +52,62 @@ Optionally, you may also remove the dependency to the Akka HTTP artifact that ad
 include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-optional]
 ----
 
-== Replace Persistence plugin
+== Replace the Persistence plugin
 
-TODO (remove Cassandra, use jdbc or other... for the Journal and the Snapshots)
+The project produced with the {akka-microservices-seed-scala}[Akka Microservices template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] assumes the application will use the {akka-persistence-cassandra}[Akka Persistence Cassandra plugin] {akka-persistence-cassandra}[{tab-icon}, window="tab"]. You can opt out from using that plugin and use the {akka-persistence-jdbc}[Akka Persistence JDBC] {akka-persistence-jdbc}[{tab-icon}, window="tab"] or {akka-persistence-couchbase}[Akka Persistence Couchbase] {akka-persistence-couchbase}[{tab-icon}, window="tab"] plugins instead.
+
+[start=1]
+. The first thing you must do is to remove the dependency to the Akka Persistence Cassandra plugin:
++
+.. remove the value declaring the dependency version
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-persistence-cassandra-version]
+----
++
+[start=2]
+.. remove the value declaring the dependency
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-persistence-cassandra]
+----
+
+[start=2]
+. Now add the dependency of the Akka Persistence plugin you want. Let's use, for example, the JDBC plugin:
++
+.. (optional) declare the version as a value:
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=add-akka-persistence-jdbc-version]
+----
++
+[start=2]
+.. add the new dependency
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=add-akka-persistence-jdbc]
+----
+
+== Replace the Offset tracking database
+
+The project produced with the {akka-microservices-seed-scala}[Akka Microservices template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] assumes the application will use a Cassandra database to store the {akka-projection}/overview.html#overview[offset tracking] {akka-projection}/overview.html#overview[{tab-icon}, window="tab"]  required by the projections. You can replace the artifact to use an RDBMS.
+
+[source,diff]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=replace-offset-store-for-projections]
+----
+
+Note how the artifact version doesn't change.
+
 
 == Remove support for Kafka
 
