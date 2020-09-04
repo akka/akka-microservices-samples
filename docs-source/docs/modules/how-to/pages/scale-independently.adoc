@@ -36,14 +36,14 @@ This type of node, would not run the projections. Alternatively, we could also h
 
 To scale the persistent entities independently you need to make two changes:
 
-. configure the sharding, so it only uses nodes with a certain role
+. configure the Sharding, so it only uses nodes with a certain role
 . set up the role in some nodes and deploy
 
 Let's see these two changes in more detail.
 
-=== Configure the sharding
+=== Configure the Sharding
 
-When you initialize the sharding of a persistent entity, as described in the xref:shopping-microservices:entity.adoc#_initialization[tutorial], you may specify a role. Take for example the final code on the initialization of the persistent entity (from the tutorial):
+When you initialize the Sharding of a persistent entity, as described in the xref:shopping-microservices:entity.adoc#_initialization[tutorial], you may specify a role. Take for example the final code on the initialization of the persistent entity (from the tutorial):
 
 [source,scala]
 ----
@@ -59,7 +59,7 @@ include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Shoppi
 
 === Set up the role in some nodes
 
-Then, when you deploy this new code you must make sure some nodes on your deployment include the role `eventsourcing`. These are the only nodes where the `ShoppingCart` entity will be run on. You can either
+Then, when you deploy this new code you must make sure some nodes on your deployment include the role `eventsourcing`. These are the only nodes where the `ShoppingCart` entity will be run on. You can either:
 
 [start=1]
 . deploy each node with a custom `application-eventsourcing.conf`:
@@ -91,14 +91,14 @@ Or
 
 To scale the projections independently you need to make two changes:
 
-. configure the sharding, so it only uses nodes with a certain role
+. configure the Sharding, so it only uses nodes with a certain role
 . set up the role in some nodes and deploy
 
 Let's see these two changes in more detail.
 
-=== Configure the sharding
+=== Configure the Sharding
 
-When you initialize the sharded daemon processes for the projections, as described in the xref:shopping-microservices:projection-query.html#_create_projection[tutorial], you may specify a role. Take for example the final code on the initialization of the sharded daemon process for the popularity projection (from the tutorial):
+When you initialize the {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[Sharded Daemon Processes] {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[{tab-icon}, window="tab"] for the projections, as described in the xref:shopping-microservices:projection-query.html#_create_projection[tutorial], you may specify a role. Take for example the final code on the initialization of the Sharded Daemon Process for the popularity projection (from the tutorial):
 
 [source,scala]
 ----
@@ -114,7 +114,7 @@ include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPo
 
 === Set up the role in some nodes
 
-Then, when you deploy this new code you must make sure some nodes on your deployment include the role `projections`. These are the only nodes where the `ItemPopularityProjection` projection daemon processes will be run on. You can either
+Then, when you deploy this new code you must make sure some nodes on your deployment include the role `projections`. These are the only nodes where the `ItemPopularityProjection` projection daemon processes will be run on. You can either:
 
 [start=1]
 . deploy each node with a custom `application-projections.conf`:
@@ -165,3 +165,10 @@ Or, using the JVM arguments syntax:
 ----
 ... -Dakka.cluster.roles.0=eventsourcing -Dakka.cluster.roles.1=projections-popularity ...
 ----
+
+
+== Learn more
+
+* {akka}/typed/cluster.html#node-roles[Akka Cluster Node Roles] {akka}/typed/cluster.html#node-roles[{tab-icon}, window="tab"]
+*  {akka}/typed/cluster-sharding.html[Akka Cluster Sharding] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"]
+* {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[Sharded Daemon Process] {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[{tab-icon}, window="tab"]
