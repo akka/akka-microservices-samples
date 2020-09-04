@@ -34,7 +34,7 @@ This type of node, would not run the projections. Alternatively, we could also h
 
 == Tuning the Write-Side
 
-To scale the persistent entities independently you need make two changes:
+To scale the persistent entities independently you need to make two changes:
 
 . configure the sharding, so it only uses nodes with a certain role
 . set up the role in some nodes and deploy
@@ -89,7 +89,7 @@ Or
 
 == Tuning the Read-Side
 
-To scale the projections independently you need make two changes:
+To scale the projections independently you need to make two changes:
 
 . configure the sharding, so it only uses nodes with a certain role
 . set up the role in some nodes and deploy
