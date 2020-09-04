@@ -4,12 +4,13 @@ val AkkaVersion = "2.6.8+71-57fb9e90"
 val AkkaPersistenceCassandraVersion = "1.0.1"
 // end::remove-akka-persistence-cassandra-version[]
 
-
 // tag::add-akka-persistence-jdbc-version[]
 val AkkaPersistenceJdbcVersion = "4.0.0"
 // end::add-akka-persistence-jdbc-version[]
 
+// tag::remove-alpakka-kafka-version[]
 val AlpakkaKafkaVersion = "2.0.4"
+// end::remove-alpakka-kafka-version[]
 val AkkaHttpVersion = "10.2.0"
 // FIXME once akka management 1.0.9 is released
 val AkkaManagementVersion = "1.0.8+35-9feaa689+20200825-1429"
@@ -72,7 +73,9 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-persistence-query" % AkkaVersion,
   "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion,
   "com.typesafe.akka" %% "akka-discovery" % AkkaVersion,
+  // tag::remove-alpakka-kafka[]
   "com.typesafe.akka" %% "akka-stream-kafka" % AlpakkaKafkaVersion,
+  // end::remove-alpakka-kafka[]
   // Logging
   "com.typesafe.akka" %% "akka-slf4j" % AkkaVersion,
   "ch.qos.logback" % "logback-classic" % "1.2.3",
@@ -81,8 +84,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-persistence-testkit" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
   "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
-  "org.scalatest" %% "scalatest" % "3.1.2" % Test
-)
+  "org.scalatest" %% "scalatest" % "3.1.2" % Test)
 
 run / fork := false
 Global / cancelable := false // ctrl-c

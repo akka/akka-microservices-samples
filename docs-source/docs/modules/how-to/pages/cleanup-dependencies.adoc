@@ -96,7 +96,7 @@ include::example$cleanup-dependencies-project/build.sbt[tag=add-akka-persistence
 include::example$cleanup-dependencies-project/build.sbt[tag=add-akka-persistence-jdbc]
 ----
 
-== Replace the Offset tracking database
+== Replace the Offset Store database
 
 The project produced with the {akka-microservices-seed-scala}[Akka Microservices template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] assumes the application will use a Cassandra database to store the {akka-projection}/overview.html#overview[offset tracking] {akka-projection}/overview.html#overview[{tab-icon}, window="tab"]  required by the projections. You can replace the artifact to use an RDBMS.
 
@@ -111,8 +111,19 @@ Note how the artifact version doesn't change.
 
 == Remove support for Kafka
 
-TODO (remove projection to Kafka)
-TODO (remove consuming from Kafka)
+The project produced with the {akka-microservices-seed-scala}[Akka Microservices template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] projects data include the necessary dependencies to project data to a Kafka topic. If you are not projecting data into Kafka, remove the version declaration and the artifact:
+
+[source,diff]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-alpakka-kafka-version]
+----
+[source,diff]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-alpakka-kafka]
+----
+
 
 == Remove projections altogether
 
@@ -122,7 +133,3 @@ TODO (remove projection artifacts, including the testkit)
 
 TODO (remove persistence artifacts, including the testkit)
 TODO (remove http2 and gRPC)
-
-== Remove Health-checks
-
-TODO (unlikely but 🤷🏼‍♂️)
