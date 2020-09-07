@@ -11,3 +11,4 @@ ifdef::review[REVIEWERS, this is a great use-case based section, looking forward
 * xref:evolve-grpc-apis.adoc[]
 * xref:enable-TLS.adoc[]
 * xref:scale-independently.adoc[]
+* xref:from-crud-to-eventsourcing.adoc[]

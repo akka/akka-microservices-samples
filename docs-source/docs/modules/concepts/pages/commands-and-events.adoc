@@ -1,0 +1,16 @@
+= Commands and Events
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::partial$include.adoc[]
+
+ifdef::todo[TODO: this page is WIP]
+
+
+TODO: orders to change state VS consequences of state changes
+
+== Event Storming
+[#event_storming]
+
+Events Storming is a multi-disciplinary meeting where product specialists, developers and other roles in the company meet with the main purpose to model the business as a collection of commands, entities and events; while grouping these commands, entities and events into separate boundaries.

@@ -11,7 +11,7 @@
 ** xref:event-sourcing.adoc[]
 ** xref:cqrs.adoc[]
 ** xref:message-driven-event-driven.adoc[Message Driven]
-** Commands and Events - Event Storming
+** xref:commands-and-events.adoc[]
 ** Memory Image Pattern
 ** Circuit Breakers
 ** Reactive Programming

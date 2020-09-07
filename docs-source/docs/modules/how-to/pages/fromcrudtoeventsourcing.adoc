@@ -1,0 +1,84 @@
+= Howto migrate from CRUD to Event Sourcing
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::partial$include.adoc[]
+
+When developing using a traditional CRUD approach, the entities in memory are a collection of mutable classes. Similarly, the representation of that data on the database is a collection of mutable rows in several tables.
+
+In xref:concepts:event-sourcing.adoc[Event Sourcing] (ES), we will model data as a sequence of immutable events where each event is the necessary data to mutate the data we modelled. Therefore, instead of storing the current representation of a state like we would do on a traditional CRUD approach, in Event Sourcing we store an always increasing list of events.
+
+The first step is to enrich your business model identifying what causes a change on the state and modelling this increment.
+
+[NOTE]
+====
+This howto is not about {reactive-microservices-ebook}[slicing the monolyth into microservices] {reactive-microservices-ebook}[{tab-icon}, window="tab"]
+or about the {lagom}/scala/ESAdvantage.html[Advantages of Event Sourcing] {lagom}/scala/ESAdvantage.html[{tab-icon}, window="tab"].
+====
+
+== CRUD State vs Event Sourcing State/Command/Event
+
+In CRUD, your only modelling concern is the `State` representing your business. In Event Sourcing (also referred to as `ES`), you will have to model the `State`, the `Command`'s demanding a state mutation  and the `Events`.
+
+An initial trick to help you in this mindset shift is to separate the CRUD code into:
+
+* `Retrieve` operations: actions on the database that only select data
+* `Create`, `Update` and `Delete` operations: operations that mutate the data
+
+Once you'de made that distinction you are on track to model your commands. Each operation mutating your data can be tracked back to a user intent demanding the state to change.
+
+Imagine you are modelling a Shopping Cart (like to one on the xref:shopping-microservices:index.adoc[tutorial]). In CRUD, you would have a `SHOPPING_CART` table, then a `SHOPPING_CART_ITEMS` table with a foreign key to `SHOPPING_CART`, another foreign key to `ITEMS` and a column with an amount (how many times that item is on that shopping cart). Then, in code, we have a `ShoppingCart` class and maybe a `ShoppingCartRepository` class with the logic to read and write from the database, and the validation code over a `ShoppingCart` instance. The `ShoppingCartRepository` maybe looked something like:
+
+[source]
+----
+// pseudo code
+class ShoppingCartRepository {
+  // fails if the cart is already checked out, or the quantity in the item field is
+  // negative or zero, or the item is on the cart already
+  def addItem(shoppingCartId, item): Unit
+
+  // fails if the cart is empty or already checked out
+  def checkOut(shoppingCartId): Unit
+}
+----
+
+In Event Sourcing, on the other hand, there is a single table (referred to as _Journal_) where we store a collection of events. Then, in code, we have a `ShoppingCart` class. We also have a function that receives a `ShoppinCartCommand` and return a new instance of `ShoppingCart` and zero, one or many `ShoppingCartEvent` 's. Finally, we have a function that given a `ShoppingCart`, and a `ShoppingCartEvent` produces the new, mutated `ShoppingCart`. Presented in pseudo-code:
+
+[source]
+----
+ (State, Command) => Seq[Event]
+ (State, Event) => State
+----
+
+A (very) simplified version of a `ShoppingCart` can be modelled using two commands, and two events:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=howto-crud-to-es-initial]
+----
+
+The code to handle the commands will follow two steps:
+
+1. validate the command can be processed given the current state
+2. produce the event(s) that represent the change demanded by the command given the current state
+
+The code to handle an event, on the other hand, only need to implement one step:
+
+1. produce a new state given the current state and an event
+
+See the xref:shopping-microservices:entity.adoc[step adding an Event Sourced entity]), and the xref:shopping-microservices:complete-entity.adoc[step completing the Event Sourced entity]) one on the tutorial for more details.
+
+[NOTE]
+====
+An more advanced approach to enriching a CRUD model into an ES model is to run one or many xref:concepts:commands-and-events.adoc#event_storming[Event Storming sessions].
+====
+
+== Consistency
+
+In order to provide data consistency, database-centric implementations, like a traditional CRUD application, rely on transactions on the database. In some cases, to reduce the cost of the transaction, you can use https://en.wikipedia.org/wiki/Optimistic_concurrency_control[optimistic locking mechanisms].
+
+Event Sourcing applications, on the other hand, need to reconstruct the state in memory so they can't base the state consistency on database locking. The solutions are:
+
+. keep a singleton memory image of the state (e.g. using {akka}/typed/cluster-sharding.html[Akka Cluster Sharding] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"]) so all writes are redirected to a single state instance which is protected by a lock so only one modification can happen simultaneously
+. use converging algorithms so concurrent modifications on multiple state instances in memory converge into a single, valid state

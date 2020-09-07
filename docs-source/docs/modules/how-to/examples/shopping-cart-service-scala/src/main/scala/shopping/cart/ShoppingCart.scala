@@ -10,11 +10,18 @@ import akka.cluster.sharding.typed.scaladsl.EntityTypeKey
 
 object ShoppingCart {
 
+  // tag::howto-crud-to-es-initial[]
   sealed trait Command
+  final case class AddItem(itemId: String, quantity: Int) extends Command
+  final case class Checkout() extends Command
 
   sealed trait Event {
     def cartId: String
   }
+  final case class ItemAdded(cartId: String, itemId: String, quantity: Int) extends Event
+  final case class CheckedOut(cartId: String, eventTime: Instant) extends Event
+  // end::howto-crud-to-es-initial[]
+
   val EntityKey: EntityTypeKey[Command] = ???
   def apply(cartId: String, projectionTag: String): Behavior[Command] = ???
   val tags: Seq[String] = ???
