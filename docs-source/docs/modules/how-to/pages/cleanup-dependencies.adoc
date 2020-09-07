@@ -21,9 +21,9 @@ The project created with the command above uses sbt as a build tool. The build i
 
 Because the template adds all the dependencies, plugins, and settings required to build the full application used in the xref:shopping-microservices:index.adoc[microservices tutorial] it is likely you can remove some bits.
 
-== Remove support for gRPC
+== Remove support for gRPC and protobuf
 
-If you don't need to serve gRPC traffic (because you implement a consumer-only service) or because you serve other types of traffic (e.g. REST-JSON), then you must remove two parts:
+If you don't need to serve or consume gRPC traffic, or use any protobuf serializer, then you can remove the Akka gRPC plugin. You must remove two parts:
 
 [start=1]
 . the Akka gRPC plugin dependency
@@ -44,18 +44,13 @@ include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-plugin]
 ----
 
 [start=3]
-Optionally, you may also remove the dependency to the Akka HTTP artifact that adds support for HTTP/2:
+If you are not serving any gRPC traffic, you may also remove the dependency to the Akka HTTP artifact that adds support for HTTP/2:
 
 [source,scala]
 .build.sbt
 ----
 include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-optional]
 ----
-
-[NOTE]
-====
-Disabling the Akka gRPC plugin also removes the code generators to de/serialize using protobuf. If you want to use protobuf serializers (for either external or internal communication), you can either keep the Akka-gRPC plugin or use other sbt plugins specific to protobuf.
-====
 
 == Replace the Persistence plugin
 
@@ -130,11 +125,37 @@ include::example$cleanup-dependencies-project/build.sbt[tag=remove-alpakka-kafka
 ----
 
 
-== Remove projections altogether
+== Remove projections
 
-TODO (remove projection artifacts, including the testkit)
+If you are not projecting your data to a read-side you can remove all the artifacts provided by {akka-projection}[Akka Projections] {akka-projection}[{tab-icon}, window="tab"]:
 
-== Remove persistence (keep kafka projections)
 
-TODO (remove persistence artifacts, including the testkit)
-TODO (remove http2 and gRPC)
+. remove the value declaring the dependency version
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-projection-version]
+----
++
+. remove the value declaring the dependencies (both compile and test scopes)
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-projection]
+----
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-projection-test]
+----
++
+. Optionally, if you are not even querying the Akka Persistence Journal of events, you may even remove the Akka Persistence Query artifact:
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-projection-optional]
+----

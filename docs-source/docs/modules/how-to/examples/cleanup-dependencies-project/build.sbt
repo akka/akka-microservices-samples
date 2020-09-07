@@ -14,7 +14,9 @@ val AlpakkaKafkaVersion = "2.0.4"
 val AkkaHttpVersion = "10.2.0"
 // FIXME once akka management 1.0.9 is released
 val AkkaManagementVersion = "1.0.8+35-9feaa689+20200825-1429"
+// tag::remove-akka-projection-version[]
 val AkkaProjectionVersion = "1.0.0-RC1"
+// end::remove-akka-projection-version[]
 
 // tag::remove-grpc-plugin[]
 enablePlugins(AkkaGrpcPlugin)
@@ -52,13 +54,16 @@ libraryDependencies ++= Seq(
   "com.lightbend.akka" %% "akka-persistence-jdbc" % AkkaPersistenceJdbcVersion,
   // end::add-akka-persistence-jdbc[]
 
+  // tag::remove-akka-projection[]
   "com.lightbend.akka" %% "akka-projection-eventsourced" % AkkaProjectionVersion,
   "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
   "com.lightbend.akka" %% "akka-projection-jdbc" % AkkaProjectionVersion,
+  // end::remove-akka-projection[]
+
   /*
   // tag::replace-offset-store-for-projections[]
--  "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
-+  "com.lightbend.akka" %% "akka-projection-jdbc" % AkkaProjectionVersion,
+  -  "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
+  +  "com.lightbend.akka" %% "akka-projection-jdbc" % AkkaProjectionVersion,
   // end::replace-offset-store-for-projections[]
    */
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
@@ -70,12 +75,15 @@ libraryDependencies ++= Seq(
   "com.lightbend.akka.management" %% "akka-management-cluster-http" % AkkaManagementVersion,
   "com.lightbend.akka.management" %% "akka-management-cluster-bootstrap" % AkkaManagementVersion,
   "com.typesafe.akka" %% "akka-persistence-typed" % AkkaVersion,
+  // tag::remove-akka-projection-optional[]
   "com.typesafe.akka" %% "akka-persistence-query" % AkkaVersion,
+  // end::remove-akka-projection-optional[]
   "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion,
   "com.typesafe.akka" %% "akka-discovery" % AkkaVersion,
   // tag::remove-alpakka-kafka[]
   "com.typesafe.akka" %% "akka-stream-kafka" % AlpakkaKafkaVersion,
   // end::remove-alpakka-kafka[]
+
   // Logging
   "com.typesafe.akka" %% "akka-slf4j" % AkkaVersion,
   "ch.qos.logback" % "logback-classic" % "1.2.3",
@@ -83,7 +91,9 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-persistence-testkit" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
+  // tag::remove-akka-projection-test[]
   "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
+  // end::remove-akka-projection-test[]
   "org.scalatest" %% "scalatest" % "3.1.2" % Test)
 
 run / fork := false
