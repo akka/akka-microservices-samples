@@ -69,6 +69,7 @@ The code to handle an event, on the other hand, only need to implement one step:
 
 See the xref:shopping-microservices:entity.adoc[step adding an Event Sourced entity]), and the xref:shopping-microservices:complete-entity.adoc[step completing the Event Sourced entity]) one on the tutorial for more details.
 
+
 [NOTE]
 ====
 An more advanced approach to enriching a CRUD model into an ES model is to run one or many xref:concepts:commands-and-events.adoc#event_storming[Event Storming sessions].
