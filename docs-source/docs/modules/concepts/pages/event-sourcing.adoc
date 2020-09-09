@@ -38,3 +38,11 @@ The state of the entity can be changed only by sending commands to it. The comma
 The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands, other parts of the application may listen to the created events. Other parties can't send events.
 
 The events are continuously persisted to the Event Journal datastore, while the entity state is kept in memory. In case of a restart the latest state gets rebuilt by replaying the events from the Event Journal.
+
+
+== Advantages of Event Sourcing
+[#advantages]
+
+ifdef::todo[TODO: this page is WIP]
+
+{lagom}/scala/ESAdvantage.html[Advantages of Event Sourcing] {lagom}/scala/ESAdvantage.html[{tab-icon}, window="tab"]

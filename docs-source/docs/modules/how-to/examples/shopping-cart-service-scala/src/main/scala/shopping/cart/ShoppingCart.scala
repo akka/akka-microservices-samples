@@ -13,7 +13,7 @@ object ShoppingCart {
   // tag::howto-crud-to-es-initial[]
   sealed trait Command
   final case class AddItem(itemId: String, quantity: Int) extends Command
-  final case class Checkout() extends Command
+  case object Checkout extends Command
 
   sealed trait Event {
     def cartId: String

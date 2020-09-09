@@ -27,3 +27,6 @@ include::ROOT:partial$include.adoc[]
 :glossary-user: https://www.reactivemanifesto.org/glossary#User
 
 
+:reactive-microservices-ebook: https://www.lightbend.com/ebooks/reactive-microservices-architecture-design-principles-for-distributed-systems-oreilly
+
+:lagom: https://www.lagomframework.com/documentation/current

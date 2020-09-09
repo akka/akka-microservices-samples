@@ -1,0 +1,10 @@
+= Slicing the Monolith
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::partial$include.adoc[]
+
+ifdef::todo[TODO: this page is WIP]
+
+{reactive-microservices-ebook}[slicing the monolyth into microservices] {reactive-microservices-ebook}[{tab-icon}, window="tab"]

@@ -1,6 +1,2 @@
 :page-partial:
 include::ROOT:partial$include.adoc[]
-
-:lagom: https://www.lagomframework.com/documentation/current
-
-:reactive-microservices-ebook: https://www.lightbend.com/ebooks/reactive-microservices-architecture-design-principles-for-distributed-systems-oreilly

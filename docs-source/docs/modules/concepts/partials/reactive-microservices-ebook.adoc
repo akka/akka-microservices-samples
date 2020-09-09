@@ -1,3 +1,5 @@
 :page-partial:
 
-NOTE: This is an excerpt from the https://www.lightbend.com/ebooks/reactive-microservices-architecture-design-principles-for-distributed-systems-oreilly[ebook *"Reactive Microservices Architecture: Design Principles For Distributed Systems"* _Jonas Bonér, Co-Founder & CTO, Lightbend, Inc_].
+include::partial$include.adoc[]
+
+NOTE: This is an excerpt from the {reactive-microservices-ebook}[ebook *"Reactive Microservices Architecture: Design Principles For Distributed Systems"* _Jonas Bonér, Co-Founder & CTO, Lightbend, Inc_].

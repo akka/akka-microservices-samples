@@ -8,6 +8,7 @@
 ** xref:state-ownership.adoc[]
 
 * Patterns and techniques recommended for Reactive Microsystems
+** xref:slicing-the-monolith.adoc[]
 ** xref:event-sourcing.adoc[]
 ** xref:cqrs.adoc[]
 ** xref:message-driven-event-driven.adoc[Message Driven]
