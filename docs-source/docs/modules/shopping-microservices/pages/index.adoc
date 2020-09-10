@@ -20,7 +20,7 @@ This example evolves around a shopping cart. The tutorial takes you through the 
 . xref:projection-kafka.adoc[Projection publishing to Kafka]
 . xref:projection-grpc-client.adoc[Projection calling gRPC service]
 
-== Dependencies
+== Used Akka modules
 
 This example project uses
 
@@ -29,29 +29,3 @@ This example project uses
 - {akka-projection}/[Akka Projections] {akka-projection}/[{tab-icon}, window="tab"] to enable CQRS
 - {akka-grpc}/[Akka gRPC] {akka-grpc}/[{tab-icon}, window="tab"] to implement a gRPC service API
 - {akka-management}/[Akka Management] {akka-management}/[{tab-icon}, window="tab"] for health checks
-
-The exact dependencies are shown below:
-
-[.tabset]
-sbt::
-+
---
-[source,scala]
-----
-include::example$shopping-cart-service-scala/build.sbt[tag=libraryDependencies]
-----
---
-
-Akka gRPC requires an sbt plugin.
-
-[.tabset]
-sbt::
-+
---
-[source,scala]
-----
-include::example$shopping-cart-service-scala/project/plugins.sbt[tag=libraryDependencies]
-----
---
-
-
