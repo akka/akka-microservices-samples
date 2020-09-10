@@ -156,17 +156,3 @@ include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-projecti
 ----
 include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-projection]
 ----
-+
-[source,scala]
-.build.sbt
-----
-include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-projection-test]
-----
-+
-. Optionally, if you are not even querying the Akka Persistence Journal of events, you may even remove the Akka Persistence Query artifact:
-+
-[source,scala]
-.build.sbt
-----
-include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-projection-optional]
-----

@@ -58,6 +58,8 @@ libraryDependencies ++= Seq(
   "com.lightbend.akka" %% "akka-projection-eventsourced" % AkkaProjectionVersion,
   "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
   "com.lightbend.akka" %% "akka-projection-jdbc" % AkkaProjectionVersion,
+  "com.typesafe.akka" %% "akka-persistence-query" % AkkaVersion,
+  "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
   // end::remove-akka-projection[]
 
   /*
@@ -79,9 +81,6 @@ libraryDependencies ++= Seq(
   "com.lightbend.akka.management" %% "akka-management-cluster-http" % AkkaManagementVersion,
   "com.lightbend.akka.management" %% "akka-management-cluster-bootstrap" % AkkaManagementVersion,
   "com.typesafe.akka" %% "akka-persistence-typed" % AkkaVersion,
-  // tag::remove-akka-projection-optional[]
-  "com.typesafe.akka" %% "akka-persistence-query" % AkkaVersion,
-  // end::remove-akka-projection-optional[]
   "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion,
   "com.typesafe.akka" %% "akka-discovery" % AkkaVersion,
   // tag::remove-alpakka-kafka[]
@@ -95,9 +94,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-persistence-testkit" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
-  // tag::remove-akka-projection-test[]
-  "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
-  // end::remove-akka-projection-test[]
   "org.scalatest" %% "scalatest" % "3.1.2" % Test)
 
 run / fork := false
