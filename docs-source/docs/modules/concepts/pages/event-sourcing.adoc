@@ -13,7 +13,7 @@ A difference to persistence based on Create-Read-Update-Delete (CRUD) data-store
 
 To update an entity's state we use commands from the outside and events on the inside:
 
-* *Commands*: The state of the entity can be changed only by sending commands to it. The commands are the "external" API of an entity. Commands request state changes. The current state may block the command, or it may accept it producing zero, one or many events (depending on the command and the current state).
+* *Commands*: The state of the entity can be changed only by sending commands to it. The commands are the "external" API of an entity. Commands request state changes. The current state may reject the command, or it may accept it producing zero, one or many events (depending on the command and the current state).
 
 * *Events*: The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands. Events are an internal mechanism for the entity to mutate the state, other parties can't send events. Other parts of the application may listen to the created events.
 +
@@ -23,9 +23,9 @@ The events are persisted to the datastore, while the entity state is kept in mem
 
 Event Sourcing improves writing performance thanks to multiple aspects:
 
-* the current state resides in memory so there's no need for a round-trip and several database joins to reconstruct it
-* the history of events for a single entity can use snapshots so reconstructing an entity with a large list of events is fast: load only the latest snapshot and apply the last few events on top
-* creating aggregates or other projections over multiple entities happens asynchronously to write operations producing eventually consistent representations of the data. That happens without impacting write throughput since the events Journal is an append-only table so no locking is required to ensure consistency between the journal and the projections.
+* The current state resides in memory so there's no need for a round-trip and several database joins to reconstruct it.
+* The history of events for a single entity can use snapshots so reconstructing an entity with a large list of events is fast: load only the latest snapshot and apply the last few events on top.
+* Creating aggregates or other projections over multiple entities happens asynchronously to write operations producing eventually consistent representations of the data. That happens without impacting write throughput since the events Journal is an append-only table so no locking is required to ensure consistency between the journal and the projections.
 
 == Advantages of Event Sourcing
 [#advantages]
@@ -47,7 +47,7 @@ In a distributed architecture, Event Sourcing provides the following advantages:
 
 == Learn more
 
-To learn more bout migrating from CRUD modelling to Event Sourcing, read the xref:how-to:from-crud-to-eventsourcing.adoc[] page and follow the xref:shopping-microservices:entity.adoc[] and the xref:shopping-microservices:complete-entity.adoc[] sections of the xref:shopping-microservices:index.adoc[tutorial].
+To learn more about migrating from CRUD modelling to Event Sourcing, read the xref:how-to:from-crud-to-eventsourcing.adoc[] page and follow the xref:shopping-microservices:entity.adoc[] and the xref:shopping-microservices:complete-entity.adoc[] sections of the xref:shopping-microservices:index.adoc[tutorial].
 
 See also an https://docs.microsoft.com/en-us/previous-versions/msp-n-p/jj591559%28v=pandp.10%29[introduction to Event Sourcing] at MSDN.
 
