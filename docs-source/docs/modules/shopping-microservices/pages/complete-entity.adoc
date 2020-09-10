@@ -30,8 +30,8 @@ not mandatory for subsequent steps of the tutorial.
 Corresponding events:
 
 * `CheckedOut`
-* `ItemRemoved`
-* `ItemQuantityAdjusted`
+* (Optional) `ItemRemoved`
+* (Optional) `ItemQuantityAdjusted`
 
 When the cart has been checked out it should not accept any more changes from `AddItem`, `RemoveItem` and `AdjustItemQuantity` commands. It should still be possible to `Get` the current state of a checked out cart.
 
