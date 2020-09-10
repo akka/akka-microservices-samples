@@ -5,8 +5,6 @@
 
 include::partial$include.adoc[]
 
-ifdef::review[REVIEWERS, this is a great use-case based section, looking forward to it!]
-
 * xref:health-checks.adoc[]
 * xref:evolve-grpc-apis.adoc[]
 * xref:enable-TLS.adoc[]

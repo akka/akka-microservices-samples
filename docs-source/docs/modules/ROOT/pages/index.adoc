@@ -1,5 +1,5 @@
 = Akka Platform Guide
-:description: Example projects to illustrate features of Akka
+:description: Guided documentation of Akka for specific use cases
 
 include::ROOT:partial$include.adoc[]
 
@@ -9,37 +9,25 @@ Akka is a toolkit for building highly concurrent, distributed, and resilient mes
 
 Both beginners getting started with _Reactive_ principles and active Akka users will find this guide useful to improve their understanding of how Akka fits into _Reactive_ and how Reactive concepts apply to Akka. The guide complements the {akka}[Akka reference documentation] {akka}[{tab-icon}, window="tab"] which presents all Akka features in detail.
 
+The tutorials in this guide show end-to-end use-cases implemented in Akka with the Reactive principles in mind. The tutorials go through implementing a system step-by-step to illustrate how the Akka APIs apply together.
+
 == How to get the most out of this guide
 
-If this is your first experience with Reactive frameworks or with Akka, we present some background and ideas behind _Reactive_ in the xref:concepts:index.adoc[Concepts section]. There you will learn:
+For a code-first experience, have a look at the xref:shopping-microservices:index.adoc[tutorial] which walks you through an example project and explains how features from the Akka ecosystem fit together to build Reactive Systems. The tutorial will point you to the relevant xref::concepts:index.adoc[concepts] where applicable.
+
+If this is your first experience with Reactive frameworks or with Akka, we present some background and ideas behind _Reactive_ in the xref:concepts:index.adoc[Concepts section]. You can read those when they are introduced in the tutorial, or read them first if you prefer a more theoretical overview before diving into the code. There you will learn:
 
 * The challenges that Reactive Architecture can help you overcome
 * A summary of Reactive Principles
 * The benefits of using Akka
 * ...
 
-For a code-first experience, have a look at the tutorial which walks you through an example project and explains how features from the Akka ecosystem fit together to build Reactive Systems. The tutorial will point you to the relevant xref::concepts:index.adoc[concepts] where applicable.
+== Akka Microservices tutorial
 
-ifdef::review[Authors: as a reader, when I land on this page, I want to first reassure myself that I'm in the right place. For example, I want to see mention of the problems I'm trying to solve and a brief description of how this guide (and Akka Platform) can help me do that. It doesn't need to go that deep, but should motivate me to want to go on and read concepts or try one of the examples, etc. Probably also useful would be a section on how to get the most out of this guide, what audience it is intended for etc. I would put the x-refs to the other sections in that section. I've added this below and revised the description for concepts so that you can get an idea of what I mean]
-
-ifdef::review[Authors, in light of the findings of this usability study: http://sigdoc.acm.org/cdq/how-developers-use-api-documentation-an-observation-study/, we might want to reconsider renaming "Concepts" and breaking it up into top level titles that might be more meaningful to readers, such as "Why Reactive", "What's Reactive" -- just brainstorming here.]
-
-== Tutorials
-
-The tutorials show end-to-end use-cases implemented in Akka with the Reactive principles in mind. Some concepts show directly in code, others are more spread-out and require multiple things in Akka to work together. The tutorials go through implementing a system step-by-step to illustrate how the Akka APIs apply together.
-
-=== xref:shopping-microservices:index.adoc[Microservices based on Event Sourcing and CQRS]
-
-This tutorial illustrates how to implement Event Sourcing with Akka Persistence and CQRS using Akka Projections.
+The xref:shopping-microservices:index.adoc[Akka Microservices tutorial] illustrates how to implement Event Sourcing with Akka Persistence and CQRS using Akka Projections.
 
 == How to...
 
-Some development tasks arise from requirements on existing projects. This section collects guidance for how to introduce a new feature or architectural improvement on an existing codebase.
-
-* xref:how-to:index.adoc[]
-** xref:how-to:health-checks.adoc[]
-** xref:how-to:evolve-grpc-apis.adoc[]
-** xref:how-to:enable-TLS.adoc[]
-
+Some development tasks arise from requirements on existing projects. The * xref:how-to:index.adoc[] section collects guidance for how to introduce a new feature or architectural improvement on an existing codebase.
 
 **This documentation was last published: {localdate}**

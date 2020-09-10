@@ -23,7 +23,7 @@ asciidoc:
     # the following two attributes cause review and todo notes to display
     # review: ''
     # todo: ''
-    doc-title: 'Akka Samples'
+    doc-title: 'Akka Platform Guide'
 
 output:
   dir: ./../target/staging
