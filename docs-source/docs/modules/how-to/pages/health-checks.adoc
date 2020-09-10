@@ -22,6 +22,8 @@ The {akka-management}/[Akka Management] library includes support for exposing re
 
 The depedencies for Akka Management include the core module and the cluster HTTP module for cluster inspection. As Akka Management uses Spray JSON internally, make sure to add that dependency of the exact same version as other Akka HTTP libraries.
 
+ifdef::todo[TODO: use an include instead of a hardcoded snippet below)]
+
 .build.sbt
 [source,scala]
 ----
