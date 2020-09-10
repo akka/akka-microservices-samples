@@ -19,16 +19,19 @@ image::example-entity.png[Example entity]
 
 Add the following commands to the `ShoppingCart`:
 
-* `RemoveItem` - remove an item from the cart
-* `AdjustItemQuantity` - adjust the quantity of an item in the cart
 * `Checkout` - checkout the shopping cart
 * `Get` - get the current state of the shopping cart
+* (Optional) `RemoveItem` - remove an item from the cart
+* (Optional) `AdjustItemQuantity` - adjust the quantity of an item in the cart
 
-and corresponding events:
+If you want to reduce the scope of the exercise you can skip `RemoveItem` and `AdjustItemQuantity`. They are
+not mandatory for subsequent steps of the tutorial.
 
+Corresponding events:
+
+* `CheckedOut`
 * `ItemRemoved`
 * `ItemQuantityAdjusted`
-* `CheckedOut`
 
 When the cart has been checked out it should not accept any more changes from `AddItem`, `RemoveItem` and `AdjustItemQuantity` commands. It should still be possible to `Get` the current state of a checked out cart.
 
