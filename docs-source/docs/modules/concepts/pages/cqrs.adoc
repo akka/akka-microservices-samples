@@ -33,4 +33,7 @@ In CQRS, in order to build the read-side representations we want a stream of dat
 
 * xref:how-to:from-crud-to-eventsourcing.adoc[]
 
-* {akka-projection}/[Akka Projections] is designed to listen to a stream of events and build up data in a different representation, a projection. See the CQRS documentation in the {akka-projection}/use-cases.html[Akka Projections documentation] for more details. The entry-point to the Akka Projections API is the `EventSourcedProvider` which listens to the events of an xref:event-sourcing.adoc[Event Sourced] entity.
+* To see a project implementing CQRS in action, have a look at the xref:shopping-microservices:index.adoc["Implementing Microservices with Akka" tutorial]. In steps xref:shopping-microservices:entity.adoc[], and xref:shopping-microservices:complete-entity.adoc[] you will implement a write-side using {akka}/typed/persistence.html[Akka Persistence] {akka}/typed/persistence.html[{tab-icon}, window="tab"]  which implements Event Sourcing. Then, in the step xref:shopping-microservices:projection-query.adoc[] you will implement a read-side using {akka-projection}[] {akka-projection}[{tab-icon}, window="tab"].
+
+* See also the CQRS documentation in the {akka-projection}/use-cases.html[Akka Projections documentation] for more details on how Akka Projection can be used to build a Query side.
+
