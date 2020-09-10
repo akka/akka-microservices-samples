@@ -5,7 +5,7 @@
 
 include::partial$include.adoc[]
 
-In the xref:shopping-microservices:index.adoc[Microservices Tutorial] there's a guide on creating a xref:shopping-microservices:grpc-server.adoc#_server[gRPC server] using {akka-http}[Akka HTTP] {akka-http}[{tab-icon}, window="tab"] and {akka-grpc}[Akka gRPC] {akka-grpc}[{tab-icon}, window="tab"]. That example, though, will only bind a server supporting plaintext HTTP.
+In the xref:microservices-tutorial:index.adoc[Microservices Tutorial] there's a guide on creating a xref:microservices-tutorial:grpc-server.adoc#_server[gRPC server] using {akka-http}[Akka HTTP] {akka-http}[{tab-icon}, window="tab"] and {akka-grpc}[Akka gRPC] {akka-grpc}[{tab-icon}, window="tab"]. That example, though, will only bind a server supporting plaintext HTTP.
 
 Enabling TLS for gRPC doesn't differ from enabling TLS for other application protocols served over HTTP. You will need to follow these 3 steps:
 

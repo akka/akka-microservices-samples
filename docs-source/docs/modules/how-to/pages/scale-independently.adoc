@@ -9,7 +9,7 @@ include::partial$include.adoc[]
 
 Not all nodes in an Akka Cluster need to be identical. When starting each process you can add some metadata to it to give that instance a special purpose. {akka}/typed/cluster.html#node-roles[Node Roles] {akka}/typed/cluster.html#node-roles[{tab-icon}, window="tab"] in Akka Cluster will handle that metadata.
 
-This feature can be used to scale portions of your application indenpendently. Let's take for example the shopping cart microservice from the xref:shopping-microservices:index.adoc[tutorial]:
+This feature can be used to scale portions of your application indenpendently. Let's take for example the shopping cart microservice from the xref:microservices-tutorial:index.adoc[tutorial]:
 
 [#e-commerce-app]
 .An e-Commerce application built with 3 microservices
@@ -28,7 +28,7 @@ For example:
 [#node-for-eventsourcing]
 .Node dedicated to event sourcing
 [caption=""]
-image::shopping-microservices:example-entity.png[Node dedicated to event sourcing]
+image::microservices-tutorial:example-entity.png[Node dedicated to event sourcing]
 
 This type of node, would not run the projections. Alternatively, we could also have nodes dedicated to only run projections and no persistent entities.
 
@@ -43,11 +43,11 @@ Let's see these two changes in more detail.
 
 === Configure the Sharding
 
-When you initialize the Sharding of a persistent entity, as described in the xref:shopping-microservices:entity.adoc#_initialization[tutorial], you may specify a role. Take for example the final code on the initialization of the persistent entity (from the tutorial):
+When you initialize the Sharding of a persistent entity, as described in the xref:microservices-tutorial:entity.adoc#_initialization[tutorial], you may specify a role. Take for example the final code on the initialization of the persistent entity (from the tutorial):
 
 [source,scala]
 ----
-include::shopping-microservices:example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=howto-write-side-without-role]
+include::microservices-tutorial:example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=howto-write-side-without-role]
 ----
 
 You can {akka}/typed/cluster-sharding.html[specify a role when declaring the entity] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"]:
@@ -98,11 +98,11 @@ Let's see these two changes in more detail.
 
 === Configure the Sharding
 
-When you initialize the {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[Sharded Daemon Processes] {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[{tab-icon}, window="tab"] for the projections, as described in the xref:shopping-microservices:projection-query.html#_create_projection[tutorial], you may specify a role. Take for example the final code on the initialization of the Sharded Daemon Process for the popularity projection (from the tutorial):
+When you initialize the {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[Sharded Daemon Processes] {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[{tab-icon}, window="tab"] for the projections, as described in the xref:microservices-tutorial:projection-query.html#_create_projection[tutorial], you may specify a role. Take for example the final code on the initialization of the Sharded Daemon Process for the popularity projection (from the tutorial):
 
 [source,scala]
 ----
-include::shopping-microservices:example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[tag=howto-read-side-without-role]
+include::microservices-tutorial:example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[tag=howto-read-side-without-role]
 ----
 
 You can {akka}/typed/cluster-sharding.html[specify a role when declaring the entity] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"]:
