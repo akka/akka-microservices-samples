@@ -26,9 +26,9 @@ Example code
 
 The example application used in the documentation is composed of 3 three microservices. The projects for these services are located at:
 
-* [Shopping cart service in Scala](docs-source/docs/modules/shopping-microservices/examples/shopping-cart-service-scala)
-* [Shopping cart analytics service in Scala](docs-source/docs/modules/shopping-microservices/examples/shopping-analytics-service-scala)
-* [Order service in Scala](docs-source/docs/modules/shopping-microservices/examples/shopping-order-service-scala)
+* [Shopping cart service in Scala](docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala)
+* [Shopping cart analytics service in Scala](docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala)
+* [Order service in Scala](docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala)
 
 
 Antora-based Akka Documentation

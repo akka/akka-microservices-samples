@@ -24,15 +24,15 @@ jobs:
   include:
     - stage: test
       env:
-        DIR="docs-source/docs/modules/shopping-microservices/examples/shopping-analytics-service-scala"
+        DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala"
         CMD="test; scalafmtCheckAll"
       name: "Shopping analytics service"
     - env:
-        DIR="docs-source/docs/modules/shopping-microservices/examples/shopping-cart-service-scala"
+        DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala"
         CMD="test; scalafmtCheckAll"
       name: "Shopping cart service"
     - env:
-        DIR="docs-source/docs/modules/shopping-microservices/examples/shopping-order-service-scala"
+        DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala"
         CMD="test; scalafmtCheckAll"
       name: "Shopping order service"
 
