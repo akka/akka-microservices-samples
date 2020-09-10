@@ -23,12 +23,12 @@ object ShoppingCartServer {
       ServiceHandler.concatOrNotFound(
         proto.ShoppingCartServiceHandler.partial(new ShoppingCartServiceImpl),
         // ServerReflection enabled to support grpcurl without import-path and proto parameters
-        ServerReflection.partial(List(proto.ShoppingCartService)))
+        ServerReflection.partial(List(proto.ShoppingCartService))) // <1>
 
     val bound =
-      Http().newServerAt(interface, port).bind(service).map(_.addToCoordinatedShutdown(3.seconds))
+      Http().newServerAt(interface, port).bind(service).map(_.addToCoordinatedShutdown(3.seconds)) // <2>
 
-    bound.onComplete {
+    bound.onComplete { // <3>
       case Success(binding) =>
         val address = binding.localAddress
         system.log.info("Shopping online at gRPC server {}:{}", address.getHostString, address.getPort)

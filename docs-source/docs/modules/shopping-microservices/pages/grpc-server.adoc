@@ -51,6 +51,8 @@ Let's implement the `ShoppingCartService` trait. Create a `ShoppingCartServiceIm
 include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[]
 ----
 
+<1> The method corresponding to the `rpc AddItem` in the service definition. Defined in the generated `proto.ShoppingCartService`.
+
 == Server
 
 The gRPC service implementation is running by an Akka HTTP server. Add the following server initialization code in a `ShoppingCartServer` object.
@@ -59,6 +61,10 @@ The gRPC service implementation is running by an Akka HTTP server. Add the follo
 ----
 include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServer.scala[]
 ----
+
+<1> Concatenate the service implementation with `ServerReflection` for better `grcurl` support.
+<2> Start the HTTP server for the gRPC service.
+<3> Some logging at startup.
 
 == Main
 
@@ -69,7 +75,11 @@ To run the service we need a class with a `main` method. Edit the `Main` class t
 include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[]
 ----
 
-ifdef::todo[TODO: describe grpc.port configuration]
+<1> Start an `ActorSystem` with the `Main` actor `Behavior`.
+<2> Initialization of Akka Management that is used for forming the Akka Cluster.
+<3> Initialize the gRPC server.
+
+The `grpc.port` configuration is defined in `local1.conf`, which is included in the generated template project.
 
 == Run
 
