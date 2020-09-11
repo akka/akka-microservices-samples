@@ -35,3 +35,11 @@ Sharing entities across <<Bounded Context>>'s adds coupling since a change on th
 == Events-First DDD
 
 ifdef::todo[TODO: this page is WIP]
+
+[discrete]
+== See also
+
+* xref:event-sourcing.adoc[]
+* [book]
+https://www.amazon.com/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215/ref=sr_1_1?dchild=1&keywords=Domain-Driven+Design&qid=1599820577&s=books&sr=1-1[Domain-Driven Design: Tackling Complexity in the Heart of Software] -- Eric Evans (Addison-Wesley Professional)
+* [book] https://www.amazon.com/Domain-Driven-Design-Distilled-Vaughn-Vernon-ebook/dp/B01JJSGE5S/ref=sr_1_1?dchild=1&keywords=Domain-Driven+Design+Distilled&qid=1599820686&s=books&sr=1-1[Domain-Driven Design Distilled] -- Vaughn Vernon ( Addison-Wesley Professional)
