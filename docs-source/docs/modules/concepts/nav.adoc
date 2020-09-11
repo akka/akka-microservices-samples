@@ -32,7 +32,6 @@
 
 * Deployment Concerns
 ** xref:services.adoc[]
-*** xref:service-discovery.adoc[]
 *** xref:service-clients.adoc[]
 *** xref:grpc-services.adoc[]
 ** xref:internal-and-external-communication.adoc[]
