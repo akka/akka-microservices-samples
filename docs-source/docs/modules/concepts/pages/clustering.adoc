@@ -13,3 +13,6 @@ The server of this service consists of JVMs in an Akka cluster. Each node run's 
 
 Enable the Akka cluster by setting `akka.actor.provider = cluster` and define the `akka.cluster.seed-nodes`. By setting the `akka.cluster.downing-provider-class` downing nodes within the Akka cluster during network problems can be managed safely avoiding "Split Brain" scenarios.
 
+== Sharding
+
+== SBR

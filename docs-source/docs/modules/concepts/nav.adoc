@@ -3,9 +3,17 @@
 ** xref:isolation.adoc[]
 ** xref:autonomy.adoc[]
 ** xref:mobility.adoc[]
-** Single Responsibility
+** xref:single-responsibility.adoc[]
 ** xref:message-driven-event-driven.adoc[Event-Driven]
 ** xref:state-ownership.adoc[]
+
+* Implementation Concepts
+** xref:akka-actor.adoc[]
+** xref:akka-stream.adoc[]
+** xref:clustering.adoc[]
+** xref:akka-persistence.adoc[]
+** xref:akka-projections.adoc[]
+** xref:akka-management.adoc[]
 
 * Patterns and techniques recommended for Reactive Microsystems
 ** xref:slicing-the-monolith.adoc[]
@@ -13,34 +21,16 @@
 ** xref:cqrs.adoc[]
 ** xref:message-driven-event-driven.adoc[Message Driven]
 ** xref:commands-and-events.adoc[]
-** Memory Image Pattern
-** Circuit Breakers
-** Reactive Programming
-** Reactive Streams
-*** Backpressure
+** xref:memory-image-pattern.adoc[]
+** xref:circuit-breakers.adoc[]
+** xref:reactive-programming.adoc[]
+** xref:reactive-strams.adoc[]
 ** xref:ddd.adoc[Brief Summary of DDD concepts]
-
-* Implementation Concepts
-** Actor model
-*** Supervision
-** Akka Streams
-** xref:clustering.adoc[]
-*** Sharding
-*** SBR
-** Akka Persistence
-** Akka Projections
-
-* Deployment Concerns
-** xref:services.adoc[]
-*** xref:service-discovery.adoc[]
-*** xref:service-clients.adoc[]
-*** xref:grpc-services.adoc[]
 ** xref:internal-and-external-communication.adoc[]
-** Akka Management
-*** Management
-*** Bootstrap
-*** Service Discovery
-** Docker
-** Kubernetes
-** Helm
+** xref:services.adoc[]
+** xref:service-discovery.adoc[]
+** xref:service-clients.adoc[]
+** xref:grpc-services.adoc[]
+** xref:deployment-and-container-orchestration.adoc[]
+
 
