@@ -5,14 +5,33 @@
 
 include::partial$include.adoc[]
 
-ifdef::todo[TODO: x-link to https://en.wikipedia.org/wiki/Domain-driven_design (?)]
-
-ifdef::todo[TODO: below is list of possible sections for this page]
+[quote, 'https://en.wikipedia.org/wiki/Domain-driven_design[Wikipedia] https://en.wikipedia.org/wiki/Domain-driven_design[{tab-icon}, window="tab"]' ]
+____
+Domain-driven design (DDD) is the concept that the structure and language of software code (class names, class methods, class variables) should match the business domain. For example, if a software processes loan applications, it might have classes such as LoanApplication and Customer, and methods such as AcceptOffer and Withdraw.
+____
 
 == Bounded Context
 [#bounded_context]
+
+As the modelling covers a more extensive are of your business, split the models into very well-delimited contexts in which each model applies. Each of these contexts will have autonomy to evolve teh models it owns.
+
+Keeping each model with strict boundaries allows having different modelling for business entities that look similar but have slightly different meaning on each of the contexts.
+
+A model within these bounds may need to be shared to interact with external contexts. Use an <<Anti-Corruption Layer>> to prevent coupling both contexts.
+
 == Ubiquitous Language
-== Consistency Boundaries
+
+Business specialists and other members of the team (both technical and non-technical) should collaborate into creating a single, meaningful naming for the use cases, entities, actions and events modelling the business. Using a single, common language will align all parties and improve communication.
+
 == Stateful Aggregate
+
+An Aggregate is a root entity, the entry point to an object graph of related entities. Using the Aggregate as the unique reference to all the related entities it is possible to guarantee the consistency.
+
 == Anti-Corruption Layer
+[#anti_corruption_layer]
+
+Sharing entities across <<Bounded Context>>'s adds coupling since a change on the entity model affects the code consuming it. An Anti-Corruption Layer is a transformation mapping the external model (controlled by a third party bounded context) into an internal model that's stable to the actual bounded context consuming the model.
+
 == Events-First DDD
+
+ifdef::todo[TODO: this page is WIP]
