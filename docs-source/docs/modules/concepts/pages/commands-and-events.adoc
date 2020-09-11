@@ -5,12 +5,15 @@
 
 include::partial$include.adoc[]
 
-ifdef::todo[TODO: this page is WIP]
+Commands and Events are two of the building blocks of xref:event-sourcing.adoc[]. In order to reconstruct the state of an entity in memory we must read the history of events for that entity from the datastore and process each event one at a time.
 
+Once the state reconstruction finishes, the entity is ready to process new commands. A command is a request to mutate the state.
 
-TODO: orders to change state VS consequences of state changes
+Events will be serialized and published into the _Journal_ table in the database. The _Journal_ can then be consumed by the emitting entity or by third parties (e.g. to build an aggregate or other kinds of projections). Events are built on top of xref:message-driven-event-driven.adoc#message_vs_event[messages].
+
+A client trying to mutate the state of an entity will produce a command message and send it to the entity. Commands are a type of message. Sometimes, commands include the address of the sender, the entity can use the sender address to send a message back with a reply.
 
 == Event Storming
 [#event_storming]
 
-Events Storming is a multi-disciplinary meeting where product specialists, developers and other roles in the company meet with the main purpose to model the business as a collection of commands, entities and events; while grouping these commands, entities and events into separate boundaries.
+Event Storming is a type of multi-disciplinary meeting where product specialists, developers and other roles in the company meet with the main purpose to model the business as a collection of commands, entities and events; while grouping these commands, entities and events into separate xref:ddd.adoc#bounded_context[bounded_contexts].

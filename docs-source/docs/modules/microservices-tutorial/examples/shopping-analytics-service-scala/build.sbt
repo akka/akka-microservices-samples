@@ -1,4 +1,4 @@
-name := "shopping-cart-service-scala"
+name := "shopping-analytics-service-scala"
 version := "1.0"
 
 organization := "com.lightbend.akka.samples"

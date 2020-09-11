@@ -9,6 +9,7 @@ include::partial$include.adoc[]
 Reactive Systems rely on {glossary-asynchronous}[asynchronous] {glossary-asynchronous}[{tab-icon}, window="tab"] {glossary-message-driven}[message-passing] {glossary-message-driven}[{tab-icon}, window="tab"] to establish a boundary between components that ensures loose coupling, isolation and {glossary-location-transparency}[location transparency] {glossary-location-transparency}[{tab-icon}, window="tab"]. This boundary also provides the means to delegate {glossary-failure}[failures] {glossary-failure}[{tab-icon}, window="tab"] as messages. Employing explicit message-passing enables load management, elasticity, and flow control by shaping and monitoring the message queues in the system and applying {glossary-back-pressure}[back-pressure] {glossary-back-pressure}[{tab-icon}, window="tab"] when necessary. Location transparent messaging as a means of communication makes it possible for the management of failure to work with the same constructs and semantics across a cluster or within a single host. {glossary-non-blocking}[Non-blocking] {glossary-non-blocking}[{tab-icon}, window="tab"] communication allows recipients to only consume {glossary-resource}[resources] {glossary-resource}[{tab-icon}, window="tab"] while active, leading to less system overhead.
 
 == Message vs Event
+[#message_vs_event]
 
 A Message is some data sent to a specific address. In Message Driven systems, each component has a unique address other components can send messages to. Each of these components, or recipients, awaits messages and reacts to them.
 

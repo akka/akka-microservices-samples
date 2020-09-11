@@ -34,7 +34,7 @@ An initial trick to help you in this mindset shift is to separate the CRUD code 
 
 Once you've made that distinction you are on track to model your commands. Each operation mutating your data can be tracked back to a user intent demanding the state to change.
 
-Imagine you are modelling a Shopping Cart (like to one on the xref:shopping-microservices:index.adoc["Implementing Microservices with Akka" tutorial]). In CRUD, you would have a `SHOPPING_CART` table, then a `SHOPPING_CART_ITEMS` table with a foreign key to `SHOPPING_CART`, another foreign key to `ITEMS` and a column with an amount (how many times an item is on a shopping cart). Then, in code, we have a `ShoppingCart` class and maybe a `ShoppingCartRepository` class with the logic to read and write from the database, and the validation code over a `ShoppingCart` instance. The `ShoppingCartRepository` maybe looked something like:
+Imagine you are modelling a Shopping Cart (like to one on the xref:microservices-tutorial:index.adoc["Implementing Microservices with Akka" tutorial]). In CRUD, you would have a `SHOPPING_CART` table, then a `SHOPPING_CART_ITEMS` table with a foreign key to `SHOPPING_CART`, another foreign key to `ITEMS` and a column with an amount (how many times an item is on a shopping cart). Then, in code, we have a `ShoppingCart` class and maybe a `ShoppingCartRepository` class with the logic to read and write from the database, and the validation code over a `ShoppingCart` instance. The `ShoppingCartRepository` maybe looked something like:
 
 [source]
 ----
@@ -77,7 +77,7 @@ The code to handle an event, on the other hand, only needs to implement one step
 
 In Event Sourcing, the `State` must be rebuilt in memory every time. The process to do that is reading the events for a given entity id from the _Journal_  table in the database and replay them over an empty entity using the event handlers. This process may become very inefficient when the history of events of an entity grows large. A workaround to prevent this performance loss is storing a snapshot of the state now and then (e.g. every 50 events). With this trick, instead of reading all the events for an entity we can read the latest snapshot and only apply the events that occurred after taking the snapshot.
 
-See the xref:shopping-microservices:entity.adoc[step adding an Event Sourced entity], and the xref:shopping-microservices:complete-entity.adoc[step completing the Event Sourced entity] on the tutorial for more details.
+See the xref:microservices-tutorial:entity.adoc[step adding an Event Sourced entity], and the xref:microservices-tutorial:complete-entity.adoc[step completing the Event Sourced entity] on the tutorial for more details.
 
 [NOTE]
 ====

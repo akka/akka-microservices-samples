@@ -10,6 +10,7 @@ ifdef::todo[TODO: x-link to https://en.wikipedia.org/wiki/Domain-driven_design (
 ifdef::todo[TODO: below is list of possible sections for this page]
 
 == Bounded Context
+[#bounded_context]
 == Ubiquitous Language
 == Consistency Boundaries
 == Stateful Aggregate

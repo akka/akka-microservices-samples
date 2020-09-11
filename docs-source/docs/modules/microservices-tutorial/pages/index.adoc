@@ -1,0 +1,24 @@
+= Implementing Microservices with Akka
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+This example illustrates how multiple microservices can interact to implement a system. They use Akka Persistence for Event Sourcing and Akka Projections to implement CQRS for the event-sourced entities.
+
+== Tutorial
+
+This example evolves around a shopping cart. The tutorial takes you through the following steps to build the services from scratch, and adding piece by piece with deployment to the cloud for each step.
+
+include::partial$listing.adoc[]
+
+== Used Akka modules
+
+This example project uses
+
+- {akka}/typed/cluster-sharding.html[Akka Cluster Sharding] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"] to distribute processing
+- {akka-persistence-cassandra}/[Akka Persistence Cassandra] {akka-persistence-cassandra}/[{tab-icon}, window="tab"] to use Event Sourcing
+- {akka-projection}/[Akka Projections] {akka-projection}/[{tab-icon}, window="tab"] to enable CQRS
+- {akka-grpc}/[Akka gRPC] {akka-grpc}/[{tab-icon}, window="tab"] to implement a gRPC service API
+- {akka-management}/[Akka Management] {akka-management}/[{tab-icon}, window="tab"] for health checks

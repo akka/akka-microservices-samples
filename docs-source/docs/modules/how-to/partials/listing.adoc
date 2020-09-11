@@ -1,0 +1,7 @@
+:page-partial:
+
+* xref:how-to:health-checks.adoc[]
+* xref:how-to:evolve-grpc-apis.adoc[]
+* xref:how-to:enable-TLS.adoc[]
+* xref:how-to:scale-independently.adoc[]
+* xref:how-to:from-crud-to-eventsourcing.adoc[]
