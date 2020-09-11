@@ -40,6 +40,10 @@ jobs:
         DIR="docs-source/docs/modules/how-to/examples/shopping-cart-service-scala"
         CMD="test; scalafmtCheckAll"
       name: "Howto example code"
+    - env:
+        DIR="docs-source/docs/modules/how-to/examples/cleanup-dependencies-project"
+        CMD="test; scalafmtCheckAll"
+      name: "Howto cleanup dependencies"
 
     - stage: site
       script:

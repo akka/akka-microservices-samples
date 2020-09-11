@@ -10,10 +10,9 @@ ifdef::todo[TODO: this page is WIP]
 
 ifdef::todo[(Lagom Service Descriptors https://www.lagomframework.com/documentation/1.6.x/java/ServiceDescriptors.html)]
 
-
 A service is made up by its API (request and response types, strict vs stream, synchronous vs asynchronous), and discovery information (URL, topic name).
 
-To communicate the API consistently, we recommend using schema-first approaches. The schemas are to be shared by the service implementation and its clients. From the schema the implementing code is generated and used to implement the service and the client code. With this approach the service and the clients don't share any code or dependencies.
+To communicate the API consistently, we recommend using schema-first approaches. The schemas are to be shared by the service implementation and its clients. From the schema the implementing code is generated and used to implement the service and the client code. With this approach the service, and the clients don't share any code or dependencies.
 
 == Synchronous Services
 
@@ -49,16 +48,25 @@ ifdef::todo[TODO:
 ]
 
 == Service Discovery
+[#service-discovery]
 
-ifdef::todo[Transport information coordinates (URL, HTTP method, broker & topic), serialization]
+Service Discovery is the mechanism service clients will use to locate and consume a xref:mobility.adoc[movable] service. Service Discovery is a key building block to {glossary-location-transparency}[Location Transparency] {glossary-location-transparency}[{tab-icon}, window="tab"]. Service clients relying on Service Discovery no longer need to have previous knowledge of the address of a service and, instead, use a discovery mechanism any time they need to use that address.
 
-ifdef::todo[Service descriptor agnostic to transport?]
+The most common discovery mechanism is DNS in which clients lookup an address resolution given a hostname. In DNS, the most common registries are `DNS-A` and `DNS-AAAA` records. The `DNS-SRV` records not only resolve the address but also a port. The `DNS-SRV` record type is a perfect match for orchestration platforms where services not only move across hosts but may also be bound to random ports are they are moved. One last characteristic of `DNS-SRV` records is the addition of extra https://en.wikipedia.org/wiki/SRV_record#Record_format[metadata] https://en.wikipedia.org/wiki/SRV_record#Record_format[{tab-icon}, window="tab"] including the application protocol (aka `service`) and the transport protocol (aka `proto`). `DNS-SRV`-based Service Discovery is a common strategy in xref:kubernetes.adoc[] deployments.
 
-ifdef::todo[Service discovery, Deployed services are announced as DNS SRV records by Kubernetes.]
+Service Discovery look-ups hit a Service Registry that keeps an up-to-date list of addresses providing a given service. In Kubernetes, for example, when a Pod is xref:how-to:health-checks.adoc[ready] the DNS registry is updated, so a new Service Discovery look-up for that service can now return this new Pod address and port. the Service Registry may resolve the look-up request with one or many valid addresses, then the client can use any load-balancing or caching mechanism it prefers with that list.
+
+The above describes a scenario of client-side Service Discovery where the service publishes a detailed registry of all the instances serving it.
+
+With server-side Service Discovery, on the other hand, the service implementor provides a single, stable entry point and handles the discovery, but also the load-balancing, internally.
+
+ifdef::todo[TODO: Transport information coordinates (URL, HTTP method, broker & topic), serialization]
+
+ifdef::todo[TODO: Service descriptor agnostic to transport?]
 
 == Protecting our Service
 
-ifdef::todo[Circuit breakers]
+A Service may experience transient failure or degradation due to excessive load, GC pauses, etc... in that case, clients will retry the failed request, which will increase the load. Instead, in order to let the service recover from the transient failure as fast as possible, clients should use xref:circuit-breakers.adoc[Circuit Breakers].
 
 == Structuring our Service
 

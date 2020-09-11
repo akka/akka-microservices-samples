@@ -1,0 +1,148 @@
+= How to reduce the build
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::partial$include.adoc[]
+
+This guide will help you clean up the build scripts, so your build only includes the dependencies, plugins, and settings you need.
+
+This guide assumes you created a new project using the {akka-microservices-seed-scala}[Akka Microservicies template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] with the following command:
+
+[source]
+----
+sbt new akka/akka-microservices-seed-scala.g8
+----
+
+The project created with the command above uses sbt as a build tool. The build is split in two files:
+
+. `build.sbt`
+. `project/plugins.sbt`
+
+Because the template adds all the dependencies, plugins, and settings required to build the full application used in the xref:shopping-microservices:index.adoc[microservices tutorial] it is likely you can remove some bits.
+
+== Remove support for gRPC and protobuf
+
+If you don't need to serve or consume gRPC traffic, or use any protobuf serializer, then you can remove the Akka gRPC plugin. You must remove two parts:
+
+[start=1]
+. the Akka gRPC plugin dependency
+
+[source,scala]
+.project/plugins.sbt
+----
+include::example$cleanup-dependencies-project/project/plugins.sbt[tag=remove-grpc-plugin]
+----
+
+[start=2]
+. the Akka gRPC plugin activation
+
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-plugin]
+----
+
+[start=3]
+If you are not serving any gRPC traffic, you may also remove the dependency to the Akka HTTP artifact that adds support for HTTP/2:
+
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-optional]
+----
+
+== Replace the Persistence plugin
+
+The project produced with the {akka-microservices-seed-scala}[Akka Microservices template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] assumes the application will use the {akka-persistence-cassandra}[Akka Persistence Cassandra plugin] {akka-persistence-cassandra}[{tab-icon}, window="tab"]. You can opt out from using that plugin and use the {akka-persistence-jdbc}[Akka Persistence JDBC] {akka-persistence-jdbc}[{tab-icon}, window="tab"] or other plugins instead.
+
+[start=1]
+. The first thing you must do is to remove the dependency to the Akka Persistence Cassandra plugin:
++
+.. remove the value declaring the dependency version
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-persistence-cassandra-version]
+----
++
+[start=2]
+.. remove the value declaring the dependency
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-persistence-cassandra]
+----
+
+[start=2]
+. Now add the dependency of the Akka Persistence plugin you want. Let's use, for example, the JDBC plugin:
++
+.. (optional) declare the version as a value:
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=add-akka-persistence-jdbc-version]
+----
++
+[start=2]
+.. add the new dependency
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=add-akka-persistence-jdbc]
+----
+
+== Replace the Offset Store database
+
+The project produced with the {akka-microservices-seed-scala}[Akka Microservices template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] assumes the application will use a Cassandra database to store the {akka-projection}/overview.html#overview[offset tracking] {akka-projection}/overview.html#overview[{tab-icon}, window="tab"]  required by the projections. You can replace the artifact to use an RDBMS:
+
+[source,diff]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=replace-offset-store-for-projections-jdbc]
+----
+
+Note how the artifact version doesn't change.
+
+Replacing the artifact is only the first step. Each of the implementations of Offset Stores for  Akka Projections has slightly different APIs. Refer to the {akka-projection}[Akka Projections reference documentation] {akka-projection}[{tab-icon}, window="tab"] for more details.
+
+== Remove support for Kafka
+
+The project produced with the {akka-microservices-seed-scala}[Akka Microservices template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] projects data include the necessary dependencies to project data to a Kafka topic. If you are not projecting data into Kafka, remove the version declaration and the artifact:
+
+[source,diff]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-alpakka-kafka-version]
+----
+[source,diff]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-alpakka-kafka]
+----
+
+
+== Remove projections
+
+If you are not projecting your data to a read-side you can remove all the artifacts provided by {akka-projection}[Akka Projections] {akka-projection}[{tab-icon}, window="tab"]:
+
+
+. remove the value declaring the dependency version
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-projection-version]
+----
++
+. remove the value declaring the dependencies (both compile and test scopes)
++
+[source,scala]
+.build.sbt
+----
+include::example$cleanup-dependencies-project/build.sbt[tag=remove-akka-projection]
+----

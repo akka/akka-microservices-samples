@@ -32,5 +32,3 @@
 ** xref:service-clients.adoc[]
 ** xref:grpc-services.adoc[]
 ** xref:deployment-and-container-orchestration.adoc[]
-
-
