@@ -10,10 +10,9 @@ ifdef::todo[TODO: this page is WIP]
 
 ifdef::todo[(Lagom Service Descriptors https://www.lagomframework.com/documentation/1.6.x/java/ServiceDescriptors.html)]
 
-
 A service is made up by its API (request and response types, strict vs stream, synchronous vs asynchronous), and discovery information (URL, topic name).
 
-To communicate the API consistently, we recommend using schema-first approaches. The schemas are to be shared by the service implementation and its clients. From the schema the implementing code is generated and used to implement the service and the client code. With this approach the service and the clients don't share any code or dependencies.
+To communicate the API consistently, we recommend using schema-first approaches. The schemas are to be shared by the service implementation and its clients. From the schema the implementing code is generated and used to implement the service and the client code. With this approach the service, and the clients don't share any code or dependencies.
 
 == Synchronous Services
 
@@ -65,7 +64,7 @@ ifdef::todo[Service descriptor agnostic to transport?]
 
 == Protecting our Service
 
-ifdef::todo[Circuit breakers]
+A Service may experience transient failure or degradation due to excessive load, GC pauses, etc... in that case, clients will retry the failed request, which will increase the load. Instead, in order to let the service recover from the transient failure as fast as possible, clients should use xref:circuit-breakers.adoc[Circuit Breakers].
 
 == Structuring our Service
 
