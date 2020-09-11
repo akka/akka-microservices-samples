@@ -56,7 +56,9 @@ The most common discovery mechanism is DNS in which clients lookup an address re
 
 Service Discovery look-ups hit a Service Registry that keeps an up-to-date list of addresses providing a given service. In Kubernetes, for example, when a Pod is xref:how-to:health-checks.adoc[ready] it is added to the Service load balancers, so a new Service Discovery look-up for that service can now return this new Pod address and port.
 
-The above describes a scenario of Client-side Service Discovery where the service publishes a detailed registry of all the instances serving it. Server-side Service Discovery, on the other hand, the service implementor provides a single, stable entry point and handles the discovery, but also the load-balancing, internally.
+The above describes a scenario of client-side Service Discovery where the service publishes a detailed registry of all the instances serving it.
+
+With server-side Service Discovery, on the other hand, the service implementor provides a single, stable entry point and handles the discovery, but also the load-balancing, internally.
 
 ifdef::todo[Transport information coordinates (URL, HTTP method, broker & topic), serialization]
 
