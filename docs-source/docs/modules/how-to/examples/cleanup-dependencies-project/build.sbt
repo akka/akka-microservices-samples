@@ -67,10 +67,6 @@ libraryDependencies ++= Seq(
   -  "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
   +  "com.lightbend.akka" %% "akka-projection-jdbc" % AkkaProjectionVersion,
   // end::replace-offset-store-for-projections-jdbc[]
-  // tag::replace-offset-store-for-projections-slick[]
-  -  "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
-  +  "com.lightbend.akka" %% "akka-projection-slick" % AkkaProjectionVersion,
-  // end::replace-offset-store-for-projections-slick[]
    */
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
   // tag::remove-grpc-optional[]

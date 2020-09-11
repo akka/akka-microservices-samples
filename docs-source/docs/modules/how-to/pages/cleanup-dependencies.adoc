@@ -98,22 +98,12 @@ include::example$cleanup-dependencies-project/build.sbt[tag=add-akka-persistence
 
 == Replace the Offset Store database
 
-The project produced with the {akka-microservices-seed-scala}[Akka Microservices template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] assumes the application will use a Cassandra database to store the {akka-projection}/overview.html#overview[offset tracking] {akka-projection}/overview.html#overview[{tab-icon}, window="tab"]  required by the projections. You can replace the artifact to use an RDBMS.
+The project produced with the {akka-microservices-seed-scala}[Akka Microservices template] {akka-microservices-seed-scala}[{tab-icon}, window="tab"] assumes the application will use a Cassandra database to store the {akka-projection}/overview.html#overview[offset tracking] {akka-projection}/overview.html#overview[{tab-icon}, window="tab"]  required by the projections. You can replace the artifact to use an RDBMS:
 
-. to use plain JDBC or Hibernate projections, use:
-+
 [source,diff]
 .build.sbt
 ----
 include::example$cleanup-dependencies-project/build.sbt[tag=replace-offset-store-for-projections-jdbc]
-----
-+
-. to use Slick on your projections, use:
-+
-[source,diff]
-.build.sbt
-----
-include::example$cleanup-dependencies-project/build.sbt[tag=replace-offset-store-for-projections-slick]
 ----
 
 Note how the artifact version doesn't change.
