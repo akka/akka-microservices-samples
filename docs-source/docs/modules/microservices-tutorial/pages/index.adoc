@@ -11,14 +11,7 @@ This example illustrates how multiple microservices can interact to implement a 
 
 This example evolves around a shopping cart. The tutorial takes you through the following steps to build the services from scratch, and adding piece by piece with deployment to the cloud for each step.
 
-. xref:overview.adoc[Overview of the example]
-. xref:dev-env.adoc[Development environment]
-. xref:grpc-server.adoc[First gRPC service]
-. xref:entity.adoc[Event Sourced entity]
-. xref:complete-entity.adoc[Complete Event Sourced entity]
-. xref:projection-query.adoc[Projection for queries]
-. xref:projection-kafka.adoc[Projection publishing to Kafka]
-. xref:projection-grpc-client.adoc[Projection calling gRPC service]
+include::partial$listing.adoc[]
 
 == Used Akka modules
 

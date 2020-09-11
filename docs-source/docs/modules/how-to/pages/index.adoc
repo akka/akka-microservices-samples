@@ -5,8 +5,4 @@
 
 include::partial$include.adoc[]
 
-* xref:health-checks.adoc[]
-* xref:evolve-grpc-apis.adoc[]
-* xref:enable-TLS.adoc[]
-* xref:scale-independently.adoc[]
-* xref:from-crud-to-eventsourcing.adoc[]
+include::partial$listing.adoc[]
