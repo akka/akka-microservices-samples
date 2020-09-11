@@ -50,11 +50,18 @@ jobs:
         - make html-author-mode
       name: "Run Antora to create site"
 
+    - stage: publish
+      script: scripts/deploy-site.yml
+      name: "Publish snapshot site"
+
 stages:
   - name: test
     if: NOT tag =~ ^v
 
   - name: site
+
+  - name: publish
+    if: (branch = main AND type = push) AND NOT fork
 
 after_failure:
   - docker-compose logs
