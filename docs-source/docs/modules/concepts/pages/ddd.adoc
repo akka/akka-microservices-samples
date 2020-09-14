@@ -15,7 +15,7 @@ ____
 
 As the modelling covers a more extensive area of your business, split the models into very well-delimited contexts in which each model applies. Each of these contexts will have autonomy to evolve the models it owns.
 
-Keeping each model with strict boundaries allows having different modelling for business entities that look similar but have slightly different meaning on each of the contexts.
+Keeping each model within strict boundaries allows different modelling for business entities that look similar but have slightly different meaning on each of the contexts.
 
 A model within these bounds may need to be shared to interact with external contexts. Use an <<Anti-Corruption Layer>> to prevent coupling both contexts.
 
