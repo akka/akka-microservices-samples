@@ -39,7 +39,7 @@ Spliting your business domain model into <<Bounded Context>>'s will provide some
 
 In parallel, you can use xref:event-sourcing.adoc[] to model the <<Stateful Aggregate>>'s on each context.
 
-Both external event-driven modeling and xref:event-sourcing.adoc[] are a perfect match. You can use an <<Anti-Corruption Layer>> and directly publish the Aggregate events for cross-context consumption.
+Both external event-driven modeling and xref:event-sourcing.adoc[] are a perfect match. You can use an <<Anti-Corruption Layer>> and directly publish the Domain events for cross-context consumption.
 
 
 [discrete]
