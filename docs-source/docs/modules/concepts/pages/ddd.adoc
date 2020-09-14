@@ -13,7 +13,7 @@ ____
 == Bounded Context
 [#bounded_context]
 
-As the modelling covers a more extensive are of your business, split the models into very well-delimited contexts in which each model applies. Each of these contexts will have autonomy to evolve teh models it owns.
+As the modelling covers a more extensive area of your business, split the models into very well-delimited contexts in which each model applies. Each of these contexts will have autonomy to evolve the models it owns.
 
 Keeping each model with strict boundaries allows having different modelling for business entities that look similar but have slightly different meaning on each of the contexts.
 
