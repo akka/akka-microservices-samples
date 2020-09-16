@@ -42,7 +42,7 @@ object Main {
 
     // use same keyspace for the item_popularity table as the offset store
     val keyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
-    val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config")
+    val session = CassandraSessionRegistry(system).sessionFor("akka.persistence.cassandra")
     Await.result(ItemPopularityRepositoryImpl.createItemPopularityTable(session, keyspace), 30.seconds)
 
     LoggerFactory.getLogger("shopping.cart.Main").info("Created keyspace [{}] and tables", keyspace)
@@ -59,7 +59,7 @@ class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](con
   ShoppingCart.init(system)
 
   // tag::ItemPopularityProjection[]
-  val session = CassandraSessionRegistry(system).sessionFor("akka.projection.cassandra.session-config") // <1>
+  val session = CassandraSessionRegistry(system).sessionFor("akka.persistence.cassandra") // <1>
   // use same keyspace for the item_popularity table as the offset store
   val itemPopularityKeyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
   val itemPopularityRepository =
