@@ -42,8 +42,8 @@ message GetCartRequest {
 }
 
 message Cart { // <3>
-    bool checkedOut = 1;
-    repeated Item items = 2;
+    repeated Item items = 1;
+    bool checkedOut = 2;
 }
 
 message Item {

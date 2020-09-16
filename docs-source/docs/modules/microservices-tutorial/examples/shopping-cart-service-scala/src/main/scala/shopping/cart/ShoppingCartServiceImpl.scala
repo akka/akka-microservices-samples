@@ -79,10 +79,10 @@ class ShoppingCartServiceImpl(system: ActorSystem[_], itemPopularityRepository: 
   // tag::toProtoCart[]
   private def toProtoCart(cart: ShoppingCart.Summary): proto.Cart = {
     proto.Cart(
-      cart.checkedOut,
       cart.items.iterator.map {
         case (itemId, quantity) => proto.Item(itemId, quantity)
-      }.toSeq)
+      }.toSeq,
+      cart.checkedOut)
   }
   // end::toProtoCart[]
 

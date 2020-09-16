@@ -18,7 +18,7 @@ message AddItemRequest { // <2>
 }
 
 message Cart { // <3>
-    repeated Item items = 2;
+    repeated Item items = 1;
 }
 
 message Item {
