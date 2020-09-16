@@ -21,7 +21,7 @@ object Main {
   // tag::createTables[]
   def main(args: Array[String]): Unit = {
     val system = ActorSystem[Nothing](Main(), "ShoppingCartService")
-    createTables(system)
+//    createTables(system)
   }
   // end::createTables[]
 
@@ -74,12 +74,12 @@ class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](con
   ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository)
 
   // tag::PublishEventsProjection[]
-  PublishEventsProjection.init(system)
+//  PublishEventsProjection.init(system)
   // end::PublishEventsProjection[]
 
   // tag::SendOrderProjection[]
-  val orderService = orderServiceClient(system)
-  SendOrderProjection.init(system, orderService)
+//  val orderService = orderServiceClient(system)
+//  SendOrderProjection.init(system, orderService)
 
   // can be overridden in tests
   protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
