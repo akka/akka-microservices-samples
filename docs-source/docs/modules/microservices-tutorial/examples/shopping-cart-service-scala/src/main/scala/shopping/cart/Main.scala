@@ -81,6 +81,8 @@ class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](con
   val orderService = orderServiceClient(system)
   SendOrderProjection.init(system, orderService)
 
+  context.spawn(Bot(), "bot")
+
   // can be overridden in tests
   protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
     val orderServiceClientSettings =
