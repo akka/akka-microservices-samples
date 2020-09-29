@@ -26,8 +26,15 @@ Business specialists and other members of the team (both technical and non-techn
 == Stateful Aggregate
 [#aggregate]
 
-An Aggregate is a root entity, the entry point to an object graph of related entities. Using the Aggregate as the unique reference to all the related entities it is possible to guarantee the consistency.
+The Aggregate is a graph of related domain objects that can only be mutated in an atomic operation. The Aggregate is responsible for keeping the invariants of the model. It decides which mutations are allowed according to its business rules and current state.
 
+It models a central concept in your system having a prominet domain object that gives name to it. We call that object the Aggregate Root. 
+
+We can take a shopping cart application as an example. A shopping cart aggregate may contain different items. An item itself is a domain concept, but the shopping cart is the central domain concept in that case. The shopping cart is therefore the Aggregate Root and gives name to the Aggregate. We can simply talk about the Shopping Cart Aggregate. 
+
+All operations must pass through the Shopping Cart so it can check its validity. You may add or remove an item, or change its quantity, you can checkout the cart. All those operations are atomic and sequential. It should not be allowed to change its content at the same time the cart is being checkout nor it should be allowed to checkout an empty cart. The shopping cart aggregate will act as the guardian of the model integrity ensuring that only valid mutations are allowed. 
+
+ 
 == Anti-Corruption Layer
 [#anti_corruption_layer]
 
