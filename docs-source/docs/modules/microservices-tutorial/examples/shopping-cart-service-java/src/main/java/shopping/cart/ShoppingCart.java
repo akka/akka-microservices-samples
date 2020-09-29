@@ -11,6 +11,7 @@ import akka.cluster.sharding.typed.javadsl.EntityTypeKey;
 import akka.pattern.StatusReply;
 import akka.persistence.typed.PersistenceId;
 import akka.persistence.typed.javadsl.*;
+import com.fasterxml.jackson.annotation.JsonCreator;
 
 import java.time.Instant;
 import java.util.*;
@@ -35,7 +36,7 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
     /**
      * The current state held by the `EventSourcedBehavior`.
      */
-    final class State implements CborSerializable {
+    final static class State implements CborSerializable {
         final Map<String, Integer> items;
         private Optional<Instant> checkoutDate;
 
@@ -141,6 +142,7 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
      */
     public static final class Checkout implements Command {
         final ActorRef<StatusReply<Summary>> replyTo;
+        @JsonCreator
         public Checkout(ActorRef<StatusReply<Summary>> replyTo) {
             this.replyTo = replyTo;
         }
@@ -159,7 +161,7 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
     /**
      * Summary of the shopping cart state, used in reply messages.
      */
-    public final class Summary implements CborSerializable {
+    public static final class Summary implements CborSerializable {
         final Map<String, Integer> items;
         final boolean checkedOut;
 
@@ -170,14 +172,14 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
         }
     }
 
-    abstract class Event implements CborSerializable {
+    abstract static class Event implements CborSerializable {
         public final String cartId;
         public Event(String cartId) {
             this.cartId = cartId;
         }
     }
 
-    abstract class ItemEvent extends Event {
+    abstract static class ItemEvent extends Event {
         public final String itemId;
         public ItemEvent(String cartId, String itemId) {
             super(cartId);
@@ -185,23 +187,49 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
         }
     }
 
-    final class ItemAdded extends ItemEvent  {
+    final static class ItemAdded extends ItemEvent  {
         public final int quantity;
         public ItemAdded(String cartId, String itemId, int quantity) {
             super(cartId, itemId);
             this.quantity = quantity;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ItemAdded itemAdded = (ItemAdded) o;
+            return quantity == itemAdded.quantity;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(quantity);
+        }
     }
 
-    final class ItemRemoved extends ItemEvent  {
+    final static class ItemRemoved extends ItemEvent  {
         public final int oldQuantity;
         public ItemRemoved(String cartId, String itemId, int oldQuantity) {
             super(cartId, itemId);
             this.oldQuantity = oldQuantity;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ItemRemoved that = (ItemRemoved) o;
+            return oldQuantity == that.oldQuantity;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(oldQuantity);
+        }
     }
 
-    final class ItemQuantityAdjusted extends ItemEvent  {
+    final static class ItemQuantityAdjusted extends ItemEvent  {
         final int oldQuantity;
         final int newQuantity;
         public ItemQuantityAdjusted(String cartId, String itemId, int oldQuantity, int newQuantity) {
@@ -209,13 +237,40 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
             this.oldQuantity = oldQuantity;
             this.newQuantity = newQuantity;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            ItemQuantityAdjusted that = (ItemQuantityAdjusted) o;
+            return oldQuantity == that.oldQuantity &&
+                    newQuantity == that.newQuantity;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(oldQuantity, newQuantity);
+        }
     }
 
-    final class CheckedOut extends Event {
+    final static class CheckedOut extends Event {
         final Instant eventTime;
         public CheckedOut(String cartId, Instant eventTime) {
             super(cartId);
             this.eventTime = eventTime;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+            CheckedOut that = (CheckedOut) o;
+            return Objects.equals(eventTime, that.eventTime);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(eventTime);
         }
     }
 
