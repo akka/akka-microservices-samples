@@ -19,14 +19,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <akka.version>2.6.9</akka.version>
         <akka-http.version>10.2.0</akka-http.version>
-        <akka-management.version>1.0.8</akka-management.version>
-        <akka-grpc.version>1.0.1</akka-grpc.version>
+        <!-- FIXME once akka management 1.0.9 is released -->
+        <akka-management.version>1.0.8+35-9feaa689+20200825-1429</akka-management.version>
         <akka-persistence-cassandra.version>1.0.2</akka-persistence-cassandra.version>
         <alpakka-kafka.version>2.0.5</alpakka-kafka.version>
         <akka-projection.version>1.0.0</akka-projection.version>
+        <akka-grpc.version>1.0.1</akka-grpc.version>
+        <!-- needs to be defined to allow for overriding through mvn exec:exec -DAPP_CONFIG=local1.conf -->
+        <APP_CONFIG>application.conf</APP_CONFIG>
     </properties>
 
     <dependencies>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-cluster-typed_2.13</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
         <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-cluster-sharding-typed_2.13</artifactId>
@@ -75,6 +83,16 @@
         <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-http-jackson_2.13</artifactId>
+            <version>${akka-http.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-http-spray-json_2.13</artifactId>
+            <version>${akka-http.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-http2-support_2.13</artifactId>
             <version>${akka-http.version}</version>
         </dependency>
         <dependency>
@@ -170,6 +188,21 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-Djava.library.path=target/lib</argument>
+                        <argument>-Dconfig.resource=${APP_CONFIG}</argument>
+                        <argument>-classpath</argument>
+                        <classpath />
+                        <argument>shopping.cart.Main</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
 
             <plugin>
                 <groupId>com.lightbend.akka.grpc</groupId>
@@ -188,4 +221,11 @@
             </plugin>
         </plugins>
     </build>
+    <repositories>
+        <!-- For akka management snapshot, remove once 1.0.9 is released -->
+        <repository>
+            <id>akka-snapshots</id>
+            <url>https://dl.bintray.com/akka/snapshots</url>
+        </repository>
+    </repositories>
 </project>

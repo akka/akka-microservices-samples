@@ -18,10 +18,12 @@ import org.junit.ClassRule;
 import org.junit.Test;
 
 import java.time.Duration;
+import java.util.Optional;
 import java.util.concurrent.CompletionStage;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ItemPopularityIntegrationTest {
     private static final long UNIQUE_QUALIFIER = System.currentTimeMillis();
@@ -89,14 +91,44 @@ public class ItemPopularityIntegrationTest {
         CompletionStage<ShoppingCart.Summary> reply1 =
                 cart1.askWithStatus(replyTo -> new ShoppingCart.AddItem(item1, 3, replyTo), timeout);
         ShoppingCart.Summary summary1 = reply1.toCompletableFuture().get(3, SECONDS);
-        assertEquals(3L, summary1.items.get(item1).longValue());
+        assertEquals(3, summary1.items.get(item1).intValue());
 
         TestProbe<Object> probe = testKit.createTestProbe();
         probe.awaitAssert(() -> {
+            // FIXME https://github.com/akka/akka/issues/29677 Supplier does not allow throwing checked
+            try {
+                Optional<Long> item1Popularity = itemPopularityRepository.getItem(item1).toCompletableFuture().get(3, SECONDS);
+                assertTrue(item1Popularity.isPresent());
+                assertEquals(3L, item1Popularity.get().longValue());
+                return null;
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
-            itemPopularityRepository.getItem(item1).toCompletableFuture().get(3, SECONDS)
-        })
+        CompletionStage<ShoppingCart.Summary> reply2 =
+                cart1.askWithStatus(replyTo -> new ShoppingCart.AddItem(item2, 3, replyTo), timeout);
+        ShoppingCart.Summary summary2 = reply2.toCompletableFuture().get(3, SECONDS);
+        assertEquals(2, summary1.items.size());
+        assertEquals(3, summary1.items.get(item2).intValue());
+        // another cart
+        CompletionStage<ShoppingCart.Summary> reply3 =
+            cart2.askWithStatus(replyTo -> new ShoppingCart.AddItem(item2, 4, replyTo), timeout);
+        ShoppingCart.Summary summary3 = reply3.toCompletableFuture().get(3, SECONDS);
+        assertEquals(1, summary3.items.size());
+        assertEquals(4L, summary1.items.get(item2).intValue());
+
+        probe.awaitAssert(() -> {
+            try {
+                Optional<Long> item2Popularity = itemPopularityRepository.getItem(item2).toCompletableFuture().get(3, SECONDS);
+                assertTrue(item2Popularity.isPresent());
+                assertEquals(3L, item2Popularity.get().longValue());
+                return null;
+            } catch (Exception ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
     }
-
 
 }

@@ -12,10 +12,10 @@ public final class ItemPopularityRepositoryImpl implements ItemPopularityReposit
     private static final String POPULARITY_TABLE = "item_popularity";
 
     public static CompletionStage<Done> createItemPopularityTable(CassandraSession session, String keyspace) {
-        return session.executeDDL("CREATE TABLE IF NOT EXISTS " + keyspace + "." + POPULARITY_TABLE + "(\n" +
+        return session.executeDDL("CREATE TABLE IF NOT EXISTS " + keyspace + "." + POPULARITY_TABLE + " (\n" +
         "item_id text,\n" +
-        "count counter," + // <1>
-        "PRIMARY_KEY (item_id)"
+        "count counter,\n" + // <1>
+        "PRIMARY KEY (item_id))"
         );
     }
 
