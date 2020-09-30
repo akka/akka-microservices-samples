@@ -1,5 +1,12 @@
+
+-- This CQL script will create the keyspace and all tables needed for the this sample. 
+-- It includes the messages and snapshot tables (write-side) and the projection tables (read-side).
+
+-- NOTE: the keyspace as created here is probably not what you need in a production environment. 
+-- This is good enough for local development though. 
+
 CREATE KEYSPACE IF NOT EXISTS shoppingcart
-WITH REPLICATION = { 'class' : 'SimpleStrategy','replication_factor':1 };
+  WITH REPLICATION = { 'class' : 'SimpleStrategy','replication_factor':1 };
 
 USE shoppingcart;
 
@@ -80,9 +87,3 @@ CREATE TABLE IF NOT EXISTS offset_store (
   manifest text,
   last_updated timestamp,
   PRIMARY KEY ((projection_name, partition), projection_key));
-
-
-CREATE TABLE IF NOT EXISTS item_popularity (
-  item_id text,
-  count counter,
-  PRIMARY KEY (item_id));

@@ -14,14 +14,6 @@ trait ItemPopularityRepository {
 
 object ItemPopularityRepositoryImpl {
   val popularityTable = "item_popularity"
-
-  def createItemPopularityTable(session: CassandraSession, keyspace: String): Future[Done] = {
-    session.executeDDL(s"""CREATE TABLE IF NOT EXISTS $keyspace.$popularityTable (
-      item_id text,
-      count counter, // <1>
-      PRIMARY KEY (item_id))
-      """)
-  }
 }
 
 class ItemPopularityRepositoryImpl(session: CassandraSession, keyspace: String)(implicit val ec: ExecutionContext)

@@ -68,7 +68,7 @@ class ItemPopularityIntegrationSpec
     // avoid concurrent creation of keyspace and tables
     val timeout = 10.seconds
     Await.result(PersistenceInit.initializeDefaultPlugins(system, timeout), timeout)
-    Main.createTables(system)
+    CreateTableTestUtils.createTables(system)
 
     ShoppingCart.init(system)
 

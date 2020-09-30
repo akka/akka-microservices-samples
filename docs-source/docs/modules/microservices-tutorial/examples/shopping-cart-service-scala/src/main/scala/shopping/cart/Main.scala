@@ -18,36 +18,13 @@ import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
 
 object Main {
 
-  // tag::createTables[]
   def main(args: Array[String]): Unit = {
-    val system = ActorSystem[Nothing](Main(), "ShoppingCartService")
-    createTables(system)
+    ActorSystem[Nothing](Main(), "ShoppingCartService")
   }
-  // end::createTables[]
 
   def apply(): Behavior[Nothing] = {
     Behaviors.setup[Nothing](context => new Main(context))
   }
-
-  // tag::createTables[]
-  def createTables(system: ActorSystem[_]): Unit = {
-    import org.slf4j.LoggerFactory
-    import akka.projection.cassandra.scaladsl.CassandraProjection
-    import scala.concurrent.Await
-    import scala.concurrent.duration._
-
-    // TODO: In production the keyspace and tables should not be created automatically.
-    // ok to block here, main thread
-    Await.result(CassandraProjection.createOffsetTableIfNotExists()(system), 30.seconds)
-
-    // use same keyspace for the item_popularity table as the offset store
-    val keyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
-    val session = CassandraSessionRegistry(system).sessionFor("akka.persistence.cassandra")
-    Await.result(ItemPopularityRepositoryImpl.createItemPopularityTable(session, keyspace), 30.seconds)
-
-    LoggerFactory.getLogger("shopping.cart.Main").info("Created keyspace [{}] and tables", keyspace)
-  }
-  // end::createTables[]
 
 }
 
