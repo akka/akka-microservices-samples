@@ -21,16 +21,20 @@ Global / cancelable := false // ctrl-c
 resolvers += Resolver.bintrayRepo("akka", "snapshots")
 
 val AkkaVersion = "2.6.9"
+// tag::dependencies-for-healthchecks[]
 val AkkaHttpVersion = "10.2.0"
 // FIXME once akka management 1.0.9 is released
 val AkkaManagementVersion = "1.0.8+35-9feaa689+20200825-1429"
+// end::dependencies-for-healthchecks[]
 val AkkaPersistenceCassandraVersion = "1.0.2"
 val AlpakkaKafkaVersion = "2.0.5"
 val AkkaProjectionVersion = "1.0.0"
 
 enablePlugins(AkkaGrpcPlugin)
 
+// tag::dependencies-for-healthchecks[]
 libraryDependencies ++= Seq(
+// end::dependencies-for-healthchecks[]
   // 1. Basic dependencies for a clustered application
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
   "com.typesafe.akka" %% "akka-cluster-typed" % AkkaVersion,
@@ -39,10 +43,14 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
 
   // Akka Management powers Health Checks and Akka Cluster Bootstrapping
+  // tag::dependencies-for-healthchecks[]
   "com.lightbend.akka.management" %% "akka-management" % AkkaManagementVersion,
+  // end::dependencies-for-healthchecks[]
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
+  // tag::dependencies-for-healthchecks[]
   "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
   "com.lightbend.akka.management" %% "akka-management-cluster-http" % AkkaManagementVersion,
+  // end::dependencies-for-healthchecks[]
   "com.lightbend.akka.management" %% "akka-management-cluster-bootstrap" % AkkaManagementVersion,
   "com.typesafe.akka" %% "akka-discovery" % AkkaVersion,
 
@@ -66,5 +74,8 @@ libraryDependencies ++= Seq(
   "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
   "com.typesafe.akka" %% "akka-stream-kafka" % AlpakkaKafkaVersion,
   "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
+
+// tag::dependencies-for-healthchecks[]
 )
+// end::dependencies-for-healthchecks[]
 

@@ -22,18 +22,10 @@ The {akka-management}/[Akka Management] library includes support for exposing re
 
 The depedencies for Akka Management include the core module and the cluster HTTP module for cluster inspection. As Akka Management uses Spray JSON internally, make sure to add that dependency of the exact same version as other Akka HTTP libraries.
 
-ifdef::todo[TODO: use an include instead of a hardcoded snippet below)]
-
 .build.sbt
 [source,scala]
 ----
-val AkkaManagementVersion = "1.0.8"
-
-libraryDependencies ++= Seq(
-  "com.lightbend.akka.management" %% "akka-management" % AkkaManagementVersion,
-  "com.lightbend.akka.management" %% "akka-management-cluster-http" % AkkaManagementVersion,
-  "com.typesafe.akka" %% "akka-http-spray-json" % AkkaHttpVersion,
-)
+include::example$shopping-cart-service-scala/build.sbt[tag=dependencies-for-healthchecks]
 ----
 
 Upon start Akka Management creates an HTTP endpoint that allows insight into the service. That endpoint is separate from the service's HTTP endpoints and will in most cases use a different network interface.
@@ -53,7 +45,7 @@ The management endpoint starts on the configured interface and port.
 
 [source,scala]
 ----
-AkkaManagement(system).start()
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=start-akka-management]
 ----
 
 We consider our service ready for requests when it has joined the Akka Cluster and the database can be reached. Akka Management's "cluster HTTP" module automatically enables a check for cluster membership.
@@ -63,13 +55,7 @@ Akka Persistence Cassandra includes a check to validate connectivity, as the ser
 .src/main/resources/application.conf
 [source,hocon]
 ----
-akka.management {
-  health-checks {
-    readiness-checks {
-      akka-persistence-cassandra = "akka.persistence.cassandra.healthcheck.CassandraHealthCheck"
-    }
-  }
-}
+include::microservices-tutorial:example$shopping-cart-service-scala/src/main/resources/persistence.conf[tag=healthchecks-for-cassandra]
 ----
 
 Following Colin Breck's advice, we do not include Cassandra connectivity checks in oue liveness probe.
