@@ -11,7 +11,7 @@ import akka.management.scaladsl.AkkaManagement
 object Main {
 
   def main(args: Array[String]): Unit = {
-    ActorSystem[Nothing](Main(), "Cart") // <1>
+    ActorSystem[Nothing](Main(), "ShoppingCartService") // <1>
   }
 
   def apply(): Behavior[Nothing] = {
