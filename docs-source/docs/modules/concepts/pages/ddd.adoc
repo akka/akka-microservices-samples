@@ -30,7 +30,7 @@ The Aggregate is a graph of related domain objects that can only be mutated in a
 
 It models a central concept in your system having a prominent domain object that gives name to it. We call that prominent domain object the Aggregate Root. 
 
-We can take a shopping cart application as an example. A shopping cart aggregate may contain different items. An item itself is a domain concept, but the shopping cart is the central domain concept in that case. The shopping cart is therefore the Aggregate Root and gives name to the Aggregate. We can simply talk about the Shopping Cart Aggregate. 
+We can take a Shopping Cart application as an example. A Shopping Cart may contain different Items (or Products the user buys). An Item itself is a domain concept, but the Shopping Cart is the root domain concept. The Shopping Cart is the Aggregate Root and gives name to the Aggregate. We can simply talk about the Shopping Cart Aggregate. 
 
 All operations must pass through the Shopping Cart so it can check its validity. You may add or remove an item, or change its quantity, you can checkout the cart. All those operations are atomic and sequential. It should not be allowed to change its content at the same time the cart is being checkout nor it should be allowed to checkout an empty cart. The shopping cart aggregate will act as the guardian of the model integrity ensuring that only valid mutations are allowed. 
 
