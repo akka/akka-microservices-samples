@@ -28,7 +28,7 @@ Business specialists and other members of the team (both technical and non-techn
 
 The Aggregate is a graph of related domain objects that can only be mutated in an atomic operation. The Aggregate is responsible for keeping the invariants of the model. It decides which mutations are allowed according to its business rules and current state.
 
-It models a central concept in your system having a prominet domain object that gives name to it. We call that object the Aggregate Root. 
+It models a central concept in your system having a prominent domain object that gives name to it. We call that prominent domain object the Aggregate Root. 
 
 We can take a shopping cart application as an example. A shopping cart aggregate may contain different items. An item itself is a domain concept, but the shopping cart is the central domain concept in that case. The shopping cart is therefore the Aggregate Root and gives name to the Aggregate. We can simply talk about the Shopping Cart Aggregate. 
 
