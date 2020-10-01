@@ -39,8 +39,6 @@ The `ItemPopularityRepository` encapsulates the database access and can have a s
 include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityRepository.scala[]
 ----
 
-<1> using https://docs.datastax.com/en/cql-oss/3.x/cql/cql_reference/counter_type.html[counter data type]
-
 The `CassandraSession` comes from the Cassandra connector in Alpakka and provides an asynchronous API for executing __CQL__ statements to Cassandra. In the initialization code, introduced later, we will see how to get access to a `CassandraSession`.
 
 You can learn more about the `CassandraSession` in the {alpakka}/cassandra.html[Alpakka reference documentation] {alpakka}/cassandra.html[{tab-icon}, window="tab"].
