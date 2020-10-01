@@ -26,7 +26,7 @@ Add a new `ShoppingCartEvents.proto` with the specification of the events:
 
 [source,proto]
 ----
-include::example$shopping-cart-service-scala/src/main/protobuf/ShoppingCartEvents.proto[]
+include::example$05-shopping-cart-service-scala/src/main/protobuf/ShoppingCartEvents.proto[]
 ----
 
 Generate code by compiling the project:
@@ -43,7 +43,7 @@ Add a `PublishEventsProjectionHandler` class that is the Projection `Handler` fo
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjectionHandler.scala[]
+include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjectionHandler.scala[]
 ----
 
 <1> `SendProducer` comes from the Kafka connector in Alpakka.
@@ -60,7 +60,7 @@ Place the initialization code of the Projection in an `PublishEventsProjection` 
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjection.scala[]
+include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjection.scala[]
 ----
 
 The `SendProducer` is initialized using some configuration that you need to add. It defines how to connect to the Kafka broker.
@@ -69,7 +69,7 @@ Add the following to `src/main/resources/kafka.conf`:
 
 [source,conf]
 ----
-include::example$shopping-cart-service-scala/src/main/resources/kafka.conf[]
+include::example$05-shopping-cart-service-scala/src/main/resources/kafka.conf[]
 ----
 
 Include `kafka.conf` from `application.conf`.
@@ -78,14 +78,14 @@ And for local development add the following to `src/main/resources/local-shared.
 
 [source,conf]
 ----
-include::example$shopping-cart-service-scala/src/main/resources/local-shared.conf[tag=kafka]
+include::example$05-shopping-cart-service-scala/src/main/resources/local-shared.conf[tag=kafka]
 ----
 
 Then you need to call the `PublishEventsProjection.init` from `Main`:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=PublishEventsProjection]
+include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=PublishEventsProjection]
 ----
 
 == Consuming the events

@@ -44,56 +44,56 @@ Add the `Checkout` command alongside the existing `AddItem` command:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkoutCommand]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkoutCommand]
 ----
 
 Add corresponding `CheckedOut` event:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEvent]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEvent]
 ----
 
 The state should include a value for if and when the cart was checked out:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=state]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=state]
 ----
 
 Add unit test for the new `Checkout` command in `ShoppingCartSpec`:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=checkout]
+include::example$03-shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=checkout]
 ----
 
 Commands should be handled differently when the cart has been checked out. `AddItem` is no longer allowed after checkout. Therefore we refactor the `handleCommand` method to two separate methods `openShoppingCart` and `checkedOutShoppingCart` that are used depending on the `checkedOut` state. The previous code for `AddItem` goes into the `openShoppingCart` method.
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=commandHandlers]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=commandHandlers]
 ----
 
 Then handle the new `Checkout` command in `openShoppingCart`:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkoutCommandHandler]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkoutCommandHandler]
 ----
 
 In `checkedOutShoppingCart` the `AddItem` and `Checkout` commands should be rejected:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutShoppingCart]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutShoppingCart]
 ----
 
 Remaining is to add the event handler for the `CheckedOut` event  in the `handleEvent` method:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEventHandler]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEventHandler]
 ----
 
 That should cover everything for the `Checkout` command. Let's confirm by running the unit tests with:
@@ -108,21 +108,21 @@ Add the `Get` command alongside the existing `AddItem` and `Checkout` commands:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommand]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommand]
 ----
 
 Add unit test for the new `Get` command in `ShoppingCartSpec`:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=get]
+include::example$03-shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=get]
 ----
 
 The command handler for `Get` is the same independent of the `checkedOut` state, so add it to both `openShoppingCart` and `checkedOutShoppingCart`:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommandHandler]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommandHandler]
 ----
 
 Try the new `Get` command  by running the unit tests with:
@@ -137,7 +137,7 @@ Let's add corresponding operations as the commands in `ShoppingCartService.proto
 
 [source,protobuf]
 ----
-include::example$shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[tag=CheckoutAndGet]
+include::example$03-shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[tag=CheckoutAndGet]
 ----
 
 ifdef::todo[TODO: callout to highlight the new bool checkedOut]
@@ -152,14 +152,14 @@ You will see a compilation error in `ShoppingCartServiceImpl.scala`, but that is
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=toProtoCart]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=toProtoCart]
 ----
 
 Then you can add implementations of the new operations in `ShoppingCartServiceImpl` in the same way as `addItem`:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=checkoutAndGet]
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=checkoutAndGet]
 ----
 
 ifdef::todo[TODO: refer to the source download, especially for the optional commands that are not shown here]

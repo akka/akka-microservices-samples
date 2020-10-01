@@ -8,12 +8,6 @@ import akka.actor.typed.Behavior
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
 
-// tag::SendOrderProjection[]
-import shopping.order.proto.{ ShoppingOrderService, ShoppingOrderServiceClient }
-import akka.grpc.GrpcClientSettings
-
-// end::SendOrderProjection[]
-
 // tag::ItemPopularityProjection[]
 import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
 
@@ -32,6 +26,7 @@ object Main {
 
 class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
   val system = context.system
+
   AkkaManagement(system).start()
   ClusterBootstrap(system).start()
 
@@ -51,28 +46,6 @@ class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](con
     system.settings.config.getString("shopping-cart-service.grpc.interface")
   val grpcPort = system.settings.config.getInt("shopping-cart-service.grpc.port")
   ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository)
-
-  // tag::PublishEventsProjection[]
-  PublishEventsProjection.init(system)
-  // end::PublishEventsProjection[]
-
-  // tag::SendOrderProjection[]
-  val orderService = orderServiceClient(system)
-  SendOrderProjection.init(system, orderService)
-
-  // can be overridden in tests
-  protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
-    val orderServiceClientSettings =
-      GrpcClientSettings
-        .connectToServiceAt(
-          system.settings.config.getString("shopping-order-service.host"),
-          system.settings.config.getInt("shopping-order-service.port"))(system)
-        .withTls(false)
-    val orderServiceClient =
-      ShoppingOrderServiceClient(orderServiceClientSettings)(system)
-    orderServiceClient
-  }
-  // end::SendOrderProjection[]
 
   override def onMessage(msg: Nothing): Behavior[Nothing] =
     this

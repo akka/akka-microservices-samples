@@ -4,7 +4,6 @@ import java.util.UUID
 
 import scala.concurrent.Await
 import scala.concurrent.ExecutionContext
-import scala.concurrent.Future
 import scala.concurrent.duration._
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
@@ -32,9 +31,6 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.Span
 import org.scalatest.wordspec.AnyWordSpec
 import org.slf4j.LoggerFactory
-import shopping.order.proto.OrderRequest
-import shopping.order.proto.OrderResponse
-import shopping.order.proto.ShoppingOrderService
 
 object IntegrationSpec {
   private val uniqueQualifier = System.currentTimeMillis()
@@ -143,22 +139,9 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
 
   private val kafkaTopicProbe = testNode1.testKit.createTestProbe[Any]()
 
-  // stub of the ShoppingOrderService
-  private val orderServiceProbe = testNode1.testKit.createTestProbe[OrderRequest]()
-  private val testOrderService: ShoppingOrderService = new ShoppingOrderService {
-    override def order(in: OrderRequest): Future[OrderResponse] = {
-      orderServiceProbe.ref ! in
-      Future.successful(OrderResponse(ok = true))
-    }
-  }
-
   def mainBehavior(): Behavior[Nothing] = {
     Behaviors.setup[Nothing] { context =>
-      new Main(context) {
-        override protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
-          testOrderService
-        }
-      }
+      new Main(context)
     }
   }
 
@@ -284,11 +267,6 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
 
       val response4 = testNode2.client.checkout(proto.CheckoutRequest(cartId = "cart-2"))
       response4.futureValue.checkedOut should ===(true)
-
-      val orderRequest = orderServiceProbe.expectMessageType[OrderRequest]
-      orderRequest.cartId should ===("cart-2")
-      orderRequest.items.head.itemId should ===("bar")
-      orderRequest.items.head.quantity should ===(18)
 
       val published4 = kafkaTopicProbe.expectMessageType[proto.CheckedOut]
       published4.cartId should ===("cart-2")
