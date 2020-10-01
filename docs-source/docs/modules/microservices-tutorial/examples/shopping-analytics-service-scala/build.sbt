@@ -19,8 +19,9 @@ Global / cancelable := false // ctrl-c
 
 // For akka management snapshot
 resolvers += Resolver.bintrayRepo("akka", "snapshots")
+resolvers += "akka-snapshot-repository".at("https://repo.akka.io/snapshots")
 
-val AkkaVersion = "2.6.9"
+val AkkaVersion = "2.6.9+70-58b1c30c"
 val AkkaHttpVersion = "10.2.0"
 // FIXME once akka management 1.0.9 is released
 val AkkaManagementVersion = "1.0.8+35-9feaa689+20200825-1429"
@@ -38,6 +39,11 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
 
+  // need this explicit because usign Akka Snapshot - mixed version issues
+  // TODO: remove when back to stable release
+  "com.typesafe.akka" %% "akka-coordination" % AkkaVersion,
+  "com.typesafe.akka" %% "akka-cluster-tools" % AkkaVersion,
+  
   // Akka Management powers Health Checks and Akka Cluster Bootstrapping
   "com.lightbend.akka.management" %% "akka-management" % AkkaManagementVersion,
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
@@ -67,4 +73,3 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream-kafka" % AlpakkaKafkaVersion,
   "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
 )
-
