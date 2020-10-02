@@ -22,6 +22,7 @@ You will learn how to:
 Read the xref:concepts:event-sourcing.adoc[Event Sourcing] section if you are unfamiliar with that concept.
 
 == Event Sourced entity
+[#event_sourced_entity]
 
 === Commands
 
