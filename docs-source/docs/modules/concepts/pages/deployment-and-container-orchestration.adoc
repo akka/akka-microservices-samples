@@ -5,10 +5,13 @@
 
 include::partial$include.adoc[]
 
+To deploy an application built using Akka Cluster you can follow the {akka-management}/kubernetes-deployment/index.html[guide in the Akka Management documentation] {akka-management}/kubernetes-deployment/index.html[{tab-icon}, window="tab"]. That guide will help you complete your code and configure the application. It will also show you how to create a <<docker>> container for your application and how to create the <<Kubernetes>> resources to successfully deploy the application. Finally, it will explain which are the relevant settings you need to consider when deploying an Akka Cluster application on a Kubernetes cluster.
+
 == Docker
+[#docker]
 
 Docker is a popular containerization technology. If you are unfamiliar to containers, we recommend the 
-{docker-docs}/get-started/[Get Started with Docker] {docker-docs}[{tab-icon}, window="tab"] documentation.
+{docker-docs}/get-started/[Get Started with Docker] {docker-docs}/get-started/[{tab-icon}, window="tab"] documentation.
 
 == Kubernetes
 
@@ -16,7 +19,3 @@ Docker is a popular containerization technology. If you are unfamiliar to contai
 ____
 Kubernetes (commonly stylized as K8s) is an open-source container-orchestration system for automating computer application deployment, scaling, and management.
 ____
-
-== Helm
-
-{helm-site}[Helm] {helm-site}[{tab-icon}, window="tab"] helps you define how to deploy and update your application on Kubernetes.
