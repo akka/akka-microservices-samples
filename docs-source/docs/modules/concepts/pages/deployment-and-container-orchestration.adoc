@@ -5,9 +5,18 @@
 
 include::partial$include.adoc[]
 
-ifdef::todo[TODO: this page is WIP]
-
-
 == Docker
+
+Docker is a popular containerization technology. If you are unfamiliar to containers, we recommend the 
+{docker-docs}/get-started/[Get Started with Docker] {docker-docs}[{tab-icon}, window="tab"] documentation.
+
 == Kubernetes
+
+[quote, ,'https://en.wikipedia.org/wiki/Kubernetes[Wikipedia]']
+____
+Kubernetes (commonly stylized as K8s) is an open-source container-orchestration system for automating computer application deployment, scaling, and management.
+____
+
 == Helm
+
+{helm-site}[Helm] {helm-site}[{tab-icon}, window="tab"] helps you define how to deploy and update your application on Kubernetes.
