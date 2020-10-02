@@ -70,6 +70,7 @@ class ShoppingCartSpec
       result2.event should ===(ShoppingCart.ItemQuantityAdjusted(cartId, "foo", 43, 42))
     }
 
+    // tag::checkout[]
     "checkout" in {
       val result1 =
         eventSourcedTestKit.runCommand[StatusReply[ShoppingCart.Summary]](ShoppingCart.AddItem("foo", 42, _))
@@ -82,6 +83,18 @@ class ShoppingCartSpec
         eventSourcedTestKit.runCommand[StatusReply[ShoppingCart.Summary]](ShoppingCart.AddItem("bar", 13, _))
       result3.reply.isError should ===(true)
     }
+    // end::checkout[]
+
+    // tag::get[]
+    "get" in {
+      val result1 =
+        eventSourcedTestKit.runCommand[StatusReply[ShoppingCart.Summary]](ShoppingCart.AddItem("foo", 42, _))
+      result1.reply.isSuccess should ===(true)
+
+      val result2 = eventSourcedTestKit.runCommand[ShoppingCart.Summary](ShoppingCart.Get(_))
+      result2.reply should ===(ShoppingCart.Summary(Map("foo" -> 42), checkedOut = false))
+    }
+    // end::get[]
 
     "keep its state" in {
       val result1 =

@@ -24,8 +24,7 @@ Add the following commands to the `ShoppingCart`:
 * (Optional) `RemoveItem` - remove an item from the cart
 * (Optional) `AdjustItemQuantity` - adjust the quantity of an item in the cart
 
-If you want to reduce the scope of the exercise you can skip `RemoveItem` and `AdjustItemQuantity`. They are
-not mandatory for subsequent steps of the tutorial.
+If you want to reduce the scope of the exercise you can skip `RemoveItem` and `AdjustItemQuantity`. They are not mandatory for subsequent steps of the tutorial.
 
 Corresponding events:
 
@@ -35,29 +34,98 @@ Corresponding events:
 
 When the cart has been checked out it should not accept any more changes from `AddItem`, `RemoveItem` and `AdjustItemQuantity` commands. It should still be possible to `Get` the current state of a checked out cart.
 
-Adding those commands, events and adjusting the `State` is very similar to the `AddItem` command and `ItemAdded` event in the xref:entity.adoc[previous step], which means that this is a good exercise for you to solidify your knowledge of how to implement an `EventSourcedBehavior`. If you like, you can start with <<Expand the unit test>> for a test driven approach.
+Adding those commands, events and adjusting the `State` is very similar to the `AddItem` command and `ItemAdded` event in the xref:entity.adoc[previous step], which means that this is a good exercise for you to solidify your knowledge of how to implement an `EventSourcedBehavior`.
 
-When you have completed your code you can compare it with:
+=== Add Checkout command
 
-[source,scala]
-----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[]
-----
+It is good if you try yourself first, as an exercise, and then you can compare with the following solution.
 
-<1> handles commands differently whether the shopping cart is checked out or not
-
-ifdef::todo[TODO: the tagging should not be shown in this part]
-
-== Expand the unit test
-
-Add unit tests for the new commands in `ShoppingCartSpec`:
+Add the `Checkout` command alongside the existing `AddItem` command:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[]
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkoutCommand]
 ----
 
-Run the test with:
+Add corresponding `CheckedOut` event:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEvent]
+----
+
+The state should include a value for if and when the cart was checked out:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=state]
+----
+
+Add unit test for the new `Checkout` command in `ShoppingCartSpec`:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=checkout]
+----
+
+Commands should be handled differently when the cart has been checked out. `AddItem` is no longer allowed after checkout. Therefore we refactor the `handleCommand` method to two separate methods `openShoppingCart` and `checkedOutShoppingCart` that are used depending on the `checkedOut` state. The previous code for `AddItem` goes into the `openShoppingCart` method.
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=commandHandlers]
+----
+
+Then handle the new `Checkout` command in `openShoppingCart`:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkoutCommandHandler]
+----
+
+In `checkedOutShoppingCart` the `AddItem` and `Checkout` commands should be rejected:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutShoppingCart]
+----
+
+Remaining is to add the event handler for the `CheckedOut` event  in the `handleEvent` method:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEventHandler]
+----
+
+That should cover everything for the `Checkout` command. Let's confirm by running the unit tests with:
+
+----
+sbt test
+----
+
+=== Add Get command
+
+Add the `Get` command alongside the existing `AddItem` and `Checkout` commands:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommand]
+----
+
+Add unit test for the new `Get` command in `ShoppingCartSpec`:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=get]
+----
+
+The command handler for `Get` is the same independent of the `checkedOut` state, so add it to both `openShoppingCart` and `checkedOutShoppingCart`:
+
+[source,scala]
+----
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommandHandler]
+----
+
+Try the new `Get` command  by running the unit tests with:
 
 ----
 sbt test
@@ -69,10 +137,10 @@ Let's add corresponding operations as the commands in `ShoppingCartService.proto
 
 [source,protobuf]
 ----
-include::example$shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[]
+include::example$shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[tag=CheckoutAndGet]
 ----
 
-ifdef::todo[TODO: GetItemPopularity should not be shown in this part]
+ifdef::todo[TODO: callout to highlight the new bool checkedOut]
 
 Generate code by compiling the project:
 
@@ -91,8 +159,10 @@ Then you can add implementations of the new operations in `ShoppingCartServiceIm
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=moreOperations]
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=checkoutAndGet]
 ----
+
+ifdef::todo[TODO: refer to the source download, especially for the optional commands that are not shown here]
 
 == Run
 
@@ -120,12 +190,12 @@ Get cart:
 grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
 ----
 
-Update quantity of item:
+(Optional) Update quantity of item:
 ----
 grpcurl -d '{"cartId":"cart2", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.UpdateItem
 ----
 
-Get cart again:
+(Optional) Get cart again:
 ----
 grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
 ----

@@ -185,6 +185,24 @@ First you need to start Cassandra with:
 docker-compose up -d
 ----
 
+Create the Cassandra keyspace and tables with: 
+
+----
+docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_tables.cql
+----
+
+This CQL script is located inside the `ddl-scripts` at the root of the project. It will create the keyspace and all tables needed for Akka Persistence as well as the offset store table for Akka Projection. 
+
+[NOTE]
+====
+* The keyspace as created by the script is probably not what you need in a production environment. This is good enough for local development though. 
+
+* When loading the `create_tables.cql` file, make sure to use the same name as your running Cassandra container name. The container name is not fixed and depends on the parent folder of the docker-compose file. The above example assumes the project was created using the seed template and named `shopping-cart-service`.
+
+* If you get a connection error with the message *_Unable to connect to any servers_*, it means the Cassandra container is still starting. Wait a few seconds and re-try the command.
+====
+
+
 Run the service with:
 
 ----

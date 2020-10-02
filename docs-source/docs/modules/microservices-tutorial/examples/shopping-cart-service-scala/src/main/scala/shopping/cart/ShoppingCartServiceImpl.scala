@@ -37,7 +37,6 @@ class ShoppingCartServiceImpl(system: ActorSystem[_], itemPopularityRepository: 
     convertError(response)
   }
 
-  // tag::moreOperations[]
   override def updateItem(in: proto.UpdateItemRequest): Future[proto.Cart] = {
     logger.info("updateItem {} to cart {}", in.itemId, in.cartId)
     val entityRef = sharding.entityRefFor(ShoppingCart.EntityKey, in.cartId)
@@ -54,6 +53,7 @@ class ShoppingCartServiceImpl(system: ActorSystem[_], itemPopularityRepository: 
     convertError(response)
   }
 
+  // tag::checkoutAndGet[]
   override def checkout(in: proto.CheckoutRequest): Future[proto.Cart] = {
     logger.info("checkout {}", in.cartId)
     val entityRef = sharding.entityRefFor(ShoppingCart.EntityKey, in.cartId)
@@ -74,7 +74,7 @@ class ShoppingCartServiceImpl(system: ActorSystem[_], itemPopularityRepository: 
     }
     convertError(response)
   }
-  // end::moreOperations[]
+  // end::checkoutAndGet[]
 
   // tag::toProtoCart[]
   private def toProtoCart(cart: ShoppingCart.Summary): proto.Cart = {

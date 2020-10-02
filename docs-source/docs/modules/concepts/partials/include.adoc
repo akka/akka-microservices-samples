@@ -30,3 +30,6 @@ include::ROOT:partial$include.adoc[]
 :reactive-microservices-ebook: https://www.lightbend.com/ebooks/reactive-microservices-architecture-design-principles-for-distributed-systems-oreilly
 
 :lagom: https://www.lagomframework.com/documentation/current
+
+:docker-docs: https://docs.docker.com
+:helm-site: https://helm.sh

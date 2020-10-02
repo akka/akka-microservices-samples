@@ -167,7 +167,7 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
     // avoid concurrent creation of keyspace and tables
     val timeout = 10.seconds
     Await.result(PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout), timeout)
-    Main.createTables(testNode1.system)
+    CreateTableTestUtils.createTables(testNode1.system)
   }
 
   private def initializeKafkaTopicProbe(): Unit = {

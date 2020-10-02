@@ -39,8 +39,6 @@ The `ItemPopularityRepository` encapsulates the database access and can have a s
 include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityRepository.scala[]
 ----
 
-<1> using https://docs.datastax.com/en/cql-oss/3.x/cql/cql_reference/counter_type.html[counter data type]
-
 The `CassandraSession` comes from the Cassandra connector in Alpakka and provides an asynchronous API for executing __CQL__ statements to Cassandra. In the initialization code, introduced later, we will see how to get access to a `CassandraSession`.
 
 You can learn more about the `CassandraSession` in the {alpakka}/cassandra.html[Alpakka reference documentation] {alpakka}/cassandra.html[{tab-icon}, window="tab"].
@@ -133,17 +131,6 @@ include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Shoppi
 
 For this you have to add the `ItemPopularityRepository` as a constructor parameter to the `ShoppingCartServiceImpl`. The `ItemPopularityRepository` instance is created in `Main.scala` so pass that instance as parameter to `ShoppingCartServer.start` and then to  `ShoppingCartServiceImpl`.
 
-== Create keyspace
-
-ifdef::todo[TODO: This will not be needed when we have added it to docker-compose, issue https://github.com/akka/akka-platform-guide/issues/18]
-
-Add the following in `Main` to create Cassandra keyspace and tables for the query database and Projection offset storage:
-
-[source,scala]
-----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=createTables]
-----
-
 == Run
 
 Start Cassandra, unless it's already running:
@@ -151,6 +138,28 @@ Start Cassandra, unless it's already running:
 ----
 docker-compose up -d
 ----
+
+Create the item popularity table:
+
+Create a file in `ddl-scripts/create_user_tables.cql` and add the CQL statement below. 
+
+[source,cql]
+----
+include::example$shopping-cart-service-scala/ddl-scripts/create_user_tables.cql[tag=itemPopularityTables]
+----
+
+Load the file into Cassandra:
+
+----
+docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_user_tables.cql
+----
+
+[NOTE]
+====
+* When loading the `create_user_tables.cql` file, make sure to use the same name as your running Cassandra container name. The container name is not fixed and depends on the parent folder of the docker-compose file. The above example assumes the project was created using the seed template and named `shopping-cart-service`.
+
+* If you get a connection error with the message *_Unable to connect to any servers_*, it means the Cassandra container is still starting. Wait a few seconds and re-try the command.
+====
 
 Run the service with:
 
