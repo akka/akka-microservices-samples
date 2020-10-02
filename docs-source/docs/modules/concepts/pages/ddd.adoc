@@ -19,6 +19,8 @@ Keeping each model within strict boundaries allows different modelling for busin
 
 A model within these bounds may need to be shared to interact with external contexts. Use an <<Anti-Corruption Layer>> to prevent coupling both contexts.
 
+When building Microservices, each service is a Bounded Context encapsulating an autonomous domain model and its external APIs play the role of an Anti-Corruption Layer.
+
 == Ubiquitous Language
 
 Business specialists and other members of the team (both technical and non-technical) should collaborate into creating a single, meaningful naming for the use cases, entities, actions and events modelling the business. Using a single, common language will align all parties and improve communication.
@@ -30,11 +32,11 @@ The Aggregate is a graph of related domain objects that can only be mutated in a
 
 It models a central concept in your system having a prominent domain object that gives name to it. We call that prominent domain object the Aggregate Root. 
 
-We can take a Shopping Cart application as an example. A Shopping Cart may contain different Items (or Products the user buys). An Item itself is a domain concept, but the Shopping Cart is the root domain concept. The Shopping Cart is the Aggregate Root and gives name to the Aggregate. We can simply talk about the Shopping Cart Aggregate. 
+We can take the xref:microservices-tutorial:entity.adoc#event_sourced_entity[Shopping Cart] application as an example. A Shopping Cart may contain different Items (or Products the user buys). An Item itself is a domain concept, but the Shopping Cart is the root domain concept. The Shopping Cart is the Aggregate Root and gives name to the Aggregate. We can simply talk about the Shopping Cart Aggregate.
 
-All operations must pass through the Shopping Cart so it can check its validity. You may add or remove an item, or change its quantity, you can checkout the cart. All those operations are atomic and sequential. It should not be allowed to change its content at the same time the cart is being checkout nor it should be allowed to checkout an empty cart. The Shopping Cart Aggregate will act as the guardian of the model integrity ensuring that only valid mutations are allowed. 
+All operations must pass through the Shopping Cart, so it can check its validity. You may add or remove an item, or change its quantity, you can checkout the cart. All those operations are atomic and sequential. It should not be allowed to change its content at the same time the cart is being checkout, nor it should be allowed to checkout an empty cart. The Shopping Cart Aggregate will act as the guardian of the model integrity ensuring that only valid mutations are allowed.
 
- 
+
 == Anti-Corruption Layer
 [#anti_corruption_layer]
 
