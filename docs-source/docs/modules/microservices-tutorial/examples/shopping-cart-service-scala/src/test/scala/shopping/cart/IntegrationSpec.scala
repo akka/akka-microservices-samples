@@ -98,7 +98,7 @@ object IntegrationSpec {
       }
       akka.management.http.port = ${managementPorts(managementPortIndex)}
       akka.discovery.config.services {
-        "integrationspec" {
+        "shoppingcartservice" {
           endpoints = [
             {host = "127.0.0.1", port = ${managementPorts(0)}},
             {host = "127.0.0.1", port = ${managementPorts(1)}}
