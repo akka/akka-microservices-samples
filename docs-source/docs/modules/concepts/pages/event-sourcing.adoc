@@ -15,7 +15,7 @@ To update an entity's state we use commands from the outside and events on the i
 
 * *Commands*: The state of the entity can be changed only by sending commands to it. The commands are the "external" API of an entity. Commands request state changes. The current state may reject the command, or it may accept it producing zero, one or many events (depending on the command and the current state).
 
-* *Events*: The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands. Events are an internal mechanism for the entity to mutate the state, other parties can't send events. Other parts of the application may listen to the created events.
+* *Events*: The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands. Events are an internal mechanism for the entity to mutate the state, other parties can't send events. Other parts of the application may listen to the created events. Summing up, events are {reactive-principles}/patterns/communicate-facts.html[facts] {reactive-principles}/patterns/communicate-facts.html[{tab-icon}, window="tab"].
 +
 The events are persisted to the datastore, while the entity state is kept in memory. In case of a restart the latest state gets rebuilt by replaying the events from the Event Journal.
 
@@ -25,7 +25,7 @@ Event Sourcing improves writing performance thanks to multiple aspects:
 
 * The current state resides in memory so there's no need for a round-trip and several database joins to reconstruct it.
 * The history of events for a single entity can use snapshots so reconstructing an entity with a large list of events is fast: load only the latest snapshot and apply the last few events on top.
-* Creating aggregates or other projections over multiple entities happens asynchronously to write operations producing eventually consistent representations of the data. That happens without impacting write throughput since the events Journal is an append-only table so no locking is required to ensure consistency between the journal and the projections.
+* Creating aggregates or other projections over multiple entities happens asynchronously to write operations producing xref:eventual-consistency.adoc[eventually consistent] representations of the data. That happens without impacting write throughput since the events Journal is an append-only table so no locking is required to ensure consistency between the journal and the projections.
 
 == Advantages of Event Sourcing
 [#advantages]

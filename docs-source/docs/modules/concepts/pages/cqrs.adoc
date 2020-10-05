@@ -27,7 +27,9 @@ You can start refactoring an application towards a CQRS architecture by identify
 
 As described above, CQRS doesn't require the write-side handling the commands to be implemented using xref:event-sourcing.adoc[Event Sourcing]. Using Event Sourcing, though, is a perfect fit for CQRS.
 
-In CQRS, in order to build the read-side representations we want a stream of data changes to build projections from, and that is exactly what Event Sourcing provides. In Event Sourcing, state is stored as as an append-only, ordered list of changes (referred to as events).
+In CQRS, in order to build the read-side representations we want a stream of data changes to build projections from, and that is exactly what Event Sourcing provides. In Event Sourcing, state is stored as an append-only, ordered list of changes (referred to as events).
+
+Summing up, in a CQRS applications, the write-side and the read-side operate {reactive-principles}/principles/assert-autonomy.html[autonomosly] {reactive-principles}/principles/assert-autonomy.html[{tab-icon}, window="tab"]. Generally, the write-side provides {reactive-principles}/principles/tailor-consistency.html[strong consistency] {reactive-principles}/principles/tailor-consistency.html[{tab-icon}, window="tab"] while the read-side provides xref:eventual-consistency.adoc[eventual consistency].
 
 == Learn more
 

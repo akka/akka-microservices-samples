@@ -10,3 +10,5 @@ ifdef::todo[TODO: this page is WIP]
 
 
 == Supervision
+
+When presenting supervision,  link to https://principles.reactive.foundation/principles/embrace-failure.html

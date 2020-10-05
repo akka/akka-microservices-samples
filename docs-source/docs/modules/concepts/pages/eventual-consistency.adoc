@@ -1,0 +1,11 @@
+= Eventual Consistency
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::partial$include.adoc[]
+
+
+link to https://principles.reactive.foundation/principles/accept-uncertainty.html
+
+link to https://principles.reactive.foundation/principles/tailor-consistency.html

@@ -61,7 +61,7 @@ For more information about DDD and Events-First design, take the free, self pace
 
 == Eventual Consistency
 
-In a traditional n-tiered architecture where functionality was tightly coupled and associated with a single database it was possible to maintain strong consistency. In a distributed system however, strong consistency limits scalability, availability, and throughput. The model of eventual consistency provides a tradeoff to achieve Reactive characteristics. Eventual Consistency means that indeterminate amount of time elapses before every component in the system sees a particular change. A microservice design needs to identify where strong consistency is necessary--usually within a microservice--and where consistency can be relaxed.
+In a traditional n-tiered architecture where functionality was tightly coupled and associated with a single database it was possible to maintain strong consistency. In a distributed system however, strong consistency limits scalability, availability, and throughput. The model of xref:eventual-consistency.adoc[eventual consistency] provides a tradeoff to achieve Reactive characteristics. Eventual Consistency means that indeterminate amount of time elapses before every component in the system sees a particular change. A microservice design needs to identify where strong consistency is necessary--usually within a microservice--and where consistency can be relaxed.
 
 Eventual Consistency accurately reflects how the world works. The things we observe have already happened. And, workflows and state machines are common development practices that fit an event model. Focusing on events and accepting eventual consistency allows for a variety of communication patterns in a microservices system.
 

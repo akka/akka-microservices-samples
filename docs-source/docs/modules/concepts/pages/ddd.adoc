@@ -13,7 +13,7 @@ ____
 == Bounded Context
 [#bounded_context]
 
-As the modelling covers a more extensive area of your business, split the models into very well-delimited contexts in which each model applies. Each of these contexts will have autonomy to evolve the models it owns.
+As the modelling covers a more extensive area of your business, {reactive-principles}/patterns/partition-state.html[split the models] {reactive-principles}/patterns/partition-state.html[{tab-icon}, window="tab"] into very well-delimited contexts in which each model applies. Each of these contexts will have xref:autonomy.adoc[autonomy] to evolve the models it owns.
 
 Keeping each model within strict boundaries allows different modelling for business entities that look similar but have slightly different meaning on each of the contexts.
 

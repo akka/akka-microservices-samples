@@ -14,3 +14,6 @@ Another aspect of autonomy is that if a service only can make promises about its
 Working with autonomous services opens up flexibility around service orchestration, workflow management and collaborative behavior, as well as scalability, availability and runtime management, at the cost of putting more thought into well-defined and composable APIs that can make communication—and consensus—a bit more challenging—something we will discuss shortly.
 
 include::partial$reactive-microservices-ebook.adoc[]
+
+NOTE: Autonomy is one oif the {reactive-principles}/principles/assert-autonomy.html[Reactive Principles] {reactive-principles}/principles/assert-autonomy.html[{tab-icon}, window="tab"].
+

@@ -13,6 +13,8 @@ Events will be serialized and published into the _Journal_ table in the database
 
 A client trying to mutate the state of an entity will produce a command message and send it to the entity. Commands are a type of message. Sometimes, commands include the address of the sender, the entity can use the sender address to send a message back with a reply.
 
+Events are {reactive-principles}/patterns/communicate-facts.html[facts] {reactive-principles}/patterns/communicate-facts.html[{tab-icon}, window="tab"], while commands are requests for a state mutation.
+
 == Event Storming
 [#event_storming]
 

@@ -24,7 +24,7 @@ NOTE: The above is an excerpt from {reactive-streams}[Reactive Streams] {reactiv
 
 When a consumer controls the rate of consumption, it is impossible to overwhelm it. This one of the {reactive-principles}/patterns/coordinate-dataflow.html[Reactive Patterns] {reactive-principles}/patterns/coordinate-dataflow.html[{tab-icon}, window="tab"]. Such flow control, though, must be managed end-to-end.
 
-xref:akka-stream.adoc[] implements the Reactive Streams TCK so it is 100% compatible with any other Reactive Streams implementation on the JVM.
+xref:akka-stream.adoc[] implements the Reactive Streams TCK, so it is 100% compatible with any other Reactive Streams implementation on the JVM.
 
 == Backpressure
 

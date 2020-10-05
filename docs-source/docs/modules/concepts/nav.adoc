@@ -20,6 +20,7 @@
 ** xref:event-sourcing.adoc[]
 ** xref:cqrs.adoc[]
 ** xref:message-driven-event-driven.adoc[Message Driven]
+** xref:eventual-consistency.adoc[]
 ** xref:commands-and-events.adoc[]
 ** xref:memory-image-pattern.adoc[]
 ** xref:circuit-breakers.adoc[]

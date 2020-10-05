@@ -9,7 +9,7 @@ NOTE: This concept is related to {reactive-manifesto}[resilience] {reactive-mani
 
 Isolation is a prerequisite for {reactive-manifesto}[resilience] {reactive-manifesto}[{tab-icon}, window="tab"] and {reactive-manifesto}[elasticity] {reactive-manifesto}[{tab-icon}, window="tab"] and requires {reactive-manifesto}glossary#Asynchronous[asynchronous communication] boundaries between services to decouple them in:
 
-- _Time_: Allowing concurrency
+- _Time_: Allowing concurrency 
 
 - _Space_: Allowing distribution and mobility—the ability to move services around
 
@@ -20,4 +20,9 @@ When adopting Microservices, it is also essential to eliminate shared mutable st
 
 Isolation also makes it easier to scale each service, as well as allowing them to be monitored, debugged and tested independently—something that is very hard if the services are all tangled up in the big bulky mess of a monolith.
 
+
 include::partial$reactive-microservices-ebook.adoc[]
+
+
+NOTE: Decoupling Time, Decoupling Space and Embracing Failure are three of the {reactive-principles}/principles[Reactive Principles] {reactive-principles}/principles[{tab-icon}, window="tab"].
+

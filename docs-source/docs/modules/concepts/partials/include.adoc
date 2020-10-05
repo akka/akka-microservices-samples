@@ -26,6 +26,7 @@ include::ROOT:partial$include.adoc[]
 :glossary-system: https://www.reactivemanifesto.org/glossary#System
 :glossary-user: https://www.reactivemanifesto.org/glossary#User
 
+:reactive-principles:  https://principles.reactive.foundation
 
 :reactive-streams:  http://www.reactive-streams.org
 
