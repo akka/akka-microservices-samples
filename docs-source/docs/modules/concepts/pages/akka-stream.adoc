@@ -6,4 +6,16 @@
 include::partial$include.adoc[]
 
 
-ifdef::todo[TODO: this page is WIP]
+{akka}/stream/stream-introduction.html[Akka Streams] provides an intuitive and safe way to formulate stream processing setups such that we can then execute them efficiently and with bounded resource usage —- no more OutOfMemoryErrors.
+
+The Akka Streams API is completely decoupled from the xref:reactive-strams.adoc[] interfaces. While Akka Streams focus on the formulation of transformations on data streams the scope of Reactive Streams is to define a common mechanism of how to move data across an asynchronous boundary without losses, buffering or resource exhaustion. 
+
+The relationship between these two is that the Akka Streams API is geared towards end-users while the Akka Streams implementation uses the Reactive Streams interfaces internally to pass data between the different operators.
+
+To learn more, have a look at the {akka}/stream/stream-introduction.html[Akka Streams documentation] dedicated setions: 
+
+* Read the {akka}/stream/stream-quickstart.html[Quick Start Guide] to get a feel for how streams look like and what they can do.
+* Read the {akka}/general/stream/stream-design.html[Design Principles behind Akka Streams] for a top down learning approach.
+* Read the {akka}/stream/stream-cookbook.html[Streams Cookbook] for a hands-on approach.
+* Have a look at the {akka}/stream/operators/index.html[operator index] for a complete overview of the built-in processing operators.
+* Check the {akka}/stream/stream-flows-and-basics.html[reference guide] for an in-depth documentationinto specific topics.
