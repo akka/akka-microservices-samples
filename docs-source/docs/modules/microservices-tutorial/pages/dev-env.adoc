@@ -67,9 +67,9 @@ You can use any code editor you prefer for this tutorial. We recommend https://w
 == Docker and Docker Compose
 [#docker]
 
-This tutorial makes used of Cassandra and Kafka. You may use local installations during development, but we recommend run both servers using https://docs.docker.com[Docker]. The template project includes a https://docs.docker.com/compose/[Docker Compose] file on its root you can use to bootstrap Cassandra, Kafka and Zookeeper (the latter required by the Kafka server).
+This tutorial uses Cassandra and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[Docker]. The template project includes a https://docs.docker.com/compose/[Docker Compose] file on its root you can use to run Cassandra and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
 
-After installing `docker` and `docker-compose`, you can run the following command at the root of the project.
+After installing `docker` and `docker-compose`, you can run the following command at the root of the project:
 
 
 // tag::docker[]
