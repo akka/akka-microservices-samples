@@ -15,5 +15,4 @@ Working with autonomous services opens up flexibility around service orchestrati
 
 include::partial$reactive-microservices-ebook.adoc[]
 
-NOTE: Autonomy is one oif the {reactive-principles}/principles/assert-autonomy.html[Reactive Principles] {reactive-principles}/principles/assert-autonomy.html[{tab-icon}, window="tab"].
-
+NOTE: Autonomy is one of the {reactive-principles}/principles/assert-autonomy.html[Reactive Principles] {reactive-principles}/principles/assert-autonomy.html[{tab-icon}, window="tab"].
