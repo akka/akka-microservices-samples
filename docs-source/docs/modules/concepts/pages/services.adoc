@@ -5,10 +5,6 @@
 
 include::partial$include.adoc[]
 
-ifdef::todo[TODO: this page is WIP]
-
-
-ifdef::todo[(Lagom Service Descriptors https://www.lagomframework.com/documentation/1.6.x/java/ServiceDescriptors.html)]
 
 A service is made up by its API (request and response types, strict vs stream, synchronous vs asynchronous), and discovery information (URL, topic name).
 
@@ -16,28 +12,24 @@ To communicate the API consistently, we recommend using schema-first approaches.
 
 == Synchronous Services
 
-This guide illustrates building service APIs for synchronous communication for use cases which require an instant reply. Most often synchronous communication issues a single request and expects a single reply. Other cases open communication channels for continued communication with possibly ongoing replies.
+In the first steps of the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial], the tutorial illustrates building service APIs for synchronous communication for use cases which require an instant reply. Most often synchronous communication send a single request and expects a single reply. Other cases open communication channels for continued communication with possibly ongoing replies.
 
 Synchronous communication gives results and errors immediately so the client can react before continuing its processing, but that often means the client doesn't progress until it received the response.
 
 === gRPC
 
-gRPC services use Protobuf as their language-agnostic schema and which translate to efficient serialization.
+xref:grpc-services.adoc[gRPC services] use Protobuf as their language-agnostic schema and which translate to efficient serialization.
 Protobuf can also be used as a serialization format for messages on Kafka topics. So that both producer and consumer agree on the format.
 
 Akka gRPC adds plug-ins to the build system of the application to generate Java or Scala classes corresponding to the Protobuf schema.
-
-xref:grpc-services.adoc[gRPC services] explains how to use gRPC for service APIs.
 
 === HTTP with JSON / RESTful
 
 The ubiquitous communication protocol is HTTP with text-based messages in JSON. Even though JSON lacks a commonly used schema description, its simplicity, human-readability and support in Javascript has made the de-facto standard for synchronous communication over system boundaries.
 
-NOTE: This guide doesn't cover how REST services can be implemented with Akka HTTP.
-
 == Asynchronous Services
 
-Asynchronous service communication decouples services at a higher degree. Sending and receiving is decoupled in time and both parts do not necessarily act at the same time.
+Asynchronous service communication xref:isolation.adoc[decouples] services even further. Sending and receiving is decoupled in time and both parts do not necessarily act at the same time.
 To ensure delivery of messages asynchronous communication may require extra measures like sending acknowledgements.
 
 ifdef::todo[TODO:
@@ -68,6 +60,4 @@ ifdef::todo[TODO: Service descriptor agnostic to transport?]
 
 A Service may experience transient failure or degradation due to excessive load, GC pauses, etc... in that case, clients will retry the failed request, which will increase the load. Instead, in order to let the service recover from the transient failure as fast as possible, clients should use xref:circuit-breakers.adoc[Circuit Breakers].
 
-== Structuring our Service
-
-ifdef::todo[Anti-corruption layer]
+ifdef::todo[== Structuring our Service]
