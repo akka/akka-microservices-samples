@@ -22,47 +22,12 @@ script:
 
 jobs:
   include:
-    - stage: test
-      env:
-        DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala"
-        CMD="test; scalafmtCheckAll"
-      name: "Shopping analytics service"
-    - env:
-        DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala"
-        CMD="test; scalafmtCheckAll"
-      name: "Shopping cart service"
-    - env:
-        DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala"
-        CMD="test; scalafmtCheckAll"
-      name: "Shopping order service"
-
-    - env:
-        DIR="docs-source/docs/modules/how-to/examples/shopping-cart-service-scala"
-        CMD="test; scalafmtCheckAll"
-      name: "Howto example code"
-    - env:
-        DIR="docs-source/docs/modules/how-to/examples/cleanup-dependencies-project"
-        CMD="test; scalafmtCheckAll"
-      name: "Howto cleanup dependencies"
-
-    - stage: site
-      script:
-        - make html-author-mode
-      name: "Run Antora to create site"
-
-    - stage: publish
-      script: scripts/prepare-downloads.sh; scripts/deploy-site.sh
-      name: "Publish snapshot site"
+    - stage: tags
+      script: scripts/remove-tags.sh
+      name: "remove tags"
 
 stages:
-  - name: test
-    if: NOT tag =~ ^v
-
-  - name: site
-
-  - name: publish
-    if: (branch = main AND type = push) AND NOT fork
-
+  - name: tags
 after_failure:
   - docker-compose logs
 
