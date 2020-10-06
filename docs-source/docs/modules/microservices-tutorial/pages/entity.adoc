@@ -182,27 +182,7 @@ include::example$02-shopping-cart-service-scala/src/main/resources/application.c
 
 First you need to start Cassandra with:
 
-----
-docker-compose up -d
-----
-
-Create the Cassandra keyspace and tables with: 
-
-----
-docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_tables.cql
-----
-
-This CQL script is located inside the `ddl-scripts` at the root of the project. It will create the keyspace and all tables needed for Akka Persistence as well as the offset store table for Akka Projection. 
-
-[NOTE]
-====
-* The keyspace as created by the script is probably not what you need in a production environment. This is good enough for local development though. 
-
-* When loading the `create_tables.cql` file, make sure to use the same name as your running Cassandra container name. The container name is not fixed and depends on the parent folder of the docker-compose file. The above example assumes the project was created using the seed template and named `shopping-cart-service`.
-
-* If you get a connection error with the message *_Unable to connect to any servers_*, it means the Cassandra container is still starting. Wait a few seconds and re-try the command.
-====
-
+include::dev-env.adoc[tag=docker]
 
 Run the service with:
 
@@ -222,7 +202,7 @@ Try the validation logic by trying to add the same item again, which should resu
 grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
-To verify that the events are actually saved and the state can be recovered from the events you can stop the service with `ctrl-c` and then start it again.
+To verify that the events are actually saved, and the state can be recovered from the events you can stop the service with `ctrl-c` and then start it again.
 
 Add 2 t-shirts to the same cart:
 

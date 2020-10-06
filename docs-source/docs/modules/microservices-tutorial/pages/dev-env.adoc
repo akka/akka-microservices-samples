@@ -64,10 +64,41 @@ You can use any code editor you prefer for this tutorial. We recommend https://w
 3. open the `shopping-cart-service/build.sbt` from __File > Open__.
 4. select __Open as project__
 
-== grpcurl
+== Docker and Docker Compose
+[#docker]
 
-https://github.com/fullstorydev/grpcurl[grpcurl] is useful for making gRPC calls from the command line. It is used in the tutorial and it's recommended that you https://github.com/fullstorydev/grpcurl#installation[install] it.
+This tutorial uses Cassandra and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[Docker] https://docs.docker.com[{tab-icon}, window="tab"]. The template project includes a https://docs.docker.com/compose/[Docker Compose]  https://docs.docker.com/compose/[{tab-icon}, window="tab"] file on its root you can use to run Cassandra and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
 
+After installing `docker` and `docker-compose`, you can run the following command at the root of the project:
+
+
+// tag::docker[]
+----
+docker-compose up -d
+----
+
+Create the Cassandra keyspace and tables with:
+
+----
+docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_tables.cql
+----
+
+This CQL script is located inside the `ddl-scripts` at the root of the project. It will create the keyspace and all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
+
+[CAUTION]
+====
+* The keyspace as created by the script is probably not what you need in a production environment. This is good enough for local development though.
+====
+
+// tag::dockerImportant[]
+[IMPORTANT]
+====
+* When loading the CQL script, make sure to use the same name as your running Cassandra container name. The container name is not fixed and depends on the parent folder of the docker-compose file. The above example assumes the project was created using the seed template and named `shopping-cart-service`.
+
+* If you get a connection error with the message *_Unable to connect to any servers_*, it means the Cassandra container is still starting. Wait a few seconds and re-try the command.
+====
+// end::dockerImportant[]
+// end::docker[]
 
 == Config for local development
 
@@ -149,6 +180,12 @@ The example projects are using the following ports.
 |8303
 
 |===
+
+
+== grpcurl
+
+https://github.com/fullstorydev/grpcurl[grpcurl] is useful for making gRPC calls from the command line. It is used in the tutorial and it's recommended that you https://github.com/fullstorydev/grpcurl#installation[install] it.
+
 
 == Learn more
 

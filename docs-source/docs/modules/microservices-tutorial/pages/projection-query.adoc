@@ -154,12 +154,8 @@ Load the file into Cassandra:
 docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_user_tables.cql
 ----
 
-[NOTE]
-====
-* When loading the `create_user_tables.cql` file, make sure to use the same name as your running Cassandra container name. The container name is not fixed and depends on the parent folder of the docker-compose file. The above example assumes the project was created using the seed template and named `shopping-cart-service`.
 
-* If you get a connection error with the message *_Unable to connect to any servers_*, it means the Cassandra container is still starting. Wait a few seconds and re-try the command.
-====
+include::dev-env.adoc[tag=dockerImportant]
 
 Run the service with:
 

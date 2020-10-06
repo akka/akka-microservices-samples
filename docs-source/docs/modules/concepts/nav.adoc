@@ -3,7 +3,6 @@
 ** xref:isolation.adoc[]
 ** xref:autonomy.adoc[]
 ** xref:mobility.adoc[]
-** xref:single-responsibility.adoc[]
 ** xref:message-driven-event-driven.adoc[Event-Driven]
 ** xref:state-ownership.adoc[]
 
@@ -16,7 +15,6 @@
 ** xref:akka-management.adoc[]
 
 * Patterns and techniques recommended for Reactive Microsystems
-** xref:slicing-the-monolith.adoc[]
 ** xref:event-sourcing.adoc[]
 ** xref:cqrs.adoc[]
 ** xref:message-driven-event-driven.adoc[Message Driven]
@@ -24,11 +22,9 @@
 ** xref:commands-and-events.adoc[]
 ** xref:memory-image-pattern.adoc[]
 ** xref:circuit-breakers.adoc[]
-** xref:reactive-programming.adoc[]
 ** xref:reactive-streams.adoc[]
 ** xref:ddd.adoc[Brief Summary of DDD concepts]
 ** xref:internal-and-external-communication.adoc[]
 ** xref:services.adoc[]
-** xref:service-clients.adoc[]
 ** xref:grpc-services.adoc[]
 ** xref:deployment-and-container-orchestration.adoc[]
