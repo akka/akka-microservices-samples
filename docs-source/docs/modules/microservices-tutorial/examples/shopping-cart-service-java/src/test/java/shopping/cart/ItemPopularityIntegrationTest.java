@@ -15,7 +15,6 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 import java.time.Duration;
@@ -26,7 +25,6 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@FixMethodOrder
 public class ItemPopularityIntegrationTest {
     private static final long UNIQUE_QUALIFIER = System.currentTimeMillis();
     private static final String KEYSPACE = "ItemPopularityIntegrationTest_" + UNIQUE_QUALIFIER;
@@ -36,7 +34,7 @@ public class ItemPopularityIntegrationTest {
            "akka.persistence.cassandra.journal.keyspace = " + KEYSPACE + "\n" +
            "akka.persistence.cassandra.snapshot.keyspace = " + KEYSPACE + "\n" +
            "akka.projection.cassandra.offset-store.keyspace = " + KEYSPACE + "\n"
-        ).withFallback(ConfigFactory.load("item-popularity-integration.conf"));
+        ).withFallback(ConfigFactory.load("item-popularity-integration-test.conf"));
     }
 
 
@@ -119,6 +117,7 @@ public class ItemPopularityIntegrationTest {
         assertEquals(4L, summary3.items.get(item2).intValue());
 
         probe.awaitAssert(() -> {
+            // FIXME https://github.com/akka/akka/issues/29677 Supplier does not allow throwing checked
             try {
                 Optional<Long> item2Popularity = itemPopularityRepository.getItem(item2).toCompletableFuture().get(3, SECONDS);
                 assertTrue(item2Popularity.isPresent());

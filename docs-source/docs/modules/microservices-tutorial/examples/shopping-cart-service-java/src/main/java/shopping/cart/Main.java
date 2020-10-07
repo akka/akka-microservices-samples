@@ -23,7 +23,7 @@ import akka.grpc.GrpcClientSettings;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 // tag::ItemPopularityProjection[]
-public final class Main extends AbstractBehavior<Void> {
+public class Main extends AbstractBehavior<Void> {
 
     public static void main(String[] args) throws Exception {
         ActorSystem<Void> system = ActorSystem.create(Main.create(), "ShoppingCartService");
