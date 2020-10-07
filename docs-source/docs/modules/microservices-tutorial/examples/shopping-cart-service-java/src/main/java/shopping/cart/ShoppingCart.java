@@ -36,6 +36,7 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
     /**
      * The current state held by the `EventSourcedBehavior`.
      */
+    // tag::state[]
     final static class State implements CborSerializable {
         final Map<String, Integer> items;
         private Optional<Instant> checkoutDate;
@@ -88,6 +89,7 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
             return items.isEmpty();
         }
     }
+    // end::state[]
 
     /**
      * This interface defines all the commands (messages) that the ShoppingCart actor supports.
@@ -153,6 +155,7 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
      */
     public static final class Get implements Command {
         final ActorRef<Summary> replyTo;
+        @JsonCreator
         public Get(ActorRef<Summary> replyTo) {
             this.replyTo = replyTo;
         }
@@ -326,27 +329,36 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
     public State emptyState() {
         return new State();
     }
+    // tag::commandHandlers[]
     @Override
     public CommandHandlerWithReply<Command, Event, State> commandHandler() {
-        //The shopping cart behavior changes if it's checked out or not.
+        // The shopping cart behavior changes if it's checked out or not.
         // The commands are handled differently for each case.
         CommandHandlerWithReplyBuilder<Command, Event, State> builder = newCommandHandlerWithReplyBuilder();
+        // end::commandHandlers[]
 
+        // tag::checkedOutShoppingCart[]
         builder.forState(State::isCheckedOut)
+            // end::checkedOutShoppingCart[]
             .onCommand(Get.class, this::onGet)
+            // tag::checkedOutShoppingCart[]
             .onCommand(
                 AddItem.class,
                 cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't add an item to an already checked out shopping cart")))
+            // end::checkedOutShoppingCart[]
             .onCommand(
                 RemoveItem.class,
                 cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't remove an item from an already checked out shopping cart")))
             .onCommand(
                 AdjustItemQuantity.class,
                 cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't adjust item on an already checked out shopping cart")))
+            // tag::checkedOutShoppingCart[]
             .onCommand(
                 Checkout.class,
                 cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't checkout already checked out shopping cart")));
+        // end::checkedOutShoppingCart[]
 
+        // tag::commandHandlers[]
         builder.forState(state -> !state.isCheckedOut())
             .onCommand(Get.class, this::onGet)
             .onCommand(AddItem.class, this::onAddItem)
@@ -356,10 +368,14 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
 
         return builder.build();
     }
+    // end::commandHandlers[]
 
+    // tag::getCommandHandler[]
     private ReplyEffect<Event, State> onGet(State state, Get cmd) {
         return Effect().reply(cmd.replyTo, state.toSummary());
     }
+    // end::getCommandHandler[]
+    // tag::commandHandlers[]
 
     private ReplyEffect<Event, State> onAddItem(State state, AddItem cmd) {
         if (state.hasItem(cmd.itemId)) {
@@ -405,6 +421,7 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
         }
     }
 
+    // tag::checkedOutEventHandler[]
     @Override
     public EventHandler<State, Event> eventHandler() {
         return newEventHandlerBuilder().forAnyState()
@@ -414,5 +431,5 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
             .onEvent(CheckedOut.class, (state, evt) -> state.checkout(evt.eventTime))
             .build();
     }
-
+    // end::checkedOutEventHandler[]
 }

@@ -15,6 +15,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 import java.time.Duration;
@@ -25,17 +26,17 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@FixMethodOrder
 public class ItemPopularityIntegrationTest {
     private static final long UNIQUE_QUALIFIER = System.currentTimeMillis();
     private static final String KEYSPACE = "ItemPopularityIntegrationTest_" + UNIQUE_QUALIFIER;
 
-    private static final Config config() {
+    private static Config config() {
         return ConfigFactory.parseString(
-                "akka.persistence.cassandra.journal.keyspace = " + KEYSPACE + "\n" +
-                   "akka.persistence.cassandra.snapshot.keyspace = " + KEYSPACE + "\n" +
-                   "akka.projection.cassandra.offset-store.keyspace = " + KEYSPACE + "\n"
-        ).withFallback(ConfigFactory.load("item-popularity-integration.conf")
-         .withFallback(ConfigFactory.load()));
+           "akka.persistence.cassandra.journal.keyspace = " + KEYSPACE + "\n" +
+           "akka.persistence.cassandra.snapshot.keyspace = " + KEYSPACE + "\n" +
+           "akka.projection.cassandra.offset-store.keyspace = " + KEYSPACE + "\n"
+        ).withFallback(ConfigFactory.load("item-popularity-integration.conf"));
     }
 
 
@@ -47,23 +48,21 @@ public class ItemPopularityIntegrationTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        CassandraSession session = CassandraSessionRegistry.get(system).sessionFor("akka.persistence.cassandra");
-        // use same keyspace for the item_popularity table as the offset store
-        String itemPopularityKeyspace = system.settings().config().getString("akka.projection.cassandra.offset-store.keyspace");
-        itemPopularityRepository = new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace);
-
         // avoid concurrent creation of keyspace and tables
         PersistenceInit.initializeDefaultPlugins(system, Duration.ofSeconds(10)).toCompletableFuture().get(10, SECONDS);
-        Main.createTables(system);
+        CreateTableTestUtils.createTables(system);
+
+
+        // use same keyspace for the item_popularity table as the offset store
+        CassandraSession session = CassandraSessionRegistry.get(system).sessionFor("akka.persistence.cassandra");
+        String itemPopularityKeyspace = system.settings().config().getString("akka.projection.cassandra.offset-store.keyspace");
 
         ShoppingCart.init(system);
 
+        itemPopularityRepository = new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace);
         ItemPopularityProjection.init(system, itemPopularityRepository);
-    }
 
-
-    @Test
-    public void initAndJoinCluster() {
+        // form a single node cluster and make sure that completes before running the test
         Cluster node = Cluster.get(system);
         node.manager().tell(Join.create(node.selfMember().address()));
 
@@ -78,6 +77,7 @@ public class ItemPopularityIntegrationTest {
     @Test
     public void consumeCartEventsAndUpdatePopularityCount() throws Exception {
         ClusterSharding sharding = ClusterSharding.get(system);
+
         final String cartId1 = "cart1";
         final String cartId2 = "cart2";
         final String item1 = "item1";
@@ -99,7 +99,7 @@ public class ItemPopularityIntegrationTest {
             try {
                 Optional<Long> item1Popularity = itemPopularityRepository.getItem(item1).toCompletableFuture().get(3, SECONDS);
                 assertTrue(item1Popularity.isPresent());
-                assertEquals(3L, item1Popularity.get().longValue());
+                assertEquals(3L, item1Popularity.get().intValue());
                 return null;
             } catch (Exception ex) {
                 throw new RuntimeException(ex);
@@ -107,22 +107,22 @@ public class ItemPopularityIntegrationTest {
         });
 
         CompletionStage<ShoppingCart.Summary> reply2 =
-                cart1.askWithStatus(replyTo -> new ShoppingCart.AddItem(item2, 3, replyTo), timeout);
+                cart1.askWithStatus(replyTo -> new ShoppingCart.AddItem(item2, 5, replyTo), timeout);
         ShoppingCart.Summary summary2 = reply2.toCompletableFuture().get(3, SECONDS);
-        assertEquals(2, summary1.items.size());
-        assertEquals(3, summary1.items.get(item2).intValue());
+        assertEquals(2, summary2.items.size());
+        assertEquals(5, summary2.items.get(item2).intValue());
         // another cart
         CompletionStage<ShoppingCart.Summary> reply3 =
             cart2.askWithStatus(replyTo -> new ShoppingCart.AddItem(item2, 4, replyTo), timeout);
         ShoppingCart.Summary summary3 = reply3.toCompletableFuture().get(3, SECONDS);
         assertEquals(1, summary3.items.size());
-        assertEquals(4L, summary1.items.get(item2).intValue());
+        assertEquals(4L, summary3.items.get(item2).intValue());
 
         probe.awaitAssert(() -> {
             try {
                 Optional<Long> item2Popularity = itemPopularityRepository.getItem(item2).toCompletableFuture().get(3, SECONDS);
                 assertTrue(item2Popularity.isPresent());
-                assertEquals(3L, item2Popularity.get().longValue());
+                assertEquals(5 + 4, item2Popularity.get().longValue());
                 return null;
             } catch (Exception ex) {
                 throw new RuntimeException(ex);

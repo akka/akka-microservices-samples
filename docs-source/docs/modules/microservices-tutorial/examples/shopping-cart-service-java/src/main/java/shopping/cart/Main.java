@@ -25,27 +25,10 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 // tag::ItemPopularityProjection[]
 public final class Main extends AbstractBehavior<Void> {
 
-    // tag::createTables[]
     public static void main(String[] args) throws Exception {
         ActorSystem<Void> system = ActorSystem.create(Main.create(), "ShoppingCartService");
-        createTables(system);
     }
-    // end::createTables[]
 
-    // tag::createTables[]
-    public static void createTables(ActorSystem<?> system) throws Exception {
-        // TODO: In production the keyspace and tables should not be created automatically.
-        // ok to block here, main thread
-        CassandraProjection.createOffsetTableIfNotExists(system).toCompletableFuture().get(30, SECONDS);
-
-        // use same keyspace for the item_popularity table as the offset store
-        String keyspace = system.settings().config().getString("akka.projection.cassandra.offset-store.keyspace");
-        CassandraSession session = CassandraSessionRegistry.get(system).sessionFor("akka.persistence.cassandra");
-        ItemPopularityRepositoryImpl.createItemPopularityTable(session, keyspace).toCompletableFuture().get(30, SECONDS);
-
-        LoggerFactory.getLogger("shopping.cart.Main").info("Created keyspace [{}] and tables", keyspace);
-    }
-    // end::createTables[]
 
     public static Behavior<Void> create() {
         return Behaviors.setup(Main::new);

@@ -1,42 +1,55 @@
 ## Running the sample code
 
-1. Make sure you have compiled the project
-
-    ```
-    mvn compile 
-    ```
-   
-2. Start a local Cassandra server on default port 9042 and a Kafka broker on port 9092. The included `docker-compose.yml` starts everything required for running locally.
+1. Start a local Cassandra server on default port 9042 and a Kafka broker on port 9092. The included `docker-compose.yml` starts everything required for running locally.
 
     ```
     docker-compose up -d
     ```
 
-3. Start a first node:
+2. Create Cassandra keyspace and tables:
+
+    ```shell
+    # creates keyspace and all tables needed for Akka Persistence
+    # as well as the offset store table for Akka Projection
+    docker exec -i shopping-cart-service-scala_cassandra_1 cqlsh -t < ddl-scripts/create_tables.cql
+    ```
+
+    ```shell
+    # creates the user defined projection table.
+    docker exec -i shopping-cart-service-scala_cassandra_1 cqlsh -t < ddl-scripts/create_user_tables.cql
+    ```
+
+3. Make sure you have compiled the project
+
+    ```
+    mvn compile 
+    ```
+
+4. Start a first node:
 
     ```
     mvn exec:exec -DAPP_CONFIG=local1.conf
     ```
 
-4. (Optional) Start another node with different ports:
+5. (Optional) Start another node with different ports:
 
     ```
     mvn exec:exec -DAPP_CONFIG=local2.conf
     ```
 
-5. (Optional) More can be started:
+6. (Optional) More can be started:
 
     ```
     mvn exec:exec -DAPP_CONFIG=local3.conf
     ```
 
-6. Check for service readiness
+7. Check for service readiness
 
     ```
     curl http://localhost:9101/ready
     ```
 
-7. Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
+8. Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
 
     ```
     # add item to cart

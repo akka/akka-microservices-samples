@@ -9,6 +9,7 @@ import org.junit.ClassRule;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
+import static akka.persistence.testkit.javadsl.EventSourcedBehaviorTestKit.CommandResultWithReply;
 
 public class ShoppingCartTest {
 
@@ -25,7 +26,7 @@ public class ShoppingCartTest {
             ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State>
             eventSourcedTestKit =
             EventSourcedBehaviorTestKit.create(
-                    testKit.system(), ShoppingCart.create(CART_ID, "tag-1"));
+                    testKit.system(), ShoppingCart.create(CART_ID, "carts-0"));
 
 
     @Before
@@ -35,22 +36,22 @@ public class ShoppingCartTest {
 
     @Test
     public void addAnItemToCart() {
-        EventSourcedBehaviorTestKit.CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result =
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result =
                 eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.AddItem("foo", 42, replyTo));
         assertTrue(result.reply().isSuccess());
         ShoppingCart.Summary summary = result.reply().getValue();
         assertFalse(summary.checkedOut);
         assertEquals(1, summary.items.size());
-        assertEquals(42, summary.items.get("foo").longValue());
+        assertEquals(42, summary.items.get("foo").intValue());
         assertEquals(new ShoppingCart.ItemAdded(CART_ID, "foo", 42), result.event());
     }
 
     @Test
     public void rejectAlreadyAddedItem() {
-        EventSourcedBehaviorTestKit.CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result1 =
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result1 =
                 eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.AddItem("foo", 42, replyTo));
         assertTrue(result1.reply().isSuccess());
-        EventSourcedBehaviorTestKit.CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result2 =
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result2 =
                 eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.AddItem("foo", 42, replyTo));
         assertTrue(result2.reply().isError());
         assertTrue(result2.hasNoEvents());
@@ -58,10 +59,10 @@ public class ShoppingCartTest {
 
     @Test
     public void removeItem() {
-        EventSourcedBehaviorTestKit.CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result1 =
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result1 =
                 eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.AddItem("foo", 42, replyTo));
         assertTrue(result1.reply().isSuccess());
-        EventSourcedBehaviorTestKit.CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result2 =
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result2 =
                 eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.RemoveItem("foo", replyTo));
         assertTrue(result2.reply().isSuccess());
         assertEquals(new ShoppingCart.ItemRemoved(CART_ID, "foo", 42), result2.event());
@@ -69,30 +70,61 @@ public class ShoppingCartTest {
 
     @Test
     public void adjustQuantity() {
-        EventSourcedBehaviorTestKit.CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result1 =
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result1 =
                 eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.AddItem("foo", 42, replyTo));
         assertTrue(result1.reply().isSuccess());
-        EventSourcedBehaviorTestKit.CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result2 =
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result2 =
                 eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.AdjustItemQuantity("foo", 43, replyTo));
         assertTrue(result2.reply().isSuccess());
-        assertEquals(43, result2.reply().getValue().items.get("foo").longValue());
+        assertEquals(43, result2.reply().getValue().items.get("foo").intValue());
         assertEquals(new ShoppingCart.ItemQuantityAdjusted(CART_ID, "foo", 42, 43), result2.event());
     }
 
+    // tag::checkout[]
     @Test
     public void checkout() {
-        EventSourcedBehaviorTestKit.CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result1 =
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result1 =
                 eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.AddItem("foo", 42, replyTo));
         assertTrue(result1.reply().isSuccess());
-        EventSourcedBehaviorTestKit.CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result2 =
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result2 =
                 eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.Checkout(replyTo));
         assertTrue(result2.reply().isSuccess());
         assertTrue(result2.event() instanceof ShoppingCart.CheckedOut);
         assertEquals(CART_ID, result2.event().cartId);
 
-        EventSourcedBehaviorTestKit.CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result3 =
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result3 =
                 eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.AddItem("foo", 42, replyTo));
         assertTrue(result3.reply().isError());
     }
+    // end::checkout[]
 
+    // tag::get[]
+    @Test
+    public void get() {
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result1 =
+                eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.AddItem("foo", 42, replyTo));
+        assertTrue(result1.reply().isSuccess());
+
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, ShoppingCart.Summary> result2 =
+                eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.Get(replyTo));
+        assertFalse(result2.reply().checkedOut);
+        assertEquals(1, result2.reply().items.size());
+        assertEquals(42, result2.reply().items.get("foo").intValue());
+    }
+    // end::get[]
+
+    @Test
+    public void keepItsState() {
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, StatusReply<ShoppingCart.Summary>> result1 =
+                eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.AddItem("foo", 42, replyTo));
+        assertTrue(result1.reply().isSuccess());
+
+        eventSourcedTestKit.restart();
+
+        CommandResultWithReply<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State, ShoppingCart.Summary> result2 =
+                eventSourcedTestKit.runCommand(replyTo -> new ShoppingCart.Get(replyTo));
+        assertFalse(result2.reply().checkedOut);
+        assertEquals(1, result2.reply().items.size());
+        assertEquals(42, result2.reply().items.get("foo").intValue());
+    }
 }

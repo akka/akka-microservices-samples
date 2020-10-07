@@ -19,11 +19,12 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final ItemPopularityRepository itemPopularotyRepository;
+    private final ItemPopularityRepository itemPopularityRepository;
     private final Duration timeout;
     private final ClusterSharding sharding;
-    public ShoppingCartServiceImpl(ActorSystem<?> system, ItemPopularityRepository itemPopularotyRepository) {
-        this.itemPopularotyRepository = itemPopularotyRepository;
+
+    public ShoppingCartServiceImpl(ActorSystem<?> system, ItemPopularityRepository itemPopularityRepository) {
+        this.itemPopularityRepository = itemPopularityRepository;
         timeout = system.settings().config().getDuration("shopping-cart-service.ask-timeout");
         sharding = ClusterSharding.get(system);
     }
@@ -38,7 +39,6 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
         return convertError(cart);
     }
 
-    // tag::moreOperations[]
     @Override
     public CompletionStage<Cart> updateItem(UpdateItemRequest in) {
         logger.info("getCart {}", in.getCartId());
@@ -53,6 +53,7 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
         return convertError(cart);
     }
 
+    // tag::checkoutAndGet[]
     @Override
     public CompletionStage<Cart> checkout(CheckoutRequest in) {
         logger.info("checkout {}", in.getCartId());
@@ -76,12 +77,12 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
         });
         return convertError(protoCart);
     }
-    // end::moreOperations[]
+    // end::checkoutAndGet[]
 
     // tag::getItemPopularity[]
     @Override
     public CompletionStage<GetItemPopularityResponse> getItemPopularity(GetItemPopularityRequest in) {
-        return itemPopularotyRepository.getItem(in.getItemId()).thenApply(maybePopularity -> {
+        return itemPopularityRepository.getItem(in.getItemId()).thenApply(maybePopularity -> {
             long popularity = maybePopularity.orElse(0L);
             return GetItemPopularityResponse.newBuilder().setPopularityCount(popularity).build();
         });

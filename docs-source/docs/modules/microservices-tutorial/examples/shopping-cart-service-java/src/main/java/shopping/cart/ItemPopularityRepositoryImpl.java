@@ -4,20 +4,11 @@ import akka.Done;
 import akka.stream.alpakka.cassandra.javadsl.CassandraSession;
 
 import java.util.Optional;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
 public final class ItemPopularityRepositoryImpl implements ItemPopularityRepository {
 
-    private static final String POPULARITY_TABLE = "item_popularity";
-
-    public static CompletionStage<Done> createItemPopularityTable(CassandraSession session, String keyspace) {
-        return session.executeDDL("CREATE TABLE IF NOT EXISTS " + keyspace + "." + POPULARITY_TABLE + " (\n" +
-        "item_id text,\n" +
-        "count counter,\n" + // <1>
-        "PRIMARY KEY (item_id))"
-        );
-    }
+    static final String POPULARITY_TABLE = "item_popularity";
 
     private final CassandraSession session;
     private final String table;
