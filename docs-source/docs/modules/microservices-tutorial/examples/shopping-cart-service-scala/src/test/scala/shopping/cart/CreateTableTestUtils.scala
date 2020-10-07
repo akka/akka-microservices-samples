@@ -22,11 +22,11 @@ object CreateTableTestUtils {
     Await.result(
       session.executeDDL(s"""CREATE TABLE IF NOT EXISTS $keyspace.$popularityTable (
       item_id text,
-      count counter, // <1>
+      count counter,
       PRIMARY KEY (item_id))
       """),
       30.seconds)
 
-    LoggerFactory.getLogger("shopping.cart.Main").info("Created keyspace [{}] and tables", keyspace)
+    LoggerFactory.getLogger(getClass).info("Created keyspace [{}] and tables", keyspace)
   }
 }
