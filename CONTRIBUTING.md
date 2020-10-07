@@ -27,7 +27,7 @@ Detailed information about working with the documentation is provided in the [do
 
 ## Building the Documentation
 
-This part of the Akka documentation is built using [Antora](https://docs.antora.org/antora/2.1/), from asciidoc sources.
+This part of the Akka documentation is built using [Antora](https://docs.antora.org/antora/2.3/), from asciidoc sources.
 The building process is managed by `make` using the [makefile](./Makefile) script.
 
 
@@ -60,7 +60,7 @@ Each part of the tutorial has full source code in directories in `docs-source/do
 Many files are identical and maintained with `scripts/copy-identical-files.sh`, which copies the files.
 
 The `00` directory corresponds to the generated code from https://github.com/akka/akka-microservices-seed-scala.g8.
-When changes are made to the g8 temaplate the `00` directory should be updated. It can be created with `sbt new`
+When changes are made to the g8 template the `00` directory should be updated. It can be created with `sbt new`
 according to the instructions in the tutorial. Thereafter, run `scripts/copy-identical-files.sh`.
 
 It's often easiest to make changes to the example in the full example (last part of the tutorial) and then
