@@ -12,8 +12,9 @@ content:
 
 ui:
   bundle:
-    url: https://github.com/lightbend/antora-ui-lightbend-theme/raw/master/build/ui-bundle.zip
+    url: https://downloads.lightbend.com/website/antora/ui-bundle-sept-29-2020.zip
     snapshot: true
+  supplemental_files: ./supplemental_ui
     
 runtime:
   fetch: true
@@ -25,6 +26,8 @@ asciidoc:
     review: ''
     todo: ''
     doc-title: 'Akka Samples'
+    page-pagination: ""
+    page-toctitle: "On This Page"
 
 output:
   dir: ./../target/staging
