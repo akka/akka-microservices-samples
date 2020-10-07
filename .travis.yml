@@ -37,6 +37,27 @@ jobs:
       name: "Shopping order service"
 
     - env:
+        DIR="docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-scala"
+        CMD="test; scalafmtCheckAll"
+        name: "01 Shopping cart service"
+    - env:
+        DIR="docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-scala"
+        CMD="test; scalafmtCheckAll"
+        name: "02 Shopping cart service"
+    - env:
+        DIR="docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-scala"
+        CMD="test; scalafmtCheckAll"
+        name: "03 Shopping cart service"
+    - env:
+        DIR="docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala"
+        CMD="test; scalafmtCheckAll"
+        name: "04 Shopping cart service"
+    - env:
+        DIR="docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-scala"
+        CMD="test; scalafmtCheckAll"
+        name: "05 Shopping cart service"
+
+    - env:
         DIR="docs-source/docs/modules/how-to/examples/shopping-cart-service-scala"
         CMD="test; scalafmtCheckAll"
       name: "Howto example code"
@@ -44,6 +65,10 @@ jobs:
         DIR="docs-source/docs/modules/how-to/examples/cleanup-dependencies-project"
         CMD="test; scalafmtCheckAll"
       name: "Howto cleanup dependencies"
+
+    script:
+      - scripts/copy-identical-files.sh; git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
+      name: "copyIdenticalFiles"
 
     - stage: site
       script:

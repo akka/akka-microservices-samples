@@ -15,7 +15,10 @@ import akka.http.scaladsl.model.HttpResponse
 
 object ShoppingCartServer {
 
-  def start(interface: String, port: Int, system: ActorSystem[_]): Unit = {
+  def start(
+      interface: String,
+      port: Int,
+      system: ActorSystem[_]): Unit = {
     implicit val sys: ActorSystem[_] = system
     implicit val ec: ExecutionContext = system.executionContext
 

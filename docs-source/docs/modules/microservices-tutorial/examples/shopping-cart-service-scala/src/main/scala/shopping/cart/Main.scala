@@ -1,7 +1,10 @@
 package shopping.cart
 
-import akka.actor.typed.{ ActorSystem, Behavior }
-import akka.actor.typed.scaladsl.{ AbstractBehavior, ActorContext, Behaviors }
+import akka.actor.typed.scaladsl.AbstractBehavior
+import akka.actor.typed.scaladsl.ActorContext
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.ActorSystem
+import akka.actor.typed.Behavior
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
 
@@ -25,7 +28,6 @@ object Main {
   def apply(): Behavior[Nothing] = {
     Behaviors.setup[Nothing](context => new Main(context))
   }
-
 }
 
 class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
@@ -72,7 +74,6 @@ class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](con
   }
   // end::SendOrderProjection[]
 
-  override def onMessage(msg: Nothing): Behavior[Nothing] = {
+  override def onMessage(msg: Nothing): Behavior[Nothing] =
     this
-  }
 }

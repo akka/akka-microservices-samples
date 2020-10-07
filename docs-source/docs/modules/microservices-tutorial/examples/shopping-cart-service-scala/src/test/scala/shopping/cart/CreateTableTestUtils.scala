@@ -27,6 +27,6 @@ object CreateTableTestUtils {
       """),
       30.seconds)
 
-    LoggerFactory.getLogger(getClass).info("Created keyspace [{}] and tables", keyspace)
+    LoggerFactory.getLogger("shopping.cart.CreateTableTestUtils").info("Created keyspace [{}] and tables", keyspace)
   }
 }

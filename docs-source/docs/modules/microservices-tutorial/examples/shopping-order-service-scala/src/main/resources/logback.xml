@@ -5,6 +5,9 @@
         </encoder>
     </appender>
 
+
+    <logger name="com.datastax.oss.driver" level="WARN"/>
+
     <appender name="ASYNC" class="ch.qos.logback.classic.AsyncAppender">
         <queueSize>8192</queueSize>
         <neverBlock>true</neverBlock>

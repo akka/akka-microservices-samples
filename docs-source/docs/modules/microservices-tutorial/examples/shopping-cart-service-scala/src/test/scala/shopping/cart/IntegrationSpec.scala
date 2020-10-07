@@ -234,7 +234,7 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
     }
 
     "update and project from different nodes via gRPC" in {
-      // add from client1, consume event on node3
+      // add from client1
       val response1 = testNode1.client.addItem(proto.AddItemRequest(cartId = "cart-1", itemId = "foo", quantity = 42))
       val updatedCart1 = response1.futureValue
       updatedCart1.items.head.itemId should ===("foo")
@@ -246,13 +246,13 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
       published1.itemId should ===("foo")
       published1.quantity should ===(42)
 
-      // add from client2, consume event on node3
+      // add from client2
       val response2 = testNode2.client.addItem(proto.AddItemRequest(cartId = "cart-2", itemId = "bar", quantity = 17))
       val updatedCart2 = response2.futureValue
       updatedCart2.items.head.itemId should ===("bar")
       updatedCart2.items.head.quantity should ===(17)
 
-      // update from client2, consume event on node3
+      // update from client2
       val response3 =
         testNode2.client.updateItem(proto.UpdateItemRequest(cartId = "cart-2", itemId = "bar", quantity = 18))
       val updatedCart3 = response3.futureValue

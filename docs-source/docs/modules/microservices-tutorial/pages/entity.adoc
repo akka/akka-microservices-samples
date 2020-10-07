@@ -120,14 +120,14 @@ The template project includes this marker interface `CborSerializable`:
 
 [source,scala]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/CborSerializable.scala[]
+include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/CborSerializable.scala[]
 ----
 
 The interface is configured in the `serialization.conf` file to enable CBOR serialization. `serialization.conf` is included in `application.conf`.
 
 [source,hocon]
 ----
-include::example$shopping-cart-service-scala/src/main/resources/serialization.conf[]
+include::example$02-shopping-cart-service-scala/src/main/resources/serialization.conf[]
 ----
 
 == Unit testing
@@ -168,7 +168,7 @@ The events are stored in Cassandra and you have to add the configuration for tha
 
 [source,hocon]
 ----
-include::example$shopping-cart-service-scala/src/main/resources/persistence.conf[]
+include::example$02-shopping-cart-service-scala/src/main/resources/persistence.conf[tag=persistence-cassandra-config]
 ----
 
 Also, include `persistence.conf` in `application.conf`:
