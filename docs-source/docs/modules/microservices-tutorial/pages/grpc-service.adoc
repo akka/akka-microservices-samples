@@ -1,17 +1,17 @@
-= Part 3: First gRPC service
+= III: Create the Cart service
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
 include::ROOT:partial$include.adoc[]
 
-In this part, we will create the `ShoppingCartService` with gRPC. At first, it will only have one operation to add items to a cart. It will be a dummy implementation that is only logging the calls. In later parts of the tutorial it will be expanded with more operations and real implementations.
+In this part, we will create the `ShoppingCartService` with gRPC. The motivation for using gRPC as the inter-service protocol is explained in the {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?"] {akka-grpc}/whygrpc.html[{tab-icon}, window="tab"] documentation. 
 
-.This part of the xref:overview.adoc[full example] will focus on the gRPC `ShoppingCartService`.
-[caption=""]
+The gRPC `ShoppingCartService` corresponds to the *Cart Service* shown in the architectural overview below. The steps on this page show how to create the `ShoppingCartService` with a single operation that adds items to a cart. The implementation will only log the calls for now. Later, we'll expand the service with more operations and real implementations.
+
 image::example-grpc-server.png[Example gRPC service]
 
-You will learn how to:
+In this section, you will learn how to:
 
 * define the interface of the gRPC service
 * implement the service interface
@@ -19,11 +19,15 @@ You will learn how to:
 * interact with the service from the command line
 * deploy for the first time to the cloud
 
-The motivation for using gRPC as inter-service protocol is explained in the {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?"] {akka-grpc}/whygrpc.html[{tab-icon}, window="tab"] documentation.
+ifdef::review[REVIEWERS: I didn't notice where a server component was introduced in the overview. Can we add something about it there?]
+
+:sectnums:
+
+ifdef::review[REVIEWERS: I thought about removing the headings and changing to a simple numbered list, that is still an option. But, for now, I've made the section headings numbered so it's easier not to lose your place. There are pros and cons. The way it is, it is nice to have the numbered items in the on this page TOC.]
 
 == Service definition
 
-First you should define the interface of the service in a protobuf service descriptor. It should be located in the `src/main/protobuf/ShoppingCartService.proto`.
+First, create a protobuf service descriptor file: `src/main/protobuf/ShoppingCartService.proto`. Define the service interface as shown. 
 
 [source,protobuf]
 ----
@@ -34,9 +38,11 @@ include::example$01-shopping-cart-service-scala/src/main/protobuf/ShoppingCartSe
 <2> Describes the request to add an item to the shopping cart.
 <3> For simplicity, most requests share a common response, for easier evolution of an interface, separate responses are often a better choice (See xref:how-to:evolve-grpc-apis.adoc[] for details).
 
+ifdef::review[REVIEWERS: I don't understand the explanation of callout 3. Do you mean that the one shown is a single response that will be used elsewhere?]
+
 == Generate code
 
-The Akka gRPC plugin will generate code from the service descriptor when you compile the project.
+The Akka gRPC plugin will generate code from the service descriptor when you compile the project. Run `sbt` to compile:
 
 ----
 sbt compile
@@ -45,6 +51,8 @@ sbt compile
 == Service implementation
 
 Let's implement the `ShoppingCartService` trait. Create a `ShoppingCartServiceImpl` class that extends the generated `ShoppingCartService` trait. Implement the `addItem` method from the trait by logging the call and return a successful `Future`.
+
+ifdef::review[REVIEWERS: it appears as though the impl class is in a separate file, do we need to explicitly tell the reader where to put it?]
 
 [source,scala]
 ----
@@ -55,7 +63,10 @@ include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 == Server
 
-The gRPC service implementation is running by an Akka HTTP server. Add the following server initialization code in a `ShoppingCartServer` object.
+We will run the gRPC service implementation in an Akka HTTP server. Add the following server initialization code in a `ShoppingCartServer` object:
+
+ifdef::review[REVIEWERS: same question as before, do we need to tell them where to put this file and what to name it?]
+
 
 [source,scala]
 ----
@@ -82,7 +93,7 @@ include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Mai
 
 The `grpc.port` configuration is defined in `local1.conf`, which is included in the generated template project.
 
-== Run
+== Run locally
 
 You can run this service with:
 
@@ -118,6 +129,7 @@ You can stop the service with `ctrl-c`.
 
 ifdef::todo[TODO: deploy to cloud and try it]
 
+:!sectnums:
 == Learn more
 
 * In xref:entity.adoc[**next step**] of the tutorial you will add an Event Sourced entity.

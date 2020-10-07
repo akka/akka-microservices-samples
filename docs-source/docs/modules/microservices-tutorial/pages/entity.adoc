@@ -1,14 +1,14 @@
-= Part 3: Event Sourced entity
+= IV: Create Event Sourced Cart entity
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
 include::ROOT:partial$include.adoc[]
 
-In this part, we will create the `ShoppingCart` entity that manages the state for each shopping cart. The `ShoppingCart` is using Event Sourcing to persist events that represents changes to the state of the cart. At first, it only will handle the command to add items to the cart. In xref:complete-entity.adoc[next part] of the tutorial we will expand it to handle more commands and events.
+In this part, we will create the `ShoppingCart` entity that manages the state for each shopping cart. The `ShoppingCart` will use Event Sourcing to persist events that represents changes to the state of the cart. We only need to handle the command to add items to the cart for now. In the next part of the tutorial we will expand it to handle more commands and events.
 
-.This part of the xref:overview.adoc[full example] will focus on the `ShoppingCart` entity.
-[caption=""]
+The architectural overview shows how the entity is related to the Cart service. It writes events to the event journal, which we will use later to create projections:
+
 image::example-entity.png[Example entity]
 
 You will learn how to:
@@ -17,45 +17,45 @@ You will learn how to:
 * unit test the entity
 * distribute the entities over the nodes in the Akka Cluster
 * send requests from the gRPC service implementation to the entities
-* update the deployment from the xref:grpc-server.adoc[previous step]
+* update the deployment from the previous step
 
-Read the xref:concepts:event-sourcing.adoc[Event Sourcing] section if you are unfamiliar with that concept.
+ifdef::review[REVIEWERS: re: bullet 3 above, I didn't see any explanation of how to distribute entities in the rest of the page. Maybe because it's part of deploying in the cloud, which isn't written yet? But isn't this something that we should introduce and motivate in the overview of this page? That is why it's a good think to distribute the entities and how Akka makes it easy for you to do with cluster sharding?]
 
-== Event Sourced entity
-[#event_sourced_entity]
+If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sourcing.adoc[Event Sourcing] section for an explanation.
 
-=== Commands
+:sectnums:
+== Commands and events
 
-The state of the entity can be changed only by sending commands to it. The commands are the "external" API of an entity. Commands request state changes, but they might lead to different events depending on the current state of the entity.
+Commands are the "external" API of an entity. The state of the entity can be changed only by commands. The results of commands are emitted as events. A command can request state changes, but different events might be generated depending on the current state of the entity.
 
-Define a `ShoppingCart` object and the `AddItem` command:
+ifdef::review[REVIEWERS: again my scala ignorance is showing, but will the reader know that they define an object in a separate file and what to name it and where to put it?]
 
+. Define a `ShoppingCart` object and the `AddItem` command:
++
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;commands]
 ----
 
-=== Events
-
-The corresponding `ItemAdded` event:
-
+. Add a corresponding `ItemAdded` event:
++
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;events]
 ----
 
-=== State
+== State
 
-The state of the `ShoppingCart` contains a `Map` of items that have been added to the cart.
+The state of the `ShoppingCart` contains a `Map` of items that have been added to the cart. Add this to the `ShoppingCart` object.
 
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;state]
 ----
 
-=== Command handler
+== Command handler
 
-You implement the Event Sourced entity with the `EventSourcedBehavior`. It defines command handlers:
+Implement the Event Sourced entity with the `EventSourcedBehavior`. Define the command handlers:
 
 [source,scala]
 ----
@@ -73,7 +73,7 @@ If the validation fails we want to send back an error message. The reply can be 
 
 See all available effects in the {akka}/typed/persistence.html#effects-and-side-effects[Akka reference documentation] {akka}/typed/persistence.html#effects-and-side-effects[{tab-icon}, window="tab"].
 
-=== Event handler
+== Event handler
 
 The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands, other parts of the application may listen to the created events. Other parties can't send events.
 
@@ -86,7 +86,7 @@ Aligning with the command handler above, the entity's event handler reacts on ev
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;eventHandler]
 ----
 
-=== Initialization
+== Initialization
 
 To glue this together we need some initialization code:
 
@@ -182,7 +182,7 @@ include::example$02-shopping-cart-service-scala/src/main/resources/application.c
 
 First you need to start Cassandra with:
 
-include::dev-env.adoc[tag=docker]
+include::template.adoc[tag=docker]
 
 Run the service with:
 

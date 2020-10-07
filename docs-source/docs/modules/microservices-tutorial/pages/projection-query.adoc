@@ -155,7 +155,7 @@ docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_u
 ----
 
 
-include::dev-env.adoc[tag=dockerImportant]
+include::template.adoc[tag=dockerImportant]
 
 Run the service with:
 

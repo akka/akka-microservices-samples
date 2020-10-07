@@ -1,0 +1,83 @@
+= II: Start a project
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+
+include::ROOT:partial$include.adoc[]
+
+
+We provide a template so that you don't need to create the shopping cart project structure along with configuration and build files. The instructions below describe how to run the template and open the resulting project in IntelliJ. If you are using a different IDE, substitute as necessary.
+
+:sectnums:
+
+== Run the template
+
+Use `sbt` to download and run the template to create your project:
+
+. Open a console and run the following command: 
++
+----
+sbt new akka/akka-microservices-seed-scala.g8
+----
++
+The template will prompt you to name the project. 
+
+. Enter the following for the first Cart service:
+
+.. `shopping-cart-service` as the project name.
+.. `shopping.cart` as the package name.
+
+. Change to the new `shopping-cart-service` project directory and try to build it with:
++
+----
+sbt compile
+----
+
+ifdef::review[REVIEWERS: we should add what they will see if successful and what to do if not.]
+
+== Open the project in IntelliJ
+
+If you are using IntelliJ, follow these steps to open the project:
+
+. From  the *File > Open* menu, highlight `shopping-cart-service/build.sbt` .
+. Select *Open as project*.
+
+ifdef::review[REVIEWERS: is this the appropriate place to run Docker, or wait until they have created their first service and are trying to run it?]
+
+== Run Docker and Docker Compose
+
+Follow these steps to prepare for running shopping cart:
+
+. From the root project directory, run the following command:
++
+// # tag::docker[]
+----
+docker-compose up -d
+----
+
+. Create the Cassandra keyspace and tables from the CQL script located inside the `ddl-scripts` at the root of the project:
++
+----
+docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_tables.cql
+----
++
+// # tag::dockerImportant[]
++
+[IMPORTANT]
+====
+When loading the CQL script, make sure to use the same name as your running Cassandra container name. The container name is not fixed and depends on the parent folder of the docker-compose file. The above example assumes the project was created using the seed template and named `shopping-cart-service`.
+
+If you get a connection error with the message *_Unable to connect to any servers_*, it means the Cassandra container is still starting. Wait a few seconds and re-try the command.
+====
+// # end::dockerImportant[]
+
+
+It will create the keyspace and all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
+
+[CAUTION]
+====
+The keyspace as created by the script works fine for local development but is probably not what you need in a production environment. 
+====
+
+// # end::docker[]
+

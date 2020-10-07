@@ -1,26 +1,35 @@
-= Part 1: Overview of the example
+= Shopping Cart example architecture
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2
 
 include::ROOT:partial$include.adoc[]
 
-
-This example evolves around a user shopping cart. The user can finally checkout the shopping cart to create an order. The shopping cart contents are persisted by xref:concepts:event-sourcing.adoc[Event Sourcing] from the commands that make updates to the carts. The events are persisted to a Cassandra database as an "Event Journal".
-
-The service counts how often an item is added to any shopping cart to get a measure of popularity. This information is derived or "projected" from the contents of all shopping carts. Projecting data into a new representation from stored domain events is supported by {akka-projection}/[Akka Projections] {akka-projection}/[{tab-icon}, window="tab"]. This idea of creating a dependent projection of data is part of Command Query Responsibility Segregation (or CQRS).
-
-The shopping cart service also interacts with two other services. It publishes the events for the shopping cart changes to a Kafka topic, which is consumed by a shopping analytics service. When a shopping cart is checked out the order is sent with gRPC to a shopping order service. Both these interactions are performed from projections of the shopping cart events.
+This tutorial shows how to build the functionality for a Shopping Cart system. When complete, end users will be able to add items to a cart and checkout, creating an order. Analytics also measure item popularity based on the quantity sold. As shown in the following illustration, the system includes three services that use xref:concepts:grpc-services.adoc[gRPC] as a transport mechanism: Cart, Order, and Analytics. 
 
 image::example-overview.png[Example overview]
 
-The tutorial takes you through the following steps to build the services from scratch, and adding piece by piece with deployment to the cloud for each step.
+Each user's cart is represented by an Cart Entity. Cart state is persisted using xref:concepts:event-sourcing.adoc[Event Sourcing]: When a user updates their cart, the Entity persists commands to a Cassandra database in an _Event Journal_. Using xref:concepts:cqrs.adoc[Command Query Responsibility Segregation] (CQRS), which separates read and write responsibility, {akka-projection}/[Akka Projections] {akka-projection}/[{tab-icon}, window="tab"] provide the data necessary for the Order and Analytics services.
 
-. xref:overview.adoc[Overview of the example] (this page)
-. xref:dev-env.adoc[**Development environment**] (next)
-. xref:grpc-server.adoc[First gRPC service]
-. xref:entity.adoc[Event Sourced entity]
-. xref:complete-entity.adoc[Complete Event Sourced entity]
-. xref:projection-query.adoc[Projection for queries]
-. xref:projection-kafka.adoc[Projection publishing to Kafka]
-. xref:projection-grpc-client.adoc[Projection calling gRPC service]
+The `PopularityProjection` is derived from the contents of all shopping carts.
+
+ifdef::review[REVIEWERS: there are still some missing pieces here: an explanation of the queryDB; why an arrow from PopularityProjection goes up to queryDB and comes down from Entity, when this is what the Analytics service needs to use, right?;  Why is PublishEvents projection written to Kafka and subscribed to by Analytics instead of PopularityProjection?]
+
+
+Follow these main steps to build functionality a bit at a time and deploy to the cloud as you go:
+
+ifdef::review[REVIEWERS: with the next and prev buttons in the new template, not sure that we need the full list of reproduced here again?]
+
+xref:dev-env.adoc[I. Set up your development environment]
+
+xref:grpc-server.adoc[II. First gRPC service]
+
+xref:entity.adoc[III. Event Sourced entity]
+
+xref:complete-entity.adoc[IV. Complete Event Sourced entity]
+
+xref:projection-query.adoc[Projection for queries]
+
+xref:projection-kafka.adoc[Projection publishing to Kafka]
+
+xref:projection-grpc-client.adoc[Projection calling gRPC service]

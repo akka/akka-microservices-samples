@@ -5,20 +5,21 @@
 
 include::ROOT:partial$include.adoc[]
 
-This example illustrates how multiple microservices can interact to implement a system. They use Akka Persistence for Event Sourcing and Akka Projections to implement CQRS for the event-sourced entities.
+ifdef::review[REVIEWERS: I edited this page to remove repetitive words/concepts/sentences/sections. I don't think I removed anything important, but please check.]
 
-== Tutorial
 
-This example evolves around a shopping cart. The tutorial takes you through the following steps to build the services from scratch, and adding piece by piece with deployment to the cloud for each step.
+This tutorial illustrates how microservices can interact to implement a shopping cart system. It demonstrates use of the following Akka Platform features:
+
+- {akka}/typed/cluster-sharding.html[Akka Cluster Sharding] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"]: to distribute processing
+- {akka-persistence-cassandra}/[Akka Persistence Cassandra] {akka-persistence-cassandra}/[{tab-icon}, window="tab"]: to use Event Sourcing
+- {akka-projection}/[Akka Projections] {akka-projection}/[{tab-icon}, window="tab"]: to enable CQRS
+- {akka-grpc}/[Akka gRPC] {akka-grpc}/[{tab-icon}, window="tab"]: to implement a gRPC service API
+- {akka-management}/[Akka Management] {akka-management}/[{tab-icon}, window="tab"]: for health checks
+
+
+
+The topics listed below show how to build the services piece by piece, from scratch. After testing locally what you build in each main step, you can also deploy to the cloud.
+
+ifdef::review[REVIEWERS: Not sure why the page listing is in a partial, there isn't a use case for sharing it (including in multiple places), is there?]
 
 include::partial$listing.adoc[]
-
-== Used Akka modules
-
-This example project uses
-
-- {akka}/typed/cluster-sharding.html[Akka Cluster Sharding] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"] to distribute processing
-- {akka-persistence-cassandra}/[Akka Persistence Cassandra] {akka-persistence-cassandra}/[{tab-icon}, window="tab"] to use Event Sourcing
-- {akka-projection}/[Akka Projections] {akka-projection}/[{tab-icon}, window="tab"] to enable CQRS
-- {akka-grpc}/[Akka gRPC] {akka-grpc}/[{tab-icon}, window="tab"] to implement a gRPC service API
-- {akka-management}/[Akka Management] {akka-management}/[{tab-icon}, window="tab"] for health checks

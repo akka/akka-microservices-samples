@@ -25,6 +25,10 @@ asciidoc:
     review: ''
     todo: ''
     doc-title: 'Akka Samples'
+    # the following turns on next and previous links in the new template
+    page-pagination: ""
+  
+    
 
 output:
   dir: ./../target/staging
