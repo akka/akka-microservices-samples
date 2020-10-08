@@ -1,4 +1,4 @@
-= IV: Create Event Sourced Cart entity
+= IV: Create the Event Sourced Cart entity
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2

@@ -1,4 +1,4 @@
-= III: Create the Cart service
+= III: Create the gRPC Cart service
 :toc:
 :toc-title: ON THIS PAGE
 :toclevels: 2
@@ -15,7 +15,7 @@ In this section, you will learn how to:
 
 * define the interface of the gRPC service
 * implement the service interface
-* initialize and run the server
+* initialize and run an HTTP server
 * interact with the service from the command line
 * deploy for the first time to the cloud
 
@@ -27,7 +27,7 @@ ifdef::review[REVIEWERS: I thought about removing the headings and changing to a
 
 == Service definition
 
-First, create a protobuf service descriptor file: `src/main/protobuf/ShoppingCartService.proto`. Define the service interface as shown. 
+First, create a protobuf service descriptor file: `src/main/protobuf/ShoppingCartService.proto`. Define the service interface as shown below: 
 
 [source,protobuf]
 ----

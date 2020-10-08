@@ -48,9 +48,9 @@ ifdef::review[REVIEWERS: is this the appropriate place to run Docker, or wait un
 
 Follow these steps to prepare for running shopping cart:
 
+// # tag::docker[]
 . From the root project directory, run the following command:
 +
-// # tag::docker[]
 ----
 docker-compose up -d
 ----
@@ -70,10 +70,9 @@ When loading the CQL script, make sure to use the same name as your running Cass
 If you get a connection error with the message *_Unable to connect to any servers_*, it means the Cassandra container is still starting. Wait a few seconds and re-try the command.
 ====
 // # end::dockerImportant[]
-
-
++
 It will create the keyspace and all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
-
++
 [CAUTION]
 ====
 The keyspace as created by the script works fine for local development but is probably not what you need in a production environment. 
