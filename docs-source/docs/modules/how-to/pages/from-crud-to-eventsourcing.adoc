@@ -79,10 +79,6 @@ In Event Sourcing, the `State` must be rebuilt in memory every time. The process
 
 See the xref:microservices-tutorial:entity.adoc[step adding an Event Sourced entity], and the xref:microservices-tutorial:complete-entity.adoc[step completing the Event Sourced entity] on the tutorial for more details.
 
-[NOTE]
-====
-An more advanced approach to enriching a CRUD model into an Event Sourcing model is to run one or many xref:concepts:commands-and-events.adoc#event_storming[Event Storming sessions].
-====
 
 == Consistency and Availability
 
