@@ -3,6 +3,7 @@ package shopping.cart;
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Behavior;
+import akka.actor.typed.SupervisorStrategy;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.cluster.sharding.typed.javadsl.ClusterSharding;
 import akka.cluster.sharding.typed.javadsl.Entity;
@@ -13,6 +14,7 @@ import akka.persistence.typed.PersistenceId;
 import akka.persistence.typed.javadsl.*;
 import com.fasterxml.jackson.annotation.JsonCreator;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 
@@ -285,19 +287,16 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
 
     // tag::howto-write-side-without-role[]
     public static void init(ActorSystem<?> system) {
-        // FIXME not very nice with akka.japi.function when type is not inferred
-        akka.japi.function.Function<EntityContext<Command>, Behavior<Command>> behaviorFactory = entityContext -> {
+        ClusterSharding.get(system).init(Entity.of(ENTITY_KEY, entityContext -> {
             int i = Math.abs(entityContext.getEntityId().hashCode() % TAGS.size());
             String selectedTag = TAGS.get(i);
             return ShoppingCart.create(entityContext.getEntityId(), selectedTag);
-        };
-        ClusterSharding.get(system).init(Entity.of(ENTITY_KEY, behaviorFactory));
+        }));
     }
     // end::howto-write-side-without-role[]
     // end::tagging[]
 
     public static Behavior<Command> create(String cartId, String projectionTag) {
-        // FIXME onPersistFailure(SupervisorStrategy.restartWithBackoff(200.millis, 5.seconds, 0.1))
         return Behaviors.setup(ctx ->
             EventSourcedBehavior.start(new ShoppingCart(cartId, projectionTag), ctx)
         );
@@ -309,7 +308,8 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
     private final String cartId;
 
     private ShoppingCart(String cartId, String projectionTag) {
-        super(PersistenceId.of(ENTITY_KEY.name(), cartId));
+        super(PersistenceId.of(ENTITY_KEY.name(), cartId),
+                SupervisorStrategy.restartWithBackoff(Duration.ofMillis(200), Duration.ofSeconds(5), 0.1));
         this.cartId = cartId;
         this.projectionTag = projectionTag;
     }

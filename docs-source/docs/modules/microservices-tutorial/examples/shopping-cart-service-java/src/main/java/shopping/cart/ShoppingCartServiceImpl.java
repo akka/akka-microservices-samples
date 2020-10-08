@@ -110,7 +110,6 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
             if (ex instanceof TimeoutException) {
                 throw new GrpcServiceException(Status.UNAVAILABLE.withDescription("Operation timed out"));
             } else {
-                // FIXME from scala sample, but how is this always INVALID_ARGUMENT??
                 throw new GrpcServiceException(Status.INVALID_ARGUMENT.withDescription(ex.getMessage()));
             }
         });
