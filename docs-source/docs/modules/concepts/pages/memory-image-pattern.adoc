@@ -1,7 +1,5 @@
 = Memory Image Pattern
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 2
+
 
 include::partial$include.adoc[]
 

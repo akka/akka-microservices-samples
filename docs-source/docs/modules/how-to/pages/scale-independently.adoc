@@ -1,7 +1,5 @@
 = How to scale command-side and query-side independently
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 2
+
 
 include::partial$include.adoc[]
 

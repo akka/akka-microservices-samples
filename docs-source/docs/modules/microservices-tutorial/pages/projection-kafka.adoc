@@ -1,7 +1,4 @@
 = Part 6: Projection publishing to Kafka
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 2
 
 include::ROOT:partial$include.adoc[]
 

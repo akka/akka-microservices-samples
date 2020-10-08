@@ -1,7 +1,4 @@
 = Part 1: Overview of the example
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 2
 
 include::ROOT:partial$include.adoc[]
 

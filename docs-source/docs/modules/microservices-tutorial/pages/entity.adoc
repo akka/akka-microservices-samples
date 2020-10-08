@@ -1,7 +1,4 @@
 = Part 3: Event Sourced entity
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 2
 
 include::ROOT:partial$include.adoc[]
 
