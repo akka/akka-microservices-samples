@@ -1,4 +1,5 @@
 = Akka Platform Guide
+:page-toclevels: -1
 :description: Guided documentation of Akka for specific use cases
 
 include::ROOT:partial$include.adoc[]

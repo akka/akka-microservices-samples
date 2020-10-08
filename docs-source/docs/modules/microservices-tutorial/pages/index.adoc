@@ -1,7 +1,4 @@
 = Implementing Microservices with Akka
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 2
 
 include::ROOT:partial$include.adoc[]
 

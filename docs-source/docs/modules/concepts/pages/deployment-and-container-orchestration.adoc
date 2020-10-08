@@ -1,7 +1,5 @@
 = Deployment and Container Orchestration
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 2
+
 
 include::partial$include.adoc[]
 

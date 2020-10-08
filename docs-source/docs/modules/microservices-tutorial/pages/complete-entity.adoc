@@ -1,8 +1,4 @@
 = Part 4: Complete Event Sourced entity
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 2
-:page-supergroup-scala-java: Language
 
 include::ROOT:partial$include.adoc[]
 
@@ -43,16 +39,6 @@ It is good if you try yourself first, as an exercise, and then you can compare w
 
 Add the `Checkout` command alongside the existing `AddItem` command:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkoutCommand]
@@ -60,16 +46,6 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 Add corresponding `CheckedOut` event:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEvent]
@@ -77,16 +53,6 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 The state should include a value for if and when the cart was checked out:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=state]
@@ -94,16 +60,6 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 Add unit test for the new `Checkout` command in `ShoppingCartSpec`:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=checkout]
@@ -111,16 +67,6 @@ include::example$03-shopping-cart-service-scala/src/test/scala/shopping/cart/Sho
 
 Commands should be handled differently when the cart has been checked out. `AddItem` is no longer allowed after checkout. Therefore we refactor the `handleCommand` method to two separate methods `openShoppingCart` and `checkedOutShoppingCart` that are used depending on the `checkedOut` state. The previous code for `AddItem` goes into the `openShoppingCart` method.
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=commandHandlers]
@@ -128,16 +74,6 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 Then handle the new `Checkout` command in `openShoppingCart`:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkoutCommandHandler]
@@ -145,16 +81,6 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 In `checkedOutShoppingCart` the `AddItem` and `Checkout` commands should be rejected:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutShoppingCart]
@@ -162,16 +88,6 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 Remaining is to add the event handler for the `CheckedOut` event  in the `handleEvent` method:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEventHandler]
@@ -179,7 +95,6 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 That should cover everything for the `Checkout` command. Let's confirm by running the unit tests with:
 
-[source,shell script]
 ----
 sbt test
 ----
@@ -188,16 +103,6 @@ sbt test
 
 Add the `Get` command alongside the existing `AddItem` and `Checkout` commands:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommand]
@@ -205,16 +110,6 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 Add unit test for the new `Get` command in `ShoppingCartSpec`:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=get]
@@ -222,16 +117,6 @@ include::example$03-shopping-cart-service-scala/src/test/scala/shopping/cart/Sho
 
 The command handler for `Get` is the same independent of the `checkedOut` state, so add it to both `openShoppingCart` and `checkedOutShoppingCart`:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommandHandler]
@@ -239,7 +124,6 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 Try the new `Get` command  by running the unit tests with:
 
-[source,shell script]
 ----
 sbt test
 ----
@@ -257,23 +141,12 @@ ifdef::todo[TODO: callout to highlight the new bool checkedOut]
 
 Generate code by compiling the project:
 
-[source,shell script]
 ----
 sbt compile
 ----
 
 You will see a compilation error in `ShoppingCartServiceImpl.scala`, but that is expected with the changed Protobuf definition. We will fix that now. You have to include the new `checkedOut` flag when converting from `ShoppingCart.Summary` to `proto.Cart`.
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=toProtoCart]
@@ -281,16 +154,6 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 Then you can add implementations of the new operations in `ShoppingCartServiceImpl` in the same way as `addItem`:
 
-[.tabset]
-Java::
-+
-[source,java]
-----
-TODO
-----
-
-Scala::
-+
 [source,scala]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=checkoutAndGet]
@@ -302,14 +165,12 @@ ifdef::todo[TODO: refer to the source download, especially for the optional comm
 
 Start Cassandra, unless it's already running:
 
-[source,shell script]
 ----
 docker-compose up -d
 ----
 
 Run the service with:
 
-[source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
@@ -317,34 +178,34 @@ sbt -Dconfig.resource=local1.conf run
 Try it with `grpcurl`.
 
 Add item to cart:
-[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
 Get cart:
-[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
 ----
 
 (Optional) Update quantity of item:
-[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.UpdateItem
 ----
 
 (Optional) Get cart again:
-[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
 ----
 
 Check out cart:
-[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.Checkout
 ----
+
+
+== Deploy
+
+ifdef::todo[TODO: deploy the updated version to the cloud and try it]
 
 == Learn more
 

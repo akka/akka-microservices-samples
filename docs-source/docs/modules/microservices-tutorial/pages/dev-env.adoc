@@ -1,43 +1,22 @@
-= I: Set up your development environment
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 2
+= Part 2: Development environment
 
 include::ROOT:partial$include.adoc[]
 
+== sbt
 
-To follow tutorial steps you will need a code editor, a build tool, and `grpcurl` (a CLI for sending gRPC calls). You can use your preferred code editor. We provide the steps for using https://www.jetbrains.com/idea/[IntelliJ IDEA {tab-icon}, window="tab"] from JetBrains. For the Scala version of the example, we use `sbt` as the build tool. 
+For Scala we will use `sbt` as the build tool.
 
-This tutorial uses Cassandra and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[Docker {tab-icon}, window="tab"]. The template project's root directory includes a https://docs.docker.com/compose/[Docker Compose] https://docs.docker.com/compose/[{tab-icon}, window="tab"] file that you can use to run Cassandra and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
+https://www.scala-sbt.org/download.html[Install sbt] if you haven't already.
 
-The following sections provide links for downloading and installing:
+`sbt` is an interactive shell and it is most efficient to start it once with the `sbt` command and then repeatedly run tasks like `compile` and `test` in the sbt shell.
 
-* <<IntelliJ IDEA>>
-* <<The sbt tool>>
-* <<The grpcurl tool>>
-* <<Docker and Docker Compose>>
+In the tutorial we use the full command for clarity, such as:
 
-We also provide downloadable versions of the example at different phases of completion. And, you will likely want to test locally before deploying to the cloud. You will need to understand how to configure to run locally. The following sections provide information on:
+----
+sbt compile
+----
 
-* <<Downloadable example source>>
-* <<Configuring for local development>>
- 
-
-:!sectnums:
-== IntelliJ IDEA
-
-To install IntelliJ and prepare to develop the Scala example, follow these steps:
- 
-. Download and install https://www.jetbrains.com/idea/download/[IntelliJ {tab-icon}, window="tab"].
-. From the *Preferences* menu, add the *Scala* plugin.
-
-== The sbt tool
-
-For the Scala Shopping Cart example, we use `sbt` as the build tool. https://www.scala-sbt.org/download.html[Install sbt] if you haven't already.
-
-[TIP]
-====
-`sbt` is an interactive shell. If you start it with the `sbt` command, you can repeatedly run tasks like `compile` and `test` in the sbt shell. In the tutorial we use the full command for clarity, such as `sbt compile`. You can run tasks independently in this way, but it's faster to leave the `sbt` shell running and only enter the tasks. For example:
+This works, but it's faster to leave the `sbt` shell running and only enter the tasks:
 
 ----
 $ sbt
@@ -47,45 +26,92 @@ sbt:shopping-cart-service> compile
 sbt:shopping-cart-service> test
 ...
 ----
-====
 
-== The grpcurl tool
+== Template project
 
-The https://github.com/fullstorydev/grpcurl[grpcurl {tab-icon}, window="tab"] tool is useful for making gRPC calls from the command line. It is used in tutorial procedures and we recommend that you install it as described in https://github.com/fullstorydev/grpcurl#installation[the grpcurl documentation {tab-icon}, window="tab"].
+Open a console and run the following command to create a project with build and configuration files for Akka Microservices. This build is the starting point for the tutorial:
+
+----
+sbt new akka/akka-microservices-seed-scala.g8
+----
+
+This template will prompt for the naming of the project. Enter the following for the first service:
+
+1. `shopping-cart-service` as the project name
+2. `shopping.cart` as the package name
+
+Change directory to the new `shopping-cart-service` project and try to build it with:
+
+----
+sbt compile
+----
+
+== Download example source
+
+We encourage that you to enter the code described in the tutorial. If you are stuck or prefer to skip over some parts you can download a zip file containing the complete source code for each part of the tutorial.
+
+TODO: download link
+
+== IntelliJ IDEA
+
+You can use any code editor you prefer for this tutorial. We recommend https://www.jetbrains.com/idea/[IntelliJ] from JetBrains.
+
+1. https://www.jetbrains.com/idea/download/[install IntelliJ]
+2. add the Scala plugin from __Preferences__ menu
+3. open the `shopping-cart-service/build.sbt` from __File > Open__.
+4. select __Open as project__
 
 == Docker and Docker Compose
 [#docker]
 
-See the instructions for installing https://docs.docker.com/get-docker/[Docker {tab-icon}, window="new"] and https://docs.docker.com/compose/install/[Docker Compose {tab-icon}, window="tab"] on your platform. 
+This tutorial uses Cassandra and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[Docker] https://docs.docker.com[{tab-icon}, window="tab"]. The template project includes a https://docs.docker.com/compose/[Docker Compose]  https://docs.docker.com/compose/[{tab-icon}, window="tab"] file on its root you can use to run Cassandra and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
 
-== Downloadable example source
+After installing `docker` and `docker-compose`, you can run the following command at the root of the project:
 
-We encourage entering the code described in the tutorial, even if you just copy and paste. If you get stuck or prefer to skip over some parts you can download a zip file containing the complete source code for each part of the tutorial.
 
-ifdef::todo[TODO: download link]
+// tag::docker[]
+----
+docker-compose up -d
+----
 
-ifdef::review[REVIEWERS: in the new UI template that we will have soon, each page will have a next and previous link with the full page title. The Learn More section can still appear but it makes sense for it not to include the next page.]
+Create the Cassandra keyspace and tables with:
 
-== Configuring for local development
+----
+docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_tables.cql
+----
 
-ifdef::review[REVIEWERS: I was not sure whether this section belongs here or where they actually will need to use it. I found the following confusing, it says that the template includes the config for running locally, but then in sentence #3, it says when running locally, some config properties must be overridden? Then it says those properties "are placed" in the file, by whom? Are they there or do I need to put them there? I'll find out when I try, but just wanted to point out that this is confusing.]
+This CQL script is located inside the `ddl-scripts` at the root of the project. It will create the keyspace and all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
 
-The template project comes with configuration for running the application locally. By default, when using `sbt run` the `Main` class will start an `ActorSystem` with the default `application.conf`. When running locally some configuration properties must be overridden. Those local configuration properties are placed in the `local1.conf` file and you can run the application with this configuration with:
+[CAUTION]
+====
+* The keyspace as created by the script is probably not what you need in a production environment. This is good enough for local development though.
+====
 
-[source,shell script]
+// tag::dockerImportant[]
+[IMPORTANT]
+====
+* When loading the CQL script, make sure to use the same name as your running Cassandra container name. The container name is not fixed and depends on the parent folder of the docker-compose file. The above example assumes the project was created using the seed template and named `shopping-cart-service`.
+
+* If you get a connection error with the message *_Unable to connect to any servers_*, it means the Cassandra container is still starting. Wait a few seconds and re-try the command.
+====
+// end::dockerImportant[]
+// end::docker[]
+
+== Config for local development
+
+The <<Template project>> comes with configuration for running the application locally. By default, when using `sbt run` the `Main` class will start an `ActorSystem` with the default `application.conf`. When running locally some configuration properties must be overridden. Those local configuration properties are placed in the `local1.conf` file and you can run the application with this configuration with:
+
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
 
 The `local1.conf` includes the `application.conf`. There are also `local2.conf`, `local3.conf`, and so on. Those define settings for additional Akka Cluster nodes. For example, a second node can be started with:
 
-[source,shell script]
 ----
 sbt -Dconfig.resource=local2.conf run
 ----
 
 When you develop several services you have to adjust the port numbers in those files. Each node (`ActorSystem`) must use unique ports when running several on the same machine.
-
 
 The example projects are using the following ports.
 
@@ -153,7 +179,12 @@ The example projects are using the following ports.
 |===
 
 
+== grpcurl
+
+https://github.com/fullstorydev/grpcurl[grpcurl] is useful for making gRPC calls from the command line. It is used in the tutorial and it's recommended that you https://github.com/fullstorydev/grpcurl#installation[install] it.
+
+
 == Learn more
 
-* Next, xref:template.adoc[get your project] set up.
+* In xref:grpc-server.adoc[**next step**] of the tutorial you will create the first gRPC service.
 * Revisit the overview in xref:overview.adoc[previous step].

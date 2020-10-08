@@ -1,8 +1,5 @@
-
 = Introduction: Traditional architectures versus Reactive Microsystems
-:toc:
-:toc-title: ON THIS PAGE
-:toclevels: 3
+:page-toclevels: 3
 
 include::partial$include.adoc[]
 
