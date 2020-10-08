@@ -12,7 +12,7 @@ To communicate the API consistently, we recommend using schema-first approaches.
 
 == Synchronous Services
 
-In the first steps of the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial], the tutorial illustrates building service APIs for synchronous communication for use cases which require an instant reply. Most often synchronous communication send a single request and expects a single reply. Other cases open communication channels for continued communication with possibly ongoing replies.
+The first steps of the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] illustrate building service APIs for synchronous communication for use cases which require an instant reply. Most often, synchronous communication sends a single request and expects a single reply. Other cases open communication channels for continued communication with possibly ongoing replies.
 
 Synchronous communication gives results and errors immediately so the client can react before continuing its processing, but that often means the client doesn't progress until it received the response.
 
