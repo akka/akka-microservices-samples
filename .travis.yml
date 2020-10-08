@@ -12,6 +12,10 @@ before_install:
   - . ~/.jabba/jabba.sh
   - jabba install ${JDK:=adopt@~1.11-0}
   - jabba use ${JDK:=adopt@~1.11-0}
+  - wget https://archive.apache.org/dist/maven/maven-3/3.6.1/binaries/apache-maven-3.6.1-bin.zip
+  - unzip -qq apache-maven-3.6.1-bin.zip
+  - export M2_HOME=$PWD/apache-maven-3.6.1
+  - export PATH=$M2_HOME/bin:$PATH
 
 # default script for jobs, that do not have any specified
 script:
@@ -26,15 +30,20 @@ jobs:
       env:
         DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala"
         CMD="test; scalafmtCheckAll"
-      name: "Shopping analytics service"
+      name: "Shopping analytics service Scala"
     - env:
         DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala"
         CMD="test; scalafmtCheckAll"
-      name: "Shopping cart service"
+      name: "Shopping cart service Scala"
+    - env:
+        DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-java"
+      script:
+        - mvn test
+      name: "Shopping cart service Java"
     - env:
         DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala"
         CMD="test; scalafmtCheckAll"
-      name: "Shopping order service"
+      name: "Shopping order service Scala"
 
     - env:
         DIR="docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-scala"
