@@ -179,7 +179,7 @@ public class IntegrationTest {
 
         // wait for all nodes to have joined the cluster, become up and see all other nodes as up
         TestProbe<Object> upProbe = testNode1.testKit.createTestProbe();
-        systems.stream().forEach(system -> {
+        systems.forEach(system -> {
             upProbe.awaitAssert(() -> {
                 Cluster cluster = Cluster.get(system);
                 assertEquals(MemberStatus.up(), cluster.selfMember().status());
@@ -214,7 +214,7 @@ public class IntegrationTest {
 
     @Test
     public void updateAndProjectFromDifferentNodesViaGrpc() throws Exception {
-        // add from client1, consume event on node3
+        // add from client1
         CompletionStage<Cart> response1 = testNode1.getClient().addItem(
                 AddItemRequest.newBuilder()
                         .setCartId("cart-1")
@@ -231,7 +231,7 @@ public class IntegrationTest {
         assertEquals("foo", published1.getItemId());
         assertEquals(42, published1.getQuantity());
 
-        // add from client2, consume event on node3
+        // add from client2
         CompletionStage<Cart> response2 = testNode2.getClient().addItem(
                 AddItemRequest.newBuilder()
                         .setCartId("cart-2")
@@ -243,7 +243,7 @@ public class IntegrationTest {
         assertEquals("bar", updatedCart2.getItems(0).getItemId());
         assertEquals(17, updatedCart2.getItems(0).getQuantity());
 
-        // update from client2, consume event on node3
+        // update from client2
         CompletionStage<Cart> response3 = testNode2.getClient().updateItem(UpdateItemRequest.newBuilder()
                 .setCartId("cart-2")
                 .setItemId("bar")
