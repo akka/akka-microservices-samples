@@ -18,7 +18,7 @@ Synchronous communication gives results and errors immediately so the client can
 
 === gRPC
 
-xref:grpc-services.adoc[gRPC services] use Protobuf as their language-agnostic schema and which translate to efficient serialization.
+xref:grpc-services.adoc[gRPC services] use Protobuf as their language-agnostic schema which translates to efficient serialization.
 Protobuf can also be used as a serialization format for messages on Kafka topics. So that both producer and consumer agree on the format.
 
 Akka gRPC adds plug-ins to the build system of the application to generate Java or Scala classes corresponding to the Protobuf schema.
