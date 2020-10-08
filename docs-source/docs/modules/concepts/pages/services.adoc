@@ -60,5 +60,5 @@ ifdef::todo[TODO: Service descriptor agnostic to transport?]
 
 A Service may experience transient failure or degradation due to excessive load, GC pauses, etc... in that case, clients will retry the failed request, which will increase the load. Instead, in order to let the service recover from the transient failure as fast as possible, clients should use xref:circuit-breakers.adoc[Circuit Breakers].
 
-ifdef::todo[== Structuring our Service]
-ifdef::todo[Anti-corruption layer]
+ifdef::todo[== TODO: Structuring our Service]
+ifdef::todo[TODO: Anti-corruption layer (link to DDD.adoc)]
