@@ -10,11 +10,11 @@ ifdef::review[REVIEWERS: I edited this page to remove repetitive words/concepts/
 
 This tutorial illustrates how microservices can interact to implement a shopping cart system. It demonstrates use of the following Akka Platform features:
 
-- {akka}/typed/cluster-sharding.html[Akka Cluster Sharding] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"]: to distribute processing
-- {akka-persistence-cassandra}/[Akka Persistence Cassandra] {akka-persistence-cassandra}/[{tab-icon}, window="tab"]: to use Event Sourcing
-- {akka-projection}/[Akka Projections] {akka-projection}/[{tab-icon}, window="tab"]: to enable CQRS
-- {akka-grpc}/[Akka gRPC] {akka-grpc}/[{tab-icon}, window="tab"]: to implement a gRPC service API
-- {akka-management}/[Akka Management] {akka-management}/[{tab-icon}, window="tab"]: for health checks
+* Akka Cluster Sharding: to distribute processing
+* Akka Persistence Cassandra: to use Event Sourcing
+* Akka Projections: to enable CQRS
+* Akka gRPC: to implement a gRPC service API
+* Akka Management: for health checks
 
 
 
@@ -23,3 +23,14 @@ The topics listed below show how to build the services piece by piece, from scra
 ifdef::review[REVIEWERS: Not sure why the page listing is in a partial, there isn't a use case for sharing it (including in multiple places), is there?]
 
 include::partial$listing.adoc[]
+
+== Learn more
+
+The following links provide more information about the Akka Platform features mentioned above:
+
+* {akka}/typed/cluster-sharding.html[Akka Cluster Sharding {tab-icon}, window="tab"]
+* {akka-persistence-cassandra}/[Akka Persistence Cassandra {tab-icon}, window="tab"]
+* {akka-projection}/[Akka Projections {tab-icon}, window="tab"]
+* {akka-grpc}/[Akka gRPC {tab-icon}, window="tab"]
+* {akka-management}/[Akka Management {tab-icon}, window="tab"]
+

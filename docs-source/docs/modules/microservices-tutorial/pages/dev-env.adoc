@@ -5,11 +5,10 @@
 
 include::ROOT:partial$include.adoc[]
 
-ifdef::review:[REVIEWERS: I'm assuming you will also supply instructions for Java? I've organized so that would be easy to do.]
 
 To follow tutorial steps you will need a code editor, a build tool, and `grpcurl` (a CLI for sending gRPC calls). You can use your preferred code editor. We provide the steps for using https://www.jetbrains.com/idea/[IntelliJ IDEA {tab-icon}, window="tab"] from JetBrains. For the Scala version of the example, we use `sbt` as the build tool. 
 
-This tutorial uses Cassandra and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[{tab-icon}, window="tab"]. The template project includes a https://docs.docker.com/compose/[Docker Compose]  https://docs.docker.com/compose/[{tab-icon}, window="tab"] file on its root you can use to run Cassandra and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
+This tutorial uses Cassandra and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[Docker {tab-icon}, window="tab"]. The template project's root directory includes a https://docs.docker.com/compose/[Docker Compose] https://docs.docker.com/compose/[{tab-icon}, window="tab"] file that you can use to run Cassandra and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
 
 The following sections provide links for downloading and installing:
 
@@ -29,8 +28,8 @@ We also provide downloadable versions of the example at different phases of comp
 
 To install IntelliJ and prepare to develop the Scala example, follow these steps:
  
-. https://www.jetbrains.com/idea/download/[install IntelliJ]
-. From the *Preferences* menu, add the `sbt` plugin.
+. Download and install https://www.jetbrains.com/idea/download/[IntelliJ {tab-icon}, window="tab"].
+. From the *Preferences* menu, add the *Scala* plugin.
 
 == The sbt tool
 
@@ -52,7 +51,7 @@ sbt:shopping-cart-service> test
 
 == The grpcurl tool
 
-The https://github.com/fullstorydev/grpcurl[grpcurl {tab-icon}, window="tab"] tab is useful for making gRPC calls from the command line. It is used in tutorial procedures and we recommend that you install it as described in https://github.com/fullstorydev/grpcurl#installation[the grpcurl documentation {tab-icon}, window="tab"].
+The https://github.com/fullstorydev/grpcurl[grpcurl {tab-icon}, window="tab"] tool is useful for making gRPC calls from the command line. It is used in tutorial procedures and we recommend that you install it as described in https://github.com/fullstorydev/grpcurl#installation[the grpcurl documentation {tab-icon}, window="tab"].
 
 == Docker and Docker Compose
 [#docker]
@@ -65,7 +64,7 @@ We encourage entering the code described in the tutorial, even if you just copy 
 
 ifdef::todo[TODO: download link]
 
-ifdef::review:[REVIEWERS: in the new UI template that we will have soon, each page will have a next and previous link with the full page title, which will eliminate the need for the Learn More section, unless you have links other than to the next and prev that you want to supply. I've left them in for now.]
+ifdef::review[REVIEWERS: in the new UI template that we will have soon, each page will have a next and previous link with the full page title. The Learn More section can still appear but it makes sense for it not to include the next page.]
 
 == Configuring for local development
 

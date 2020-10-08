@@ -19,7 +19,7 @@ You will learn how to:
 * send requests from the gRPC service implementation to the entities
 * update the deployment from the previous step
 
-ifdef::review[REVIEWERS: re: bullet 3 above, I didn't see any explanation of how to distribute entities in the rest of the page. Maybe because it's part of deploying in the cloud, which isn't written yet? But isn't this something that we should introduce and motivate in the overview of this page? That is why it's a good think to distribute the entities and how Akka makes it easy for you to do with cluster sharding?]
+ifdef::review[REVIEWERS: re: bullet 3 above, the Initialization section only contains a brief statement about distributing among nodes. I think we should introduce and motivate use in the overview of this page or maybe in the architectural overview to explain that this is one thing that helps us achieve Reactive?]
 
 If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sourcing.adoc[Event Sourcing] section for an explanation.
 

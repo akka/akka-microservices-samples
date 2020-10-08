@@ -1,19 +1,19 @@
 :page-partial:
 
-xref:microservices-tutorial:overview.adoc[Shopping Cart example architecture]
+xref:microservices-tutorial:overview.adoc[]
 
-xref:microservices-tutorial:dev-env.adoc[I: Set up your dev environment]
+xref:microservices-tutorial:dev-env.adoc[]
 
-xref:microservices-tutorial:template.adoc[II: Start a project]
+xref:microservices-tutorial:template.adoc[]
 
-xref:microservices-tutorial:grpc-server.adoc[III: Create the Cart service]
+xref:microservices-tutorial:grpc-service.adoc[]
 
-xref:microservices-tutorial:entity.adoc[IV: Create Event Sourced Cart entity]
+xref:microservices-tutorial:entity.adoc[]
 
-xref:microservices-tutorial:complete-entity.adoc[Complete Event Sourced entity]
+xref:microservices-tutorial:complete-entity.adoc[]
 
-xref:microservices-tutorial:projection-query.adoc[Projection for queries]
+xref:microservices-tutorial:projection-query.adoc[]
 
-xref:microservices-tutorial:projection-kafka.adoc[Projection publishing to Kafka]
+xref:microservices-tutorial:projection-kafka.adoc[]
 
-xref:microservices-tutorial:projection-grpc-client.adoc[Projection calling gRPC service]
+xref:microservices-tutorial:projection-grpc-client.adoc[]

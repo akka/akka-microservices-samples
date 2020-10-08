@@ -5,7 +5,7 @@
 
 include::ROOT:partial$include.adoc[]
 
-This tutorial shows how to build the functionality for a Shopping Cart system. When complete, end users will be able to add items to a cart and checkout, creating an order. Analytics also measure item popularity based on the quantity sold. As shown in the following illustration, the system includes three services that use xref:concepts:grpc-services.adoc[gRPC] as a transport mechanism: Cart, Order, and Analytics. 
+This tutorial shows how to build the functionality for a Shopping Cart system. When complete, end users will be able to add items to a cart and checkout, creating an order. As shown in the following illustration, the system includes three services that use xref:concepts:grpc-services.adoc[gRPC] and Kafka as transport mechanisms: Cart, Order, and Analytics. 
 
 image::example-overview.png[Example overview]
 
@@ -20,16 +20,18 @@ Follow these main steps to build functionality a bit at a time and deploy to the
 
 ifdef::review[REVIEWERS: with the next and prev buttons in the new template, not sure that we need the full list of reproduced here again?]
 
-xref:dev-env.adoc[I. Set up your development environment]
+xref:dev-env.adoc[]
 
-xref:grpc-server.adoc[II. First gRPC service]
+xref:template.adoc[]
 
-xref:entity.adoc[III. Event Sourced entity]
+xref:grpc-service.adoc[]
 
-xref:complete-entity.adoc[IV. Complete Event Sourced entity]
+xref:entity.adoc[]
 
-xref:projection-query.adoc[Projection for queries]
+xref:complete-entity.adoc[]
 
-xref:projection-kafka.adoc[Projection publishing to Kafka]
+xref:projection-query.adoc[]
 
-xref:projection-grpc-client.adoc[Projection calling gRPC service]
+xref:projection-kafka.adoc[]
+
+xref:projection-grpc-client.adoc[]
