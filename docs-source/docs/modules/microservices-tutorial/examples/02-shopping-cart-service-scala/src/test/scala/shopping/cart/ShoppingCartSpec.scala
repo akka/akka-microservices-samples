@@ -18,7 +18,7 @@ object ShoppingCartSpec {
 }
 
 class ShoppingCartSpec
-  extends ScalaTestWithActorTestKit(ShoppingCartSpec.config)
+    extends ScalaTestWithActorTestKit(ShoppingCartSpec.config)
     with AnyWordSpecLike
     with BeforeAndAfterEach {
 

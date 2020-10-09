@@ -15,10 +15,7 @@ import akka.http.scaladsl.model.HttpResponse
 
 object ShoppingCartServer {
 
-  def start(
-      interface: String,
-      port: Int,
-      system: ActorSystem[_]): Unit = {
+  def start(interface: String, port: Int, system: ActorSystem[_]): Unit = {
     implicit val sys: ActorSystem[_] = system
     implicit val ec: ExecutionContext = system.executionContext
 
@@ -26,7 +23,8 @@ object ShoppingCartServer {
       ServiceHandler.concatOrNotFound(
         proto.ShoppingCartServiceHandler.partial(new ShoppingCartServiceImpl),
         // ServerReflection enabled to support grpcurl without import-path and proto parameters
-        ServerReflection.partial(List(proto.ShoppingCartService))) // <1>
+        ServerReflection.partial(List(proto.ShoppingCartService))
+      ) // <1>
 
     val bound =
       Http().newServerAt(interface, port).bind(service).map(_.addToCoordinatedShutdown(3.seconds)) // <2>
