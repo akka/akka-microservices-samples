@@ -35,6 +35,7 @@ jobs:
         DIR="docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-java"
       script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-java
+        - docker-compose up -d
         - mvn test
       name: "Shopping cart service Java"
     - env:
