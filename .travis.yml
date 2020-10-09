@@ -51,7 +51,7 @@ jobs:
         - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
       name: "03 Shopping cart service"
     - script:
-        - cd docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala"
+        - cd docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala
         - docker-compose up -d
         - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
       name: "04 Shopping cart service"
@@ -71,8 +71,10 @@ jobs:
       name: "Howto cleanup dependencies"
 
     - script:
+        - set -e
         - scripts/copy-identical-files.sh
         - git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
+        - set +e
       name: "copy-identical-files"
 
     - stage: site
@@ -82,8 +84,10 @@ jobs:
 
     - stage: publish
       script:
+        - set -e
         - scripts/prepare-downloads.sh
         - scripts/deploy-site.sh
+        - set +e
       name: "Publish snapshot site"
 
 stages:
