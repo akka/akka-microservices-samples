@@ -21,13 +21,13 @@ Global / cancelable := false // ctrl-c
 // For akka management snapshot
 resolvers += Resolver.bintrayRepo("akka", "snapshots")
 
-val AkkaVersion = "2.6.9"
+val AkkaVersion = "2.6.10"
 val AkkaHttpVersion = "10.2.0"
 // FIXME once akka management 1.0.9 is released
 val AkkaManagementVersion = "1.0.8+35-9feaa689+20200825-1429"
 
 // tag::remove-akka-persistence-cassandra-version[]
-val AkkaPersistenceCassandraVersion = "1.0.2"
+val AkkaPersistenceCassandraVersion = "1.0.3"
 // end::remove-akka-persistence-cassandra-version[]
 // tag::add-akka-persistence-jdbc-version[]
 val AkkaPersistenceJdbcVersion = "4.0.0"

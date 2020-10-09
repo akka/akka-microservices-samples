@@ -19,13 +19,12 @@ Global / cancelable := false // ctrl-c
 
 // For akka management snapshot
 resolvers += Resolver.bintrayRepo("akka", "snapshots")
-resolvers += "akka-snapshot-repository".at("https://repo.akka.io/snapshots")
 
-val AkkaVersion = "2.6.9+70-58b1c30c"
+val AkkaVersion = "2.6.10"
 val AkkaHttpVersion = "10.2.0"
 // FIXME once akka management 1.0.9 is released
 val AkkaManagementVersion = "1.0.8+35-9feaa689+20200825-1429"
-val AkkaPersistenceCassandraVersion = "1.0.2"
+val AkkaPersistenceCassandraVersion = "1.0.3"
 val AlpakkaKafkaVersion = "2.0.5"
 val AkkaProjectionVersion = "1.0.0"
 
