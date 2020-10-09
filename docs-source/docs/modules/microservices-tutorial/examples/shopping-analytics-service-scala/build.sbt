@@ -38,11 +38,6 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
 
-  // need this explicit because usign Akka Snapshot - mixed version issues
-  // TODO: remove when back to stable release
-  "com.typesafe.akka" %% "akka-coordination" % AkkaVersion,
-  "com.typesafe.akka" %% "akka-cluster-tools" % AkkaVersion,
-  
   // Akka Management powers Health Checks and Akka Cluster Bootstrapping
   "com.lightbend.akka.management" %% "akka-management" % AkkaManagementVersion,
   "com.typesafe.akka" %% "akka-http" % AkkaHttpVersion,
