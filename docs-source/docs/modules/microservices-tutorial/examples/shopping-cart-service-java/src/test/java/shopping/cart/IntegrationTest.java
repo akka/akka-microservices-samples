@@ -180,7 +180,7 @@ public class IntegrationTest {
         // wait for all nodes to have joined the cluster, become up and see all other nodes as up
         TestProbe<Object> upProbe = testNode1.testKit.createTestProbe();
         systems.forEach(system -> {
-            upProbe.awaitAssert(() -> {
+            upProbe.awaitAssert(Duration.ofSeconds(15), () -> {
                 Cluster cluster = Cluster.get(system);
                 assertEquals(MemberStatus.up(), cluster.selfMember().status());
                 cluster.state().getMembers().iterator().forEachRemaining(member ->
@@ -195,9 +195,9 @@ public class IntegrationTest {
 
     @AfterClass
     public static void tearDown() {
-        testNode1.testKit.shutdownTestKit();
-        testNode2.testKit.shutdownTestKit();
         testNode3.testKit.shutdownTestKit();
+        testNode2.testKit.shutdownTestKit();
+        testNode1.testKit.shutdownTestKit();
     }
 
 
