@@ -34,7 +34,7 @@ To create a new page, start your file with a title and select from the following
 
 :page-toclevels: 3 //overide number of toc levels, default is 2. To turn off toc at page level set to -1
 
-:!page-supergroup-scala-java: Language //remove '!' to enable tabbed example boxes for scala and java
+:!page-supergroup-java-scala: Language //remove '!' to enable tabbed example boxes for scala and java
 :!page-supergroup-sbt-maven: Build Tool //remove '!' to enable tabbed example boxes for sbt and maven
 :!page-supergroup-sbt-maven-gradle: Build Tool  //remove '!' to enable tabbed example boxes for sbt, maven, and gradle
 :!page-supergroup-minishift-minikube: Platform  //remove '!' to enable tabbed example boxes for Minishift and Minikube
