@@ -60,8 +60,9 @@ class ItemPopularityIntegrationSpec
     with AnyWordSpecLike {
 
   private lazy val itemPopularityRepository = {
-    val session = CassandraSessionRegistry(system)
-      .sessionFor("akka.persistence.cassandra")
+    val session =
+      CassandraSessionRegistry(system).sessionFor(
+        "akka.persistence.cassandra")
     // use same keyspace for the item_popularity table as the offset store
     val itemPopularityKeyspace =
       system.settings.config.getString(

@@ -21,8 +21,9 @@ object CreateTableTestUtils {
     // use same keyspace for the item_popularity table as the offset store
     val keyspace = system.settings.config.getString(
       "akka.projection.cassandra.offset-store.keyspace")
-    val session = CassandraSessionRegistry(system)
-      .sessionFor("akka.persistence.cassandra")
+    val session =
+      CassandraSessionRegistry(system).sessionFor(
+        "akka.persistence.cassandra")
 
     Await.result(
       session.executeDDL(

@@ -40,10 +40,11 @@ class ShoppingCartSpec
   "The Shopping Cart" should {
 
     "add item" in {
-      val result1 = eventSourcedTestKit
-        .runCommand[StatusReply[ShoppingCart.Summary]](
-          replyTo =>
-            ShoppingCart.AddItem("foo", 42, replyTo))
+      val result1 =
+        eventSourcedTestKit
+          .runCommand[StatusReply[ShoppingCart.Summary]](
+            replyTo =>
+              ShoppingCart.AddItem("foo", 42, replyTo))
       result1.reply should ===(
         StatusReply.Success(ShoppingCart
           .Summary(Map("foo" -> 42), checkedOut = false)))
@@ -70,9 +71,10 @@ class ShoppingCartSpec
           .runCommand[StatusReply[ShoppingCart.Summary]](
             ShoppingCart.AddItem("foo", 42, _))
       result1.reply.isSuccess should ===(true)
-      val result2 = eventSourcedTestKit
-        .runCommand[StatusReply[ShoppingCart.Summary]](
-          ShoppingCart.RemoveItem("foo", _))
+      val result2 =
+        eventSourcedTestKit
+          .runCommand[StatusReply[ShoppingCart.Summary]](
+            ShoppingCart.RemoveItem("foo", _))
       result2.reply should ===(
         StatusReply.Success(ShoppingCart
           .Summary(Map.empty, checkedOut = false)))
