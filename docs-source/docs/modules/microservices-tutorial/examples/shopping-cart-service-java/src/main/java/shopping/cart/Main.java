@@ -68,9 +68,11 @@ public class Main extends AbstractBehavior<Void> {
         // tag::SendOrderProjection[]
         ShoppingOrderService orderService = orderServiceClient(system);
         SendOrderProjection.init(system, orderService);
+        // end::SendOrderProjection[]
     }
 
     // can be overridden in tests
+    // tag::SendOrderProjection[]
     protected ShoppingOrderService orderServiceClient(ActorSystem<?> system) {
         GrpcClientSettings orderServiceClientSettings =
                 GrpcClientSettings

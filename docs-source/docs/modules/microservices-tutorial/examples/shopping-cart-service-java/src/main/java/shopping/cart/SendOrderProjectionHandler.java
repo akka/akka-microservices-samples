@@ -28,7 +28,7 @@ public final class SendOrderProjectionHandler extends Handler<EventEnvelope<Shop
     private final Duration timeout;
     private final ShoppingOrderService orderService;
 
-    public SendOrderProjectionHandler(ActorSystem<?> system, ShoppingOrderService orderService) { // <1> FIXME or on class decl?
+    public SendOrderProjectionHandler(ActorSystem<?> system, ShoppingOrderService orderService) { // <1>
         sharding = ClusterSharding.get(system);
         timeout = system.settings().config().getDuration("shopping-cart-service.ask-timeout");
         this.orderService = orderService;

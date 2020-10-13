@@ -31,13 +31,35 @@ Commands are the "external" API of an entity. The state of the entity can be cha
 ifdef::review[REVIEWERS: again my scala ignorance is showing, but will the reader know that they define an object in a separate file and what to name it and where to put it?]
 
 . Define a `ShoppingCart` object and the `AddItem` command:
+
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 +
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;commands]
 ----
 
+[start=2]
 . Add a corresponding `ItemAdded` event:
+
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
 +
 [source,scala]
 ----
@@ -48,6 +70,16 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 The state of the `ShoppingCart` contains a `Map` of items that have been added to the cart. Add this to the `ShoppingCart` object.
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;state]
@@ -57,6 +89,16 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 Implement the Event Sourced entity with the `EventSourcedBehavior`. Define the command handlers:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;commandHandler]
@@ -81,6 +123,16 @@ The events are continuously persisted to the Event Journal datastore, while the 
 
 Aligning with the command handler above, the entity's event handler reacts on events and updates the state. Notice that there are no decisions on events, they are applied without any checks.
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;eventHandler]
@@ -90,6 +142,16 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 To glue this together we need some initialization code:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;init]
@@ -105,6 +167,16 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 Then you need to call the `ShoppingCart.init` from `Main.scala`:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=ShoppingCart]
@@ -118,6 +190,16 @@ The state, commands and events are marked as `CborSerializable` which is configu
 
 The template project includes this marker interface `CborSerializable`:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/CborSerializable.scala[]
@@ -136,6 +218,16 @@ To test the `ShoppingCart` entity you can write a unit test using the `EventSour
 
 A test for the `AddItem` command looks like this in `src/test/scala/shopping/cart/ShoppingCartSpec.scala`:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[]
@@ -143,6 +235,7 @@ include::example$02-shopping-cart-service-scala/src/test/scala/shopping/cart/Sho
 
 Run the test with:
 
+[source,shell script]
 ----
 sbt test
 ----
@@ -153,6 +246,16 @@ You can learn more about the `EventSourcedBehaviorTestKit` in the {akka}/typed/p
 
 We want to send commands to the entities from the gRPC service implementation. In the xref:grpc-server.adoc[previous step] we wrote a dummy implementation of `addItem` in the `ShoppingCartServiceImpl`. You can now replace that with sending `ShoppingCart.AddItem` command from `ShoppingCartServiceImpl`.
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[]
@@ -186,18 +289,21 @@ include::template.adoc[tag=docker]
 
 Run the service with:
 
+[source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
 
 Try it with `grpcurl`. Add 3 socks to a cart:
 
+[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
 Try the validation logic by trying to add the same item again, which should result in an error:
 
+[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
@@ -206,6 +312,7 @@ To verify that the events are actually saved, and the state can be recovered fro
 
 Add 2 t-shirts to the same cart:
 
+[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
@@ -214,10 +321,12 @@ Then the returned updated cart should still contain the 3 socks.
 
 Another fun experiment is to start several instances of the service on different ports (2552, 2553) and then interact with different carts via the different gRPC servers (gRPC ports 8101, 8102, 8103).
 
+[source,shell script]
 ----
 sbt -Dconfig.resource=local2.conf run
 ----
 
+[source,shell script]
 ----
 sbt -Dconfig.resource=local3.conf run
 ----
@@ -226,11 +335,10 @@ You can stop the service with `ctrl-c`.
 
 You can leave Cassandra running or stop it with:
 
+[source,shell script]
 ----
 docker-compose down
 ----
-
-== Deploy
 
 ifdef::todo[TODO deploy the updated version to the cloud and try it]
 

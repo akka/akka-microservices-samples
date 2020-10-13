@@ -72,12 +72,14 @@ ifdef::review[REVIEWERS: I was not sure whether this section belongs here or whe
 
 The template project comes with configuration for running the application locally. By default, when using `sbt run` the `Main` class will start an `ActorSystem` with the default `application.conf`. When running locally some configuration properties must be overridden. Those local configuration properties are placed in the `local1.conf` file and you can run the application with this configuration with:
 
+[source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
 
 The `local1.conf` includes the `application.conf`. There are also `local2.conf`, `local3.conf`, and so on. Those define settings for additional Akka Cluster nodes. For example, a second node can be started with:
 
+[source,shell script]
 ----
 sbt -Dconfig.resource=local2.conf run
 ----

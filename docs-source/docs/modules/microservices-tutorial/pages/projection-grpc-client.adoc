@@ -7,7 +7,7 @@ include::ROOT:partial$include.adoc[]
 
 In this part, we will add another Projection from the events of the `ShoppingCart` entity. This Projection calls another service when the shopping carts are checked out. We will also add the other service, the `ShoppingOrderService` that provides the gRPC service that is called.
 
-.This part of the xref:overview.adoc[full example] will focus on the gRPC client in the `SendOrderProjection` .
+.This part of the xref:overview.adoc[full example] will focus on the gRPC client in the `SendOrderProjection`.
 [caption=""]
 image::example-projection-grpc-client.png[Example gRPC client]
 
@@ -15,7 +15,7 @@ You will learn how to:
 
 * call another service with gRPC
 
-TODO link to synchronous communication concepts
+ifdef::todo[TODO link to synchronous communication concepts]
 
 == Another gRPC service
 
@@ -27,19 +27,30 @@ Adjust the port numbers in the `local1.conf`, `local2.conf`, and `local3.conf` f
 
 First, define the interface of the service in a protobuf service descriptor. It should be located in the `src/main/protobuf/ShoppingOrderService.proto` in the new `shopping-order-service` project.
 
-[source,proto]
+[source,protobuf]
 ----
 include::example$shopping-order-service-scala/src/main/protobuf/ShoppingOrderService.proto[]
 ----
 
 Generate code by compiling the project:
 
+[source,shell script]
 ----
 sbt compile
 ----
 
 Implement the `ShoppingOrderService` in a new class `ShoppingOrderServiceImpl`:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$shopping-order-service-scala/src/main/scala/shopping/order/ShoppingOrderServiceImpl.scala[]
@@ -47,6 +58,16 @@ include::example$shopping-order-service-scala/src/main/scala/shopping/order/Shop
 
 Similar to the xref:grpc-server.adoc[gRPC server for the ShoppingCartService] we need to initialize the gRPC server. Add a `ShoppingOrderServer` object:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$shopping-order-service-scala/src/main/scala/shopping/order/ShoppingOrderServer.scala[]
@@ -54,6 +75,16 @@ include::example$shopping-order-service-scala/src/main/scala/shopping/order/Shop
 
 and call the `ShoppingOrderServer.init` from `Main`:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$shopping-order-service-scala/src/main/scala/shopping/order/Main.scala[]
@@ -67,12 +98,23 @@ The new Projection in the `shopping-cart-service` will be similar to what we dev
 
 First we need to include the service definition. Copy the `ShoppingOrderService.proto` file from the `shopping-order-service` to the `shopping-cart-service/src/main/protobuf` directory and generate code by compiling the `shopping-cart-service` project:
 
+[source,shell script]
 ----
 sbt compile
 ----
 
 Add a `SendOrderProjectionHandler` class that is the Projection `Handler` for processing the events:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+include::example$shopping-cart-service-java/src/main/java/shopping/cart/SendOrderProjectionHandler.java[]
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/SendOrderProjectionHandler.scala[]
@@ -94,6 +136,16 @@ The tagging of the events is already in place from a xref:projection-query.adoc#
 
 Place the initialization code of the Projection in an `SendOrderProjection` object:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+include::example$shopping-cart-service-java/src/main/java/shopping/cart/SendOrderProjection.java[]
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/SendOrderProjection.scala[]
@@ -101,6 +153,16 @@ include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/SendOr
 
 In the `Main` you can invoke the `SendOrderProjection.init` and create the gRPC client for the `ShoppingOrderService` like this:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+include::example$shopping-cart-service-java/src/main/java/shopping/cart/Main.java[tag=SendOrderProjection]
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=SendOrderProjection]
@@ -108,7 +170,7 @@ include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Main.s
 
 The gRPC client is using service discovery to locate the `ShoppingOrderService`. For local development add the following to `src/main/resources/local-shared.conf`, which is loaded when running locally:
 
-[source,conf]
+[source,hocon]
 ----
 include::example$shopping-cart-service-scala/src/main/resources/local-shared.conf[tag=grpc]
 ----
@@ -117,30 +179,35 @@ include::example$shopping-cart-service-scala/src/main/resources/local-shared.con
 
 Start Cassandra and Kafka, unless it's already running:
 
+[source,shell script]
 ----
 docker-compose up -d
 ----
 
 Run the `shopping-order-service` with:
 
+[source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
 
 Try the new order service directly with `grpcurl`:
 
+[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "items":[{"itemId":"socks", "quantity":3}, {"itemId":"t-shirt", "quantity":2}]}' -plaintext 127.0.0.1:8301 shoppingorder.ShoppingOrderService.Order
 ----
 
 Keep the `shopping-order-service` running, and in another terminal run the `shopping-cart-service` with:
 
+[source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
 
 Use the checkout in the shopping cart service with `grpcurl` (note the different port):
 
+[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"scissors", "quantity":1}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 
@@ -152,8 +219,6 @@ In the terminal of the `shopping-order-service` you should see the log of the or
 ----
 Order 12 items from cart cart1
 ----
-
-== Deploy
 
 ifdef::todo[TODO: deploy the updated shopping-cart-service and the new shopping-order-service to the cloud and try it]
 
