@@ -1,5 +1,5 @@
 = IV: Create the Event Sourced Cart entity
-:page-supergroup-scala-java: Language
+:page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
 

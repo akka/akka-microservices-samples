@@ -1,5 +1,5 @@
 = Part 5: Projection for queries
-:page-supergroup-scala-java: Language
+:page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
 
