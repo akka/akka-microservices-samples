@@ -16,11 +16,15 @@ import shopping.order.proto.ShoppingOrderService
 
 object SendOrderProjection {
 
-  def init(system: ActorSystem[_], orderService: ShoppingOrderService): Unit = {
+  def init(
+      system: ActorSystem[_],
+      orderService: ShoppingOrderService): Unit = {
     ShardedDaemonProcess(system).init(
       name = "SendOrderProjection",
       ShoppingCart.tags.size,
-      index => ProjectionBehavior(createProjectionFor(system, orderService, index)),
+      index =>
+        ProjectionBehavior(
+          createProjectionFor(system, orderService, index)),
       ShardedDaemonProcessSettings(system),
       Some(ProjectionBehavior.Stop))
   }
@@ -28,18 +32,27 @@ object SendOrderProjection {
   private def createProjectionFor(
       system: ActorSystem[_],
       orderService: ShoppingOrderService,
-      index: Int): AtLeastOnceProjection[Offset, EventEnvelope[ShoppingCart.Event]] = {
+      index: Int): AtLeastOnceProjection[
+    Offset,
+    EventEnvelope[ShoppingCart.Event]] = {
     val tag = ShoppingCart.tags(index)
-    val sourceProvider: SourceProvider[Offset, EventEnvelope[ShoppingCart.Event]] =
+    val sourceProvider: SourceProvider[
+      Offset,
+      EventEnvelope[ShoppingCart.Event]] =
       EventSourcedProvider.eventsByTag[ShoppingCart.Event](
         system = system,
-        readJournalPluginId = CassandraReadJournal.Identifier,
+        readJournalPluginId =
+          CassandraReadJournal.Identifier,
         tag = tag)
 
     CassandraProjection.atLeastOnce(
-      projectionId = ProjectionId("SendOrderProjection", tag),
+      projectionId =
+        ProjectionId("SendOrderProjection", tag),
       sourceProvider,
-      handler = () => new SendOrderProjectionHandler(system, orderService))
+      handler = () =>
+        new SendOrderProjectionHandler(
+          system,
+          orderService))
   }
 
 }

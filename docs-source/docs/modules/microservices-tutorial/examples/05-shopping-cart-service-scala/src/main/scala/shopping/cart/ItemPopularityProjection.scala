@@ -15,11 +15,15 @@ import akka.projection.scaladsl.SourceProvider
 
 object ItemPopularityProjection {
   // tag::howto-read-side-without-role[]
-  def init(system: ActorSystem[_], repository: ItemPopularityRepository): Unit = {
+  def init(
+      system: ActorSystem[_],
+      repository: ItemPopularityRepository): Unit = {
     ShardedDaemonProcess(system).init( // <1>
       name = "ItemPopularityProjection",
       ShoppingCart.tags.size,
-      index => ProjectionBehavior(createProjectionFor(system, repository, index)),
+      index =>
+        ProjectionBehavior(
+          createProjectionFor(system, repository, index)),
       ShardedDaemonProcessSettings(system),
       Some(ProjectionBehavior.Stop))
   }
@@ -28,19 +32,31 @@ object ItemPopularityProjection {
   private def createProjectionFor(
       system: ActorSystem[_],
       repository: ItemPopularityRepository,
-      index: Int): AtLeastOnceProjection[Offset, EventEnvelope[ShoppingCart.Event]] = {
+      index: Int): AtLeastOnceProjection[
+    Offset,
+    EventEnvelope[ShoppingCart.Event]] = {
     val tag = ShoppingCart.tags(index) // <2>
 
-    val sourceProvider: SourceProvider[Offset, EventEnvelope[ShoppingCart.Event]] = // <3>
+    val sourceProvider
+        : SourceProvider[Offset, EventEnvelope[
+          ShoppingCart.Event
+        ]] = // <3>
       EventSourcedProvider.eventsByTag[ShoppingCart.Event](
         system = system,
-        readJournalPluginId = CassandraReadJournal.Identifier, // <4>
+        readJournalPluginId =
+          CassandraReadJournal.Identifier, // <4>
         tag = tag)
 
     CassandraProjection.atLeastOnce( // <5>
-      projectionId = ProjectionId("ItemPopularityProjection", tag),
+      projectionId =
+        ProjectionId("ItemPopularityProjection", tag),
       sourceProvider,
-      handler = () => new ItemPopularityProjectionHandler(tag, system, repository)
+      handler = () =>
+        new ItemPopularityProjectionHandler(
+          tag,
+          system,
+          repository
+        )
     ) // <6>
   }
 

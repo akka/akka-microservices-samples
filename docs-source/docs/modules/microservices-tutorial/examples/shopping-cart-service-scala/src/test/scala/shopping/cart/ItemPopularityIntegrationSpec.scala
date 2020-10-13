@@ -17,7 +17,8 @@ import org.scalatest.wordspec.AnyWordSpecLike
 
 object ItemPopularityIntegrationSpec {
   private val uniqueQualifier = System.currentTimeMillis()
-  private val keyspace = s"ItemPopularityIntegrationSpec_$uniqueQualifier"
+  private val keyspace =
+    s"ItemPopularityIntegrationSpec_$uniqueQualifier"
 
   val config: Config = ConfigFactory
     .parseString(s"""
@@ -54,36 +55,50 @@ object ItemPopularityIntegrationSpec {
 }
 
 class ItemPopularityIntegrationSpec
-    extends ScalaTestWithActorTestKit(ItemPopularityIntegrationSpec.config)
+    extends ScalaTestWithActorTestKit(
+      ItemPopularityIntegrationSpec.config)
     with AnyWordSpecLike {
 
   private lazy val itemPopularityRepository = {
-    val session = CassandraSessionRegistry(system).sessionFor("akka.persistence.cassandra")
+    val session =
+      CassandraSessionRegistry(system).sessionFor(
+        "akka.persistence.cassandra")
     // use same keyspace for the item_popularity table as the offset store
-    val itemPopularityKeyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
-    new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext)
+    val itemPopularityKeyspace =
+      system.settings.config.getString(
+        "akka.projection.cassandra.offset-store.keyspace")
+    new ItemPopularityRepositoryImpl(
+      session,
+      itemPopularityKeyspace)(system.executionContext)
   }
 
   override protected def beforeAll(): Unit = {
     // avoid concurrent creation of keyspace and tables
     val timeout = 10.seconds
-    Await.result(PersistenceInit.initializeDefaultPlugins(system, timeout), timeout)
+    Await.result(
+      PersistenceInit
+        .initializeDefaultPlugins(system, timeout),
+      timeout)
     CreateTableTestUtils.createTables(system)
 
     ShoppingCart.init(system)
 
-    ItemPopularityProjection.init(system, itemPopularityRepository)
+    ItemPopularityProjection.init(
+      system,
+      itemPopularityRepository)
 
     super.beforeAll()
   }
 
   "Item popularity projection" should {
     "init and join Cluster" in {
-      Cluster(system).manager ! Join(Cluster(system).selfMember.address)
+      Cluster(system).manager ! Join(
+        Cluster(system).selfMember.address)
 
       // let the node join and become Up
       eventually {
-        Cluster(system).selfMember.status should ===(MemberStatus.Up)
+        Cluster(system).selfMember.status should ===(
+          MemberStatus.Up)
       }
     }
 
@@ -94,26 +109,45 @@ class ItemPopularityIntegrationSpec
       val item1 = "item1"
       val item2 = "item2"
 
-      val cart1 = sharding.entityRefFor(ShoppingCart.EntityKey, cartId1)
-      val cart2 = sharding.entityRefFor(ShoppingCart.EntityKey, cartId2)
+      val cart1 = sharding.entityRefFor(
+        ShoppingCart.EntityKey,
+        cartId1)
+      val cart2 = sharding.entityRefFor(
+        ShoppingCart.EntityKey,
+        cartId2)
 
-      val reply1: Future[ShoppingCart.Summary] = cart1.askWithStatus(ShoppingCart.AddItem(item1, 3, _))
+      val reply1: Future[ShoppingCart.Summary] =
+        cart1.askWithStatus(
+          ShoppingCart.AddItem(item1, 3, _))
       reply1.futureValue.items.values.sum should ===(3)
 
       eventually {
-        itemPopularityRepository.getItem(item1).futureValue.get should ===(3)
+        itemPopularityRepository
+          .getItem(item1)
+          .futureValue
+          .get should ===(3)
       }
 
-      val reply2: Future[ShoppingCart.Summary] = cart1.askWithStatus(ShoppingCart.AddItem(item2, 5, _))
+      val reply2: Future[ShoppingCart.Summary] =
+        cart1.askWithStatus(
+          ShoppingCart.AddItem(item2, 5, _))
       reply2.futureValue.items.values.sum should ===(3 + 5)
       // another cart
-      val reply3: Future[ShoppingCart.Summary] = cart2.askWithStatus(ShoppingCart.AddItem(item2, 4, _))
+      val reply3: Future[ShoppingCart.Summary] =
+        cart2.askWithStatus(
+          ShoppingCart.AddItem(item2, 4, _))
       reply3.futureValue.items.values.sum should ===(4)
 
       eventually {
-        itemPopularityRepository.getItem(item2).futureValue.get should ===(5 + 4)
+        itemPopularityRepository
+          .getItem(item2)
+          .futureValue
+          .get should ===(5 + 4)
       }
-      itemPopularityRepository.getItem(item1).futureValue.get should ===(3)
+      itemPopularityRepository
+        .getItem(item1)
+        .futureValue
+        .get should ===(3)
     }
 
   }

@@ -68,13 +68,17 @@ object IntegrationSpec {
       ConfigFactory.load("local1")
     ) // pick up local configuration to test it, dynamic ports have been overridden
 
-  private def nodeConfig(grpcPort: Int, managementPorts: Seq[Int], managementPortIndex: Int): Config =
+  private def nodeConfig(
+      grpcPort: Int,
+      managementPorts: Seq[Int],
+      managementPortIndex: Int): Config =
     ConfigFactory.parseString(s"""
       shopping-cart-service.grpc {
         interface = "localhost"
         port = $grpcPort
       }
-      akka.management.http.port = ${managementPorts(managementPortIndex)}
+      akka.management.http.port = ${managementPorts(
+      managementPortIndex)}
       akka.discovery.config.services {
         "shoppingcartservice" {
           endpoints = [
@@ -85,37 +89,64 @@ object IntegrationSpec {
       }
       """)
 
-  class TestNodeFixture(grpcPort: Int, managementPorts: Seq[Int], managementPortIndex: Int) {
+  class TestNodeFixture(
+      grpcPort: Int,
+      managementPorts: Seq[Int],
+      managementPortIndex: Int) {
     val testKit =
       ActorTestKit(
         "IntegrationSpec",
-        nodeConfig(grpcPort, managementPorts, managementPortIndex).withFallback(IntegrationSpec.config).resolve())
+        nodeConfig(
+          grpcPort,
+          managementPorts,
+          managementPortIndex)
+          .withFallback(IntegrationSpec.config)
+          .resolve())
 
     def system: ActorSystem[_] = testKit.system
 
     private val clientSettings =
-      GrpcClientSettings.connectToServiceAt("127.0.0.1", grpcPort)(testKit.system).withTls(false)
+      GrpcClientSettings
+        .connectToServiceAt("127.0.0.1", grpcPort)(
+          testKit.system)
+        .withTls(false)
     lazy val client: proto.ShoppingCartService =
-      proto.ShoppingCartServiceClient(clientSettings)(testKit.system)
+      proto.ShoppingCartServiceClient(clientSettings)(
+        testKit.system)
 
   }
 }
 
-class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll with ScalaFutures with Eventually {
+class IntegrationSpec
+    extends AnyWordSpec
+    with Matchers
+    with BeforeAndAfterAll
+    with ScalaFutures
+    with Eventually {
   import IntegrationSpec.TestNodeFixture
 
   implicit private val patience: PatienceConfig =
-    PatienceConfig(10.seconds, Span(100, org.scalatest.time.Millis))
+    PatienceConfig(
+      10.seconds,
+      Span(100, org.scalatest.time.Millis))
 
   private val (grpcPorts, managementPorts) =
-    SocketUtil.temporaryServerAddresses(6, "127.0.0.1").map(_.getPort).splitAt(3)
+    SocketUtil
+      .temporaryServerAddresses(6, "127.0.0.1")
+      .map(_.getPort)
+      .splitAt(3)
 
   // one TestKit (ActorSystem) per cluster node
-  private val testNode1 = new TestNodeFixture(grpcPorts(0), managementPorts, 0)
-  private val testNode2 = new TestNodeFixture(grpcPorts(1), managementPorts, 1)
-  private val testNode3 = new TestNodeFixture(grpcPorts(2), managementPorts, 2)
+  private val testNode1 =
+    new TestNodeFixture(grpcPorts(0), managementPorts, 0)
+  private val testNode2 =
+    new TestNodeFixture(grpcPorts(1), managementPorts, 1)
+  private val testNode3 =
+    new TestNodeFixture(grpcPorts(2), managementPorts, 2)
 
-  private val systems3 = List(testNode1, testNode2, testNode3).map(_.testKit.system)
+  private val systems3 =
+    List(testNode1, testNode2, testNode3).map(
+      _.testKit.system)
 
   def mainBehavior(): Behavior[Nothing] = {
     Behaviors.setup[Nothing] { context =>
@@ -127,7 +158,11 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
     super.beforeAll()
     // avoid concurrent creation of keyspace and tables
     val timeout = 10.seconds
-    Await.result(PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout), timeout)
+    Await.result(
+      PersistenceInit.initializeDefaultPlugins(
+        testNode1.system,
+        timeout),
+      timeout)
   }
 
   override protected def afterAll(): Unit = {
@@ -139,28 +174,42 @@ class IntegrationSpec extends AnyWordSpec with Matchers with BeforeAndAfterAll w
 
   "Shopping Cart service" should {
     "init and join Cluster" in {
-      testNode1.testKit.spawn[Nothing](mainBehavior(), "guardian")
-      testNode2.testKit.spawn[Nothing](mainBehavior(), "guardian")
-      testNode3.testKit.spawn[Nothing](mainBehavior(), "guardian")
+      testNode1.testKit
+        .spawn[Nothing](mainBehavior(), "guardian")
+      testNode2.testKit
+        .spawn[Nothing](mainBehavior(), "guardian")
+      testNode3.testKit
+        .spawn[Nothing](mainBehavior(), "guardian")
 
       // let the nodes join and become Up
-      eventually(PatienceConfiguration.Timeout(15.seconds)) {
+      eventually(
+        PatienceConfiguration.Timeout(15.seconds)) {
         systems3.foreach { sys =>
-          Cluster(sys).selfMember.status should ===(MemberStatus.Up)
-          Cluster(sys).state.members.unsorted.map(_.status) should ===(Set(MemberStatus.Up))
+          Cluster(sys).selfMember.status should ===(
+            MemberStatus.Up)
+          Cluster(sys).state.members.unsorted
+            .map(_.status) should ===(Set(MemberStatus.Up))
         }
       }
     }
 
     "update from different nodes via gRPC" in {
       // add from client1
-      val response1 = testNode1.client.addItem(proto.AddItemRequest(cartId = "cart-1", itemId = "foo", quantity = 42))
+      val response1 = testNode1.client.addItem(
+        proto.AddItemRequest(
+          cartId = "cart-1",
+          itemId = "foo",
+          quantity = 42))
       val updatedCart1 = response1.futureValue
       updatedCart1.items.head.itemId should ===("foo")
       updatedCart1.items.head.quantity should ===(42)
 
       // add from client2
-      val response2 = testNode2.client.addItem(proto.AddItemRequest(cartId = "cart-2", itemId = "bar", quantity = 17))
+      val response2 = testNode2.client.addItem(
+        proto.AddItemRequest(
+          cartId = "cart-2",
+          itemId = "bar",
+          quantity = 17))
       val updatedCart2 = response2.futureValue
       updatedCart2.items.head.itemId should ===("bar")
       updatedCart2.items.head.quantity should ===(17)

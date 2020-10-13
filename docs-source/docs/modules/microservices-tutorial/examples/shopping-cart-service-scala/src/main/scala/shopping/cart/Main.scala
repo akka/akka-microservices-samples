@@ -9,7 +9,10 @@ import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
 
 // tag::SendOrderProjection[]
-import shopping.order.proto.{ ShoppingOrderService, ShoppingOrderServiceClient }
+import shopping.order.proto.{
+  ShoppingOrderService,
+  ShoppingOrderServiceClient
+}
 import akka.grpc.GrpcClientSettings
 
 // end::SendOrderProjection[]
@@ -30,7 +33,8 @@ object Main {
   }
 }
 
-class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
+class Main(context: ActorContext[Nothing])
+    extends AbstractBehavior[Nothing](context) {
   val system = context.system
   AkkaManagement(system).start()
   ClusterBootstrap(system).start()
@@ -38,19 +42,37 @@ class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](con
   ShoppingCart.init(system)
 
   // tag::ItemPopularityProjection[]
-  val session = CassandraSessionRegistry(system).sessionFor("akka.persistence.cassandra") // <1>
+  val session = CassandraSessionRegistry(system).sessionFor(
+    "akka.persistence.cassandra"
+  ) // <1>
   // use same keyspace for the item_popularity table as the offset store
-  val itemPopularityKeyspace = system.settings.config.getString("akka.projection.cassandra.offset-store.keyspace")
+  val itemPopularityKeyspace =
+    system.settings.config.getString(
+      "akka.projection.cassandra.offset-store.keyspace")
   val itemPopularityRepository =
-    new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(system.executionContext) // <2>
+    new ItemPopularityRepositoryImpl(
+      session,
+      itemPopularityKeyspace)(
+      system.executionContext
+    ) // <2>
 
-  ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
+  ItemPopularityProjection.init(
+    system,
+    itemPopularityRepository
+  ) // <3>
   // end::ItemPopularityProjection[]
 
   val grpcInterface =
-    system.settings.config.getString("shopping-cart-service.grpc.interface")
-  val grpcPort = system.settings.config.getInt("shopping-cart-service.grpc.port")
-  ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository)
+    system.settings.config
+      .getString("shopping-cart-service.grpc.interface")
+  val grpcPort =
+    system.settings.config
+      .getInt("shopping-cart-service.grpc.port")
+  ShoppingCartServer.start(
+    grpcInterface,
+    grpcPort,
+    system,
+    itemPopularityRepository)
 
   // tag::PublishEventsProjection[]
   PublishEventsProjection.init(system)
@@ -61,15 +83,19 @@ class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](con
   SendOrderProjection.init(system, orderService)
 
   // can be overridden in tests
-  protected def orderServiceClient(system: ActorSystem[_]): ShoppingOrderService = {
+  protected def orderServiceClient(
+      system: ActorSystem[_]): ShoppingOrderService = {
     val orderServiceClientSettings =
       GrpcClientSettings
         .connectToServiceAt(
-          system.settings.config.getString("shopping-order-service.host"),
-          system.settings.config.getInt("shopping-order-service.port"))(system)
+          system.settings.config.getString(
+            "shopping-order-service.host"),
+          system.settings.config.getInt(
+            "shopping-order-service.port"))(system)
         .withTls(false)
     val orderServiceClient =
-      ShoppingOrderServiceClient(orderServiceClientSettings)(system)
+      ShoppingOrderServiceClient(
+        orderServiceClientSettings)(system)
     orderServiceClient
   }
   // end::SendOrderProjection[]

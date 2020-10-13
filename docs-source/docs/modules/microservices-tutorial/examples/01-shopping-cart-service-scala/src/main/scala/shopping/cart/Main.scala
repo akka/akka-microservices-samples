@@ -11,7 +11,10 @@ import akka.management.scaladsl.AkkaManagement
 object Main {
 
   def main(args: Array[String]): Unit = {
-    ActorSystem[Nothing](Main(), "ShoppingCartService") // <1>
+    ActorSystem[Nothing](
+      Main(),
+      "ShoppingCartService"
+    ) // <1>
   }
 
   def apply(): Behavior[Nothing] = {
@@ -19,16 +22,24 @@ object Main {
   }
 }
 
-class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
+class Main(context: ActorContext[Nothing])
+    extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
   AkkaManagement(system).start() // <2>
   ClusterBootstrap(system).start()
 
-  val grpcInterface = system.settings.config.getString("shopping-cart-service.grpc.interface")
-  val grpcPort = system.settings.config.getInt("shopping-cart-service.grpc.port")
-  ShoppingCartServer.start(grpcInterface, grpcPort, system) // <3>
+  val grpcInterface = system.settings.config
+    .getString("shopping-cart-service.grpc.interface")
+  val grpcPort = system.settings.config
+    .getInt("shopping-cart-service.grpc.port")
+  ShoppingCartServer.start(
+    grpcInterface,
+    grpcPort,
+    system
+  ) // <3>
 
-  override def onMessage(msg: Nothing): Behavior[Nothing] = // <4>
+  override def onMessage(
+      msg: Nothing): Behavior[Nothing] = // <4>
     this
 }

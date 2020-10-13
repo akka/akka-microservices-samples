@@ -19,7 +19,8 @@ object Main {
   }
 }
 
-class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
+class Main(context: ActorContext[Nothing])
+    extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
   AkkaManagement(system).start()

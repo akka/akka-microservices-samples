@@ -19,16 +19,19 @@ object Main {
   }
 }
 
-class Main(context: ActorContext[Nothing]) extends AbstractBehavior[Nothing](context) {
+class Main(context: ActorContext[Nothing])
+    extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
   AkkaManagement(system).start()
   ClusterBootstrap(system).start()
 
   val grpcInterface =
-    context.system.settings.config.getString("shopping-order-service.grpc.interface")
+    context.system.settings.config
+      .getString("shopping-order-service.grpc.interface")
   val grpcPort =
-    context.system.settings.config.getInt("shopping-order-service.grpc.port")
+    context.system.settings.config
+      .getInt("shopping-order-service.grpc.port")
   ShoppingOrderServer.start(grpcInterface, grpcPort, system)
 
   override def onMessage(msg: Nothing): Behavior[Nothing] =
