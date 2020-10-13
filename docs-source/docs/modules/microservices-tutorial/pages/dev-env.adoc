@@ -148,9 +148,3 @@ The example projects are using the following ports.
 |8303
 
 |===
-
-
-== Learn more
-
-* Next, xref:template.adoc[get your project] set up.
-* Revisit the overview in xref:overview.adoc[previous step].

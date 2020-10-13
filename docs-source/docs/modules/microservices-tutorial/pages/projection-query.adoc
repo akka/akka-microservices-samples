@@ -1,4 +1,4 @@
-= Part 5: Projection for queries
+= VI: Projection for queries
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
@@ -267,8 +267,6 @@ ifdef::todo[TODO: deploy the updated version to the cloud and try it]
 
 == Learn more
 
-* In xref:projection-kafka.adoc[**next step**] of the tutorial you will add a Projection for publishing events to Kafka.
-* Revisit the Event Sourced entity in xref:complete-entity.adoc[previous step].
 * xref:concepts:cqrs.adoc[CQRS concepts].
 * {akka-projection}/[Akka Projection reference documentation] {akka-projection}/[{tab-icon}, window="tab"].
 * {akka}/typed/cluster-sharded-daemon-process.html[Akka Sharded Daemon Process reference documentation] {akka}/typed/cluster-sharded-daemon-process.html[{tab-icon}, window="tab"].

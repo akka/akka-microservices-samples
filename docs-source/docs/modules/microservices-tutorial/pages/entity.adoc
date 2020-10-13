@@ -340,10 +340,9 @@ docker-compose down
 
 ifdef::todo[TODO deploy the updated version to the cloud and try it]
 
+:!sectnums:
 == Learn more
 
-* In xref:complete-entity.adoc[**next step**] of the tutorial you will complete the `ShoppingCart` entity.
-* Revisit the gRPC server in xref:grpc-server.adoc[previous step].
 * xref:concepts:event-sourcing.adoc[Event Sourcing concepts].
 * {akka}/typed/persistence.html[Akka Event Sourcing reference documentation] {akka}/typed/persistence.html[{tab-icon}, window="tab"].
 * {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"].

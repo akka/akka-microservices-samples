@@ -1,4 +1,4 @@
-= Part 4: Complete Event Sourced entity
+= V: Complete Event Sourced entity
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
@@ -345,8 +345,6 @@ grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingC
 
 == Learn more
 
-* In xref:projection-query.adoc[**next step**] of the tutorial you will add a Projection for queries.
-* Revisit the Event Sourced entity in xref:entity.adoc[previous step].
 * xref:concepts:event-sourcing.adoc[Event Sourcing concepts].
 * {akka}/typed/persistence.html[Akka Event Sourcing reference documentation] {akka}/typed/persistence.html[{tab-icon}, window="tab"].
 * {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"].
