@@ -1,6 +1,6 @@
 site:
   title: "Akka Platform Guide"
-  url: https://akka.io/platform-guide
+  url: https://developer.lightbend.com/docs/akka-platform-guide
   
 content:
   sources:
@@ -25,10 +25,11 @@ asciidoc:
     # the following two attributes cause review and todo notes to display
     review: ''
     todo: ''
-    doc-title: 'Akka Samples'
+    doc-title: 'Akka Platform Guide'
+    # the following turns on next and previous links in the new template
     page-pagination: ""
     page-toctitle: "On This Page"
 
 output:
-  dir: ./../target/staging
+  dir: ./../target
   clean: true

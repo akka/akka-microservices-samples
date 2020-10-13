@@ -1,4 +1,8 @@
 = Part 6: Projection publishing to Kafka
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 2
+:page-supergroup-scala-java: Language
 
 include::ROOT:partial$include.adoc[]
 
@@ -13,7 +17,7 @@ You will learn how to:
 * send messages to a Kafka topic from a Projection
 * consume messages from a Kafka topic
 
-TODO link to asynchronous communication concepts
+ifdef::todo[TODO link to asynchronous communication concepts]
 
 == External representation of the events
 
@@ -21,13 +25,14 @@ For external APIs of a service, such as a Kafka topic that is consumed by other 
 
 Add a new `ShoppingCartEvents.proto` with the specification of the events:
 
-[source,proto]
+[source,protobuf]
 ----
 include::example$05-shopping-cart-service-scala/src/main/protobuf/ShoppingCartEvents.proto[]
 ----
 
 Generate code by compiling the project:
 
+[source,shell script]
 ----
 sbt compile
 ----
@@ -38,6 +43,16 @@ The new Projection will be similar to what we developed in the xref:projection-q
 
 Add a `PublishEventsProjectionHandler` class that is the Projection `Handler` for processing the events:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjectionHandler.scala[]
@@ -55,6 +70,16 @@ The tagging of the events is already in place from the xref:projection-query.ado
 
 Place the initialization code of the Projection in an `PublishEventsProjection` object:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjection.scala[]
@@ -64,7 +89,7 @@ The `SendProducer` is initialized using some configuration that you need to add.
 
 Add the following to `src/main/resources/kafka.conf`:
 
-[source,conf]
+[source,hocon]
 ----
 include::example$05-shopping-cart-service-scala/src/main/resources/kafka.conf[]
 ----
@@ -73,13 +98,23 @@ Include `kafka.conf` from `application.conf`.
 
 And for local development add the following to `src/main/resources/local-shared.conf`, which is loaded when running locally:
 
-[source,conf]
+[source,hocon]
 ----
 include::example$05-shopping-cart-service-scala/src/main/resources/local-shared.conf[tag=kafka]
 ----
 
 Then you need to call the `PublishEventsProjection.init` from `Main`:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=PublishEventsProjection]
@@ -99,6 +134,7 @@ Adjust the port numbers in the `local1.conf`, `local2.conf`, and `local3.conf` f
 
 This service will receive the events in the Protobuf format defined in the `ShoppingCartEvents.proto` from the `shopping-cart-service`. Copy that file to the `shopping-analytics-service/src/main/protobuf` and generate code by compiling the project:
 
+[source,shell script]
 ----
 sbt compile
 ----
@@ -109,6 +145,16 @@ Note that different services should not share code, but the Protobuf specificati
 
 Create a `ShoppingCartEventConsumer` object that runs an Akka Stream with a Kafka `Consumer.committableSource` from Alpakka Kafka.
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$shopping-analytics-service-scala/src/main/scala/shopping/analytics/ShoppingCartEventConsumer.scala[]
@@ -130,7 +176,7 @@ The `Consumer` is initialized using some configuration that you need to add. It 
 
 Add the following to `src/main/resources/kafka.conf`:
 
-[source,conf]
+[source,hocon]
 ----
 include::example$shopping-analytics-service-scala/src/main/resources/kafka.conf[]
 ----
@@ -139,7 +185,7 @@ Include `kafka.conf` from `application.conf`.
 
 And for local development add the following to `src/main/resources/local-shared.conf`, which is loaded when running locally:
 
-[source,conf]
+[source,hocon]
 ----
 include::example$shopping-analytics-service-scala/src/main/resources/local-shared.conf[tag=kafka]
 ----
@@ -148,6 +194,16 @@ include::example$shopping-analytics-service-scala/src/main/resources/local-share
 
 Edit the `Main` class that is included from the template project. It should initialize the `ActorSystem` and the `ShoppingCartEventConsumer` like this:
 
+[.tabset]
+Java::
++
+[source,java]
+----
+TODO
+----
+
+Scala::
++
 [source,scala]
 ----
 include::example$shopping-analytics-service-scala/src/main/scala/shopping/analytics/Main.scala[]
@@ -159,24 +215,28 @@ In addition to Cassandra we now also need Kafka. Kafka is also started by the `d
 
 Start Cassandra and Kafka, unless it's already running:
 
+[source,shell script]
 ----
 docker-compose up -d
 ----
 
 Run the `shopping-cart-service` with:
 
+[source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
 
 Run the new `shopping-analytics-service` with:
 
+[source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
 
 Try it with `grpcurl`. Add 1 pencil to a cart:
 
+[source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"pencil", "quantity":1}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
@@ -186,8 +246,6 @@ Look at the log output in the terminal of the `shopping-analytics-service`. Ther
 ----
 ItemAdded: 1 pencil to cart cart1
 ----
-
-== Deploy
 
 ifdef::todo[TODO: deploy the updated shopping-cart-service and the new shopping-analytics-service to the cloud and try it]
 
