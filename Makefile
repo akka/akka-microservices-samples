@@ -22,7 +22,7 @@ clean:
 	rm -rf ${work_dir}
 
 docker-image:
-	(cd ${ROOT_DIR}/antora-docker;  docker build -t local/antora-doc:latest .)
+	(cd ${ROOT_DIR}/antora-docker;  docker build -t ${antora_docker_image}:${antora_docker_image_tag} .)
 
 # build: clean html javascaladoc_staged print-site
 build: clean html print-site
