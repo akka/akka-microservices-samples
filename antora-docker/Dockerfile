@@ -1,5 +1,14 @@
-FROM antora/antora:2.1.2
+FROM antora/antora:2.3.1
 
-RUN npm install -g asciidoc-link-check
+RUN yarn global add asciidoc-link-check
+# https://github.com/Mogztter/antora-lunr
+RUN yarn global add antora-lunr
+# https://github.com/Mogztter/antora-site-generator-lunr
+RUN yarn global add antora-site-generator-lunr
 
-LABEL description="antora/antora image with the additional 'asciidoc-link-check' tool"
+ENV DOCSEARCH_ENABLED=true
+ENV DOCSEARCH_ENGINE=lunr
+
+ENTRYPOINT ["docker-entrypoint.sh", "--stacktrace", "--generator", "antora-site-generator-lunr"]
+
+LABEL description="antora/antora image with some extensions"

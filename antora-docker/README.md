@@ -3,7 +3,7 @@
 ## Build the image
 
 ```
-docker build -t lighbend/antora-doc:<version> .
+docker build -t lightbend/antora-doc:<version> .
 ```
 
 ## Publish the image
@@ -11,7 +11,7 @@ docker build -t lighbend/antora-doc:<version> .
 Login as `lightbend` on docker. Credentials available in keybase.
 
 ```
-docker push lighbend/antora-doc:<version>
+docker push lightbend/antora-doc:<version>
 ```
 
 Note: Only contributors with access to the Lightbend credentials are able to publish this image.
