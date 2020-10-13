@@ -52,7 +52,7 @@ Both external event-driven modeling and xref:event-sourcing.adoc[] are a perfect
 
 
 [discrete]
-== See also
+== Learn more
 
 * xref:event-sourcing.adoc[]
 * [book]

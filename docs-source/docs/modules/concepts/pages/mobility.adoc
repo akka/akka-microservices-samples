@@ -26,5 +26,6 @@ Using virtual addresses means that the client can stay oblivious to all of these
 
 include::partial$reactive-microservices-ebook.adoc[]
 
+== Learn more
 
-See also xref:services#service-discovery.adoc[].
+* xref:services#service-discovery[Service Discovery].

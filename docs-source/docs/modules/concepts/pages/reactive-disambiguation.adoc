@@ -57,4 +57,6 @@ ____
 [quote,'','{reactive-streams}']
 Reactive Streams is an initiative to provide a standard for asynchronous stream processing with non-blocking back pressure. This encompasses efforts aimed at runtime environments (JVM and JavaScript) as well as network protocols.
 
-See also xref:reactive-streams.adoc
+== Learn more
+
+* xref:reactive-streams.adoc[]
