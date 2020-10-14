@@ -33,6 +33,8 @@ html: clean docker-image
 		--cache-dir=./.cache/antora \
 		docs-source/site.yml
 	@echo "Done file://${target_dir}/snapshot/index.html"
+	@echo "# Tech Hub wants to know what to publish:"
+	@echo "${target_dir}/snapshot/"
 
 html-author-mode: clean docker-image
 	mv docs-source/supplemental_ui/partials/head-scripts.hbs docs-source/supplemental_ui/partials/head-scripts.hbs.tmp
