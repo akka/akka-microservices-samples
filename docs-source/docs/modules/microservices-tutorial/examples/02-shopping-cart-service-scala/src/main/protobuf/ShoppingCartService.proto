@@ -17,7 +17,7 @@ message AddItemRequest { // <2>
     int32 quantity = 3;
 }
 
-message Cart { // <3>
+message Cart {
     repeated Item items = 1;
 }
 

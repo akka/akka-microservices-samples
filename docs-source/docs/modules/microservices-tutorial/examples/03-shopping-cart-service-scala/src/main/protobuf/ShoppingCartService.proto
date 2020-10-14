@@ -8,13 +8,13 @@ package shoppingcart;
 // gRPC definition for ShoppingCartService
 
 // tag::CheckoutAndGet[]
-service ShoppingCartService { // <1>
+service ShoppingCartService {
 // end::CheckoutAndGet[]
     rpc AddItem (AddItemRequest) returns (Cart) {}
     rpc UpdateItem (UpdateItemRequest) returns (Cart) {}
     // tag::CheckoutAndGet[]
-    rpc Checkout (CheckoutRequest) returns (Cart) {}
-    rpc GetCart (GetCartRequest) returns (Cart) {}
+    rpc Checkout (CheckoutRequest) returns (Cart) {} // <1>
+    rpc GetCart (GetCartRequest) returns (Cart) {} // <2>
     // end::CheckoutAndGet[]
 
     // tag::CheckoutAndGet[]
@@ -22,7 +22,7 @@ service ShoppingCartService { // <1>
 
 // end::CheckoutAndGet[]
 
-message AddItemRequest { // <2>
+message AddItemRequest {
     string cartId = 1;
     string itemId = 2;
     int32 quantity = 3;
@@ -45,7 +45,7 @@ message GetCartRequest {
 
 message Cart { // <3>
     repeated Item items = 1;
-    bool checkedOut = 2;
+    bool checkedOut = 2; // <4>
 }
 // end::CheckoutAndGet[]
 

@@ -34,9 +34,6 @@ include::example$01-shopping-cart-service-scala/src/main/protobuf/ShoppingCartSe
 
 <1> Defines the requests a client may send to the service in the serivce definition.
 <2> Describes the request to add an item to the shopping cart.
-<3> For simplicity, most requests share a common response, for easier evolution of an interface, separate responses are often a better choice (See xref:how-to:evolve-grpc-apis.adoc[] for details).
-
-ifdef::review[REVIEWERS: I don't understand the explanation of callout 3. Do you mean that the one shown is a single response that will be used elsewhere?]
 
 == Generate code
 

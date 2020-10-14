@@ -250,7 +250,10 @@ Let's add corresponding operations as the commands in `ShoppingCartService.proto
 include::example$03-shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[tag=CheckoutAndGet]
 ----
 
-ifdef::todo[TODO: callout to highlight the new bool checkedOut]
+<1> Defines the `Checkout` operation.
+<2> Defines the `GetCart` operation.
+<3> <3> For simplicity, most requests share a common response, for easier evolution of an interface, separate responses are often a better choice (See xref:how-to:evolve-grpc-apis.adoc[] for details).
+<4> Note the new `checkedOut` flag.
 
 Generate code by compiling the project:
 
