@@ -35,6 +35,7 @@ html: clean docker-image
 	@echo "Done file://${target_dir}/snapshot/index.html"
 
 html-author-mode: clean docker-image
+	mv docs-source/supplemental_ui/partials/head-scripts.hbs docs-source/supplemental_ui/partials/head-scripts.hbs.tmp
 	docker run \
 		-u $(shell id -u):$(shell id -g) \
 		-v ${ROOT_DIR}:/antora \
@@ -42,6 +43,7 @@ html-author-mode: clean docker-image
 		-t ${antora_docker_image}:${antora_docker_image_tag} \
 		--cache-dir=./.cache/antora \
 		docs-source/author-mode-site.yml
+	mv docs-source/supplemental_ui/partials/head-scripts.hbs.tmp docs-source/supplemental_ui/partials/head-scripts.hbs
 	@echo "Done file://${target_dir}/snapshot/index.html"
 
 check-links: docker-image
