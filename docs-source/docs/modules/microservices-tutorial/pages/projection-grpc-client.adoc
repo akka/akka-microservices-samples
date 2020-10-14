@@ -17,10 +17,10 @@ ifdef::todo[TODO link to synchronous communication concepts]
 
 .Download source code
 ****
-You can download the initial source for this section link:_attachments/shopping-cart-service-projection-kafka.zip[here] +
+You can download the initial source for this section link:_attachments/shopping-cart-service-projection-kafka-scala.zip[here] +
 (includes code from the previous step).
 
-The completed source code for this section can be downloaded link:_attachments/shopping-cart-service-complete.zip[here].
+The completed source code for this section can be downloaded link:_attachments/shopping-cart-service-complete-scala.zip[here].
 ****
 
 == Another gRPC service

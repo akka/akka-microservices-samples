@@ -23,10 +23,10 @@ If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sour
 
 .Download source code
 ****
-You can download the initial source for this section link:_attachments/shopping-cart-service-grpc.zip[here]. +
+You can download the initial source for this section link:_attachments/shopping-cart-service-grpc-scala.zip[here]. +
 (includes code from the previous step)
 
-The completed source code for this section can be downloaded link:_attachments/shopping-cart-service-event-sourced.zip[here].
+The completed source code for this section can be downloaded link:_attachments/shopping-cart-service-event-sourced-scala.zip[here].
 ****
 
 :sectnums:

@@ -18,10 +18,10 @@ ifdef::todo[TODO link to asynchronous communication concepts]
 
 .Download source code
 ****
-You can download the initial source for this section link:_attachments/shopping-cart-service-projection.zip[here] +
+You can download the initial source for this section link:_attachments/shopping-cart-service-projection-scala.zip[here] +
 (includes code from the previous step).
 
-The completed source code for this section can be downloaded link:_attachments/shopping-cart-service-projection-kafka.zip[here].
+The completed source code for this section can be downloaded link:_attachments/shopping-cart-service-projection-kafka-scala.zip[here].
 ****
 
 == External representation of the events
