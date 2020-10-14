@@ -1,6 +1,6 @@
 name: "" # root
 version: "snapshot"
-title: Akka Platform Guide
+title: "" # removed title to prevent a double title entry in TOC
 nav:
 - modules/ROOT/nav.adoc
 - modules/microservices-tutorial/nav.adoc
