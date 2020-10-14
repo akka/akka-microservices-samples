@@ -16,6 +16,14 @@ You will learn how to:
 
 ifdef::todo[TODO link to asynchronous communication concepts]
 
+.Download source code
+****
+You can download the initial source for this section link:_attachments/shopping-cart-service-projection.zip[here] +
+(includes code from the previous step).
+
+The completed source code for this section can be downloaded link:_attachments/shopping-cart-service-projection-kafka.zip[here].
+****
+
 == External representation of the events
 
 For external APIs of a service, such as a Kafka topic that is consumed by other services, it is good to have a well defined format of the data. Therefore we define that in Protobuf, rather than using the internal representation of the events. This also makes it easier to evolve representation over time without breaking downstream consumers.

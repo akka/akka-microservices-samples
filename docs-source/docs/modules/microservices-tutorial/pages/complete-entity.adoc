@@ -9,6 +9,14 @@ You will learn how to:
 
 * implement an Event Sourced entity by expanding the xref:entity.adoc[previous step]
 
+.Download source code
+****
+You can download the initial source for this section link:_attachments/shopping-cart-service-event-sourced.zip[here] +
+(includes code from the previous step).
+
+The completed source code for this section can be downloaded link:_attachments/shopping-cart-service-event-sourced-complete.zip[here].
+****
+
 == More commands and events
 
 .This part of the xref:overview.adoc[full example] will focus on the shopping cart entity.

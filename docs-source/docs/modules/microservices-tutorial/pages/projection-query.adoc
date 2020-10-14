@@ -17,6 +17,14 @@ You will learn how to:
 
 Read the xref:concepts:cqrs.adoc[CQRS] section as a background to why it is good to build a query representation from the events of the entities with a Projection.
 
+.Download source code
+****
+You can download the initial source for this section link:_attachments/shopping-cart-service-event-sourced-complete.zip[here] +
+(includes code from the previous step).
+
+The completed source code for this section can be downloaded link:_attachments/shopping-cart-service-projection.zip[here].
+****
+
 == Processing events in a Projection
 
 You implement the event processing of the Projection in a `Handler`. Add a class `ItemPopularityProjectionHandler`:
