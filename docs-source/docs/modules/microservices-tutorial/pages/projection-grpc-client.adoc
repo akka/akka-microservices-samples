@@ -9,7 +9,7 @@ In this part, we will add another Projection from the events of the `ShoppingCar
 [caption=""]
 image::example-projection-grpc-client.png[Example gRPC client]
 
-You will learn how to:
+In this section, you will learn how to:
 
 * call another service with gRPC
 

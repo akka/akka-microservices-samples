@@ -9,7 +9,7 @@ The gRPC `ShoppingCartService` corresponds to the *Cart Service* shown in the ar
 
 image::example-grpc-server.png[Example gRPC service]
 
-You will learn how to:
+In this section, you will learn how to:
 
 * define the interface of the gRPC service
 * implement the service interface
