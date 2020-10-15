@@ -6,19 +6,13 @@ services:
 git:
   depth: 500
 
-before_install:
-  # using jabba for custom jdk management
-  - if [ ! -f ~/.jabba/jabba.sh ]; then curl -L -v --retry 5 -o jabba-install.sh https://raw.githubusercontent.com/shyiko/jabba/0.11.2/install.sh && bash jabba-install.sh; fi
-  - . ~/.jabba/jabba.sh
-  - jabba install ${JDK:=adopt@~1.11-0}
-  - jabba use ${JDK:=adopt@~1.11-0}
-
 jobs:
   include:
     - stage: test
       script:
-        cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
-        sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+        - java -version
+        - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
+        - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
       name: "Shopping analytics service Scala"
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
@@ -87,6 +81,10 @@ jobs:
       script:
         - make html-author-mode
       name: "Run Antora to create site"
+      if: type != cron
+    - script:
+        - make check-links
+      name: "Run the link checker"
 
     - stage: publish
       script:
@@ -96,7 +94,7 @@ jobs:
 
 stages:
   - name: test
-    if: NOT tag =~ ^v
+    if: (NOT tag =~ ^v) AND (type != cron)
 
   - name: site
 
@@ -114,8 +112,7 @@ cache:
   directories:
    - $HOME/.m2
    - $HOME/.ivy2/cache
-   - $HOME/.sbt/boot
-   - $HOME/.sbt/launchers
+   - $HOME/.sbt
    - $HOME/.cache/coursier
    - $HOME/.jabba
 
