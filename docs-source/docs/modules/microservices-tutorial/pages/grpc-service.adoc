@@ -19,9 +19,9 @@ In this section, you will learn how to:
 
 .Download source code
 ****
-You can download the initial project template link:_attachments/0-shopping-cart-start-scala.zip[here] or use `sbt` to start a new project based on the template as explained in xref:template.adoc[Run the template].
+You can download the link:_attachments/0-shopping-cart-start-scala.zip[initial project template] or use `sbt` to start a new project as explained in xref:template.adoc[Run the template].
 
-The completed source code for this section can be downloaded link:_attachments/1-shopping-cart-grpc-scala.zip[here].
+Or if you prefer, you can download the link:_attachments/1-shopping-cart-grpc-scala.zip[completed source] for this tutorial step.
 ****
 
 ifdef::review[REVIEWERS: I didn't notice where a server component was introduced in the overview. Can we add something about it there?]
