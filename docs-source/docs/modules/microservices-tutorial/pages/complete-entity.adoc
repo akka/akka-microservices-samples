@@ -5,7 +5,7 @@ include::ROOT:partial$include.adoc[]
 
 In this part, we will complete the `ShoppingCart` entity with more commands and events. The `ShoppingCart` is using Event Sourcing to persist events that represents changes to the state of the cart.
 
-In this section, you will learn how to:
+On this page you will learn how to:
 
 * implement an Event Sourced entity by expanding the xref:entity.adoc[previous step]
 

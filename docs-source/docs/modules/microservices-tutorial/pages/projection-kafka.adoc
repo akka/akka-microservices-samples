@@ -9,7 +9,7 @@ In this part, we will add another Projection from the events of the `ShoppingCar
 [caption=""]
 image::example-projection-kafka.png[Example Kafka]
 
-In this section, you will learn how to:
+On this page you will learn how to:
 
 * send messages to a Kafka topic from a Projection
 * consume messages from a Kafka topic

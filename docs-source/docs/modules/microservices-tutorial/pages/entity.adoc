@@ -9,7 +9,7 @@ The architectural overview shows how the entity is related to the Cart service. 
 
 image::example-entity.png[Example entity]
 
-In this section, you will learn how to:
+On this page you will learn how to:
 
 * implement an Event Sourced entity
 * unit test the entity
