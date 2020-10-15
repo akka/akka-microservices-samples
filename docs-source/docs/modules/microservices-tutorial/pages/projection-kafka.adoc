@@ -20,7 +20,7 @@ ifdef::todo[TODO link to asynchronous communication concepts]
 ****
 You can download the link:_attachments/4-shopping-cart-projection-scala.zip[initial source] for this tutorial step (includes code from the previous step).
 
-Or if you prefer, you can download the link:_attachments/5-shopping-cart-projection-kafka-scala.zip[completed source] for this tutorial step.
+Or, if you prefer, you can download the link:_attachments/5-shopping-cart-projection-kafka-scala.zip[completed source] for this tutorial step.
 ****
 
 == External representation of the events

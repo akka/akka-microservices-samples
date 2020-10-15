@@ -21,7 +21,7 @@ Read the xref:concepts:cqrs.adoc[CQRS] section as a background to why it is good
 ****
 You can download the link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[initial source] for this tutorial step (includes code from the previous step).
 
-Or if you prefer, you can download the link:_attachments/4-shopping-cart-projection-scala.zip[completed source] for this tutorial step.
+Or, if you prefer, you can download the link:_attachments/4-shopping-cart-projection-scala.zip[completed source] for this tutorial step.
 ****
 
 == Processing events in a Projection
