@@ -1,5 +1,5 @@
 name: "" # root
-version: "snapshot"
+version: "master"
 title: "" # removed title to prevent a double title entry in TOC
 nav:
 - modules/ROOT/nav.adoc

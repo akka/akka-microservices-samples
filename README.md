@@ -11,7 +11,7 @@ Try it with:
 1. git clone https://github.com/akka/akka-platform-guide
 2. cd akka-platform-guide
 3. make html-author-mode
-4. open target/staging/snapshot/index.html
+4. open target/index.html
 5. read and follow the instructions in the tutorial
 
 Feel free to give your feedback in the form of issues/PRs, or chat in https://gitter.im/akka/dev.
