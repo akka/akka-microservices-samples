@@ -11,10 +11,10 @@ You will learn how to:
 
 .Download source code
 ****
-You can download the initial source for this section link:_attachments/shopping-cart-service-event-sourced-scala.zip[here] +
+You can download the initial source for this section link:_attachments/2-shopping-cart-event-sourced-scala.zip[here] +
 (includes code from the previous step).
 
-The completed source code for this section can be downloaded link:_attachments/shopping-cart-service-event-sourced-complete-scala.zip[here].
+The completed source code for this section can be downloaded link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[here].
 ****
 
 == More commands and events

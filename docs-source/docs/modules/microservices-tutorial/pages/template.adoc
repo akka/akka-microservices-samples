@@ -32,7 +32,7 @@ sbt compile
 
 ifdef::review[REVIEWERS: we should add what they will see if successful and what to do if not.]
 
-The starting template is also available as downloadable link:_attachments/shopping-cart-service-start-scala.zip[zip file].
+The starting template is also available as downloadable link:_attachments/0-shopping-cart-start-scala.zip[zip file].
 
 == Open the project in IntelliJ
 

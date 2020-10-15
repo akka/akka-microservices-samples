@@ -59,7 +59,7 @@ See the instructions for installing https://docs.docker.com/get-docker/[Docker {
 
 We encourage entering the code described in the tutorial, even if you just copy and paste. If you get stuck or prefer to skip over some parts you can download a zip file containing the complete source code for each part of the tutorial. You will find a link at the beginning of each tutorial step. 
 
-If you prefer to skip the tutorial and have a study on the full example implementation on your own, you can download it link:{site-url}/assets/attachments/shopping-cart-service-complete-scala.zip[here].
+If you prefer to skip the tutorial and study the full example implementation on your own, you can download it link:_attachments/6-shopping-cart-complete-scala.zip[here].
 
 ifdef::review[REVIEWERS: in the new UI template that we will have soon, each page will have a next and previous link with the full page title. The Learn More section can still appear but it makes sense for it not to include the next page.]
 
