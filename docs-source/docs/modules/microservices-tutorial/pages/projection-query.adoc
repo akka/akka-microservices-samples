@@ -17,11 +17,10 @@ On this page you will learn how to:
 
 Read the xref:concepts:cqrs.adoc[CQRS] section as a background to why it is good to build a query representation from the events of the entities with a Projection.
 
-.Download source code
+.Available .zip downloads:
 ****
-You can download the link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[initial source] for this tutorial step (includes code from the previous step).
-
-Or, if you prefer, you can download the link:_attachments/4-shopping-cart-projection-scala.zip[completed source] for this tutorial step.
+* link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
+* link:_attachments/4-shopping-cart-projection-scala.zip[Source] with the steps on this page completed.
 ****
 
 == Processing events in a Projection

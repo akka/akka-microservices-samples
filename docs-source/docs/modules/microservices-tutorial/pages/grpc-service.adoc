@@ -17,11 +17,10 @@ On this page you will learn how to:
 * interact with the service from the command line
 * deploy for the first time to the cloud
 
-.Download source code
+.Available .zip downloads:
 ****
-You can download the link:_attachments/0-shopping-cart-start-scala.zip[initial project template] or use `sbt` to start a new project as explained in xref:template.adoc[Run the template].
-
-Or, if you prefer, you can download the link:_attachments/1-shopping-cart-grpc-scala.zip[completed source] for this tutorial step.
+* link:_attachments/0-shopping-cart-start-scala.zip[Source] with initial project template. Alternatively, use `sbt` to start a new project as explained in xref:template.adoc[Run the template].
+* link:_attachments/1-shopping-cart-grpc-scala.zip[Source] with the steps on this page completed.
 ****
 
 ifdef::review[REVIEWERS: I didn't notice where a server component was introduced in the overview. Can we add something about it there?]

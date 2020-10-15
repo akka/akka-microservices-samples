@@ -21,11 +21,10 @@ ifdef::review[REVIEWERS: re: bullet 3 above, the Initialization section only con
 
 If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sourcing.adoc[Event Sourcing] section for an explanation.
 
-.Download source code
+.Available .zip downloads:
 ****
-You can download the link:_attachments/1-shopping-cart-grpc-scala.zip[initial source] for this tutorial step (includes code from the previous step).
-
-Or, if you prefer, you can download the link:_attachments/2-shopping-cart-event-sourced-scala.zip[completed source] for this tutorial step.
+* link:_attachments/1-shopping-cart-grpc-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
+* link:_attachments/2-shopping-cart-event-sourced-scala.zip[Source] with the steps on this page completed.
 ****
 
 :sectnums:

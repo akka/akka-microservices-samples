@@ -16,11 +16,10 @@ On this page you will learn how to:
 
 ifdef::todo[TODO link to asynchronous communication concepts]
 
-.Download source code
+.Available .zip downloads:
 ****
-You can download the link:_attachments/4-shopping-cart-projection-scala.zip[initial source] for this tutorial step (includes code from the previous step).
-
-Or, if you prefer, you can download the link:_attachments/5-shopping-cart-projection-kafka-scala.zip[completed source] for this tutorial step.
+* link:_attachments/4-shopping-cart-projection-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
+* link:_attachments/5-shopping-cart-projection-kafka-scala.zip[Source] with the steps on this page completed.
 ****
 
 == External representation of the events
