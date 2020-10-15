@@ -17,8 +17,8 @@ ifdef::todo[TODO link to synchronous communication concepts]
 
 .Available .zip downloads:
 ****
-* link:_attachments/5-shopping-cart-projection-kafka-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
-* link:_attachments/6-shopping-cart-complete-scala.zip[Source] with the steps on this page completed.
+* [.group-scala]#link:_attachments/5-shopping-cart-projection-kafka-scala.zip[Source]# [.group-java]#link:_attachments/5-shopping-cart-projection-kafka-java.zip[Source]# that includes all previous tutorial steps and allows you to start with the steps on this page.
+* [.group-scala]#link:_attachments/6-shopping-cart-complete-scala.zip[Source]# [.group-java]#link:_attachments/6-shopping-cart-complete-java.zip[Source]# with the steps on this page completed.
 ****
 
 == Another gRPC service
@@ -38,6 +38,13 @@ include::example$shopping-order-service-scala/src/main/protobuf/ShoppingOrderSer
 
 Generate code by compiling the project:
 
+[.group-java]
+[source,shell script]
+----
+mvn compile
+----
+
+[.group-scala]
 [source,shell script]
 ----
 sbt compile
@@ -50,7 +57,7 @@ Java::
 +
 [source,java]
 ----
-TODO
+include::example$shopping-order-service-java/src/main/java/shopping/order/ShoppingOrderServiceImpl.java[]
 ----
 
 Scala::
@@ -67,7 +74,7 @@ Java::
 +
 [source,java]
 ----
-TODO
+include::example$shopping-order-service-java/src/main/java/shopping/order/ShoppingOrderServer.java[]
 ----
 
 Scala::
@@ -84,7 +91,7 @@ Java::
 +
 [source,java]
 ----
-TODO
+include::example$shopping-order-service-java/src/main/java/shopping/order/Main.java[]
 ----
 
 Scala::
@@ -102,10 +109,14 @@ The new Projection in the `shopping-cart-service` will be similar to what we dev
 
 First we need to include the service definition. Copy the `ShoppingOrderService.proto` file from the `shopping-order-service` to the `shopping-cart-service/src/main/protobuf` directory and generate code by compiling the `shopping-cart-service` project:
 
+[.group-java]
 [source,shell script]
 ----
-sbt compile
+mvn compile
 ----
+
+[.group-scala]
+[source,shell script]
 
 Add a `SendOrderProjectionHandler` class that is the Projection `Handler` for processing the events:
 
@@ -130,9 +141,9 @@ include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/SendOr
 
 <3> call the `ShoppingOrderService`
 
-In the order we need to include the list of items and their quantities. That information is not included in the `ChoppingCart.CheckedOut` event, but we can retrieve it by asking the `ShoppingCart` entity for it.
+In the order we need to include the list of items and their quantities. That information is not included in the `ShoppingCart.CheckedOut` event, but we can retrieve it by asking the `ShoppingCart` entity for it.
 
-If the call to the `ShoppingOrderService` fails the returned `Future[Done]` is failed and the Projection is automatically restarted from the previously saved offset. This will result in that the call to the `ShoppingOrderService` will be retried. Since the Projection has `at-least-once` semantics the `ShoppingOrderService` must be idempotent, i.e. handle duplicate order attempts for the same `cartId`.
+If the call to the `ShoppingOrderService` fails the returned [.group-scala]#`Future[Done]`# [.group-java]#`CompletionStage[Done]`# is failed and the Projection is automatically restarted from the previously saved offset. This will result in that the call to the `ShoppingOrderService` will be retried. Since the Projection has `at-least-once` semantics the `ShoppingOrderService` must be idempotent, i.e. handle duplicate order attempts for the same `cartId`.
 
 == Initialize the Projection
 
@@ -190,6 +201,14 @@ docker-compose up -d
 
 Run the `shopping-order-service` with:
 
+[.group-java]
+[source,shell script]
+----
+# make sure to compile before running exec:exec
+mvn compile exec:exec -DAPP_CONFIG=local1.conf
+----
+
+[.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
@@ -204,6 +223,14 @@ grpcurl -d '{"cartId":"cart1", "items":[{"itemId":"socks", "quantity":3}, {"item
 
 Keep the `shopping-order-service` running, and in another terminal run the `shopping-cart-service` with:
 
+[.group-java]
+[source,shell script]
+----
+# make sure to compile before running exec:exec
+mvn compile exec:exec -DAPP_CONFIG=local1.conf
+----
+
+[.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
