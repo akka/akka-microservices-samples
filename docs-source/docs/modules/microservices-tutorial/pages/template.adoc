@@ -59,7 +59,6 @@ docker-compose up -d
 ----
 docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_tables.cql
 ----
-+
 // # tag::dockerImportant[]
 +
 [IMPORTANT]
