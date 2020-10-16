@@ -1,4 +1,3 @@
-
 -- This CQL script will create the keyspace and all tables needed for the this sample. 
 -- It includes the messages and snapshot tables (write-side) and the projection tables (read-side).
 

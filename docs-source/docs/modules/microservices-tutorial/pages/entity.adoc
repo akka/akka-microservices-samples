@@ -270,14 +270,9 @@ Also, you need to include the new `ActorSystem` parameter to the constructor whe
 
 == Cassandra
 
-The events are stored in Cassandra and you have to add the configuration for that in `src/main/resources/persistence.conf` file:
+The events are stored in Cassandra and the template project includes configuration for that in the `src/main/resources/persistence.conf` file.
 
-[source,hocon]
-----
-include::example$02-shopping-cart-service-scala/src/main/resources/persistence.conf[tag=persistence-cassandra-config]
-----
-
-Also, include `persistence.conf` in `application.conf`:
+You have to enable this configuration by including `persistence.conf` in `application.conf`:
 
 [source,hocon]
 ----

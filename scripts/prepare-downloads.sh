@@ -57,8 +57,8 @@ function zipAndAttach() {
 removeTags
 
 
-## empty codebase (this is a backup option for users 
-## that can't use the .g8 template)
+## Scala Zip files
+## empty codebase (this is a backup option for users  that can't use the .g8 template)
 prepareTemporalFolder
 fetchProject 00-shopping-cart-service-scala shopping-cart-service
 zipAndAttach 0-shopping-cart-start-scala.zip
@@ -95,3 +95,43 @@ fetchProject shopping-cart-service-scala shopping-cart-service
 fetchProject shopping-analytics-service-scala shopping-analytics-service
 fetchProject shopping-order-service-scala shopping-order-service-scala
 zipAndAttach 6-shopping-cart-complete-scala.zip
+
+
+## Java Zip files
+## empty codebase (this is a backup option for users  that can't use the .g8 template)
+prepareTemporalFolder
+fetchProject 00-shopping-cart-service-java shopping-cart-service
+zipAndAttach 0-shopping-cart-start-java.zip
+
+## gRPC service
+prepareTemporalFolder
+fetchProject 01-shopping-cart-service-java shopping-cart-service
+zipAndAttach 1-shopping-cart-grpc-java.zip
+
+## basic entity
+prepareTemporalFolder
+fetchProject 02-shopping-cart-service-java shopping-cart-service
+zipAndAttach 2-shopping-cart-event-sourced-java.zip
+
+## complete entity
+prepareTemporalFolder
+fetchProject 03-shopping-cart-service-java shopping-cart-service
+zipAndAttach 3-shopping-cart-event-sourced-complete-java.zip
+
+## projection query
+prepareTemporalFolder
+fetchProject 04-shopping-cart-service-java shopping-cart-service
+zipAndAttach 4-shopping-cart-projection-java.zip
+
+## projection kafka
+prepareTemporalFolder
+fetchProject 05-shopping-cart-service-java shopping-cart-service
+fetchProject shopping-analytics-service-java shopping-analytics-service
+zipAndAttach 5-shopping-cart-projection-kafka-java.zip
+
+## complete
+prepareTemporalFolder
+fetchProject shopping-cart-service-java shopping-cart-service
+fetchProject shopping-analytics-service-java shopping-analytics-service
+fetchProject shopping-order-service-java shopping-order-service-java
+zipAndAttach 6-shopping-cart-complete-java.zip

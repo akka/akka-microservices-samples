@@ -12,7 +12,7 @@ You may also check out these [other resources](https://akka.io/get-involved/).
 
 # Antora-based Akka Documentation
 
-This folder contains the sources for parts of the [Akka web site](https://akka.io/akka-platform-guide).
+This folder contains the sources for parts of the [Akka Platform Guide web site](https://developer.lightbend.com/docs/akka-platform-guide).
 
 This folder is structured as follows:
 - The root directory contains the `Makefile` for the documentation generation process.
@@ -20,6 +20,12 @@ This folder is structured as follows:
 
 Contributions to the documentation are welcome and encouraged.
 If you are unfamiliar with the project or with asciidoc, please read the contribution guidelines below.
+
+## Antora extension
+
+Find some hints about the Lightbend Antora theme at https://lightbend.github.io/antora-supplemental-ui-lightbend-theme/build/site/index.html
+
+The theme sources are in a Lightbend-private project at https://github.com/lightbend/antora-supplemental-ui-lightbend-theme
 
 ## Contributing to the Akka Documentation
 
