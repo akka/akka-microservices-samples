@@ -8,23 +8,15 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.cluster.MemberStatus;
 import akka.cluster.typed.Cluster;
 import akka.grpc.GrpcClientSettings;
-import akka.kafka.ConsumerSettings;
-import akka.kafka.Subscriptions;
-import akka.kafka.javadsl.Consumer;
 import akka.persistence.testkit.javadsl.PersistenceInit;
 import akka.testkit.SocketUtil;
-import com.google.protobuf.Any;
-import com.google.protobuf.CodedInputStream;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
-import org.apache.kafka.common.serialization.ByteArrayDeserializer;
-import org.apache.kafka.common.serialization.StringDeserializer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import scala.jdk.CollectionConverters;
 import shopping.cart.proto.*;
 
@@ -32,8 +24,6 @@ import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 
@@ -52,8 +42,7 @@ public class IntegrationTest {
         return ConfigFactory.parseString(
                 "akka.persistence.cassandra.journal.keyspace = " + KEYSPACE + "\n" +
                         "akka.persistence.cassandra.snapshot.keyspace = " + KEYSPACE + "\n" +
-                        "akka.projection.cassandra.offset-store.keyspace = " + KEYSPACE + "\n" +
-                        "shopping-cart-service.kafka.topic = \"shopping_cart_events_" + UNIQUE_QUALIFIER + "\""
+                        "akka.projection.cassandra.offset-store.keyspace = " + KEYSPACE
         ).withFallback(ConfigFactory.load("integration-test.conf"));
     }
 
@@ -92,48 +81,11 @@ public class IntegrationTest {
         }
     }
 
-    private static void initializeKafkaTopicProbe(ActorSystem<?> system, TestProbe<Object> kafkaTopicProbe) {
-        String topic = system.settings().config().getString("shopping-cart-service.kafka.topic");
-        String groupId = UUID.randomUUID().toString();
-        ConsumerSettings<String, byte[]> consumerSettings = ConsumerSettings.create(system, new StringDeserializer(), new ByteArrayDeserializer())
-                .withBootstrapServers("localhost:9092") // provided by Docker compose
-                .withGroupId(groupId);
-        Consumer.plainSource(consumerSettings, Subscriptions.topics(topic))
-                .map(record -> {
-                    byte[] bytes = record.value();
-                    Any x = Any.parseFrom(bytes);
-                    String typeUrl = x.getTypeUrl();
-                    CodedInputStream inputBytes = x.getValue().newCodedInput();
-                    final Object event;
-                    switch (typeUrl) {
-                        case "shopping-cart-service/shoppingcart.ItemAdded":
-                            event = shopping.cart.proto.ItemAdded.parseFrom(inputBytes);
-                            break;
-                        case "shopping-cart-service/shoppingcart.ItemQuantityAdjusted":
-                            event = shopping.cart.proto.ItemQuantityAdjusted.parseFrom(inputBytes);
-                            break;
-                        case "shopping-cart-service/shoppingcart.ItemRemoved":
-                            event = shopping.cart.proto.ItemRemoved.parseFrom(inputBytes);
-                            break;
-                        case "shopping-cart-service/shoppingcart.CheckedOut":
-                            event = shopping.cart.proto.CheckedOut.parseFrom(inputBytes);
-                            break;
-                        default:
-                            throw new IllegalArgumentException("Unknown record type [" + typeUrl + "]");
-                    }
-                    return event;
-                }).runForeach(event -> kafkaTopicProbe.getRef().tell(event), system)
-        .whenComplete((ok, ex) -> {
-            if (ex != null)
-                logger.error("Test consumer of " + topic + " failed", ex);
-        });
-    }
 
     private static TestNodeFixture testNode1;
     private static TestNodeFixture testNode2;
     private static TestNodeFixture testNode3;
     private static List<ActorSystem<?>> systems;
-    private static TestProbe<Object> kafkaTopicProbe;
     private final static Duration requestTimeout = Duration.ofSeconds(10);
 
     @BeforeClass
@@ -154,8 +106,6 @@ public class IntegrationTest {
         testNode3 = new TestNodeFixture(grpcPorts.get(2), managementPorts, 2);
         systems = Arrays.asList(testNode1.system, testNode2.system, testNode3.system);
 
-        kafkaTopicProbe = testNode1.testKit.createTestProbe();
-        
         // avoid concurrent creation of keyspace and tables
         PersistenceInit.initializeDefaultPlugins(testNode1.system, Duration.ofSeconds(10)).toCompletableFuture().get(10, SECONDS);
         CreateTableTestUtils.createTables(testNode1.system);
@@ -176,8 +126,6 @@ public class IntegrationTest {
                 return null;
             });
         });
-
-        initializeKafkaTopicProbe(testNode1.system, kafkaTopicProbe);
     }
 
     @AfterClass
@@ -205,12 +153,6 @@ public class IntegrationTest {
         Cart updatedCart1 = response1.toCompletableFuture().get(requestTimeout.getSeconds(), SECONDS);
         assertEquals("foo", updatedCart1.getItems(0).getItemId());
         assertEquals(42, updatedCart1.getItems(0).getQuantity());
-
-        // first may take longer time
-        ItemAdded published1 = kafkaTopicProbe.expectMessageClass(ItemAdded.class, Duration.ofSeconds(20));
-        assertEquals("cart-1", published1.getCartId());
-        assertEquals("foo", published1.getItemId());
-        assertEquals(42, published1.getQuantity());
 
         // add from client2
         CompletionStage<Cart> response2 = testNode2.getClient().addItem(
@@ -256,22 +198,10 @@ public class IntegrationTest {
             }
         });
 
-        ItemAdded published2 = kafkaTopicProbe.expectMessageClass(ItemAdded.class);
-        assertEquals("cart-2", published2.getCartId());
-        assertEquals("bar", published2.getItemId());
-        assertEquals(17, published2.getQuantity());
-
-        ItemQuantityAdjusted published3 = kafkaTopicProbe.expectMessageClass(ItemQuantityAdjusted.class);
-        assertEquals("cart-2", published3.getCartId());
-        assertEquals("bar", published3.getItemId());
-        assertEquals(18, published3.getQuantity());
-
         CompletionStage<Cart> response4 = testNode2.getClient().checkout(CheckoutRequest.newBuilder().setCartId("cart-2").build());
         Cart cart4 = response4.toCompletableFuture().get(requestTimeout.getSeconds(), SECONDS);
         assertTrue(cart4.getCheckedOut());
 
-        CheckedOut published4 = kafkaTopicProbe.expectMessageClass(CheckedOut.class);
-        assertEquals("cart-2", published4.getCartId());
     }
 
 }
