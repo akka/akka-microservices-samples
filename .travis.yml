@@ -15,6 +15,12 @@ before_install:
 
 jobs:
   include:
+    - stage: check-files
+      script:
+        - scripts/copy-identical-files.sh
+        - git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
+      name: "copy-identical-files"
+      
     - stage: test
       script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
@@ -108,11 +114,6 @@ jobs:
         - cd docs-source/docs/modules/how-to/examples/cleanup-dependencies-project
         - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
       name: "Howto cleanup dependencies"
-
-    - script:
-        - scripts/copy-identical-files.sh
-        - git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
-      name: "copy-identical-files"
 
     - stage: site
       script:
