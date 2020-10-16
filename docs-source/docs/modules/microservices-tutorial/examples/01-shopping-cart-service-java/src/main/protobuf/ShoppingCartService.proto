@@ -1,0 +1,71 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "shopping.cart.proto";
+
+package shoppingcart;
+
+// gRPC definition for ShoppingCartService
+
+// tag::GetItemPopularity[]
+// tag::CheckoutAndGet[]
+service ShoppingCartService { // <1>
+// end::CheckoutAndGet[]
+// end::GetItemPopularity[]
+    rpc AddItem (AddItemRequest) returns (Cart) {}
+    rpc UpdateItem (UpdateItemRequest) returns (Cart) {}
+    // tag::CheckoutAndGet[]
+    rpc Checkout (CheckoutRequest) returns (Cart) {}
+    rpc GetCart (GetCartRequest) returns (Cart) {}
+    // end::CheckoutAndGet[]
+
+    // tag::GetItemPopularity[]
+    rpc GetItemPopularity(GetItemPopularityRequest) returns (GetItemPopularityResponse) {}
+    // tag::CheckoutAndGet[]
+}
+
+// end::CheckoutAndGet[]
+// end::GetItemPopularity[]
+
+message AddItemRequest { // <2>
+    string cartId = 1;
+    string itemId = 2;
+    int32 quantity = 3;
+}
+
+message UpdateItemRequest {
+    string cartId = 1;
+    string itemId = 2;
+    int32 quantity = 3;
+}
+
+// tag::CheckoutAndGet[]
+message CheckoutRequest {
+    string cartId = 1;
+}
+
+message GetCartRequest {
+    string cartId = 1;
+}
+
+message Cart {
+    repeated Item items = 1;
+    bool checkedOut = 2;
+}
+// end::CheckoutAndGet[]
+
+message Item {
+    string itemId = 1;
+    int32 quantity = 2;
+}
+
+// tag::GetItemPopularity[]
+message GetItemPopularityRequest {
+    string itemId = 1;
+}
+
+message GetItemPopularityResponse {
+    string itemId = 1;
+    int64 popularityCount = 2;
+}
+// end::GetItemPopularity[]
