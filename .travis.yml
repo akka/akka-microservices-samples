@@ -13,6 +13,12 @@ before_install:
   - jabba install ${JDK:=adopt@~1.11-0}
   - jabba use ${JDK:=adopt@~1.11-0}
 
+stages:
+  - check-files
+  - test
+  - site
+  - publish
+
 jobs:
   include:
     - stage: check-files
@@ -20,7 +26,7 @@ jobs:
         - scripts/copy-identical-files.sh
         - git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
       name: "copy-identical-files"
-      
+
     - stage: test
       script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
