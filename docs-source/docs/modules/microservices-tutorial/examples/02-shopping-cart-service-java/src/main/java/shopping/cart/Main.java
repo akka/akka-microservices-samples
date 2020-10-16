@@ -16,13 +16,11 @@ import org.slf4j.LoggerFactory;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-// tag::ItemPopularityProjection[]
 public class Main extends AbstractBehavior<Void> {
 
     public static void main(String[] args) throws Exception {
         ActorSystem<Void> system = ActorSystem.create(Main.create(), "ShoppingCartService");
     }
-
 
     public static Behavior<Void> create() {
         return Behaviors.setup(Main::new);
@@ -39,25 +37,11 @@ public class Main extends AbstractBehavior<Void> {
 
         ShoppingCart.init(system);
 
-        // tag::ItemPopularityProjection[]
-        CassandraSession session = CassandraSessionRegistry.get(system).sessionFor("akka.persistence.cassandra"); // <1>
-        // use same keyspace for the item_popularity table as the offset store
-        String itemPopularityKeyspace = system.settings().config().getString("akka.projection.cassandra.offset-store.keyspace");
-        ItemPopularityRepository itemPopularityRepository =
-                new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace); // <2>
-
-        ItemPopularityProjection.init(system, itemPopularityRepository); // <3>
-        // end::ItemPopularityProjection[]
-
-
         String grpcInterface =
                 system.settings().config().getString("shopping-cart-service.grpc.interface");
         int grpcPort = system.settings().config().getInt("shopping-cart-service.grpc.port");
-        ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository);
+        ShoppingCartServer.start(grpcInterface, grpcPort, system);
 
-        // tag::PublishEventsProjection[]
-        PublishEventsProjection.init(system);
-        // end::PublishEventsProjection[]
 
     }
 

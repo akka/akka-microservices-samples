@@ -39,7 +39,7 @@ object ShoppingCart {
   /**
    * The current state held by the `EventSourcedBehavior`.
    */
-  // tag::state[]
+  // tag::state-with-checkout[]
   final case class State(
       items: Map[String, Int],
       checkoutDate: Option[Instant])
@@ -47,6 +47,12 @@ object ShoppingCart {
 
     def isCheckedOut: Boolean =
       checkoutDate.isDefined
+
+    def checkout(now: Instant): State =
+      copy(checkoutDate = Some(now))
+
+    def toSummary: Summary =
+      Summary(items, isCheckedOut)
 
     def hasItem(itemId: String): Boolean =
       items.contains(itemId)
@@ -61,20 +67,17 @@ object ShoppingCart {
       }
     }
 
+    // end::state-with-checkout[]
     def removeItem(itemId: String): State =
       copy(items = items - itemId)
+    // tag::state-with-checkout[]
 
-    def checkout(now: Instant): State =
-      copy(checkoutDate = Some(now))
-
-    def toSummary: Summary =
-      Summary(items, isCheckedOut)
   }
   object State {
     val empty =
       State(items = Map.empty, checkoutDate = None)
   }
-  // end::state[]
+  // end::state-with-checkout[]
 
   /**
    * This interface defines all the commands (messages) that the ShoppingCart actor supports.
@@ -233,6 +236,17 @@ object ShoppingCart {
             .thenReply(replyTo) { updatedCart =>
               StatusReply.Success(updatedCart.toSummary)
             }
+
+      case Checkout(replyTo) =>
+        if (state.isEmpty)
+          Effect.reply(replyTo)(
+            StatusReply.Error(
+              "Cannot checkout an empty shopping cart"))
+        else
+          Effect
+            .persist(CheckedOut(cartId, Instant.now()))
+            .thenReply(replyTo)(updatedCart =>
+              StatusReply.Success(updatedCart.toSummary))
       // end::commandHandlers[]
 
       case RemoveItem(itemId, replyTo) =>
@@ -268,19 +282,6 @@ object ShoppingCart {
         else
           Effect.reply(replyTo)(StatusReply.Error(
             s"Cannot adjust quantity for item '$itemId'. Item not present on cart"))
-
-      // tag::checkoutCommandHandler[]
-      case Checkout(replyTo) =>
-        if (state.isEmpty)
-          Effect.reply(replyTo)(
-            StatusReply.Error(
-              "Cannot checkout an empty shopping cart"))
-        else
-          Effect
-            .persist(CheckedOut(cartId, Instant.now()))
-            .thenReply(replyTo)(updatedCart =>
-              StatusReply.Success(updatedCart.toSummary))
-      // end::checkoutCommandHandler[]
 
       // tag::getCommandHandler[]
       case Get(replyTo) =>

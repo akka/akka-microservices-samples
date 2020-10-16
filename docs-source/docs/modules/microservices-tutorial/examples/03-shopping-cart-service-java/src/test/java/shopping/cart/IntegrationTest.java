@@ -136,7 +136,7 @@ public class IntegrationTest {
 
 
     public static Behavior<Void> createMainBehavior() {
-        return Behaviors.setup(context -> new Main(context));
+        return Behaviors.setup(Main::new);
     }
 
 

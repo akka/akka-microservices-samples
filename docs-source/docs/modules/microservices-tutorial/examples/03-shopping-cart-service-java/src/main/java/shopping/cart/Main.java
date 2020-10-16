@@ -1,6 +1,5 @@
 package shopping.cart;
 
-import akka.actor.Actor;
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.AbstractBehavior;
@@ -9,12 +8,6 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import akka.management.cluster.bootstrap.ClusterBootstrap;
 import akka.management.javadsl.AkkaManagement;
-import akka.projection.cassandra.javadsl.CassandraProjection;
-import akka.stream.alpakka.cassandra.javadsl.CassandraSession;
-import akka.stream.alpakka.cassandra.javadsl.CassandraSessionRegistry;
-import org.slf4j.LoggerFactory;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class Main extends AbstractBehavior<Void> {
 

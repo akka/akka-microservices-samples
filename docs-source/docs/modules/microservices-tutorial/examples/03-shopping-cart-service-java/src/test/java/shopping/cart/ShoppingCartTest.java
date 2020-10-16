@@ -26,7 +26,7 @@ public class ShoppingCartTest {
             ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State>
             eventSourcedTestKit =
             EventSourcedBehaviorTestKit.create(
-                    testKit.system(), ShoppingCart.create(CART_ID, "carts-0"));
+                    testKit.system(), ShoppingCart.create(CART_ID));
 
 
     @Before

@@ -98,11 +98,11 @@ jobs:
         - docker-compose up -d
         - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
       name: "02 Shopping cart service (Scala)"
-    # - script:
-    #     - cd docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-java
-    #     - docker-compose up -d
-    #     - mvn test
-    #   name: "02 Shopping cart service (Java)"
+    - script:
+        - cd docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-java
+        - docker-compose up -d
+        - mvn test
+      name: "02 Shopping cart service (Java)"
 
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-scala

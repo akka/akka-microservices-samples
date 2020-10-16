@@ -1,5 +1,6 @@
 package shopping.cart;
 
+
 import akka.actor.typed.ActorRef;
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Behavior;
@@ -7,7 +8,6 @@ import akka.actor.typed.SupervisorStrategy;
 import akka.actor.typed.javadsl.Behaviors;
 import akka.cluster.sharding.typed.javadsl.ClusterSharding;
 import akka.cluster.sharding.typed.javadsl.Entity;
-import akka.cluster.sharding.typed.javadsl.EntityContext;
 import akka.cluster.sharding.typed.javadsl.EntityTypeKey;
 import akka.pattern.StatusReply;
 import akka.persistence.typed.PersistenceId;
@@ -17,6 +17,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+
 
 /**
  * This is an event sourced actor (`EventSourcedBehavior`). An entity managed by Cluster Sharding.
@@ -56,6 +57,15 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
             return checkoutDate.isPresent();
         }
 
+        public State checkout(Instant now) {
+            checkoutDate = Optional.of(now);
+            return this;
+        }
+
+        public Summary toSummary() {
+            return new Summary(items, isCheckedOut());
+        }
+
         public boolean hasItem(String itemId) {
             return items.containsKey(itemId);
         }
@@ -69,26 +79,18 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
             return this;
         }
 
+        public boolean isEmpty() {
+            return items.isEmpty();
+        }
+        // end::state-with-checkout[]
+
         public State removeItem(String itemId) {
             items.remove(itemId);
             return this;
         }
 
-        public State checkout(Instant now) {
-            checkoutDate = Optional.of(now);
-            return this;
-        }
-
-        public Summary toSummary() {
-            return new Summary(items, isCheckedOut());
-        }
-
         public int itemCount(String itemId) {
             return items.get(itemId);
-        }
-
-        public boolean isEmpty() {
-            return items.isEmpty();
         }
     }
     // end::state[]
@@ -329,53 +331,24 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
     public State emptyState() {
         return new State();
     }
-    // tag::commandHandlers[]
+
+    
     @Override
     public CommandHandlerWithReply<Command, Event, State> commandHandler() {
-        // The shopping cart behavior changes if it's checked out or not.
-        // The commands are handled differently for each case.
-        CommandHandlerWithReplyBuilder<Command, Event, State> builder = newCommandHandlerWithReplyBuilder();
-        // end::commandHandlers[]
-
-        // tag::checkedOutShoppingCart[]
-        builder.forState(State::isCheckedOut)
-            // end::checkedOutShoppingCart[]
-            .onCommand(Get.class, this::onGet)
-            // tag::checkedOutShoppingCart[]
-            .onCommand(
-                AddItem.class,
-                cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't add an item to an already checked out shopping cart")))
-            // end::checkedOutShoppingCart[]
-            .onCommand(
-                RemoveItem.class,
-                cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't remove an item from an already checked out shopping cart")))
-            .onCommand(
-                AdjustItemQuantity.class,
-                cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't adjust item on an already checked out shopping cart")))
-            // tag::checkedOutShoppingCart[]
-            .onCommand(
-                Checkout.class,
-                cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't checkout already checked out shopping cart")));
-        // end::checkedOutShoppingCart[]
-
-        // tag::commandHandlers[]
-        builder.forState(state -> !state.isCheckedOut())
-            .onCommand(Get.class, this::onGet)
-            .onCommand(AddItem.class, this::onAddItem)
-            .onCommand(RemoveItem.class, this::onRemoveItem)
-            .onCommand(AdjustItemQuantity.class, this::onAdjustItemQuantity)
-            .onCommand(Checkout.class, this::onCheckout);
-
-        return builder.build();
+        return openShoppingCart()
+                .orElse(checkedOutShoppingCart())
+                .orElse(getCommandHandler())
+                .build();
     }
-    // end::commandHandlers[]
-
-    // tag::getCommandHandler[]
-    private ReplyEffect<Event, State> onGet(State state, Get cmd) {
-        return Effect().reply(cmd.replyTo, state.toSummary());
+    
+    private CommandHandlerWithReplyBuilderByState<Command, Event, State, State> openShoppingCart() {
+        return newCommandHandlerWithReplyBuilder()
+                .forState(state -> !state.isCheckedOut())
+                .onCommand(AddItem.class, this::onAddItem)
+                .onCommand(RemoveItem.class, this::onRemoveItem)
+                .onCommand(AdjustItemQuantity.class, this::onAdjustItemQuantity)
+                .onCommand(Checkout.class, this::onCheckout);
     }
-    // end::getCommandHandler[]
-    // tag::commandHandlers[]
 
     private ReplyEffect<Event, State> onAddItem(State state, AddItem cmd) {
         if (state.hasItem(cmd.itemId)) {
@@ -386,7 +359,16 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
             return Effect().reply(cmd.replyTo, StatusReply.error("Quantity must be greater than zero"));
         } else {
             return Effect().persist(new ItemAdded(cartId, cmd.itemId, cmd.quantity))
-                .thenReply(cmd.replyTo, updatedCart -> StatusReply.success(updatedCart.toSummary()));
+                    .thenReply(cmd.replyTo, updatedCart -> StatusReply.success(updatedCart.toSummary()));
+        }
+    }
+
+    private ReplyEffect<Event, State> onCheckout(State state, Checkout cmd) {
+        if (state.isEmpty()) {
+            return Effect().reply(cmd.replyTo, StatusReply.error("Cannot checkout an empty shopping cart"));
+        } else {
+            return Effect().persist(new CheckedOut(cartId, Instant.now()))
+                    .thenReply(cmd.replyTo, updatedCart -> StatusReply.success(updatedCart.toSummary()));
         }
     }
 
@@ -412,16 +394,31 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
         }
     }
 
-    private ReplyEffect<Event, State> onCheckout(State state, Checkout cmd) {
-        if (state.isEmpty()) {
-            return Effect().reply(cmd.replyTo, StatusReply.error("Cannot checkout an empty shopping cart"));
-        } else {
-            return Effect().persist(new CheckedOut(cartId, Instant.now()))
-                    .thenReply(cmd.replyTo, updatedCart -> StatusReply.success(updatedCart.toSummary()));
-        }
+
+    private CommandHandlerWithReplyBuilderByState<Command, Event, State, State> checkedOutShoppingCart() {
+        return newCommandHandlerWithReplyBuilder()
+                .forState(State::isCheckedOut)
+                .onCommand(
+                        AddItem.class,
+                        cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't add an item to an already checked out shopping cart")))
+                .onCommand(
+                        RemoveItem.class,
+                        cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't remove an item from an already checked out shopping cart")))
+                .onCommand(
+                        AdjustItemQuantity.class,
+                        cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't adjust item on an already checked out shopping cart")))
+                .onCommand(
+                        Checkout.class,
+                        cmd -> Effect().reply(cmd.replyTo, StatusReply.error("Can't checkout already checked out shopping cart")));
+    }
+    
+    private CommandHandlerWithReplyBuilderByState<Command, Event, State, State> getCommandHandler() {
+        return newCommandHandlerWithReplyBuilder()
+                .forAnyState()
+                .onCommand(Get.class,
+                        (state, cmd) -> Effect().reply(cmd.replyTo, state.toSummary()));
     }
 
-    // tag::checkedOutEventHandler[]
     @Override
     public EventHandler<State, Event> eventHandler() {
         return newEventHandlerBuilder().forAnyState()
@@ -431,5 +428,5 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
             .onEvent(CheckedOut.class, (state, evt) -> state.checkout(evt.eventTime))
             .build();
     }
-    // end::checkedOutEventHandler[]
+    
 }
