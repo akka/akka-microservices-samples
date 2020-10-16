@@ -1,13 +1,19 @@
-= Part 4: Complete Event Sourced entity
+= V: Complete Event Sourced entity
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
 
 In this part, we will complete the `ShoppingCart` entity with more commands and events. The `ShoppingCart` is using Event Sourcing to persist events that represents changes to the state of the cart.
 
-You will learn how to:
+On this page you will learn how to:
 
 * implement an Event Sourced entity by expanding the xref:entity.adoc[previous step]
+
+.Available .zip downloads:
+****
+* link:_attachments/2-shopping-cart-event-sourced-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
+* link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[Source] with the steps on this page completed.
+****
 
 == More commands and events
 
@@ -250,7 +256,10 @@ Let's add corresponding operations as the commands in `ShoppingCartService.proto
 include::example$03-shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[tag=CheckoutAndGet]
 ----
 
-ifdef::todo[TODO: callout to highlight the new bool checkedOut]
+<1> Defines the `Checkout` operation.
+<2> Defines the `GetCart` operation.
+<3> For simplicity, most requests share a common response, for easier evolution of an interface, separate responses are often a better choice (See xref:how-to:evolve-grpc-apis.adoc[] for details).
+<4> Note the new `checkedOut` flag.
 
 Generate code by compiling the project:
 
@@ -345,8 +354,6 @@ grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingC
 
 == Learn more
 
-* In xref:projection-query.adoc[**next step**] of the tutorial you will add a Projection for queries.
-* Revisit the Event Sourced entity in xref:entity.adoc[previous step].
 * xref:concepts:event-sourcing.adoc[Event Sourcing concepts].
 * {akka}/typed/persistence.html[Akka Event Sourcing reference documentation] {akka}/typed/persistence.html[{tab-icon}, window="tab"].
 * {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"].

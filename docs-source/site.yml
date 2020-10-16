@@ -4,16 +4,20 @@ site:
   
 content:
   sources:
-  - url: git@github.com:akka/akka-platform-guide.git
+#  - url: git@github.com:akka/akka-platform-guide.git
+  - url: ./../
     start-paths:
     - docs-source/docs
-    branches: [main]
+#    branches: [main]
+    branches: [HEAD]
+
 
 ui: 
   bundle:
-    url: https://github.com/lightbend/antora-ui-lightbend-theme/raw/master/build/ui-bundle.zip
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
     snapshot: true
-    
+  supplemental_files: ./supplemental_ui
+
 runtime:
   fetch: true
 
@@ -26,6 +30,7 @@ asciidoc:
     doc-title: 'Akka Platform Guide'
     # the following turns on next and previous links in the new template
     page-pagination: ""
+    page-toctitle: "On This Page"
 
 output:
   dir: ./../target

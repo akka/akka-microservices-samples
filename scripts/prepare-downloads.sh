@@ -61,37 +61,37 @@ removeTags
 ## that can't use the .g8 template)
 prepareTemporalFolder
 fetchProject 00-shopping-cart-service-scala shopping-cart-service
-zipAndAttach step-2.zip
+zipAndAttach 0-shopping-cart-start-scala.zip
 
 ## gRPC service
 prepareTemporalFolder
 fetchProject 01-shopping-cart-service-scala shopping-cart-service
-zipAndAttach step-3.zip
+zipAndAttach 1-shopping-cart-grpc-scala.zip
 
 ## basic entity
 prepareTemporalFolder
 fetchProject 02-shopping-cart-service-scala shopping-cart-service
-zipAndAttach step-4.zip
+zipAndAttach 2-shopping-cart-event-sourced-scala.zip
 
 ## complete entity
 prepareTemporalFolder
 fetchProject 03-shopping-cart-service-scala shopping-cart-service
-zipAndAttach step-5.zip
+zipAndAttach 3-shopping-cart-event-sourced-complete-scala.zip
 
 ## projection query
 prepareTemporalFolder
 fetchProject 04-shopping-cart-service-scala shopping-cart-service
-zipAndAttach step-6.zip
+zipAndAttach 4-shopping-cart-projection-scala.zip
 
 ## projection kafka
 prepareTemporalFolder
 fetchProject 05-shopping-cart-service-scala shopping-cart-service
 fetchProject shopping-analytics-service-scala shopping-analytics-service
-zipAndAttach step-7.zip
+zipAndAttach 5-shopping-cart-projection-kafka-scala.zip
 
 ## complete
 prepareTemporalFolder
 fetchProject shopping-cart-service-scala shopping-cart-service
 fetchProject shopping-analytics-service-scala shopping-analytics-service
 fetchProject shopping-order-service-scala shopping-order-service-scala
-zipAndAttach step-8.zip
+zipAndAttach 6-shopping-cart-complete-scala.zip

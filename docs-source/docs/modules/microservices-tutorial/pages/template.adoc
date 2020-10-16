@@ -32,6 +32,8 @@ sbt compile
 
 ifdef::review[REVIEWERS: we should add what they will see if successful and what to do if not.]
 
+The starting template is also available as downloadable link:_attachments/0-shopping-cart-start-scala.zip[zip file].
+
 == Open the project in IntelliJ
 
 If you are using IntelliJ, follow these steps to open the project:
@@ -76,4 +78,3 @@ The keyspace as created by the script works fine for local development but is pr
 ====
 
 // # end::docker[]
-

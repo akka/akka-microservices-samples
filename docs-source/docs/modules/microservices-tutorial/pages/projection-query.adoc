@@ -1,4 +1,4 @@
-= Part 5: Projection for queries
+= VI: Projection for queries
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
@@ -9,13 +9,19 @@ In this part, we will create an {akka-projection}/[Akka Projection] {akka-projec
 [caption=""]
 image::example-projection-query.png[Example query]
 
-You will learn how to:
+On this page you will learn how to:
 
 * implement a Projection
 * distribute the Projection instances over the nodes in the Akka Cluster
 * work with an asynchronous API for Cassandra
 
 Read the xref:concepts:cqrs.adoc[CQRS] section as a background to why it is good to build a query representation from the events of the entities with a Projection.
+
+.Available .zip downloads:
+****
+* link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
+* link:_attachments/4-shopping-cart-projection-scala.zip[Source] with the steps on this page completed.
+****
 
 == Processing events in a Projection
 
@@ -267,8 +273,6 @@ ifdef::todo[TODO: deploy the updated version to the cloud and try it]
 
 == Learn more
 
-* In xref:projection-kafka.adoc[**next step**] of the tutorial you will add a Projection for publishing events to Kafka.
-* Revisit the Event Sourced entity in xref:complete-entity.adoc[previous step].
 * xref:concepts:cqrs.adoc[CQRS concepts].
 * {akka-projection}/[Akka Projection reference documentation] {akka-projection}/[{tab-icon}, window="tab"].
 * {akka}/typed/cluster-sharded-daemon-process.html[Akka Sharded Daemon Process reference documentation] {akka}/typed/cluster-sharded-daemon-process.html[{tab-icon}, window="tab"].

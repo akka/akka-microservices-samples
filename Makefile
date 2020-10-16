@@ -32,9 +32,12 @@ html: clean docker-image
 		-t ${antora_docker_image}:${antora_docker_image_tag} \
 		--cache-dir=./.cache/antora \
 		docs-source/site.yml
-	@echo "Done file://${target_dir}/snapshot/index.html"
+	@echo "Done ${target_dir}/index.html"
+	@echo "# Tech Hub wants to know what to publish:"
+	@echo "${target_dir}"
 
 html-author-mode: clean docker-image
+	mv docs-source/supplemental_ui/partials/head-scripts.hbs docs-source/supplemental_ui/partials/head-scripts.hbs.tmp
 	docker run \
 		-u $(shell id -u):$(shell id -g) \
 		-v ${ROOT_DIR}:/antora \
@@ -42,7 +45,8 @@ html-author-mode: clean docker-image
 		-t ${antora_docker_image}:${antora_docker_image_tag} \
 		--cache-dir=./.cache/antora \
 		docs-source/author-mode-site.yml
-	@echo "Done file://${target_dir}/snapshot/index.html"
+	mv docs-source/supplemental_ui/partials/head-scripts.hbs.tmp docs-source/supplemental_ui/partials/head-scripts.hbs
+	@echo "Done ${target_dir}/index.html"
 
 check-links: docker-image
 	docker run \
@@ -60,4 +64,4 @@ list-todos: html docker-image
 		--entrypoint /bin/sh \
 		-t ${antora_docker_image}:${antora_docker_image_tag} \
 		--cache-dir=./.cache/antora \
-		-c 'find /antora/target/snapshot/ -name "*.html" -print0 | xargs -0 grep -iE "TODO|FIXME|REVIEWERS|adoc"'
+		-c 'find /antora/target/ -name "*.html" -print0 | xargs -0 grep -iE "TODO|FIXME|REVIEWERS|adoc"'

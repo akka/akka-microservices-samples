@@ -9,7 +9,7 @@ The architectural overview shows how the entity is related to the Cart service. 
 
 image::example-entity.png[Example entity]
 
-You will learn how to:
+On this page you will learn how to:
 
 * implement an Event Sourced entity
 * unit test the entity
@@ -20,6 +20,12 @@ You will learn how to:
 ifdef::review[REVIEWERS: re: bullet 3 above, the Initialization section only contains a brief statement about distributing among nodes. I think we should introduce and motivate use in the overview of this page or maybe in the architectural overview to explain that this is one thing that helps us achieve Reactive?]
 
 If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sourcing.adoc[Event Sourcing] section for an explanation.
+
+.Available .zip downloads:
+****
+* link:_attachments/1-shopping-cart-grpc-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
+* link:_attachments/2-shopping-cart-event-sourced-scala.zip[Source] with the steps on this page completed.
+****
 
 :sectnums:
 == Commands and events
@@ -39,7 +45,6 @@ TODO
 ----
 
 Scala::
-+
 +
 [source,scala]
 ----
@@ -340,10 +345,9 @@ docker-compose down
 
 ifdef::todo[TODO deploy the updated version to the cloud and try it]
 
+:!sectnums:
 == Learn more
 
-* In xref:complete-entity.adoc[**next step**] of the tutorial you will complete the `ShoppingCart` entity.
-* Revisit the gRPC server in xref:grpc-server.adoc[previous step].
 * xref:concepts:event-sourcing.adoc[Event Sourcing concepts].
 * {akka}/typed/persistence.html[Akka Event Sourcing reference documentation] {akka}/typed/persistence.html[{tab-icon}, window="tab"].
 * {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"].

@@ -48,7 +48,7 @@ message GetCartRequest {
     string cartId = 1;
 }
 
-message Cart { // <3>
+message Cart {
     repeated Item items = 1;
     bool checkedOut = 2;
 }

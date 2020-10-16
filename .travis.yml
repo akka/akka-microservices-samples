@@ -23,7 +23,7 @@ jobs:
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
         - mvn test
-        name: "Shopping analytics service Java"
+      name: "Shopping analytics service Java"
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala
         - docker-compose up -d

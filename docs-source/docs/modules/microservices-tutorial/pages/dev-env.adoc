@@ -57,9 +57,9 @@ See the instructions for installing https://docs.docker.com/get-docker/[Docker {
 
 == Downloadable example source
 
-We encourage entering the code described in the tutorial, even if you just copy and paste. If you get stuck or prefer to skip over some parts you can download a zip file containing the complete source code for each part of the tutorial.
+We encourage you to enter the example code, even if by copying and pasting. If you get stuck or prefer to skip some main steps, we provide source files for download. The introduction of each page with tutorial development steps includes links to two zip files: one with completed source up to that point, and one with completed source for the steps described on that page.
 
-ifdef::todo[TODO: download link]
+If you would like to run the full example, you can download the link:_attachments/6-shopping-cart-complete-scala.zip[full implementation]. In this case, we suggest you scan the tutorial instructions to identify the source files that you can learn from.
 
 ifdef::review[REVIEWERS: in the new UI template that we will have soon, each page will have a next and previous link with the full page title. The Learn More section can still appear but it makes sense for it not to include the next page.]
 
@@ -148,9 +148,3 @@ The example projects are using the following ports.
 |8303
 
 |===
-
-
-== Learn more
-
-* Next, xref:template.adoc[get your project] set up.
-* Revisit the overview in xref:overview.adoc[previous step].

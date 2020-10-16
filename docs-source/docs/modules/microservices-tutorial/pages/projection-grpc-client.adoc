@@ -1,4 +1,4 @@
-= Part 7: Projection calling gRPC service
+= VIII: Projection calling gRPC service
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
@@ -9,11 +9,17 @@ In this part, we will add another Projection from the events of the `ShoppingCar
 [caption=""]
 image::example-projection-grpc-client.png[Example gRPC client]
 
-You will learn how to:
+On this page you will learn how to:
 
 * call another service with gRPC
 
 ifdef::todo[TODO link to synchronous communication concepts]
+
+.Available .zip downloads:
+****
+* link:_attachments/5-shopping-cart-projection-kafka-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
+* link:_attachments/6-shopping-cart-complete-scala.zip[Source] with the steps on this page completed.
+****
 
 == Another gRPC service
 
@@ -224,6 +230,5 @@ ifdef::todo[TODO: deploy the updated shopping-cart-service and the new shopping-
 
 This is the end of the tutorial.
 
-* Revisit the Projection for publishing events to Kafka in xref:projection-kafka.adoc[previous step].
 * {akka-grpc}/client/index.html[Akka gRPC client reference documentation] {akka-grpc}/client/index.html[{tab-icon}, window="tab"].
 * {akka-projection}/[Akka Projection reference documentation] {akka-projection}/[{tab-icon}, window="tab"].
