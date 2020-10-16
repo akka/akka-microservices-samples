@@ -55,10 +55,6 @@ public class Main extends AbstractBehavior<Void> {
         int grpcPort = system.settings().config().getInt("shopping-cart-service.grpc.port");
         ShoppingCartServer.start(grpcInterface, grpcPort, system, itemPopularityRepository);
 
-        // tag::PublishEventsProjection[]
-        PublishEventsProjection.init(system);
-        // end::PublishEventsProjection[]
-
     }
 
     @Override
