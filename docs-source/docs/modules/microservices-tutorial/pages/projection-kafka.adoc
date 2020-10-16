@@ -18,8 +18,8 @@ ifdef::todo[TODO link to asynchronous communication concepts]
 
 .Available .zip downloads:
 ****
-* link:_attachments/4-shopping-cart-projection-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
-* link:_attachments/5-shopping-cart-projection-kafka-scala.zip[Source] with the steps on this page completed.
+* [.group-scala]#link:_attachments/4-shopping-cart-projection-scala.zip[Source]# [.group-java]#link:_attachments/4-shopping-cart-projection-java.zip[Source]# that includes all previous tutorial steps and allows you to start with the steps on this page.
+* [.group-scala]#link:_attachments/5-shopping-cart-projection-kafka-scala.zip[Source]# [.group-java]#link:_attachments/5-shopping-cart-projection-kafka-java.zip[Source]# with the steps on this page completed.
 ****
 
 == External representation of the events
@@ -35,9 +35,16 @@ include::example$05-shopping-cart-service-scala/src/main/protobuf/ShoppingCartEv
 
 Generate code by compiling the project:
 
+[.group-scala]
 [source,shell script]
 ----
 sbt compile
+----
+
+[.group-java]
+[source,shell script]
+----
+mvn compile
 ----
 
 == Sending to Kafka from a Projection
@@ -51,7 +58,7 @@ Java::
 +
 [source,java]
 ----
-TODO
+include::example$05-shopping-cart-service-java/src/main/java/shopping/cart/PublishEventsProjectionHandler.java[]
 ----
 
 Scala::
@@ -65,7 +72,7 @@ include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/Pub
 <2> The events are serialized to Protobuf and sent to the given topic.
 <3> Wrap in Protobuf `Any` to include type information.
 
-The serialization converts the `ShoppingCart.Event` classes to the Protobuf representation. Since several types of messages are sent to the same topic we must include some type information that the consumers of the topic can use when deserializing the messages. Protobuf provides a built-in type called `Any` for this purpose. That is why it is wrapped with `ScalaPBAny.pack`.
+The serialization converts the `ShoppingCart.Event` classes to the Protobuf representation. Since several types of messages are sent to the same topic we must include some type information that the consumers of the topic can use when deserializing the messages. Protobuf provides a built-in type called `Any` for this purpose. [.group-scala]#That is why it is wrapped with `ScalaPBAny.pack`.#
 
 == Initialize the Projection
 
@@ -78,7 +85,7 @@ Java::
 +
 [source,java]
 ----
-TODO
+include::example$05-shopping-cart-service-java/src/main/java/shopping/cart/PublishEventsProjection.java[]
 ----
 
 Scala::
@@ -113,7 +120,7 @@ Java::
 +
 [source,java]
 ----
-TODO
+include::example$05-shopping-cart-service-java/src/main/java/shopping/cart/Main.java[tag=PublishEventsProjection]
 ----
 
 Scala::
@@ -137,9 +144,16 @@ Adjust the port numbers in the `local1.conf`, `local2.conf`, and `local3.conf` f
 
 This service will receive the events in the Protobuf format defined in the `ShoppingCartEvents.proto` from the `shopping-cart-service`. Copy that file to the `shopping-analytics-service/src/main/protobuf` and generate code by compiling the project:
 
+[.group-scala]
 [source,shell script]
 ----
 sbt compile
+----
+
+[.group-java]
+[source,shell script]
+----
+mvn compile
 ----
 
 Note that different services should not share code, but the Protobuf specification can be copied since that is the published interface of the service.
@@ -153,7 +167,7 @@ Java::
 +
 [source,java]
 ----
-TODO
+include::example$shopping-analytics-service-java/src/main/java/shopping/analytics/ShoppingCartEventConsumer.java[]
 ----
 
 Scala::
@@ -163,11 +177,11 @@ Scala::
 include::example$shopping-analytics-service-scala/src/main/scala/shopping/analytics/ShoppingCartEventConsumer.scala[]
 ----
 
-<1> Kafka Consumer stream.
+<1> `RestartSource` will restart the stream in case of failures.
 
-<2> Offset is committed to Kafka when records have been processed.
+<2> Kafka Consumer stream.
 
-<3> `RestartSource` will restart the stream in case of failures.
+<3> Offset is committed to Kafka when records have been processed.
 
 <4> Protobuf `Any` for type information.
 
@@ -202,7 +216,7 @@ Java::
 +
 [source,java]
 ----
-TODO
+include::example$shopping-analytics-service-java/src/main/java/shopping/analytics/Main.java[]
 ----
 
 Scala::
@@ -225,6 +239,14 @@ docker-compose up -d
 
 Run the `shopping-cart-service` with:
 
+[.group-java]
+[source,shell script]
+----
+# make sure to compile before running exec:exec
+mvn compile exec:exec -DAPP_CONFIG=local1.conf
+----
+
+[.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
@@ -232,6 +254,14 @@ sbt -Dconfig.resource=local1.conf run
 
 Run the new `shopping-analytics-service` with:
 
+[.group-java]
+[source,shell script]
+----
+# make sure to compile before running exec:exec
+mvn compile exec:exec -DAPP_CONFIG=local1.conf
+----
+
+[.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
