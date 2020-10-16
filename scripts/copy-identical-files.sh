@@ -113,6 +113,9 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/ddl-scripts/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/ddl-scripts/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-java/ddl-scripts/
 
+declare SRC="${tutorial_root}/00-shopping-cart-service-scala/src/main/resources/application.conf"
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/src/main/resources/
+
 declare SRC="${tutorial_root}/00-shopping-cart-service-scala/src/main/resources/cluster.conf"
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/src/main/resources/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/resources/
@@ -127,6 +130,19 @@ cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/src/main/resources/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/resources/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/resources/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-java/src/main/resources/
+
+declare SRC="${tutorial_root}/00-shopping-cart-service-scala/src/main/resources/persistence.conf"
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/src/main/resources/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/resources/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/main/resources/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/resources/
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/resources/
+
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/src/main/resources/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/src/main/resources/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/src/main/resources/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/resources/
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/resources/
 
 declare SRC="${tutorial_root}/00-shopping-cart-service-scala/src/main/resources/grpc.conf"
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/src/main/resources/
@@ -270,12 +286,6 @@ cp ${SRC} ${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/car
 declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/resources/kafka.conf"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/resources/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/resources/
-
-declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/resources/persistence.conf"
-cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/resources/
-cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/resources/
-cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/main/resources/
-cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/resources/
 
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/resources/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/resources/
