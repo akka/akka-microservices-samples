@@ -25,12 +25,6 @@ jobs:
       script:
         - scripts/copy-identical-files.sh
         - git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
-        - rm -rf $HOME/.m2
-        - rm -rf $HOME/.ivy2/cache
-        - rm -rf $HOME/.sbt/boot
-        - rm -rf $HOME/.sbt/launchers
-        - rm -rf $HOME/.cache/coursier
-        - rm -rf $HOME/.jabba
       name: "copy-identical-files"
 
     - stage: test
