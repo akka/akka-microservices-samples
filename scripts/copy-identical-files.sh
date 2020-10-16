@@ -287,11 +287,6 @@ declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/resources/kaf
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/resources/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/resources/
 
-cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/resources/
-cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/resources/
-cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/src/main/resources/
-cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/src/main/resources/
-
 declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/protobuf/ShoppingCartEvents.proto"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/protobuf/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/protobuf/

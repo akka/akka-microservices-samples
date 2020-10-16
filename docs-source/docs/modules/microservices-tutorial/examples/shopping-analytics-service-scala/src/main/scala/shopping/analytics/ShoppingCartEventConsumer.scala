@@ -48,7 +48,7 @@ object ShoppingCartEventConsumer {
         .withGroupId("shopping-cart-analytics")
     val committerSettings = CommitterSettings(system)
 
-    RestartSource // <3>
+    RestartSource // <1>
       .onFailuresWithBackoff(
         minBackoff = 1.second,
         maxBackoff = 30.seconds,
@@ -57,12 +57,12 @@ object ShoppingCartEventConsumer {
           .committableSource(
             consumerSettings,
             Subscriptions.topics(topic)
-          ) // <1>
+          ) // <2>
           .mapAsync(1) { msg =>
             handleRecord(msg.record).map(_ =>
               msg.committableOffset)
           }
-          .via(Committer.flow(committerSettings)) // <2>
+          .via(Committer.flow(committerSettings)) // <3>
       }
       .run()
   }

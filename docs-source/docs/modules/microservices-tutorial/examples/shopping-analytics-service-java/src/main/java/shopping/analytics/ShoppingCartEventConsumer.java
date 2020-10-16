@@ -42,13 +42,13 @@ class ShoppingCartEventConsumer {
         Duration maxBackoff = Duration.ofSeconds(30);
         double randomFactor = 0.1;
 
-        RestartSource // <3>
+        RestartSource // <1>
                 .onFailuresWithBackoff(minBackoff, maxBackoff, randomFactor, () -> {
                     return Consumer
-                            .committableSource(consumerSettings, Subscriptions.topics(topic)) // <1>
+                            .committableSource(consumerSettings, Subscriptions.topics(topic)) // <2>
                             .mapAsync(1, msg ->
                                     handleRecord(msg.record()).thenApply(done -> msg.committableOffset()))
-                            .via(Committer.flow(committerSettings)); // <2>
+                            .via(Committer.flow(committerSettings)); // <3>
                 })
                 .run(system);
     }

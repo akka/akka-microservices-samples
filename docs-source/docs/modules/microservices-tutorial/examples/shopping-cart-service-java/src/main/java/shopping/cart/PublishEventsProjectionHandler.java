@@ -1,14 +1,11 @@
 package shopping.cart;
 
 import akka.Done;
-import akka.actor.typed.ActorSystem;
 import akka.kafka.javadsl.SendProducer;
 import akka.projection.eventsourced.EventEnvelope;
 import akka.projection.javadsl.Handler;
 import com.google.protobuf.Any;
 import com.google.protobuf.ByteString;
-import com.google.protobuf.GeneratedMessage;
-import com.google.protobuf.MessageOrBuilder;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +17,7 @@ import static akka.Done.done;
 public final class PublishEventsProjectionHandler extends Handler<EventEnvelope<ShoppingCart.Event>> {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final String topic;
-    private final SendProducer<String, byte[]> sendProducer;
+    private final SendProducer<String, byte[]> sendProducer; // <1>
 
     public PublishEventsProjectionHandler(String topic, SendProducer<String, byte[]> sendProducer) {
         this.topic = topic;
@@ -34,7 +31,8 @@ public final class PublishEventsProjectionHandler extends Handler<EventEnvelope<
         // using the cartId as the key and `DefaultPartitioner` will select partition based on the key
         // so that events for same cart always ends up in same partition
         String key = event.cartId;
-        ProducerRecord<String, byte[]> producerRecord = new ProducerRecord<>(topic, key, serialize(event));// <2>
+        ProducerRecord<String, byte[]> producerRecord =
+                new ProducerRecord<>(topic, key, serialize(event)); // <2>
         return sendProducer.send(producerRecord).thenApply(recordMetadata -> {
             logger.info("Published event [{}] to topic/partition {}/{}", event, topic, recordMetadata.partition());
             return done();
