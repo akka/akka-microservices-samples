@@ -17,13 +17,14 @@ jobs:
   include:
     - stage: test
       script:
-        cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
-        sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+        - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
+        - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
       name: "Shopping analytics service (Scala)"
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
         - mvn test
       name: "Shopping analytics service (Java)"
+      
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala
         - docker-compose up -d
@@ -34,6 +35,7 @@ jobs:
         - docker-compose up -d
         - mvn test
       name: "Shopping cart service (Java)"
+      
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala
         - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
