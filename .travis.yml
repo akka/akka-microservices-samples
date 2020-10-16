@@ -119,6 +119,10 @@ jobs:
       script:
         - make html-author-mode
       name: "Run Antora to create site"
+      if: type != cron
+    - script:
+        - make check-links
+      name: "Run the link checker"
 
     - stage: publish
       script:
@@ -128,10 +132,10 @@ jobs:
 
 stages:
   - name: check-files
-    if: NOT tag =~ ^v
+    if: (NOT tag =~ ^v) AND (type != cron)
 
   - name: test
-    if: NOT tag =~ ^v
+    if: (NOT tag =~ ^v) AND (type != cron)
 
   - name: site
 
