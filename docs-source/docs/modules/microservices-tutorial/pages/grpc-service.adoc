@@ -3,27 +3,24 @@
 
 include::ROOT:partial$include.adoc[]
 
-In this part, we will create the `ShoppingCartService` with gRPC. The motivation for using gRPC as the inter-service protocol is explained in the {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?"] {akka-grpc}/whygrpc.html[{tab-icon}, window="tab"] documentation. 
-
-The gRPC `ShoppingCartService` corresponds to the *Cart Service* shown in the architectural overview below. The steps on this page show how to create the `ShoppingCartService` with a single operation that adds items to a cart. The implementation will only log the calls for now. Later, we'll expand the service with more operations and real implementations.
+We will create the gRPC `ShoppingCartService` for the *Cart Service* shown in the architectural overview below. The motivation for using gRPC as the inter-service protocol is explained in the {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?"] {akka-grpc}/whygrpc.html[{tab-icon}, window="tab"] documentation. First, we will create the `ShoppingCartService` with a single operation that adds items to a cart. The implementation will only log the calls for now. Later, we'll expand the service with more operations and real implementations.
 
 image::example-grpc-server.png[Example gRPC service]
 
 On this page you will learn how to:
 
-* define the interface of the gRPC service
+* define the interface of a gRPC service
 * implement the service interface
-* initialize and run an HTTP server
+* initialize and run an HTTP server and the service locally
 * interact with the service from the command line
 * deploy for the first time to the cloud
 
 .Available .zip downloads:
 ****
-* link:_attachments/0-shopping-cart-start-scala.zip[Source] with initial project template. Alternatively, use `sbt` to start a new project as explained in xref:template.adoc[Run the template].
+* link:_attachments/0-shopping-cart-start-scala.zip[Source] with the initial project template. Alternatively, use `sbt` to start a new project as explained in xref:template.adoc[Run the template].
 * link:_attachments/1-shopping-cart-grpc-scala.zip[Source] with the steps on this page completed.
 ****
 
-ifdef::review[REVIEWERS: I didn't notice where a server component was introduced in the overview. Can we add something about it there?]
 
 :sectnums:
 
@@ -31,14 +28,16 @@ ifdef::review[REVIEWERS: I thought about removing the headings and changing to a
 
 == Service definition
 
-First, create a protobuf service descriptor file: `src/main/protobuf/ShoppingCartService.proto`. Define the service interface as shown below: 
+ifdef::review[REVIEWERS: if this is their first exposure to gRPC, should we start this with a few introductory sentences about what it is and what the .proto file is used for?]
+
+First, create a protobuf service descriptor file: `src/main/protobuf/ShoppingCartService.proto`. In it, define the service interface as shown below: 
 
 [source,protobuf]
 ----
 include::example$01-shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[]
 ----
 
-<1> Defines the requests a client may send to the service in the serivce definition.
+<1> Defines the requests a client may send to the service in the service definition.
 <2> Describes the request to add an item to the shopping cart.
 
 == Generate code
@@ -73,7 +72,7 @@ include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 <1> The method corresponding to the `rpc AddItem` in the service definition. Defined in the generated `proto.ShoppingCartService`.
 
-== Server
+== HTTP Server
 
 We will run the gRPC service implementation in an Akka HTTP server. Add the following server initialization code in a `ShoppingCartServer` object:
 
@@ -99,7 +98,7 @@ include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 <2> Start the HTTP server for the gRPC service.
 <3> Some logging at startup.
 
-== Main
+== Main method
 
 To run the service we need a class with a `main` method. Edit the `Main` class that is included from the template project. It should initialize the `ActorSystem` and the `ShoppingCartServer` like this:
 

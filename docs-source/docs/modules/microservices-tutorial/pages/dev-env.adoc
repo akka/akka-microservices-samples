@@ -2,6 +2,8 @@
 
 include::ROOT:partial$include.adoc[]
 
+ifdef::review[REVIWERS: will Java devs also user sbt or maven? If the latter, we need to make Build tool a separate section with Scala and Java tabs?]
+
 
 To follow tutorial steps you will need a code editor, a build tool, and `grpcurl` (a CLI for sending gRPC calls). You can use your preferred code editor. We provide the steps for using https://www.jetbrains.com/idea/[IntelliJ IDEA {tab-icon}, window="tab"] from JetBrains. For the Scala version of the example, we use `sbt` as the build tool. 
 
@@ -61,30 +63,32 @@ We encourage you to enter the example code, even if by copying and pasting. If y
 
 If you would like to run the full example, you can download the link:_attachments/6-shopping-cart-complete-scala.zip[full implementation]. In this case, we suggest you scan the tutorial instructions to identify the source files that you can learn from.
 
-ifdef::review[REVIEWERS: in the new UI template that we will have soon, each page will have a next and previous link with the full page title. The Learn More section can still appear but it makes sense for it not to include the next page.]
 
 == Configuring for local development
 
-ifdef::review[REVIEWERS: I was not sure whether this section belongs here or where they actually will need to use it. I found the following confusing, it says that the template includes the config for running locally, but then in sentence #3, it says when running locally, some config properties must be overridden? Then it says those properties "are placed" in the file, by whom? Are they there or do I need to put them there? I'll find out when I try, but just wanted to point out that this is confusing.]
+When running microservices locally using `sbt`, you will likely want to run multiple Akka Cluster nodes to observe fault tolerance. Within each node, or `ActorSystem`, each service must use unique Akka port numbers when running on the same machine.  
 
-The template project comes with configuration for running the application locally. By default, when using `sbt run` the `Main` class will start an `ActorSystem` with the default `application.conf`. When running locally some configuration properties must be overridden. Those local configuration properties are placed in the `local1.conf` file and you can run the application with this configuration with:
+To simplify the process of running multiple clusters locally, we've provided three `.conf` files named `local1`, `local2`, and `local3` with the port values shown below. By default, the `sbt run` command starts an `ActorSystem` with the default `application.conf`. All of the local configuration files include `application.conf`.
+
+ifdef::review[REVIEWERS: I don't think that the commands for running with these conf files should be here, but in the steps for deploying, once they've gotten more than one service to deploy locally. The table is good here for reference, though and we can link to this section from the procedure. I'm also not sure this is the place to introduce `ActorSystem`, but I left it in for now.]
+
+Run one Akka Cluster node with `local1.conf` as follows:
 
 [source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
 
-The `local1.conf` includes the `application.conf`. There are also `local2.conf`, `local3.conf`, and so on. Those define settings for additional Akka Cluster nodes. For example, a second node can be started with:
+
+Similarly, you can start two additional nodes with `local2.conf` and `local3.conf`:
 
 [source,shell script]
 ----
 sbt -Dconfig.resource=local2.conf run
+sbt -Dconfig.resource=local3.conf run
 ----
 
-When you develop several services you have to adjust the port numbers in those files. Each node (`ActorSystem`) must use unique ports when running several on the same machine.
-
-
-The example projects are using the following ports.
+The local configuration files set the following ports for each of the example services:
 
 .shopping-cart-service ports
 |===
