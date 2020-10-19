@@ -15,7 +15,7 @@ before_install:
 
 env:
   global:
-    - FLUSH=false
+    - RUN_DROP_TRAVIS_CACHES_STAGE=false
 
 jobs:
   include:
@@ -149,8 +149,8 @@ stages:
     # to drop caches trigger a custom build with
     # env:
     #   global:
-    #     - FLUSH=true
-    if: env(FLUSH) = true
+    #     - RUN_DROP_TRAVIS_CACHES_STAGE=true
+    if: env(RUN_DROP_TRAVIS_CACHES_STAGE) = true
 
   - name: check-files
     if: (NOT tag =~ ^v) AND (type != cron)
