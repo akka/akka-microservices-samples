@@ -13,6 +13,10 @@ before_install:
   - jabba install ${JDK:=adopt@~1.11-0}
   - jabba use ${JDK:=adopt@~1.11-0}
 
+env:
+  global:
+    - FLUSH=false
+
 jobs:
   include:
     - stage: drop-travis-caches
@@ -142,6 +146,11 @@ jobs:
 
 stages:
   - name: drop-travis-caches
+    # to drop caches trigger a custom build with
+    # env:
+    #   global:
+    #     - FLUSH=true
+    if: env(FLUSH) = true
 
   - name: check-files
     if: (NOT tag =~ ^v) AND (type != cron)
