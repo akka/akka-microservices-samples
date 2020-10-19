@@ -7,6 +7,7 @@ import akka.kafka.ConsumerSettings;
 import akka.kafka.Subscriptions;
 import akka.kafka.javadsl.Committer;
 import akka.kafka.javadsl.Consumer;
+import akka.stream.RestartSettings;
 import akka.stream.javadsl.RestartSource;
 import com.google.protobuf.Any;
 import com.google.protobuf.CodedInputStream;
@@ -43,7 +44,7 @@ class ShoppingCartEventConsumer {
         double randomFactor = 0.1;
 
         RestartSource // <1>
-                .onFailuresWithBackoff(minBackoff, maxBackoff, randomFactor, () -> {
+                .onFailuresWithBackoff(RestartSettings.create(minBackoff, maxBackoff, randomFactor), () -> {
                     return Consumer
                             .committableSource(consumerSettings, Subscriptions.topics(topic)) // <2>
                             .mapAsync(1, msg ->

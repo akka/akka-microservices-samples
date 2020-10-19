@@ -6,15 +6,11 @@ import scala.concurrent.duration._
 import scala.util.control.NonFatal
 import akka.Done
 import akka.actor.typed.ActorSystem
-import akka.actor.typed.scaladsl.adapter._
 import akka.kafka.CommitterSettings
 import akka.kafka.ConsumerSettings
 import akka.kafka.Subscriptions
-import akka.kafka.scaladsl.{
-  Committer,
-  Consumer,
-  DiscoverySupport
-}
+import akka.kafka.scaladsl.{ Committer, Consumer }
+import akka.stream.RestartSettings
 import akka.stream.scaladsl.RestartSource
 import com.google.protobuf.any.{ Any => ScalaPBAny }
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -50,9 +46,10 @@ object ShoppingCartEventConsumer {
 
     RestartSource // <1>
       .onFailuresWithBackoff(
-        minBackoff = 1.second,
-        maxBackoff = 30.seconds,
-        randomFactor = 0.1) { () =>
+        RestartSettings(
+          minBackoff = 1.second,
+          maxBackoff = 30.seconds,
+          randomFactor = 0.1)) { () =>
         Consumer
           .committableSource(
             consumerSettings,

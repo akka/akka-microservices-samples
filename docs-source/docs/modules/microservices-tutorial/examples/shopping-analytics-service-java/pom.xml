@@ -17,8 +17,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <akka.version>2.6.9+70-58b1c30c</akka.version>
-        <akka-http.version>10.2.0</akka-http.version>
+        <akka.version>2.6.10</akka.version>
+        <akka-http.version>10.2.1</akka-http.version>
         <!-- FIXME once akka management 1.0.9 is released -->
         <akka-management.version>1.0.8+35-9feaa689+20200825-1429</akka-management.version>
         <akka-persistence-cassandra.version>1.0.2</akka-persistence-cassandra.version>
@@ -226,11 +226,6 @@
         <repository>
             <id>akka-management-snapshots</id>
             <url>https://dl.bintray.com/akka/snapshots</url>
-        </repository>
-        <!-- For akka snapshot, remove once 2.6.10 is released -->
-        <repository>
-            <id>akka-snapshots</id>
-            <url>https://repo.akka.io/snapshots</url>
         </repository>
     </repositories>
 </project>
