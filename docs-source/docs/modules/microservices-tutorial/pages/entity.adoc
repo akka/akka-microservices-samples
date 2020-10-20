@@ -23,8 +23,8 @@ If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sour
 
 .Source downloads:
 ****
-* link:_attachments/1-shopping-cart-grpc-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
-* link:_attachments/2-shopping-cart-event-sourced-scala.zip[Source] with the steps on this page completed.
+* [.group-scala]#link:_attachments/1-shopping-cart-grpc-scala.zip[Source]# [.group-java]#link:_attachments/1-shopping-cart-grpc-java.zip[Source]# that includes all previous tutorial steps and allows you to start with the steps on this page.
+* [.group-scala]#link:_attachments/2-shopping-cart-event-sourced-scala.zip[Source]# [.group-java]#link:_attachments/2-shopping-cart-event-sourced-java.zip[Source]# with the steps on this page completed.
 ****
 
 :sectnums:
@@ -32,16 +32,14 @@ If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sour
 
 Commands are the "external" API of an entity. The state of the entity can be changed only by commands. The results of commands are emitted as events. A command can request state changes, but different events might be generated depending on the current state of the entity.
 
-ifdef::review[REVIEWERS: again my scala ignorance is showing, but will the reader know that they define an object in a separate file and what to name it and where to put it?]
-
-. Define a `ShoppingCart` object and the `AddItem` command:
+. [.group-scala]#Define a `ShoppingCart` object and the `AddItem` command:# [.group-java]#Define a `ShoppingCart` class extending `EventSourcedBehaviorWithEnforcedReplies` and the `AddItem` command:#
 
 [.tabset]
 Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;commands]
 ----
 
 Scala::
@@ -59,7 +57,7 @@ Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;events]
 ----
 
 Scala::
@@ -78,7 +76,7 @@ Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;state]
 ----
 
 Scala::
@@ -90,14 +88,15 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 == Command handler
 
-Implement the Event Sourced entity with the `EventSourcedBehavior`. Define the command handlers:
+[.group-scala]#Implement the Event Sourced entity with the `EventSourcedBehavior`. Define the command handlers:#
+[.group-java]#Implement the `commandHandler` as required by `EventSourcedBehaviorWithEnforcedReplies`.#
 
 [.tabset]
 Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;commandHandler]
 ----
 
 Scala::
@@ -131,7 +130,7 @@ Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;eventHandler]
 ----
 
 Scala::
@@ -150,7 +149,7 @@ Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;init]
 ----
 
 Scala::
@@ -162,7 +161,7 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 <1> The entities are distributed over the nodes in the Akka Cluster with Cluster Sharding.
 
-<2> Command and event handler are defined with the `EventSourcedBehavior`.
+<2> [.group-scala]#Command and event handler are defined with the `EventSourcedBehavior`.# [.group-java]#An `EventSourcedBehavior` is created for the `ShoppingCart`.#
 
 <3> Snapshotting is an optimization to reduce recovery when the entity is started.
 
@@ -175,7 +174,7 @@ Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/Main.java[tag=ShoppingCart]
 ----
 
 Scala::
@@ -198,7 +197,7 @@ Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/CborSerializable.java[]
 ----
 
 Scala::
@@ -217,16 +216,16 @@ include::example$02-shopping-cart-service-scala/src/main/resources/serialization
 
 == Unit testing
 
-To test the `ShoppingCart` entity you can write a unit test using the `EventSourcedBehaviorTestKit`.
+To test the `ShoppingCart` entity you can write a unit test using the [.group-scala]#`EventSourcedBehaviorTestKit`# [.group-java]#`TestKitJunitResource`#.
 
-A test for the `AddItem` command looks like this in `src/test/scala/shopping/cart/ShoppingCartSpec.scala`:
+A test for the `AddItem` command looks like this in [.group-scala]#`src/test/scala/shopping/cart/ShoppingCartSpec.scala`# [.group-java]#`src/test/java/shopping/cart/ShoppingCartTest.java`#:
 
 [.tabset]
 Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$02-shopping-cart-service-java/src/test/java/shopping/cart/ShoppingCartTest.java[]
 ----
 
 Scala::
@@ -238,12 +237,19 @@ include::example$02-shopping-cart-service-scala/src/test/scala/shopping/cart/Sho
 
 Run the test with:
 
+[.group-scala]
 [source,shell script]
 ----
 sbt test
 ----
 
-You can learn more about the `EventSourcedBehaviorTestKit` in the {akka}/typed/persistence-testing.html#unit-testing[Akka reference documentation] {akka}/typed/persistence-testing.html#unit-testing[{tab-icon}, window="tab"]
+[.group-java]
+[source,shell script]
+----
+mvn test
+----
+
+You can learn more about the [.group-scala]#`EventSourcedBehaviorTestKit`# [.group-java]#`TestKitJunitResource`# in the {akka}/typed/persistence-testing.html#unit-testing[Akka reference documentation] {akka}/typed/persistence-testing.html#unit-testing[{tab-icon}, window="tab"]
 
 == Sending commands to the entities
 
@@ -254,7 +260,7 @@ Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServiceImpl.java[]
 ----
 
 Scala::
@@ -264,7 +270,7 @@ Scala::
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[]
 ----
 
-If the command was successful the entity replied with `StatusReply.Success` with the updated `ShoppingCart.Summary`. If the validation in the entity failed it replied with `StatusReply.Error`, which will fail the `Future` that is returned from `askWithStatus`.
+If the command was successful the entity replied with `StatusReply.Success` with the updated `ShoppingCart.Summary`. If the validation in the entity failed it replied with `StatusReply.Error`, which will fail the [.group-scala]#`Future`# [.group-java]#`CompletionStage`# that is returned from `askWithStatus`.
 
 Also, you need to include the new `ActorSystem` parameter to the constructor when creating an instance of `ShoppingCartServiceImpl` from the `ShoppingCartServer`.
 
@@ -287,9 +293,17 @@ include::template.adoc[tag=docker]
 
 Run the service with:
 
+[.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
+----
+
+[.group-java]
+[source,shell script]
+----
+# make sure to compile before running exec:exec
+mvn compile exec:exec -DAPP_CONFIG=local1.conf
 ----
 
 Try it with `grpcurl`. Add 3 socks to a cart:
@@ -319,14 +333,32 @@ Then the returned updated cart should still contain the 3 socks.
 
 Another fun experiment is to start several instances of the service on different ports (2552, 2553) and then interact with different carts via the different gRPC servers (gRPC ports 8101, 8102, 8103).
 
+
+[.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local2.conf run
 ----
 
+[.group-java]
+[source,shell script]
+----
+# make sure to compile before running exec:exec
+mvn compile exec:exec -DAPP_CONFIG=local2.conf
+----
+
+
+[.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local3.conf run
+----
+
+[.group-java]
+[source,shell script]
+----
+# make sure to compile before running exec:exec
+mvn compile exec:exec -DAPP_CONFIG=local3.conf
 ----
 
 You can stop the service with `ctrl-c`.

@@ -44,7 +44,7 @@ jobs:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
         - mvn test
       name: "Shopping analytics service (Java)"
-      
+
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala
         - docker-compose up -d
@@ -55,7 +55,7 @@ jobs:
         - docker-compose up -d
         - mvn test
       name: "Shopping cart service (Java)"
-      
+
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala
         - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
@@ -87,11 +87,11 @@ jobs:
         - cd docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-scala
         - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
       name: "01 Shopping cart service (Scala)"
-    # - script:
-    #     - cd docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-java
-    #     - docker-compose up -d
-    #     - mvn test
-    #   name: "01 Shopping cart service (Java)"  
+    - script:
+        - cd docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-java
+        - docker-compose up -d
+        - mvn test
+      name: "01 Shopping cart service (Java)"
 
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-scala
@@ -190,12 +190,12 @@ before_cache:
 
 cache:
   directories:
-   - $HOME/.m2
-   - $HOME/.ivy2/cache
-   - $HOME/.sbt/boot
-   - $HOME/.sbt/launchers
-   - $HOME/.cache/coursier
-   - $HOME/.jabba
+    - $HOME/.m2
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt/boot
+    - $HOME/.sbt/launchers
+    - $HOME/.cache/coursier
+    - $HOME/.jabba
 
 # safelist
 branches:

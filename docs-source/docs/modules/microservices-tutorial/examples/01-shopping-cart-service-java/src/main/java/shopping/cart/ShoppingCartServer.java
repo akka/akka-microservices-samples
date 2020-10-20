@@ -1,20 +1,18 @@
 package shopping.cart;
 
 import akka.actor.typed.ActorSystem;
-import akka.grpc.ServiceDescription;
-import akka.grpc.javadsl.ServiceHandler;
 import akka.grpc.javadsl.ServerReflection;
+import akka.grpc.javadsl.ServiceHandler;
 import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
 import akka.http.javadsl.model.HttpRequest;
 import akka.http.javadsl.model.HttpResponse;
 import akka.japi.Function;
-import shopping.cart.proto.ShoppingCartServiceHandlerFactory;
 import shopping.cart.proto.ShoppingCartService;
+import shopping.cart.proto.ShoppingCartServiceHandlerFactory;
 
 import java.net.InetSocketAddress;
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.CompletionStage;
 
@@ -22,8 +20,8 @@ public final class ShoppingCartServer {
 
     private ShoppingCartServer() { }
 
-    static void start(String host, int port, ActorSystem<?> system, ItemPopularityRepository itemPopularityRepository) {
-        ShoppingCartServiceImpl impl = new ShoppingCartServiceImpl(system, itemPopularityRepository);
+    static void start(String host, int port, ActorSystem<?> system) {
+        ShoppingCartServiceImpl impl = new ShoppingCartServiceImpl(system);
         @SuppressWarnings("unchecked")
         Function<HttpRequest, CompletionStage<HttpResponse>> service =
                 ServiceHandler.concatOrNotFound(

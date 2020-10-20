@@ -33,12 +33,16 @@ import java.util.Objects;
  * loaded from the database - each event will be replayed to recreate the state
  * of the entity.
  */
-public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State> {
+// tag::shoppingCart[]
+public final class ShoppingCart
+        extends EventSourcedBehaviorWithEnforcedReplies<ShoppingCart.Command, ShoppingCart.Event, ShoppingCart.State> {
+// end::shoppingCart[]
 
     /**
      * The current state held by the `EventSourcedBehavior`.
      */
     // tag::state[]
+    //...
     final static class State implements CborSerializable {
         final Map<String, Integer> items;
 
@@ -77,6 +81,8 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
     }
     // end::state[]
 
+    // tag::commands[]
+    //...
     /**
      * This interface defines all the commands (messages) that the ShoppingCart actor supports.
      */
@@ -98,6 +104,7 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
             this.replyTo = replyTo;
         }
     }
+    // end::commands[]
 
     /**
      * Summary of the shopping cart state, used in reply messages.
@@ -112,6 +119,8 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
         }
     }
 
+    // tag::events[]
+    //...
     abstract static class Event implements CborSerializable {
         public final String cartId;
         public Event(String cartId) {
@@ -147,49 +156,53 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
             return Objects.hash(quantity);
         }
     }
+    // end::events[]
 
 
+    // tag::init[]
     final static EntityTypeKey<Command> ENTITY_KEY = EntityTypeKey.create(Command.class, "ShoppingCart");
-
-    // tag::howto-write-side-without-role[]
-    public static void init(ActorSystem<?> system) {
-        ClusterSharding.get(system).init(Entity.of(ENTITY_KEY, entityContext -> {
-            return ShoppingCart.create(entityContext.getEntityId());
-        }));
-    }
-    // end::howto-write-side-without-role[]
-
-    public static Behavior<Command> create(String cartId) {
-        return Behaviors.setup(ctx ->
-            EventSourcedBehavior.start(new ShoppingCart(cartId), ctx)
-        );
-    }
 
     private final String cartId;
 
-    private ShoppingCart(String cartId) {
-        super(PersistenceId.of(ENTITY_KEY.name(), cartId),
-                SupervisorStrategy.restartWithBackoff(Duration.ofMillis(200), Duration.ofSeconds(5), 0.1));
-        this.cartId = cartId;
+    public static void init(ActorSystem<?> system) {
+        ClusterSharding.get(system).init(Entity.of(ENTITY_KEY, entityContext -> { // <1>
+            return ShoppingCart.create(entityContext.getEntityId());
+        }));
+    }
+
+    public static Behavior<Command> create(String cartId) {
+        return Behaviors.setup(ctx ->
+            EventSourcedBehavior.start(new ShoppingCart(cartId), ctx) // <<2>
+        );
     }
 
     @Override
-    public RetentionCriteria retentionCriteria() {
+    public RetentionCriteria retentionCriteria() { // <3>
         return RetentionCriteria.snapshotEvery(100, 3);
     }
+
+    private ShoppingCart(String cartId) {
+        super(PersistenceId.of(ENTITY_KEY.name(), cartId),
+              SupervisorStrategy // <4>
+                      .restartWithBackoff(Duration.ofMillis(200), Duration.ofSeconds(5), 0.1));
+        this.cartId = cartId;
+    }
+    // end::init[]
+
+
 
     @Override
     public State emptyState() {
         return new State();
     }
-    // tag::commandHandlers[]
+    // tag::commandHandler[]
+    //...
     @Override
     public CommandHandlerWithReply<Command, Event, State> commandHandler() {
         CommandHandlerWithReplyBuilder<Command, Event, State> builder = newCommandHandlerWithReplyBuilder();
-        builder.forAnyState().onCommand(AddItem.class, this::onAddItem);
+        builder.forAnyState().onCommand(AddItem.class, this::onAddItem); // <1>
         return builder.build();
     }
-    // end::commandHandlers[]
 
     private ReplyEffect<Event, State> onAddItem(State state, AddItem cmd) {
         if (state.hasItem(cmd.itemId)) {
@@ -199,16 +212,25 @@ public final class ShoppingCart extends EventSourcedBehaviorWithEnforcedReplies<
         } else if (cmd.quantity <= 0) {
             return Effect().reply(cmd.replyTo, StatusReply.error("Quantity must be greater than zero"));
         } else {
-            return Effect().persist(new ItemAdded(cartId, cmd.itemId, cmd.quantity))
-                .thenReply(cmd.replyTo, updatedCart -> StatusReply.success(updatedCart.toSummary()));
+            return Effect() // <2>
+                    .persist(new ItemAdded(cartId, cmd.itemId, cmd.quantity))
+                    .thenReply(cmd.replyTo, updatedCart -> StatusReply.success(updatedCart.toSummary()));
         }
     }
+    // end::commandHandler[]
 
 
+    // tag::eventHandler[]
+    //...
     @Override
     public EventHandler<State, Event> eventHandler() {
         return newEventHandlerBuilder().forAnyState()
             .onEvent(ItemAdded.class, (state, evt) -> state.updateItem(evt.itemId, evt.quantity))
             .build();
     }
+    // end::eventHandler[]
+
+// tag::shoppingCart[]
 }
+
+// end::shoppingCart[]

@@ -35,7 +35,9 @@ public class Main extends AbstractBehavior<Void> {
         AkkaManagement.get(system.classicSystem()).start();
         ClusterBootstrap.get(system.classicSystem()).start();
 
+        // tag::ShoppingCart[]
         ShoppingCart.init(system);
+        // end::ShoppingCart[]
 
         String grpcInterface =
                 system.settings().config().getString("shopping-cart-service.grpc.interface");
