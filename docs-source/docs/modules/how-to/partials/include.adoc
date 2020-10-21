@@ -2,6 +2,4 @@
 
 include::ROOT:partial$include.adoc[]
 
-:akka-microservices-seed-scala:  https://github.com/akka/akka-microservices-seed-scala.g8
-
 :akka-persistence-jdbc:  https://doc.akka.io/docs/akka-persistence-jdbc/current

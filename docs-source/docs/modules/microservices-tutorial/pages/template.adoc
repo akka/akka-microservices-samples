@@ -1,4 +1,5 @@
 = II: Start a project
+:page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
 
@@ -7,38 +8,39 @@ We provide a template so that you don't need to create the shopping cart project
 
 :sectnums:
 
-== Run the template
+== Download the empty template
+[#seed-template]
 
-Use `sbt` to download and run the template to create your project:
+The starting template is available as downloadable link:_attachments/0-shopping-cart-start-scala.zip[zip file].
 
-. Open a console and run the following command: 
-+
+Unzip the file and you should have 3 directories:
+
+* `shopping-analytics-service`
+* `shopping-cart-service`
+* `shopping-order-service`
+
+In the first part of the tutorial we will work with the `shopping-cart-service` and we will use the others in later steps of the tutorial.
+
+Change to the new `shopping-cart-service` project directory and try to build it with:
+
+[.group-java]
 ----
-sbt new akka/akka-microservices-seed-scala.g8
+mvn compile
 ----
-+
-The template will prompt you to name the project. 
 
-. Enter the following for the first Cart service:
-
-.. `shopping-cart-service` as the project name.
-.. `shopping.cart` as the package name.
-
-. Change to the new `shopping-cart-service` project directory and try to build it with:
-+
+[.group-scala]
 ----
 sbt compile
 ----
 
 ifdef::review[REVIEWERS: we should add what they will see if successful and what to do if not.]
 
-The starting template is also available as downloadable link:_attachments/0-shopping-cart-start-scala.zip[zip file].
-
 == Open the project in IntelliJ
+[#intellij]
 
 If you are using IntelliJ, follow these steps to open the project:
 
-. From  the *File > Open* menu, highlight `shopping-cart-service/build.sbt` .
+. From  the *File > Open* menu, select [.group-scala]#`shopping-cart-service/build.sbt`# [.group-java]#`shopping-cart-service/pom.xml`#.
 . Select *Open as project*.
 
 ifdef::review[REVIEWERS: is this the appropriate place to run Docker, or wait until they have created their first service and are trying to run it?]

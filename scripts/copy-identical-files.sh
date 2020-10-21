@@ -12,6 +12,12 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/
 
+declare SRC="${tutorial_root}/00-shopping-analytics-service-scala/build.sbt"
+cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/
+
+declare SRC="${tutorial_root}/00-shopping-order-service-scala/build.sbt"
+cp ${SRC} ${tutorial_root}/shopping-order-service-scala/
+
 declare SRC="${tutorial_root}/00-shopping-cart-service-scala/.scalafmt.conf"
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/
@@ -19,8 +25,10 @@ cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/
-cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/
 cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/
+cp ${SRC} ${tutorial_root}/shopping-order-service-scala/
 cp ${SRC} ${howto_root}/shopping-cart-service-scala/
 cp ${SRC} ${howto_root}/cleanup-dependencies-project/
 
@@ -31,7 +39,9 @@ cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/project/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/project/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/project/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/project/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/project/
 cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/project/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/project/
 cp ${SRC} ${tutorial_root}/shopping-order-service-scala/project/
 cp ${SRC} ${howto_root}/shopping-cart-service-scala/project/
 
@@ -43,7 +53,9 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/project/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/project/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/project/
 cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/project/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/project/
 cp ${SRC} ${tutorial_root}/shopping-order-service-scala/project/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/project/
 cp ${SRC} ${howto_root}/shopping-cart-service-scala/project/
 
 # java only project build files
@@ -65,7 +77,9 @@ cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/
 cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/
 cp ${SRC} ${tutorial_root}/shopping-order-service-scala/
 
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/
@@ -85,7 +99,9 @@ cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/
 cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/
 cp ${SRC} ${tutorial_root}/shopping-order-service-scala/
 
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/
@@ -122,7 +138,10 @@ cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/resources/
 cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/main/resources/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/resources/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/resources/
-cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/src/main/resources/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/src/main/resources/
+cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/src/main/resources/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/src/main/resources/
+cp ${SRC} ${tutorial_root}/shopping-order-service-scala/src/main/resources/
 
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/src/main/resources/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/src/main/resources/
@@ -213,7 +232,9 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/resources/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/resources/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/src/main/resources/
 cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/src/main/resources/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/src/main/resources/
 cp ${SRC} ${tutorial_root}/shopping-order-service-scala/src/main/resources/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/src/main/resources/
 
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/src/main/resources/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/src/main/resources/
@@ -246,7 +267,9 @@ cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/test/resources/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/resources/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/resources/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/src/test/resources/
 cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/src/test/resources/
 cp ${SRC} ${tutorial_root}/shopping-order-service-scala/src/test/resources/
 
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/src/test/resources/

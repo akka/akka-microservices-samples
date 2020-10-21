@@ -136,9 +136,7 @@ include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/Mai
 
 Let's add another service that consumes the events from the Kafka topic.
 
-Create a project named `shopping-analytics-service` in a separate directory in the same way as the `shopping-cart-service` was created. See xref:dev-env.adoc#_template_project[Template project].
-
-Adjust the port numbers in the `local1.conf`, `local2.conf`, and `local3.conf` files according to the ports defined in xref:dev-env.adoc#_config_for_local_development[Config for local development].
+The xref:template.adoc#seed-template[template download] (or other source downloads) includes a directory named `shopping-analytics-service`. Open the `shopping-analytics-service` xref:template.adoc#intellij[in IntelliJ in the same way as you did with the shopping-cart-service].
 
 === Protobuf
 

@@ -58,35 +58,46 @@ removeTags
 
 
 ## Scala Zip files
-## empty codebase (this is a backup option for users  that can't use the .g8 template)
+## empty seed template
 prepareTemporalFolder
 fetchProject 00-shopping-cart-service-scala shopping-cart-service
+fetchProject 00-shopping-analytics-service-scala shopping-analytics-service
+fetchProject 00-shopping-order-service-scala shopping-order-service-scala
 zipAndAttach 0-shopping-cart-start-scala.zip
 
 ## gRPC service
 prepareTemporalFolder
 fetchProject 01-shopping-cart-service-scala shopping-cart-service
+fetchProject 00-shopping-analytics-service-scala shopping-analytics-service
+fetchProject 00-shopping-order-service-scala shopping-order-service-scala
 zipAndAttach 1-shopping-cart-grpc-scala.zip
 
 ## basic entity
 prepareTemporalFolder
 fetchProject 02-shopping-cart-service-scala shopping-cart-service
+fetchProject 00-shopping-analytics-service-scala shopping-analytics-service
+fetchProject 00-shopping-order-service-scala shopping-order-service-scala
 zipAndAttach 2-shopping-cart-event-sourced-scala.zip
 
 ## complete entity
 prepareTemporalFolder
 fetchProject 03-shopping-cart-service-scala shopping-cart-service
+fetchProject 00-shopping-analytics-service-scala shopping-analytics-service
+fetchProject 00-shopping-order-service-scala shopping-order-service-scala
 zipAndAttach 3-shopping-cart-event-sourced-complete-scala.zip
 
 ## projection query
 prepareTemporalFolder
 fetchProject 04-shopping-cart-service-scala shopping-cart-service
+fetchProject 00-shopping-analytics-service-scala shopping-analytics-service
+fetchProject 00-shopping-order-service-scala shopping-order-service-scala
 zipAndAttach 4-shopping-cart-projection-scala.zip
 
 ## projection kafka
 prepareTemporalFolder
 fetchProject 05-shopping-cart-service-scala shopping-cart-service
 fetchProject shopping-analytics-service-scala shopping-analytics-service
+fetchProject 00-shopping-order-service-scala shopping-order-service-scala
 zipAndAttach 5-shopping-cart-projection-kafka-scala.zip
 
 ## complete
@@ -98,7 +109,7 @@ zipAndAttach 6-shopping-cart-complete-scala.zip
 
 
 ## Java Zip files
-## empty codebase (this is a backup option for users  that can't use the .g8 template)
+## empty seed template
 prepareTemporalFolder
 fetchProject 00-shopping-cart-service-java shopping-cart-service
 zipAndAttach 0-shopping-cart-start-java.zip

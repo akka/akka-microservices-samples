@@ -70,4 +70,6 @@ See the instructions for installing https://docs.docker.com/get-docker/[Docker {
 
 We encourage you to enter the example code, even if by copying and pasting. If you get stuck or prefer to skip some main steps, we provide source files for download. The introduction of each page with tutorial development steps includes links to two zip files: one with completed source up to that point, and one with completed source for the steps described on that page.
 
+In xref:template.adoc[next step] you will find instructions of how to download the starting template for the tutorial.
+
 If you would like to run the full example, you can download the link:_attachments/6-shopping-cart-complete-scala.zip[full implementation]. In this case, we suggest you scan the tutorial instructions to identify the source files that you can learn from.
