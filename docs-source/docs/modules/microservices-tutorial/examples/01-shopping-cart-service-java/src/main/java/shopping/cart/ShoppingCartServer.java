@@ -26,13 +26,16 @@ public final class ShoppingCartServer {
         Function<HttpRequest, CompletionStage<HttpResponse>> service =
                 ServiceHandler.concatOrNotFound(
                     ShoppingCartServiceHandlerFactory.create(impl, system),
-                    // ServerReflection enabled to support grpcurl without import-path and proto parameters
+                    // <1>
+                        // ServerReflection enabled to support grpcurl without import-path and proto parameters
                     ServerReflection.create(Collections.singletonList(ShoppingCartService.description), system));
 
-        CompletionStage<ServerBinding> bound = Http.get(system).newServerAt(host, port)
-                .bind(service::apply);
+        CompletionStage<ServerBinding> bound =
+                Http.get(system)
+                        .newServerAt(host, port)
+                        .bind(service::apply); // <2>
 
-        bound.whenComplete((binding, ex) -> {
+        bound.whenComplete((binding, ex) -> { // <3>
             if (binding != null) {
                 binding.addToCoordinatedShutdown(Duration.ofSeconds(3), system);
                 InetSocketAddress address = binding.localAddress();

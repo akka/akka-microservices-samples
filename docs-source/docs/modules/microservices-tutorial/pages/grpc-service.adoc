@@ -17,8 +17,13 @@ On this page you will learn how to:
 
 .Source downloads:
 ****
+<<<<<<< Updated upstream
 * link:_attachments/0-shopping-cart-start-scala.zip[Source] with the initial project template.
 * link:_attachments/1-shopping-cart-grpc-scala.zip[Source] with the steps on this page completed.
+=======
+* [.group-scala]#link:_attachments/0-shopping-cart-start-scala.zip[Source]# [.group-java]#link:_attachments/0-shopping-cart-start-java.zip[Source]# with the initial project template. Alternatively, use `sbt` to start a new project as explained in xref:template.adoc[Run the template].
+* [.group-scala]#link:_attachments/1-shopping-cart-grpc-scala.zip[Source]# [.group-java]#link:_attachments/1-shopping-cart-grpc-java.zip[Source]# with the steps on this page completed.
+>>>>>>> Stashed changes
 ****
 
 
@@ -42,16 +47,23 @@ include::example$01-shopping-cart-service-scala/src/main/protobuf/ShoppingCartSe
 
 == Generate code
 
-The Akka gRPC plugin will generate code from the service descriptor when you compile the project. Run `sbt` to compile:
+The Akka gRPC plugin will generate code from the service descriptor when you compile the project. Run [.group-scala]#`sbt`# [.group-java]#`mvn`# to compile:
 
+[.group-scala]
 [source,shell script]
 ----
 sbt compile
 ----
 
+[.group-java]
+[source,shell script]
+----
+mvn compile
+----
+
 == Service implementation
 
-Let's implement the `ShoppingCartService` trait. Create a `ShoppingCartServiceImpl` class that extends the generated `ShoppingCartService` trait. Implement the `addItem` method from the trait by logging the call and return a successful `Future`.
+Let's implement the `ShoppingCartService` [.group-scala]#trait# [.group-java]#interface#. Create a `ShoppingCartServiceImpl` class that extends the generated `ShoppingCartService` [.group-scala]#trait# [.group-java]#interface#. Implement the `addItem` method from the [.group-scala]#trait# [.group-java]#interface# by logging the call and return a successful [.group-scala]#`Future`# [.group-java]#`CompletionStage`#.
 
 ifdef::review[REVIEWERS: it appears as though the impl class is in a separate file, do we need to explicitly tell the reader where to put it?]
 
@@ -60,7 +72,7 @@ Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$01-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServiceImpl.java[]
 ----
 
 Scala::
@@ -84,7 +96,7 @@ Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$01-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServer.java[]
 ----
 
 Scala::
@@ -107,7 +119,7 @@ Java::
 +
 [source,java,indent=0]
 ----
-TODO
+include::example$01-shopping-cart-service-java/src/main/java/shopping/cart/Main.java[]
 ----
 
 Scala::
@@ -128,9 +140,17 @@ The `grpc.port` configuration is defined in `local1.conf`, which is included in 
 
 You can run this service with:
 
+[.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
+----
+
+[.group-java]
+[source,shell script]
+----
+# make sure to compile before running exec:exec
+mvn compile exec:exec -DAPP_CONFIG=local1.conf
 ----
 
 Note the log output from the `ShoppingCartServer`
