@@ -42,7 +42,7 @@ jobs:
       name: "Shopping analytics service (Scala)"
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
-        - mvn test
+        - mvn spotless:check test
       name: "Shopping analytics service (Java)"
 
     - script:
@@ -53,7 +53,7 @@ jobs:
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-java
         - docker-compose up -d
-        - mvn test
+        - mvn spotless:check test
       name: "Shopping cart service (Java)"
 
     - script:
@@ -62,7 +62,7 @@ jobs:
       name: "Shopping order service (Scala)"
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-java
-        - mvn test
+        - mvn spotless:check test
       name: "Shopping order service (Java)"
 
     - script:
@@ -90,7 +90,7 @@ jobs:
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-java
         - docker-compose up -d
-        - mvn test
+        - mvn spotless:check test
       name: "01 Shopping cart service (Java)"
 
     - script:
@@ -101,7 +101,7 @@ jobs:
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-java
         - docker-compose up -d
-        - mvn test
+        - mvn spotless:check test
       name: "02 Shopping cart service (Java)"
 
     - script:
@@ -112,7 +112,7 @@ jobs:
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-java
         - docker-compose up -d
-        - mvn test
+        - mvn spotless:check test
       name: "03 Shopping cart service (Java)"
 
     - script:
@@ -123,7 +123,7 @@ jobs:
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-java
         - docker-compose up -d
-        - mvn test
+        - mvn spotless:check test
       name: "04 Shopping cart service (Java)"
 
     - script:
@@ -134,7 +134,7 @@ jobs:
     - script:
         - cd docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-java
         - docker-compose up -d
-        - mvn test
+        - mvn spotless:check test
       name: "05 Shopping cart service (Java)"
 
     - script:

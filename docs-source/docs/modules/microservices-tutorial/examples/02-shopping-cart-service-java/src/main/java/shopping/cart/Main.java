@@ -1,6 +1,5 @@
 package shopping.cart;
 
-import akka.actor.Actor;
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Behavior;
 import akka.actor.typed.javadsl.AbstractBehavior;
@@ -9,46 +8,38 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import akka.management.cluster.bootstrap.ClusterBootstrap;
 import akka.management.javadsl.AkkaManagement;
-import akka.projection.cassandra.javadsl.CassandraProjection;
-import akka.stream.alpakka.cassandra.javadsl.CassandraSession;
-import akka.stream.alpakka.cassandra.javadsl.CassandraSessionRegistry;
-import org.slf4j.LoggerFactory;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class Main extends AbstractBehavior<Void> {
 
-    public static void main(String[] args) throws Exception {
-        ActorSystem<Void> system = ActorSystem.create(Main.create(), "ShoppingCartService");
-    }
+  public static void main(String[] args) throws Exception {
+    ActorSystem<Void> system = ActorSystem.create(Main.create(), "ShoppingCartService");
+  }
 
-    public static Behavior<Void> create() {
-        return Behaviors.setup(Main::new);
-    }
+  public static Behavior<Void> create() {
+    return Behaviors.setup(Main::new);
+  }
 
-    public Main(ActorContext<Void> context) {
-        super(context);
+  public Main(ActorContext<Void> context) {
+    super(context);
 
-        ActorSystem<?> system = context.getSystem();
+    ActorSystem<?> system = context.getSystem();
 
-        // FIXME no get(ClassicActorSystemProvider) for Java?
-        AkkaManagement.get(system.classicSystem()).start();
-        ClusterBootstrap.get(system.classicSystem()).start();
+    // FIXME no get(ClassicActorSystemProvider) for Java?
+    AkkaManagement.get(system.classicSystem()).start();
+    ClusterBootstrap.get(system.classicSystem()).start();
 
-        // tag::ShoppingCart[]
-        ShoppingCart.init(system);
-        // end::ShoppingCart[]
+    // tag::ShoppingCart[]
+    ShoppingCart.init(system);
+    // end::ShoppingCart[]
 
-        String grpcInterface =
-                system.settings().config().getString("shopping-cart-service.grpc.interface");
-        int grpcPort = system.settings().config().getInt("shopping-cart-service.grpc.port");
-        ShoppingCartServer.start(grpcInterface, grpcPort, system);
+    String grpcInterface =
+        system.settings().config().getString("shopping-cart-service.grpc.interface");
+    int grpcPort = system.settings().config().getInt("shopping-cart-service.grpc.port");
+    ShoppingCartServer.start(grpcInterface, grpcPort, system);
+  }
 
-
-    }
-
-    @Override
-    public Receive<Void> createReceive() {
-        return newReceiveBuilder().build();
-    }
+  @Override
+  public Receive<Void> createReceive() {
+    return newReceiveBuilder().build();
+  }
 }

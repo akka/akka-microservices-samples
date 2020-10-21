@@ -1,67 +1,63 @@
 package shopping.cart;
 
 import akka.Done;
-import akka.actor.typed.ActorSystem;
 import akka.projection.eventsourced.EventEnvelope;
 import akka.projection.javadsl.Handler;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionStage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
-
-public final class ItemPopularityProjectionHandler 
+public final class ItemPopularityProjectionHandler
     extends Handler<EventEnvelope<ShoppingCart.Event>> { // <1>
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    private final String tag;
-    private final ItemPopularityRepository repo;
+  private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final String tag;
+  private final ItemPopularityRepository repo;
 
-    public ItemPopularityProjectionHandler(String tag, ItemPopularityRepository repo) {
-        this.tag = tag;
-        this.repo = repo;
+  public ItemPopularityProjectionHandler(String tag, ItemPopularityRepository repo) {
+    this.tag = tag;
+    this.repo = repo;
+  }
+
+  @Override
+  public CompletionStage<Done> process(EventEnvelope<ShoppingCart.Event> envelope) // <2>
+      throws Exception, Exception {
+    ShoppingCart.Event event = envelope.event();
+
+    CompletionStage<Done> dbEffect = null;
+    if (event instanceof ShoppingCart.ItemAdded) { // <3>
+      ShoppingCart.ItemAdded added = (ShoppingCart.ItemAdded) event;
+      dbEffect = this.repo.update(added.itemId, added.quantity);
+    } else if (event instanceof ShoppingCart.ItemQuantityAdjusted) {
+      ShoppingCart.ItemQuantityAdjusted adjusted = (ShoppingCart.ItemQuantityAdjusted) event;
+      dbEffect = this.repo.update(adjusted.itemId, adjusted.newQuantity - adjusted.oldQuantity);
+    } else if (event instanceof ShoppingCart.ItemRemoved) {
+      ShoppingCart.ItemRemoved removed = (ShoppingCart.ItemRemoved) event;
+      dbEffect = this.repo.update(removed.itemId, -removed.oldQuantity);
+    } else {
+      // skip all other events, such as `CheckedOut`
+      dbEffect = CompletableFuture.completedFuture(Done.getInstance());
     }
 
-    @Override
-    public CompletionStage<Done> process(EventEnvelope<ShoppingCart.Event> envelope) // <2>
-        throws Exception, Exception { 
-        ShoppingCart.Event event = envelope.event();
+    dbEffect.thenAccept(done -> logItemCount(event));
 
-        CompletionStage<Done> dbEffect = null;
-        if (event instanceof ShoppingCart.ItemAdded) { // <3>
-            ShoppingCart.ItemAdded added = (ShoppingCart.ItemAdded) event;
-            dbEffect = this.repo.update(added.itemId, added.quantity);
-        } else if (event instanceof ShoppingCart.ItemQuantityAdjusted) {
-            ShoppingCart.ItemQuantityAdjusted adjusted =
-                    (ShoppingCart.ItemQuantityAdjusted) event;
-            dbEffect = this.repo.update(adjusted.itemId, adjusted.newQuantity - adjusted.oldQuantity);
-        } else if (event instanceof ShoppingCart.ItemRemoved) {
-            ShoppingCart.ItemRemoved removed = (ShoppingCart.ItemRemoved) event;
-            dbEffect = this.repo.update(removed.itemId, -removed.oldQuantity);
-        } else {
-            // skip all other events, such as `CheckedOut`
-            dbEffect = CompletableFuture.completedFuture(Done.getInstance());
-        }
+    return dbEffect;
+  }
 
-        dbEffect.thenAccept(done -> logItemCount(event));
+  /** Log the popularity of the item in every `ItemEvent` every `LogInterval`. */
+  private void logItemCount(ShoppingCart.Event event) {
+    if (event instanceof ShoppingCart.ItemEvent) {
+      ShoppingCart.ItemEvent itemEvent = (ShoppingCart.ItemEvent) event;
 
-        return dbEffect;
+      String itemId = itemEvent.itemId;
+      repo.getItem(itemId)
+          .thenAccept(
+              opt ->
+                  logger.info(
+                      "ItemPopularityProjectionHandler({}) item popularity for '{}': [{}]",
+                      this.tag,
+                      itemId,
+                      opt.orElse(0L)));
     }
-
-    /** Log the popularity of the item in every `ItemEvent` every `LogInterval`. */
-    private void logItemCount(ShoppingCart.Event event) {
-        if (event instanceof ShoppingCart.ItemEvent) {
-            ShoppingCart.ItemEvent itemEvent = (ShoppingCart.ItemEvent) event;
-
-            String itemId = itemEvent.itemId;
-            repo.getItem(itemId)
-                .thenAccept(
-                    opt ->
-                        logger.info(
-                                "ItemPopularityProjectionHandler({}) item popularity for '{}': [{}]",
-                                this.tag,
-                                itemId,
-                                opt.orElse(0L))
-                );
-        }
-    }
+  }
 }
