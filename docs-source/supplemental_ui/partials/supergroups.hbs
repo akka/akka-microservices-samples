@@ -10,23 +10,23 @@
 		</span>
 	{{/if}}
 
-	{{#if page.attributes.supergroup-sbt-maven}}
+	{{#if page.attributes.supergroup-maven-sbt}}
 		<span>
-			<label>{{page.attributes.supergroup-sbt-maven}}</label>
-			<select class="supergroup" name="supergroup-sbt-maven">
-				<option class="group" value="group-sbt">sbt</option>
+			<label>{{page.attributes.supergroup-maven-sbt}}</label>
+			<select class="supergroup" name="supergroup-maven-sbt">
 				<option class="group" value="group-maven">Maven</option>
+				<option class="group" value="group-sbt">sbt</option>
 			</select>
 		</span>
 	{{/if}}
 
-	{{#if page.attributes.supergroup-sbt-maven-gradle}}
+	{{#if page.attributes.supergroup-maven-gradle-sbt}}
 		<span>
-			<label>{{page.attributes.supergroup-sbt-maven-gradle}}</label>
-			<select class="supergroup" name="supergroup-sbt-maven-gradle">
-				<option class="group" value="group-sbt">sbt</option>
+			<label>{{page.attributes.supergroup-maven-gradle-sbt}}</label>
+			<select class="supergroup" name="supergroup-maven-gradle-sbt">
 				<option class="group" value="group-maven">Maven</option>
 				<option class="group" value="group-gradle">Gradle</option>
+				<option class="group" value="group-sbt">sbt</option>
 			</select>
 		</span>
 	{{/if}}

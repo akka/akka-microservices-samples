@@ -1,10 +1,14 @@
 = I: Set up your development environment
 :page-supergroup-java-scala: Language
+:page-supergroup-maven-sbt: Build tool
 
 include::ROOT:partial$include.adoc[]
 
+Select your preferred language (Java/Scala) above.
 
 To follow tutorial steps you will need a code editor, a build tool, and `grpcurl` (a CLI for sending gRPC calls). You can use your preferred code editor. We provide the steps for using https://www.jetbrains.com/idea/[IntelliJ IDEA {tab-icon}, window="tab"] from JetBrains. For the [.group-scala]#Scala# [.group-java]#Java# version of the example, we use [.group-scala]#`sbt`# [.group-java]#`Apache Maven`# as the build tool.
+
+Select [.group-scala]#sbt# [.group-java]#Maven# as build tool above.
 
 This tutorial uses Cassandra and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[Docker {tab-icon}, window="tab"]. The template project's root directory includes a https://docs.docker.com/compose/[Docker Compose] https://docs.docker.com/compose/[{tab-icon}, window="tab"] file that you can use to run Cassandra and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
 
@@ -24,23 +28,31 @@ We also provide downloadable versions of the example at different phases of comp
 :!sectnums:
 == IntelliJ IDEA
 
-[.group-java]
+[.tabset]
+Java::
++
 Download and install https://www.jetbrains.com/idea/download/[IntelliJ {tab-icon}, window="tab"].
 
-[.group-scala]
+Scala::
++
 To install IntelliJ and prepare to develop the Scala example, follow these steps:
 
-[.group-scala]
 . Download and install https://www.jetbrains.com/idea/download/[IntelliJ {tab-icon}, window="tab"].
 . From the *Preferences* menu, add the *Scala* plugin.
 
 
 == Build tool
 
-[.group-scala]
+[.tabset]
+Maven::
++
+For the Java Shopping Cart example, we use `Maven` as the build tool. http://maven.apache.org/install.html[Install Maven] if you haven't already.
+
+sbt::
++
 For the Scala Shopping Cart example, we use `sbt` as the build tool. https://www.scala-sbt.org/download.html[Install sbt] if you haven't already.
 
-[TIP.group-scala]
+[TIP.group-sbt]
 ====
 `sbt` is an interactive shell. If you start it with the `sbt` command, you can repeatedly run tasks like `compile` and `test` in the sbt shell. In the tutorial we use the full command for clarity, such as `sbt compile`. You can run tasks independently in this way, but it's faster to leave the `sbt` shell running and only enter the tasks. For example:
 
@@ -53,9 +65,6 @@ sbt:shopping-cart-service> test
 ...
 ----
 ====
-
-[.group--java]
-For the Java Shopping Cart example, we use `Maven` as the build tool. http://maven.apache.org/install.html[Install Maven] if you haven't already.
 
 == The grpcurl tool
 
