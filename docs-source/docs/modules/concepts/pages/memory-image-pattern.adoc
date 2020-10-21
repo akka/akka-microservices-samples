@@ -12,9 +12,9 @@ Memory Image is a programming pattern in which data stored on the database resid
 == Sharded Entities
 [#sharded_entities]
 
-One way to meet the two requirements above is to ensure only one copy of the data is on memory at any given time. That's also known as {reactive-principles}/patterns/isolate-mutations.html[isolating the mutations] {reactive-principles}/patterns/isolate-mutations.html[{tab-icon}, window="tab"]. Then, because your data may exceed the capacity of your memory, you can shard the data and keep a chunk on each of your application nodes. Finally, each shard of data uses mutual exclusion mechanisms to ensure each mutation happens sequentially.
+One way to meet the two requirements above is to ensure only one copy of the data is on memory at any given time. That's also known as {reactive-principles}/patterns/isolate-mutations.html[isolating the mutations {tab-icon}, window="tab"]. Then, because your data may exceed the capacity of your memory, you can shard the data and keep a chunk on each of your application nodes. Finally, each shard of data uses mutual exclusion mechanisms to ensure each mutation happens sequentially.
 
-{akka}/typed/actors.html#akka-actors[Akka actors] {akka}/typed/actors.html#akka-actors[{tab-icon}, window="tab"] provide serial access to mutating data out of the box. If an actor, is a direct image of some persistent data it becomes a memory image. Finally, Akka Cluster provides the means to implement the "Sharded Singletons" approach by {akka}/typed/cluster-sharding.html[sharding] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"] all your actors.
+{akka}/typed/actors.html#akka-actors[Akka actors {tab-icon}, window="tab"] provide serial access to mutating data out of the box. If an actor, is a direct image of some persistent data it becomes a memory image. Finally, Akka Cluster provides the means to implement the "Sharded Singletons" approach by {akka}/typed/cluster-sharding.html[sharding {tab-icon}, window="tab"] all your actors.
 
 Using a single memory instance for each of the entities in the database ensures we are compliant with the Single Writer Principle. Since there is only one instance in the cluster, we can guarantee there will only be one writer for each entity therefore we don't need to implement locking mechanisms on the database access.
 
@@ -24,9 +24,9 @@ The xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka]
 
 The Sharded Singletons approach to Memory Image prefers https://en.wikipedia.org/wiki/CAP_theorem[Consistency to Availability]. You may decrease the Consistency guarantees in favor of Availability if you implement your memory images in a way that concurrent mutation may converge.
 
-Akka Persistence supports Replicated Images for Event Sourced actors in the {akka}/typed/replicated-eventsourcing.html#relaxing-the-single-writer-principle-for-availability[Replicated Event Sourcing API] {akka}/typed/replicated-eventsourcing.html#relaxing-the-single-writer-principle-for-availability[{tab-icon}, window="tab"].
+Akka Persistence supports Replicated Images for Event Sourced actors in the {akka}/typed/replicated-eventsourcing.html#relaxing-the-single-writer-principle-for-availability[Replicated Event Sourcing API {tab-icon}, window="tab"].
 
 
 == Learn more
 
-Learn more about the Memory Image pattern at https://www.martinfowler.com/bliki/MemoryImage.html[Martin Fowler's bliki post].
+Learn more about the Memory Image pattern at https://www.martinfowler.com/bliki/MemoryImage.html[Martin Fowler's bliki post {tab-icon}, window="tab"].

@@ -13,7 +13,7 @@ To update an entity's state we use commands from the outside and events on the i
 
 * *Commands*: The state of the entity can be changed only by sending commands to it. The commands are the "external" API of an entity. Commands request state changes. The current state may reject the command, or it may accept it producing zero, one or many events (depending on the command and the current state).
 
-* *Events*: The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands. Events are an internal mechanism for the entity to mutate the state, other parties can't send events. Other parts of the application may listen to the created events. Summing up, events are {reactive-principles}/patterns/communicate-facts.html[facts] {reactive-principles}/patterns/communicate-facts.html[{tab-icon}, window="tab"].
+* *Events*: The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands. Events are an internal mechanism for the entity to mutate the state, other parties can't send events. Other parts of the application may listen to the created events. Summing up, events are {reactive-principles}/patterns/communicate-facts.html[facts {tab-icon}, window="tab"].
 +
 The events are persisted to the datastore, while the entity state is kept in memory. In case of a restart the latest state gets rebuilt by replaying the events from the Event Journal.
 
@@ -54,6 +54,6 @@ In a distributed architecture, Event Sourcing provides the following advantages:
 * Another excellent article about “thinking in Events” is
 https://hackernoon.com/events-as-first-class-citizens-8633e8479493[Events As First-Class Citizens] by Randy Shoup. It is a short and recommended read if you’re starting developing Event based applications.
 
-* {akka}/typed/persistence.html#introduction[Akka Event Sourcing documentation].
+* {akka}/typed/persistence.html#introduction[Akka Event Sourcing documentation {tab-icon}, window="tab"].
 
 

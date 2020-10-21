@@ -3,9 +3,9 @@
 
 include::partial$include.adoc[]
 
-NOTE: This concept is related to {reactive-manifesto}[resilience] {reactive-manifesto}[{tab-icon}, window="tab"] and {reactive-manifesto}[elasticity] {reactive-manifesto}[{tab-icon}, window="tab"] which are two properties of {reactive-manifesto}[Reactive Systems] {reactive-manifesto}[{tab-icon}, window="tab"].
+NOTE: This concept is related to {reactive-manifesto}[resilience {tab-icon}, window="tab"] and {reactive-manifesto}[elasticity {tab-icon}, window="tab"] which are two properties of {reactive-manifesto}[Reactive Systems {tab-icon}, window="tab"].
 
-Isolation is a prerequisite for {reactive-manifesto}[resilience] {reactive-manifesto}[{tab-icon}, window="tab"] and {reactive-manifesto}[elasticity] {reactive-manifesto}[{tab-icon}, window="tab"] and requires {reactive-manifesto}glossary#Asynchronous[asynchronous communication] boundaries between services to decouple them in:
+Isolation is a prerequisite for {reactive-manifesto}[resilience {tab-icon}, window="tab"] and {reactive-manifesto}[elasticity {tab-icon}, window="tab"] and requires {reactive-manifesto}glossary#Asynchronous[asynchronous communication {tab-icon}, window="tab"] boundaries between services to decouple them in:
 
 - _Time_: Allowing concurrency 
 
@@ -13,7 +13,7 @@ Isolation is a prerequisite for {reactive-manifesto}[resilience] {reactive-manif
 
 When adopting Microservices, it is also essential to eliminate shared mutable state and thereby minimize coordination, contention and coherency cost, as defined in the Universal Scalability Law by embracing a Share-Nothing Architecture.
 
-{reactive-manifesto}[Resilience] {reactive-manifesto}[{tab-icon}, window="tab"]—the ability to heal from failure—depends on compartmentalization and containment of failure, and can only be achieved by breaking free from the strong coupling of synchronous communication. Microservices communicating over a process boundary using asynchronous message-passing enable the level of indirection and decoupling necessary to capture and manage failure, orthogonally to the regular workflow, using service supervision.
+{reactive-manifesto}[Resilience {tab-icon}, window="tab"]—the ability to heal from failure—depends on compartmentalization and containment of failure, and can only be achieved by breaking free from the strong coupling of synchronous communication. Microservices communicating over a process boundary using asynchronous message-passing enable the level of indirection and decoupling necessary to capture and manage failure, orthogonally to the regular workflow, using service supervision.
 
 
 Isolation also makes it easier to scale each service, as well as allowing them to be monitored, debugged and tested independently—something that is very hard if the services are all tangled up in the big bulky monolith.
@@ -22,5 +22,5 @@ Isolation also makes it easier to scale each service, as well as allowing them t
 include::partial$reactive-microservices-ebook.adoc[]
 
 
-NOTE: Decoupling Time, Decoupling Space and Embracing Failure are three of the {reactive-principles}/principles[Reactive Principles] {reactive-principles}/principles[{tab-icon}, window="tab"].
+NOTE: Decoupling Time, Decoupling Space and Embracing Failure are three of the {reactive-principles}/principles[Reactive Principles {tab-icon}, window="tab"].
 

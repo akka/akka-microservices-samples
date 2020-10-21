@@ -5,7 +5,7 @@ include::partial$include.adoc[]
 
 This section explains the concepts that motivate Akka's take on how to implement Microservices using Event
 Sourcing and CQRS. Microservices built using Event Sourcing and CQRS adhere to the properties of a
-{reactive-manifesto}[Reactive System] {reactive-manifesto}[{tab-icon}, window="tab"]  and are often called Reactive Microsystems.
+{reactive-manifesto}[Reactive System {tab-icon}, window="tab"] and are often called Reactive Microsystems.
 
 == Introduction
 

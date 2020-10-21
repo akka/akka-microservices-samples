@@ -5,7 +5,7 @@ include::partial$include.adoc[]
 
 xref:isolation.adoc[Isolation] is a prerequisite for autonomy. Only when services are isolated can they be fully autonomous and make decisions independently, act independently, and cooperate and coordinate with others to solve problems.
 
-An https://en.wikipedia.org/wiki/Service_autonomy_principle[autonomous service] can only promise its own behaviour by publishing its protocol/API. Embracing this simple yet fundamental fact has profound impact on how we can understand and model collaborative systems with autonomous services.
+An https://en.wikipedia.org/wiki/Service_autonomy_principle[autonomous service {tab-icon}, window="tab"] can only promise its own behaviour by publishing its protocol/API. Embracing this simple yet fundamental fact has profound impact on how we can understand and model collaborative systems with autonomous services.
 
 Another aspect of autonomy is that if a service only can make promises about its own behavior, then all information needed to resolve a conflict or to repair under failure scenarios are available within the service itself, removing the need for communication and coordination.
 
@@ -13,4 +13,4 @@ Working with autonomous services opens up flexibility around service orchestrati
 
 include::partial$reactive-microservices-ebook.adoc[]
 
-NOTE: Autonomy is one of the {reactive-principles}/principles/assert-autonomy.html[Reactive Principles] {reactive-principles}/principles/assert-autonomy.html[{tab-icon}, window="tab"].
+NOTE: Autonomy is one of the {reactive-principles}/principles/assert-autonomy.html[Reactive Principles {tab-icon}, window="tab"].

@@ -4,7 +4,7 @@
 include::partial$include.adoc[]
 
 
-{akka}/stream/stream-introduction.html[Akka Streams] provides an intuitive and safe way to formulate stream processing setups such that we can then execute them efficiently and with bounded resource usage —- no more OutOfMemoryErrors.
+{akka}/stream/stream-introduction.html[Akka Streams {tab-icon}, window="tab"] provides an intuitive and safe way to formulate stream processing setups such that we can then execute them efficiently and with bounded resource usage —- no more OutOfMemoryErrors.
 
 The Akka Streams API is completely decoupled from the xref:reactive-streams.adoc[] interfaces. While Akka Streams focus on the formulation of transformations on data streams the scope of Reactive Streams is to define a common mechanism of how to move data across an asynchronous boundary without losses, buffering or resource exhaustion.
 
@@ -12,9 +12,9 @@ The relationship between Akka Streams and Reactive Streams is that the Akka Stre
 
 == Learn more
 
-To learn more, have a look at the {akka}/stream/stream-introduction.html[Akka Streams documentation] dedicated setions: 
+To learn more, have a look at the {akka}/stream/stream-introduction.html[Akka Streams documentation {tab-icon}, window="tab"] dedicated setions:
 
-* Read the {akka}/stream/stream-quickstart.html[Quick Start Guide] to get a feel for how streams look like and what they can do.
-* Read the {akka}/general/stream/stream-design.html[Design Principles behind Akka Streams] for a top down learning approach.
-* Have a look at the {akka}/stream/operators/index.html[operator index] for a complete overview of the built-in processing operators.
-* Check the {akka}/stream/stream-flows-and-basics.html[reference guide] for an in-depth documentation into specific topics.
+* Read the {akka}/stream/stream-quickstart.html[Quick Start Guide {tab-icon}, window="tab"] to get a feel for how streams look like and what they can do.
+* Read the {akka}/general/stream/stream-design.html[Design Principles behind Akka Streams {tab-icon}, window="tab"] for a top down learning approach.
+* Have a look at the {akka}/stream/operators/index.html[operator index {tab-icon}, window="tab"] for a complete overview of the built-in processing operators.
+* Check the {akka}/stream/stream-flows-and-basics.html[reference guide {tab-icon}, window="tab"] for an in-depth documentation into specific topics.

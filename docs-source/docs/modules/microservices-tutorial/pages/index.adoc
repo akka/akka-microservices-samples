@@ -11,7 +11,7 @@ include::partial$listing.adoc[]
 The following links provide more information about some of the Akka Platform features used in the tutorial.
 
 * {akka}/typed/cluster-sharding.html[Akka Cluster Sharding {tab-icon}, window="tab"] to distribute Event Sourced cart entities and Projections
-* {akka}/typed/persistence.html[Akka Event Sourcing] {akka}/typed/persistence.html[{tab-icon}, window="tab"] to store the state of the shopping carts
+* {akka}/typed/persistence.html[Akka Event Sourcing {tab-icon}, window="tab"] to store the state of the shopping carts
 * {akka-projection}/[Akka Projections {tab-icon}, window="tab"] to enable CQRS and event based communication with other services
 * {akka-grpc}/[Akka gRPC {tab-icon}, window="tab"] to implement a gRPC service API and communication with other services
 * {akka-management}/[Akka Management {tab-icon}, window="tab"] for Akka Cluster formation and health checks

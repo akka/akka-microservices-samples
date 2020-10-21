@@ -12,7 +12,7 @@ Introduced in 2013, the Reactive Manifesto summarizes the properties a system mu
 * *Elastic*: The system stays responsive under varying workload.
 * *Message Driven*: Reactive Systems rely on asynchronous message-passing to establish a boundary between components that ensures loose coupling, isolation and location transparency.
 
-Read the whole manifesto at {reactive-manifesto}[] {reactive-manifesto}[{tab-icon}, window="tab"].
+Read the whole manifesto at {reactive-manifesto}[https://www.reactivemanifesto.org/{tab-icon}, window="tab"].
 
 == Reactive Principles (and Patterns)
 [#reactive_principles]
@@ -33,7 +33,7 @@ The eight foundational principles of implementing a distributed system that make
 . Handle Dynamics
 
 
-Read all the details (and the patterns) at {reactive-principles}[] {reactive-principles}[{tab-icon}, window="tab"]  .
+Read all the details (and the patterns) at {reactive-principles}[https://principles.reactive.foundation  {tab-icon}, window="tab"].
 
 == Reactive Systems
 

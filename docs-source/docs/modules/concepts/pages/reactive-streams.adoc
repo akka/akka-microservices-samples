@@ -6,7 +6,7 @@ include::partial$include.adoc[]
 
 Handling streams of data—especially “live” data whose volume is not predetermined—requires special care in an asynchronous system. The most prominent issue is that resource consumption needs to be carefully controlled such that a fast data source does not overwhelm the stream destination. Asynchrony is needed in order to enable the parallel use of computing resources, on collaborating network hosts or multiple CPU cores within a single machine.
 
-The main goal of Reactive Streams is to govern the exchange of stream data across an asynchronous boundary – think passing elements on to another thread or thread-pool — while ensuring that the receiving side is not forced to buffer arbitrary amounts of data. In other words, backpressure is an integral part of this model in order to allow the queues which mediate between threads to be bounded. The benefits of asynchronous processing would be negated if the backpressure signals were synchronous (see also the {reactive-manifesto}[Reactive Manifesto] {reactive-manifesto}[{tab-icon}, window="tab"]), therefore care has been taken to mandate fully non-blocking and asynchronous behavior of all aspects of a Reactive Streams implementation.
+The main goal of Reactive Streams is to govern the exchange of stream data across an asynchronous boundary – think passing elements on to another thread or thread-pool — while ensuring that the receiving side is not forced to buffer arbitrary amounts of data. In other words, backpressure is an integral part of this model in order to allow the queues which mediate between threads to be bounded. The benefits of asynchronous processing would be negated if the backpressure signals were synchronous (see also the {reactive-manifesto}[Reactive Manifesto {tab-icon}, window="tab"]), therefore care has been taken to mandate fully non-blocking and asynchronous behavior of all aspects of a Reactive Streams implementation.
 
 (...) Reactive Streams is a standard and specification for Stream-oriented libraries for the JVM that
 
@@ -17,10 +17,10 @@ The main goal of Reactive Streams is to govern the exchange of stream data acros
 
 
 
-NOTE: The above is an excerpt from {reactive-streams}[Reactive Streams] {reactive-streams}[{tab-icon}, window="tab"]'
+NOTE: The above is an excerpt from {reactive-streams}[Reactive Streams {tab-icon}, window="tab"]
 
 
-When a consumer controls the rate of consumption, it is impossible to overwhelm it. This one of the {reactive-principles}/patterns/coordinate-dataflow.html[Reactive Patterns] {reactive-principles}/patterns/coordinate-dataflow.html[{tab-icon}, window="tab"]. Such flow control, though, must be managed end-to-end.
+When a consumer controls the rate of consumption, it is impossible to overwhelm it. This one of the {reactive-principles}/patterns/coordinate-dataflow.html[Reactive Patterns {tab-icon}, window="tab"]. Such flow control, though, must be managed end-to-end.
 
 xref:akka-stream.adoc[] implements the Reactive Streams TCK, so it is 100% compatible with any other Reactive Streams implementation on the JVM.
 
@@ -28,4 +28,4 @@ xref:akka-stream.adoc[] implements the Reactive Streams TCK, so it is 100% compa
 
 When one component is struggling to keep-up, the system as a whole needs to respond in a sensible way. It is unacceptable for the component under stress to fail catastrophically or to drop messages in an uncontrolled fashion. Since it can’t cope and it can’t fail it should communicate the fact that it is under stress to upstream components and so get them to reduce the load. This back-pressure is an important feedback mechanism that allows systems to gracefully respond to load rather than collapse under it. The back-pressure may bubble all the way up to the user, at which point responsiveness may degrade, but this mechanism will ensure that the system is resilient under load, and will provide information that may allow the system itself to apply other resources to help distribute the load, see Elasticity.
 
-NOTE: the above is part of the {reactive-manifesto}/glossary#Back-Pressure[Reactive Manifesto (Glossary)] {reactive-manifesto}/glossary#Back-Pressure[{tab-icon}, window="tab"].
+NOTE: the above is part of the {reactive-manifesto}/glossary#Back-Pressure[Reactive Manifesto (Glossary) {tab-icon}, window="tab"].

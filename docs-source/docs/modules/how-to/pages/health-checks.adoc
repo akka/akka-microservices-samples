@@ -16,7 +16,7 @@ This matches Kubernetes Health checks. See https://blog.colinbreck.com/kubernete
 
 == Using Akka Management for health checks
 
-The {akka-management}/[Akka Management] library includes support for exposing readiness and liveness checks via HTTP.
+The {akka-management}/[Akka Management {tab-icon}, window="tab"] library includes support for exposing readiness and liveness checks via HTTP.
 
 The depedencies for Akka Management include the core module and the cluster HTTP module for cluster inspection. As Akka Management uses Spray JSON internally, make sure to add that dependency of the exact same version as other Akka HTTP libraries.
 
@@ -118,4 +118,4 @@ With only one node started the response looks like this:
 }
 ----
 
-The {akka-management}/cluster-http-management.html#api-definition[Akka Management reference documentation] shows other parts of this API.
+The {akka-management}/cluster-http-management.html#api-definition[Akka Management reference documentation {tab-icon}, window="tab"] shows other parts of this API.

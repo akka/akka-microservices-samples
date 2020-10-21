@@ -6,7 +6,7 @@ This tutorial shows how to build the functionality for a Shopping Cart system. W
 
 image::example-overview.png[Example overview]
 
-Each user's cart is represented by a Cart Entity. Cart state is persisted using xref:concepts:event-sourcing.adoc[Event Sourcing]: When a user updates their cart, the Entity persists commands to a Cassandra database in an _Event Journal_. Using xref:concepts:cqrs.adoc[Command Query Responsibility Segregation] (CQRS), which separates read and write responsibility, {akka-projection}/[Akka Projections] {akka-projection}/[{tab-icon}, window="tab"] provide the data necessary for the Order and Analytics services.
+Each user's cart is represented by a Cart Entity. Cart state is persisted using xref:concepts:event-sourcing.adoc[Event Sourcing]: When a user updates their cart, the Entity persists commands to a Cassandra database in an _Event Journal_. Using xref:concepts:cqrs.adoc[Command Query Responsibility Segregation] (CQRS), which separates read and write responsibility, {akka-projection}/[Akka Projections {tab-icon}, window="tab"] provide the data necessary for the Order and Analytics services.
 
 The `PopularityProjection` uses the events from all shopping carts to store a representation in the database to answer queries of how popular the items are.
 

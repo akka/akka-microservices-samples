@@ -16,4 +16,4 @@ NOTE: The xref:microservices-tutorial:index.adoc[Implementing Microservices with
 
 == Learn more
 
-To know more, check the {akka-projection}[Akka Projections reference documentation] {akka-projection}[{tab-icon}, window="tab"].
+To know more, check the {akka-projection}[Akka Projections reference documentation {tab-icon}, window="tab"].

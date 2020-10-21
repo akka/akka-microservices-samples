@@ -6,7 +6,7 @@ include::concepts:partial$include.adoc[]
 
 [NOTE]
 ====
-This howto is not about {reactive-microservices-ebook}[slicing the monolith into Microservices] {reactive-microservices-ebook}[{tab-icon}, window="tab"] or the xref:concepts:event-sourcing.adoc#advantages[Advantages of Event Sourcing].
+This howto is not about {reactive-microservices-ebook}[slicing the monolith into Microservices {tab-icon}, window="tab"] or the xref:concepts:event-sourcing.adoc#advantages[Advantages of Event Sourcing].
 ====
 
 When developing using a traditional CRUD approach, the entities in memory are a collection of mutable classes. Similarly, the representation of that data on the database is a collection of mutable rows in several tables.
@@ -84,6 +84,6 @@ In order to provide data consistency, database-centric implementations, like a t
 
 If you are familiar with JPA it is worth noting that an Event Sourced Entity can be used for similar things as a JPA `@Entity` but several aspects are rather different. For example, a JPA `@Entity` is loaded from the database from wherever it is needed, i.e. there may be many Java object instances with the same entity identifier. In contrast, there is only one instance of Event Sourced Entity with a given identifier. With JPA you typically only store current state, and the history of how the state was reached is not captured.
 
-Event Sourcing applications, on the other hand, need to reconstruct the state in memory, so they can't base the state consistency on database locking. A solution is to keep a singleton memory image of the state (e.g. using {akka}/typed/cluster-sharding.html[Akka Cluster Sharding] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"]) so all writes are redirected to a single state instance which is protected by a lock so only one modification can happen simultaneously.
+Event Sourcing applications, on the other hand, need to reconstruct the state in memory, so they can't base the state consistency on database locking. A solution is to keep a singleton memory image of the state (e.g. using {akka}/typed/cluster-sharding.html[Akka Cluster Sharding {tab-icon}, window="tab"]) so all writes are redirected to a single state instance which is protected by a lock so only one modification can happen simultaneously.
 
-If you prefer Availability to Consistency, you may also use converging algorithms so concurrent modifications on multiple state instances in memory converge into a single, valid state. Read more on this option at {akka}/typed/replicated-eventsourcing.html[Akka Persistence supports Replicated Event Sourcing] {akka}/typed/replicated-eventsourcing.html[{tab-icon}, window="tab"].
+If you prefer Availability to Consistency, you may also use converging algorithms so concurrent modifications on multiple state instances in memory converge into a single, valid state. Read more on this option at {akka}/typed/replicated-eventsourcing.html[Akka Persistence supports Replicated Event Sourcing {tab-icon}, window="tab"].

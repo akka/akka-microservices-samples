@@ -283,4 +283,4 @@ ifdef::todo[TODO: deploy the updated shopping-cart-service and the new shopping-
 == Learn more
 
 * xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts].
-* {akka-projection}/[Akka Projection reference documentation] {akka-projection}/[{tab-icon}, window="tab"].
+* {akka-projection}/[Akka Projection reference documentation {tab-icon}, window="tab"].

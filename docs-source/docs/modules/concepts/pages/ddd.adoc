@@ -3,7 +3,7 @@
 
 include::partial$include.adoc[]
 
-[quote, 'https://en.wikipedia.org/wiki/Domain-driven_design[Wikipedia] https://en.wikipedia.org/wiki/Domain-driven_design[{tab-icon}, window="tab"]' ]
+[quote, 'https://en.wikipedia.org/wiki/Domain-driven_design[Wikipedia {tab-icon}, window="tab"]
 ____
 Domain-driven design (DDD) is the concept that the structure and language of software code (class names, class methods, class variables) should match the business domain. For example, if a software processes loan applications, it might have classes such as LoanApplication and Customer, and methods such as AcceptOffer and Withdraw.
 ____
@@ -11,7 +11,7 @@ ____
 == Bounded Context
 [#bounded_context]
 
-As the modelling covers a more extensive area of your business, {reactive-principles}/patterns/partition-state.html[split the models] {reactive-principles}/patterns/partition-state.html[{tab-icon}, window="tab"] into very well-delimited contexts in which each model applies. Each of these contexts will have xref:autonomy.adoc[autonomy] to evolve the models it owns.
+As the modelling covers a more extensive area of your business, {reactive-principles}/patterns/partition-state.html[split the models {tab-icon}, window="tab"] into very well-delimited contexts in which each model applies. Each of these contexts will have xref:autonomy.adoc[autonomy] to evolve the models it owns.
 
 Keeping each model within strict boundaries allows different modelling for business entities that look similar but have slightly different meaning on each of the contexts.
 

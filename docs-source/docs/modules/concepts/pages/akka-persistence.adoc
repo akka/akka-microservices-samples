@@ -22,4 +22,4 @@ Storage backends for journals and snapshot stores are pluggable in the Akka pers
 
 == Learn more
 
-Learn more about Akka Persistence in the {akka}/typed/index-persistence.html[Akka Persistence reference documentation] {akka}/typed/index-persistence.html[{tab-icon}, window="tab"].
+Learn more about Akka Persistence in the {akka}/typed/index-persistence.html[Akka Persistence reference documentation {tab-icon}, window="tab"].

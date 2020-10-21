@@ -3,7 +3,7 @@
 
 include::ROOT:partial$include.adoc[]
 
-We will create the gRPC `ShoppingCartService` for the *Cart Service* shown in the architectural overview below. The motivation for using gRPC as the inter-service protocol is explained in the {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?"] {akka-grpc}/whygrpc.html[{tab-icon}, window="tab"] documentation. First, we will create the `ShoppingCartService` with a single operation that adds items to a cart. The implementation will only log the calls for now. Later, we'll expand the service with more operations and real implementations.
+We will create the gRPC `ShoppingCartService` for the *Cart Service* shown in the architectural overview below. The motivation for using gRPC as the inter-service protocol is explained in the {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?" {tab-icon}, window="tab"] documentation. First, we will create the `ShoppingCartService` with a single operation that adds items to a cart. The implementation will only log the calls for now. Later, we'll expand the service with more operations and real implementations.
 
 image::example-grpc-server.png[Example gRPC service]
 
@@ -180,4 +180,4 @@ ifdef::todo[TODO: deploy to cloud and try it]
 == Learn more
 
 * xref:concepts:akka-grpc.adoc[Akka gRPC concepts]
-* {akka-grpc}/server/index.html[Akka gRPC server reference documentation] {akka-grpc}/server/index.html[{tab-icon}, window="tab"].
+* {akka-grpc}/server/index.html[Akka gRPC server reference documentation {tab-icon}, window="tab"].

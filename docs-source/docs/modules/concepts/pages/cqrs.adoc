@@ -27,13 +27,13 @@ As described above, CQRS doesn't require the write-side handling the commands to
 
 In CQRS, in order to build the read-side representations we want a stream of data changes to build projections from, and that is exactly what Event Sourcing provides. In Event Sourcing, state is stored as an append-only, ordered list of changes (referred to as events).
 
-Summing up, in a CQRS applications, the write-side and the read-side operate {reactive-principles}/principles/assert-autonomy.html[autonomosly] {reactive-principles}/principles/assert-autonomy.html[{tab-icon}, window="tab"]. Generally, the write-side provides {reactive-principles}/principles/tailor-consistency.html[strong consistency] {reactive-principles}/principles/tailor-consistency.html[{tab-icon}, window="tab"] while the read-side provides xref:eventual-consistency.adoc[eventual consistency].
+Summing up, in a CQRS applications, the write-side and the read-side operate {reactive-principles}/principles/assert-autonomy.html[autonomosly {tab-icon}, window="tab"]. Generally, the write-side provides {reactive-principles}/principles/tailor-consistency.html[strong consistency {tab-icon}, window="tab"] while the read-side provides xref:eventual-consistency.adoc[eventual consistency].
 
 == Learn more
 
 * xref:how-to:from-crud-to-eventsourcing.adoc[]
 
-* To see a project implementing CQRS in action, have a look at the xref:microservices-tutorial:index.adoc["Implementing Microservices with Akka" tutorial]. In steps xref:microservices-tutorial:entity.adoc[], and xref:microservices-tutorial:complete-entity.adoc[] you will implement a write-side using {akka}/typed/persistence.html[Akka Persistence] {akka}/typed/persistence.html[{tab-icon}, window="tab"]  which implements Event Sourcing. Then, in the step xref:microservices-tutorial:projection-query.adoc[] you will implement a read-side using {akka-projection}[Akka Projection] {akka-projection}[{tab-icon}, window="tab"].
+* To see a project implementing CQRS in action, have a look at the xref:microservices-tutorial:index.adoc["Implementing Microservices with Akka" tutorial]. In steps xref:microservices-tutorial:entity.adoc[], and xref:microservices-tutorial:complete-entity.adoc[] you will implement a write-side using {akka}/typed/persistence.html[Akka Persistence {tab-icon}, window="tab"]  which implements Event Sourcing. Then, in the step xref:microservices-tutorial:projection-query.adoc[] you will implement a read-side using {akka-projection}[Akka Projection {tab-icon}, window="tab"].
 
-* See also the CQRS documentation in the {akka-projection}/use-cases.html[Akka Projections documentation] for more details on how Akka Projection can be used to build a Query side.
+* See also the CQRS documentation in the {akka-projection}/use-cases.html[Akka Projections documentation {tab-icon}, window="tab"] for more details on how Akka Projection can be used to build a Query side.
 

@@ -370,5 +370,5 @@ grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingC
 == Learn more
 
 * xref:concepts:event-sourcing.adoc[Event Sourcing concepts].
-* {akka}/typed/persistence.html[Akka Event Sourcing reference documentation] {akka}/typed/persistence.html[{tab-icon}, window="tab"].
-* {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"].
+* {akka}/typed/persistence.html[Akka Event Sourcing reference documentation {tab-icon}, window="tab"].
+* {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation {tab-icon}, window="tab"].

@@ -37,8 +37,8 @@ Since we no longer have a shared call stack between actors that send messages to
 
 A supervisor strategy is typically defined by the parent actor when it is starting a child actor. It can decide to restart the child actor on certain types of failures or stop it completely on others. Children never go silently dead (with the notable exception of entering an infinite loop) instead they are either failing and the supervisor strategy can react to the fault, or they are stopped (in which case interested parties are notified). There is always a responsible entity for managing an actor: its parent. Restarts are not visible from the outside: collaborating actors can keep continuing sending messages while the target actor restarts.
 
-NOTE: Embracing failure (using, for example, supervision) is one of the {reactive-principles}/principles/embrace-failure.html[Reactive Principles] {reactive-principles}/principles/embrace-failure.html[{tab-icon}, window="tab"]
+NOTE: Embracing failure (using, for example, supervision) is one of the {reactive-principles}/principles/embrace-failure.html[Reactive Principles {tab-icon}, window="tab"].
 
 == Learn more
 
-Learn more about Akka and the Actor Model on the {akka}/typed/guide/actors-intro.html[Akka documentation] {akka}/typed/guide/actors-intro.html[{tab-icon}, window="tab"].
+Learn more about Akka and the Actor Model on the {akka}/typed/guide/actors-intro.html[Akka documentation {tab-icon}, window="tab"], window="tab"].

@@ -47,7 +47,7 @@ include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-optional
 
 == Replace the Persistence plugin
 
-The project produced with the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservicies template] assumes the application will use the {akka-persistence-cassandra}[Akka Persistence Cassandra plugin] {akka-persistence-cassandra}[{tab-icon}, window="tab"]. You can opt out from using that plugin and use the {akka-persistence-jdbc}[Akka Persistence JDBC] {akka-persistence-jdbc}[{tab-icon}, window="tab"] or other plugins instead.
+The project produced with the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservicies template] assumes the application will use the {akka-persistence-cassandra}[Akka Persistence Cassandra plugin {tab-icon}, window="tab"]. You can opt out from using that plugin and use the {akka-persistence-jdbc}[Akka Persistence JDBC {tab-icon}, window="tab"] or other plugins instead.
 
 [start=1]
 . The first thing you must do is to remove the dependency to the Akka Persistence Cassandra plugin:
@@ -91,7 +91,7 @@ include::example$cleanup-dependencies-project/build.sbt[tag=add-akka-persistence
 
 == Replace the Offset Store database
 
-The project produced with the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservicies template] assumes the application will use a Cassandra database to store the {akka-projection}/overview.html#overview[offset tracking] {akka-projection}/overview.html#overview[{tab-icon}, window="tab"]  required by the projections. You can replace the artifact to use an RDBMS:
+The project produced with the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservicies template] assumes the application will use a Cassandra database to store the {akka-projection}/overview.html#overview[offset tracking {tab-icon}, window="tab"] required by the projections. You can replace the artifact to use an RDBMS:
 
 [source,diff]
 .build.sbt
@@ -101,7 +101,7 @@ include::example$cleanup-dependencies-project/build.sbt[tag=replace-offset-store
 
 Note how the artifact version doesn't change.
 
-Replacing the artifact is only the first step. Each of the implementations of Offset Stores for  Akka Projections has slightly different APIs. Refer to the {akka-projection}[Akka Projections reference documentation] {akka-projection}[{tab-icon}, window="tab"] for more details.
+Replacing the artifact is only the first step. Each of the implementations of Offset Stores for  Akka Projections has slightly different APIs. Refer to the {akka-projection}[Akka Projections reference documentation {tab-icon}, window="tab"] for more details.
 
 == Remove support for Kafka
 
@@ -121,7 +121,7 @@ include::example$cleanup-dependencies-project/build.sbt[tag=remove-alpakka-kafka
 
 == Remove projections
 
-If you are not projecting your data to a read-side you can remove all the artifacts provided by {akka-projection}[Akka Projections] {akka-projection}[{tab-icon}, window="tab"]:
+If you are not projecting your data to a read-side you can remove all the artifacts provided by {akka-projection}[Akka Projections {tab-icon}, window="tab"]:
 
 
 . remove the value declaring the dependency version

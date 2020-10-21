@@ -115,7 +115,7 @@ Our business logic allows only items to be added which are not in the cart yet a
 
 If the validation fails we want to send back an error message. The reply can be a success or an error and that is the reason for using the `StatusReply`.
 
-See all available effects in the {akka}/typed/persistence.html#effects-and-side-effects[Akka reference documentation] {akka}/typed/persistence.html#effects-and-side-effects[{tab-icon}, window="tab"].
+See all available effects in the {akka}/typed/persistence.html#effects-and-side-effects[Akka reference documentation {tab-icon}, window="tab"].
 
 == Event handler
 
@@ -249,7 +249,7 @@ sbt test
 mvn test
 ----
 
-You can learn more about the [.group-scala]#`EventSourcedBehaviorTestKit`# [.group-java]#`TestKitJunitResource`# in the {akka}/typed/persistence-testing.html#unit-testing[Akka reference documentation] {akka}/typed/persistence-testing.html#unit-testing[{tab-icon}, window="tab"]
+You can learn more about the [.group-scala]#`EventSourcedBehaviorTestKit`# [.group-java]#`TestKitJunitResource`# in the {akka}/typed/persistence-testing.html#unit-testing[Akka reference documentation {tab-icon}, window="tab"]
 
 == Sending commands to the entities
 
@@ -376,5 +376,5 @@ ifdef::todo[TODO deploy the updated version to the cloud and try it]
 == Learn more
 
 * xref:concepts:event-sourcing.adoc[Event Sourcing concepts].
-* {akka}/typed/persistence.html[Akka Event Sourcing reference documentation] {akka}/typed/persistence.html[{tab-icon}, window="tab"].
-* {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation] {akka}/typed/cluster-sharding.html[{tab-icon}, window="tab"].
+* {akka}/typed/persistence.html[Akka Event Sourcing reference documentation {tab-icon}, window="tab"].
+* {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation {tab-icon}, window="tab"].

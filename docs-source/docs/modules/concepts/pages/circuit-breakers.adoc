@@ -18,7 +18,7 @@ failure of the web application due to resource exhaustion.  This will affect all
 those who are not using functionality dependent on this third party web service.
 
 Introducing circuit breakers on the web service call would cause the requests to begin to 
-{reactive-principles}/principles/stay-responsive.html[fail-fast] {reactive-principles}/principles/stay-responsive.html[{tab-icon}, window="tab"], letting the user know that something is wrong and that they need not refresh
+{reactive-principles}/principles/stay-responsive.html[fail-fast {tab-icon}, window="tab"], letting the user know that something is wrong and that they need not refresh
 their request.  This also confines the failure behavior to only those users that are using
 functionality dependent on the third party, other users are no longer affected as there is no
 resource exhaustion.  Circuit breakers can also allow savvy developers to mark portions of
@@ -56,4 +56,4 @@ image::concepts/circuit-breaker-states.png[States of a Circuit Breaker]
 
 == Learn more
 
-For more information, including code examples in Akka, see {akka}/common/circuitbreaker.html[Akka CircuitBreaker reference documentation].
+For more information, including code examples in Akka, see {akka}/common/circuitbreaker.html[Akka CircuitBreaker reference documentation {tab-icon}, window="tab"].

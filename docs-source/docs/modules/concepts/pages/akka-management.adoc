@@ -3,11 +3,11 @@
 
 include::partial$include.adoc[]
 
-{akka-management}[Akka Management] {akka-management}[{tab-icon}, window="tab"] is a collection of tools to help operate Akka Cluster applications.
+{akka-management}[Akka Management {tab-icon}, window="tab"] is a collection of tools to help operate Akka Cluster applications.
 
 == Management
 
-The main building block in {akka-management}[Akka Management] {akka-management}[{tab-icon}, window="tab"]is the Management HTTP server.
+The main building block in {akka-management}[Akka Management {tab-icon}, window="tab"] is the Management HTTP server.
 
 This HTTP server runs on a dedicated port, so you can separate the application traffic from the management traffic. It exposes, by default, some read-only endpoints where you can verify the status of the cluster or the xref:how-to:health-checks.adoc[health] of the node.
 
@@ -15,8 +15,8 @@ This HTTP server runs on a dedicated port, so you can separate the application t
 
 To form a cluster between the different nodes of your application you can use hardcoded IP and port numbers. But that solution is very hard to maintain and goes against the xref:mobility.adoc[mobility] property of a reactive system.
 
-Instead, Akka Management includes support to {akka-management}/bootstrap/index.html[Bootstrap] {akka-management}[{tab-icon}] a cluster. Akka Cluster Bootstrap uses {akka}/discovery/index.html[Akka Discovery] {akka}/discovery/index.html[{tab-icon}, window="tab"] (a  xref:services#service-discovery[service discovery] API) to locate peers. This way, when deploying an application, each node only needs to register itself on the central registry and use the service discovery to find the peers.
+Instead, Akka Management includes support to {akka-management}/bootstrap/index.html[Bootstrap {tab-icon}, window="tab"] a cluster. Akka Cluster Bootstrap uses {akka}/discovery/index.html[Akka Discovery {tab-icon}, window="tab"] (a  xref:services#service-discovery[service discovery] API) to locate peers. This way, when deploying an application, each node only needs to register itself on the central registry and use the service discovery to find the peers.
 
 == Kubernetes Lease
 
-The Akka Management {akka-management}/kubernetes-lease.html[Kubernetes Lease] {akka-management}/kubernetes-lease.html[{tab-icon}, window="tab"] is an implementation of the Akka Coordination Lease which uses Kubernetes-backed mechanisms to increase the consistency of some Akka features like {akka}/split-brain-resolver.html[Split Brain Resolver] {akka}/split-brain-resolver[{tab-icon}, window="tab"], {akka}/typed/cluster-singleton.html#lease[Akka Cluster Singleton] {akka}/typed/cluster-singleton.html#lease[{tab-icon}, window="tab"], and {akka}/typed/cluster-sharding.html#lease[Akka ClusterSharding] {akka}/typed/cluster-sharding.html#lease[{tab-icon}, window="tab"].
+The Akka Management {akka-management}/kubernetes-lease.html[Kubernetes Lease {tab-icon}, window="tab"] is an implementation of the Akka Coordination Lease which uses Kubernetes-backed mechanisms to increase the consistency of some Akka features like {akka}/split-brain-resolver.html[Split Brain Resolver {tab-icon}, window="tab"], {akka}/typed/cluster-singleton.html#lease[Akka Cluster Singleton {tab-icon}, window="tab"], and {akka}/typed/cluster-sharding.html#lease[Akka ClusterSharding {tab-icon}, window="tab"].

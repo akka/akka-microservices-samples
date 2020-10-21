@@ -255,5 +255,5 @@ ifdef::todo[TODO: deploy the updated shopping-cart-service and the new shopping-
 
 This is the end of the tutorial.
 
-* {akka-grpc}/client/index.html[Akka gRPC client reference documentation] {akka-grpc}/client/index.html[{tab-icon}, window="tab"].
-* {akka-projection}/[Akka Projection reference documentation] {akka-projection}/[{tab-icon}, window="tab"].
+* {akka-grpc}/client/index.html[Akka gRPC client reference documentation {tab-icon}, window="tab"].
+* {akka-projection}/[Akka Projection reference documentation {tab-icon}, window="tab"].

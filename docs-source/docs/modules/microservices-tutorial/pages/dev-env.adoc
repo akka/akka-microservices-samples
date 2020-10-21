@@ -6,7 +6,7 @@ include::ROOT:partial$include.adoc[]
 
 To follow tutorial steps you will need a code editor, a build tool, and `grpcurl` (a CLI for sending gRPC calls). You can use your preferred code editor. We provide the steps for using https://www.jetbrains.com/idea/[IntelliJ IDEA {tab-icon}, window="tab"] from JetBrains. For the [.group-scala]#Scala# [.group-java]#Java# version of the example, we use [.group-scala]#`sbt`# [.group-java]#`Apache Maven`# as the build tool.
 
-This tutorial uses Cassandra and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[Docker {tab-icon}, window="tab"]. The template project's root directory includes a https://docs.docker.com/compose/[Docker Compose] https://docs.docker.com/compose/[{tab-icon}, window="tab"] file that you can use to run Cassandra and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
+This tutorial uses Cassandra and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[Docker {tab-icon}, window="tab"]. The template project's root directory includes a https://docs.docker.com/compose/[Docker Compose {tab-icon}, window="tab"]] file that you can use to run Cassandra and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
 
 The following sections provide links for downloading and installing:
 
@@ -15,11 +15,7 @@ The following sections provide links for downloading and installing:
 * <<The grpcurl tool>>
 * <<Docker and Docker Compose>>
 
-We also provide downloadable versions of the example at different phases of completion. And, you will likely want to test locally before deploying to the cloud. You will need to understand how to configure to run locally. The following sections provide information on:
-
-* <<Downloadable example source>>
-* <<Configuring for local development>>
- 
+We also provide <<Downloadable example source>> of the different phases of completion.
 
 :!sectnums:
 == IntelliJ IDEA
@@ -64,7 +60,7 @@ The https://github.com/fullstorydev/grpcurl[grpcurl {tab-icon}, window="tab"] to
 == Docker and Docker Compose
 [#docker]
 
-See the instructions for installing https://docs.docker.com/get-docker/[Docker {tab-icon}, window="new"] and https://docs.docker.com/compose/install/[Docker Compose {tab-icon}, window="tab"] on your platform. 
+See the instructions for installing https://docs.docker.com/get-docker/[Docker {tab-icon}, window="tab"] and https://docs.docker.com/compose/install/[Docker Compose {tab-icon}, window="tab"] on your platform.
 
 == Downloadable example source
 
