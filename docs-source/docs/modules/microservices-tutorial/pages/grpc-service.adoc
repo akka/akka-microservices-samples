@@ -3,17 +3,17 @@
 
 include::ROOT:partial$include.adoc[]
 
-We will create the gRPC `ShoppingCartService` for the *Cart Service* shown in the architectural overview below. The motivation for using gRPC as the inter-service protocol is explained in the {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?" {tab-icon}, window="tab"] documentation. First, we will create the `ShoppingCartService` with a single operation that adds items to a cart. The implementation will only log the calls for now. Later, we'll expand the service with more operations and real implementations.
+We will create the gRPC `ShoppingCartService` for the *Cart Service* shown in the architectural overview below. The motivation for using gRPC as the inter-service protocol is explained in the {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?" {tab-icon}, window="tab"] documentation.
 
 image::example-grpc-server.png[Example gRPC service]
 
-On this page you will learn how to:
+First, we will create the `ShoppingCartService` with a single operation that adds items to a cart. The implementation will only log the calls for now. Later, we'll expand the service with more operations and real implementations. On this page you will learn how to:
 
 * define the interface of a gRPC service
 * implement the service interface
 * initialize and run an HTTP server and the service locally
 * interact with the service from the command line
-* deploy for the first time to the cloud
+* deploy to the cloud
 
 .Source downloads:
 ****
@@ -154,7 +154,7 @@ Note the log output from the `ShoppingCartServer`
 Shopping online at gRPC server 127.0.0.1:8101
 ----
 
-Try it with https://github.com/fullstorydev/grpcurl[grpcurl].
+Try exercising the service with https://github.com/fullstorydev/grpcurl[grpcurl].
 
 Add 3 socks to a cart:
 
@@ -170,7 +170,7 @@ Add 2 t-shirts to the same cart:
 grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
-Note the logging from the `ShoppingCartServiceImpl` in the console of the service.
+Note the logging from the `ShoppingCartServiceImpl` in the console.
 
 You can stop the service with `ctrl-c`.
 

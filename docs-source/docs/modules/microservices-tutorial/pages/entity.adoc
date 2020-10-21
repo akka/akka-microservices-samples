@@ -3,13 +3,11 @@
 
 include::ROOT:partial$include.adoc[]
 
-In this part, we will create the `ShoppingCart` entity that manages the state for each shopping cart. The `ShoppingCart` will use Event Sourcing to persist events that represents changes to the state of the cart. We only need to handle the command to add items to the cart for now. In the next part of the tutorial we will expand it to handle more commands and events.
-
-The architectural overview shows how the entity is related to the Cart service. It writes events to the event journal, which we will use later to create projections:
+Next, we will create the `ShoppingCart` Cart entity that manages the state for each shopping cart. The architectural overview shows how the entity is related to the Cart service. The Cart entity will use Event Sourcing to persist events that capture changes to the Cart's state. The entity writes events to the event journal, which we will use later to create projections:
 
 image::example-entity.png[Example entity]
 
-On this page you will learn how to:
+For now, we'll implement the command to add items to the Cart. In the next part of the tutorial, we will expand it to handle more commands and events. On this page you will learn how to:
 
 * implement an Event Sourced entity
 * unit test the entity
@@ -30,10 +28,10 @@ If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sour
 :sectnums:
 == Commands and events
 
-Commands are the "external" API of an entity. The state of the entity can be changed only by commands. The results of commands are emitted as events. A command can request state changes, but different events might be generated depending on the current state of the entity.
+Commands are the "external" API of an entity. Entity state can only be changed by commands. The results of commands are emitted as events. A command can request state changes, but different events might be generated depending on the current state of the entity. To add a command and an event, follow these steps:
 
 . [.group-scala]#Define a `ShoppingCart` object and the `AddItem` command:# [.group-java]#Define a `ShoppingCart` class extending `EventSourcedBehaviorWithEnforcedReplies` and the `AddItem` command:#
-
++
 [.tabset]
 Java::
 +
@@ -51,7 +49,7 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 [start=2]
 . Add a corresponding `ItemAdded` event:
-
++
 [.tabset]
 Java::
 +
@@ -69,7 +67,7 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 == State
 
-The state of the `ShoppingCart` contains a `Map` of items that have been added to the cart. Add this to the `ShoppingCart` object.
+Items added to the Cart are added to a `Map`. The contents of the `Map` comprise the Cart's state. Add the `Map` to the `ShoppingCart` object as shown:
 
 [.tabset]
 Java::
@@ -88,8 +86,11 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 == Command handler
 
+The Cart entity will receive commands that request changes to Cart state. We will implement a command handler to process these commands and emit a reply. Our business logic allows only items to be added which are not in the cart yet and require a positive quantity. 
+
+
 [.group-scala]#Implement the Event Sourced entity with the `EventSourcedBehavior`. Define the command handlers:#
-[.group-java]#Implement the `commandHandler` as required by `EventSourcedBehaviorWithEnforcedReplies`.#
+[.group-java]#Implement the `commandHandler` as required by `EventSourcedBehaviorWithEnforcedReplies`:#
 
 [.tabset]
 Java::
@@ -109,15 +110,14 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 <1> Matching the `AddItem` command
 <2> Persisting the `ItemAdded` event and replying to the sender
 
-The returned `ReplyEffect` reacts on the commands by deciding which effect they should have on the entity.
+If an `AddItem` command is accepted, the `Effect.persist` applies an event to the cart's state and makes sure this event is stored before replying to the command. The returned `ReplyEffect` reacts on the commands by deciding which effect they should have on the entity. If the validation fails we want to send back an error message. The reply can be a success or an error and that is the reason for using the `StatusReply`.
 
-Our business logic allows only items to be added which are not in the cart yet and require a positive quantity. If an `AddItem` command is accepted, the `Effect.persist` applies an event to the cart's state and makes sure this event is stored before replying to the command.
-
-If the validation fails we want to send back an error message. The reply can be a success or an error and that is the reason for using the `StatusReply`.
 
 See all available effects in the {akka}/typed/persistence.html#effects-and-side-effects[Akka reference documentation {tab-icon}, window="tab"].
 
 == Event handler
+
+ifdef::review[REVIEWERS: The first sentece says events "are the only way to change" state. However, previously we said events don't change anything, they are only a record of facts, something that has happened? Also confusing is the statement that "Other parties can't send events" Clearly other services can also send events, just not events about this entity's state, right? Once I get answers to these questions I will have suggestions about clarifying these paragraphs.]
 
 The events represent changes of the entity's state and are the only way to change it. The entity creates events from commands, other parts of the application may listen to the created events. Other parties can't send events.
 
@@ -142,7 +142,9 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 == Initialization
 
-To glue this together we need some initialization code:
+ifdef::review[REVIEWERS: what is "this" in the first sentence? The command handler, event handler, etc?]
+
+To glue this together we need some initialization code. Our code will distribute nodes in the Akka Cluster with https://doc.akka.io/docs/akka/current/cluster-sharding.html[Cluster Sharding {tab-icon}, window="tab"], enable snapshots to reduce recovery time when the entity is started, and restart with backoff in the case of failure. 
 
 [.tabset]
 Java::
@@ -167,7 +169,9 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 <4> Restarting with backoff in case of failures.
 
-Then you need to call the `ShoppingCart.init` from `Main.scala`:
+ifdef::todo[TODO: add Java]
+
+Then we need to call [.group-scala]#`ShoppingCart.init` from `Main.scala`#:
 
 [.tabset]
 Java::
@@ -188,9 +192,9 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Mai
 
 The state, commands and events of the entity must be serializable because they are written to the datastore or sent between nodes within the Akka cluster. We will use the built-in CBOR serialization.
 
-The state, commands and events are marked as `CborSerializable` which is configured to use the built-in CBOR serialization.
+ifdef::review[REVIEWERS: If I'm reading the rest of this section correctly, the user doesn't need to add anything here because it's included in the template and conf files? If so, I think we need to state that more clearly.]
 
-The template project includes this marker interface `CborSerializable`:
+The state, commands and events are marked as `CborSerializable` which is configured to use the built-in CBOR serialization. The template project includes this marker interface `CborSerializable`:
 
 [.tabset]
 Java::
@@ -216,7 +220,7 @@ include::example$02-shopping-cart-service-scala/src/main/resources/serialization
 
 == Unit testing
 
-To test the `ShoppingCart` entity you can write a unit test using the [.group-scala]#`EventSourcedBehaviorTestKit`# [.group-java]#`TestKitJunitResource`#.
+To test the `ShoppingCart` entity we can write a unit test using the [.group-scala]#`EventSourcedBehaviorTestKit`# [.group-java]#`TestKitJunitResource`#.
 
 A test for the `AddItem` command looks like this in [.group-scala]#`src/test/scala/shopping/cart/ShoppingCartSpec.scala`# [.group-java]#`src/test/java/shopping/cart/ShoppingCartTest.java`#:
 
@@ -253,7 +257,7 @@ You can learn more about the [.group-scala]#`EventSourcedBehaviorTestKit`# [.gro
 
 == Sending commands to the entities
 
-We want to send commands to the entities from the gRPC service implementation. In the xref:grpc-server.adoc[previous step] we wrote a dummy implementation of `addItem` in the `ShoppingCartServiceImpl`. You can now replace that with sending `ShoppingCart.AddItem` command from `ShoppingCartServiceImpl`.
+We want to send commands to the entities from the gRPC service implementation. In the xref:grpc-server.adoc[previous step], we wrote a dummy implementation of `addItem` in the `ShoppingCartServiceImpl`. We can now replace that and send `ShoppingCart.AddItem` commands from `ShoppingCartServiceImpl`:
 
 [.tabset]
 Java::
@@ -270,15 +274,13 @@ Scala::
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[]
 ----
 
-If the command was successful the entity replied with `StatusReply.Success` with the updated `ShoppingCart.Summary`. If the validation in the entity failed it replied with `StatusReply.Error`, which will fail the [.group-scala]#`Future`# [.group-java]#`CompletionStage`# that is returned from `askWithStatus`.
+If the command is successful, the entity will reply with `StatusReply.Success` with the updated `ShoppingCart.Summary`. If the validation in the entity fails it will reply with `StatusReply.Error`, which will fail the [.group-scala]#`Future`# [.group-java]#`CompletionStage`# that is returned from `askWithStatus`.
 
-Also, you need to include the new `ActorSystem` parameter to the constructor when creating an instance of `ShoppingCartServiceImpl` from the `ShoppingCartServer`.
+Also, we included the new `ActorSystem` parameter to the constructor when creating an instance of `ShoppingCartServiceImpl` from the `ShoppingCartServer`.
 
 == Cassandra
 
-The events are stored in Cassandra and the template project includes configuration for that in the `src/main/resources/persistence.conf` file.
-
-You have to enable this configuration by including `persistence.conf` in `application.conf`:
+The events are stored in Cassandra and the template project includes configuration for that in the `src/main/resources/persistence.conf` file. We have to enable this configuration by including `persistence.conf` in `application.conf`:
 
 [source,hocon]
 ----
@@ -287,18 +289,20 @@ include::example$02-shopping-cart-service-scala/src/main/resources/application.c
 
 == Run
 
-First you need to start Cassandra with:
+To run the service, we first need to start Cassandra to persist the events. Then we can run the service:
 
+. Start Cassandra with the following:
++
 include::template.adoc[tag=docker]
 
-Run the service with:
-
+. Run the service with:
++
 [.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
-
++
 [.group-java]
 [source,shell script]
 ----
@@ -306,40 +310,45 @@ sbt -Dconfig.resource=local1.conf run
 mvn compile exec:exec -DAPP_CONFIG=local1.conf
 ----
 
-Try it with `grpcurl`. Add 3 socks to a cart:
+== Exercise the service
+Try the following to exercise the service:
 
+
+. Use `grpcurl` to add 3 socks to a cart:
++
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
-Try the validation logic by trying to add the same item again, which should result in an error:
-
+. Test the validation logic by trying to add the same item again, which should result in an error:
++
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
-To verify that the events are actually saved, and the state can be recovered from the events you can stop the service with `ctrl-c` and then start it again.
+. To verify that the events are actually saved, and the state can be recovered from the events you can stop the service with `ctrl-c` and then start it again.
 
-Add 2 t-shirts to the same cart:
-
+. Add 2 t-shirts to the same cart:
++
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
++
+The returned updated cart should still contain the 3 socks.
 
-Then the returned updated cart should still contain the 3 socks.
+Another fun experiment is to start several instances of the service on different ports (2552, 2553) and then interact with different carts via the different gRPC servers (gRPC ports 8101, 8102, 8103). To do this, you can use the other provided configuration files:
 
-Another fun experiment is to start several instances of the service on different ports (2552, 2553) and then interact with different carts via the different gRPC servers (gRPC ports 8101, 8102, 8103).
-
-
+. Start a second instance with local configuration #2:
++
 [.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local2.conf run
 ----
-
++
 [.group-java]
 [source,shell script]
 ----
@@ -347,13 +356,14 @@ sbt -Dconfig.resource=local2.conf run
 mvn compile exec:exec -DAPP_CONFIG=local2.conf
 ----
 
-
+. Start a third instance wit local configuration #3:
++
 [.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local3.conf run
 ----
-
++
 [.group-java]
 [source,shell script]
 ----
@@ -361,9 +371,7 @@ sbt -Dconfig.resource=local3.conf run
 mvn compile exec:exec -DAPP_CONFIG=local3.conf
 ----
 
-You can stop the service with `ctrl-c`.
-
-You can leave Cassandra running or stop it with:
+When finished, stop the service with `ctrl-c`. Leave Cassandra running for the next set of steps, or stop it with:
 
 [source,shell script]
 ----
