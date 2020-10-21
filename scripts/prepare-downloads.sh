@@ -62,49 +62,49 @@ removeTags
 prepareTemporalFolder
 fetchProject 00-shopping-cart-service-scala shopping-cart-service
 fetchProject 00-shopping-analytics-service-scala shopping-analytics-service
-fetchProject 00-shopping-order-service-scala shopping-order-service-scala
+fetchProject 00-shopping-order-service-scala shopping-order-service
 zipAndAttach 0-shopping-cart-start-scala.zip
 
 ## gRPC service
 prepareTemporalFolder
 fetchProject 01-shopping-cart-service-scala shopping-cart-service
 fetchProject 00-shopping-analytics-service-scala shopping-analytics-service
-fetchProject 00-shopping-order-service-scala shopping-order-service-scala
+fetchProject 00-shopping-order-service-scala shopping-order-service
 zipAndAttach 1-shopping-cart-grpc-scala.zip
 
 ## basic entity
 prepareTemporalFolder
 fetchProject 02-shopping-cart-service-scala shopping-cart-service
 fetchProject 00-shopping-analytics-service-scala shopping-analytics-service
-fetchProject 00-shopping-order-service-scala shopping-order-service-scala
+fetchProject 00-shopping-order-service-scala shopping-order-service
 zipAndAttach 2-shopping-cart-event-sourced-scala.zip
 
 ## complete entity
 prepareTemporalFolder
 fetchProject 03-shopping-cart-service-scala shopping-cart-service
 fetchProject 00-shopping-analytics-service-scala shopping-analytics-service
-fetchProject 00-shopping-order-service-scala shopping-order-service-scala
+fetchProject 00-shopping-order-service-scala shopping-order-service
 zipAndAttach 3-shopping-cart-event-sourced-complete-scala.zip
 
 ## projection query
 prepareTemporalFolder
 fetchProject 04-shopping-cart-service-scala shopping-cart-service
 fetchProject 00-shopping-analytics-service-scala shopping-analytics-service
-fetchProject 00-shopping-order-service-scala shopping-order-service-scala
+fetchProject 00-shopping-order-service-scala shopping-order-service
 zipAndAttach 4-shopping-cart-projection-scala.zip
 
 ## projection kafka
 prepareTemporalFolder
 fetchProject 05-shopping-cart-service-scala shopping-cart-service
 fetchProject shopping-analytics-service-scala shopping-analytics-service
-fetchProject 00-shopping-order-service-scala shopping-order-service-scala
+fetchProject 00-shopping-order-service-scala shopping-order-service
 zipAndAttach 5-shopping-cart-projection-kafka-scala.zip
 
 ## complete
 prepareTemporalFolder
 fetchProject shopping-cart-service-scala shopping-cart-service
 fetchProject shopping-analytics-service-scala shopping-analytics-service
-fetchProject shopping-order-service-scala shopping-order-service-scala
+fetchProject shopping-order-service-scala shopping-order-service
 zipAndAttach 6-shopping-cart-complete-scala.zip
 
 
@@ -144,5 +144,5 @@ zipAndAttach 5-shopping-cart-projection-kafka-java.zip
 prepareTemporalFolder
 fetchProject shopping-cart-service-java shopping-cart-service
 fetchProject shopping-analytics-service-java shopping-analytics-service
-fetchProject shopping-order-service-java shopping-order-service-java
+fetchProject shopping-order-service-java shopping-order-service
 zipAndAttach 6-shopping-cart-complete-java.zip
