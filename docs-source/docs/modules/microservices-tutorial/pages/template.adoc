@@ -1,6 +1,5 @@
 = II: Start a project
 :page-supergroup-java-scala: Language
-:page-supergroup-maven-sbt: Build tool
 
 include::ROOT:partial$include.adoc[]
 
@@ -25,13 +24,13 @@ In the first part of the tutorial we will work with the `shopping-cart-service` 
 Change to the new `shopping-cart-service` project directory and try to build it with:
 
 [.tabset]
-Maven::
+Java::
 +
 ----
 mvn compile
 ----
 
-sbt::
+Scala::
 +
 ----
 sbt compile
