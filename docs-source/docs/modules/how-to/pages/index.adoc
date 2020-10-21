@@ -1,4 +1,4 @@
-= How to ... with Akka
+= How to ...
 
 
 include::partial$include.adoc[]

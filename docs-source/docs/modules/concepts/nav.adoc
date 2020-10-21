@@ -1,12 +1,4 @@
-.xref:index.adoc[Concepts]
-* Properties of Reactive Microsystems
-** xref:isolation.adoc[]
-** xref:autonomy.adoc[]
-** xref:mobility.adoc[]
-** xref:message-driven-event-driven.adoc[Event-Driven]
-** xref:state-ownership.adoc[]
-
-* Implementation Concepts
+* Akka modules for Microservices
 ** xref:akka-actor.adoc[]
 ** xref:akka-stream.adoc[]
 ** xref:akka-grpc.adoc[]
@@ -15,8 +7,15 @@
 ** xref:akka-projections.adoc[]
 ** xref:akka-management.adoc[]
 
-* Patterns and techniques recommended for Reactive Microsystems
+* xref:index.adoc[What is Reactive?]
 ** xref:reactive-disambiguation.adoc[]
+** xref:isolation.adoc[]
+** xref:autonomy.adoc[]
+** xref:mobility.adoc[]
+** xref:message-driven-event-driven.adoc[Event-Driven]
+** xref:state-ownership.adoc[]
+
+* Designing Reactive Microsystems
 ** xref:event-sourcing.adoc[]
 ** xref:cqrs.adoc[]
 ** xref:eventual-consistency.adoc[]
