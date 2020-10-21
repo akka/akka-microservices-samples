@@ -31,7 +31,7 @@ NOTE: The xref:microservices-tutorial:entity.adoc[Event Sourced Cart entity in t
 
 When operating an Akka cluster you must consider how to handle network partitions (a.k.a. split brain scenarios) and machine crashes (including JVM and hardware failures). This is crucial for correct behavior if you use Cluster Singleton or Cluster Sharding, especially together with xref:akka-persistence.adoc[].
 
-The {akka-blog}/news/2020/06/08/akka-split-brain-resolver-video[Split Brain Resolver video  {tab-icon}, window="tab"] is a good starting point for learning why it is important to use a correct downing provider and how the Split Brain Resolver works.
+The {akka-blog}/news/2020/06/08/akka-split-brain-resolver-video[Split Brain Resolver video {tab-icon}, window="tab"] is a good starting point for learning why it is important to use a correct downing provider and how the Split Brain Resolver works.
 
 == Learn more
 

@@ -168,5 +168,5 @@ Or, using the JVM arguments syntax:
 == Learn more
 
 * {akka}/typed/cluster.html#node-roles[Akka Cluster Node Roles {tab-icon}, window="tab"]
-*  {akka}/typed/cluster-sharding.html[Akka Cluster Sharding {tab-icon}, window="tab"]
+* {akka}/typed/cluster-sharding.html[Akka Cluster Sharding {tab-icon}, window="tab"]
 * {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[Sharded Daemon Process {tab-icon}, window="tab"]
