@@ -15,7 +15,7 @@ On this page you will learn how to:
 * interact with the service from the command line
 * deploy for the first time to the cloud
 
-.Available .zip downloads:
+.Source downloads:
 ****
 * link:_attachments/0-shopping-cart-start-scala.zip[Source] with the initial project template. Alternatively, use `sbt` to start a new project as explained in xref:template.adoc[Run the template].
 * link:_attachments/1-shopping-cart-grpc-scala.zip[Source] with the steps on this page completed.

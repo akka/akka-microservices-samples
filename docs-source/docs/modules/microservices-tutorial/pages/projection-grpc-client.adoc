@@ -15,7 +15,7 @@ On this page you will learn how to:
 
 ifdef::todo[TODO link to synchronous communication concepts]
 
-.Available .zip downloads:
+.Source downloads:
 ****
 * [.group-scala]#link:_attachments/5-shopping-cart-projection-kafka-scala.zip[Source]# [.group-java]#link:_attachments/5-shopping-cart-projection-kafka-java.zip[Source]# that includes all previous tutorial steps and allows you to start with the steps on this page.
 * [.group-scala]#link:_attachments/6-shopping-cart-complete-scala.zip[Source]# [.group-java]#link:_attachments/6-shopping-cart-complete-java.zip[Source]# with the steps on this page completed.

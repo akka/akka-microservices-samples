@@ -9,7 +9,7 @@ On this page you will learn how to:
 
 * implement an Event Sourced entity by expanding the xref:entity.adoc[previous step]
 
-.Available .zip downloads:
+.Source downloads:
 ****
 * link:_attachments/2-shopping-cart-event-sourced-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
 * link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[Source] with the steps on this page completed.
