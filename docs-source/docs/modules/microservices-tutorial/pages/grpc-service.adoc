@@ -24,11 +24,9 @@ First, we will create the `ShoppingCartService` with a single operation that add
 
 :sectnums:
 
-ifdef::review[REVIEWERS: I thought about removing the headings and changing to a simple numbered list, that is still an option. But, for now, I've made the section headings numbered so it's easier not to lose your place. There are pros and cons. The way it is, it is nice to have the numbered items in the on this page TOC.]
-
 == Service definition
 
-ifdef::review[REVIEWERS: if this is their first exposure to gRPC, should we start this with a few introductory sentences about what it is and what the .proto file is used for?]
+gRPC takes a schema-first approach, where the protocol is declared in a Protobuf service descriptor. From the service descriptor the source code for the messages, client and server stubs are generated.
 
 First, create a protobuf service descriptor file: `src/main/protobuf/ShoppingCartService.proto`. In it, define the service interface as shown below: 
 
@@ -56,14 +54,15 @@ sbt compile
 mvn compile
 ----
 
+TIP: You might have to synchronize the [.group-scala]#`build.sbt`# [.group-java]#`pom.xml`# in IntelliJ after this so that it adds the source directories for the generated code.
+
 == Service implementation
 
 Let's implement the `ShoppingCartService` [.group-scala]#trait# [.group-java]#interface#. Create a `ShoppingCartServiceImpl` class that extends the generated `ShoppingCartService` [.group-scala]#trait# [.group-java]#interface#. Implement the `addItem` method from the [.group-scala]#trait# [.group-java]#interface# by logging the call and return a successful [.group-scala]#`Future`# [.group-java]#`CompletionStage`#.
 
-ifdef::review[REVIEWERS: it appears as though the impl class is in a separate file, do we need to explicitly tell the reader where to put it?]
-
 [.tabset]
 Java::
+src/main/java/shopping/cart/ShoppingCartServiceImpl.java:
 +
 [source,java,indent=0]
 ----
@@ -71,6 +70,7 @@ include::example$01-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 ----
 
 Scala::
+src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala:
 +
 [source,scala,indent=0]
 ----
@@ -81,13 +81,11 @@ include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 == HTTP Server
 
-We will run the gRPC service implementation in an Akka HTTP server. Add the following server initialization code in a `ShoppingCartServer` object:
-
-ifdef::review[REVIEWERS: same question as before, do we need to tell them where to put this file and what to name it?]
-
+We will run the gRPC service implementation in an Akka HTTP server. Add the following server initialization code in a `ShoppingCartServer` [.group-scala]#`object`# [.group-java]#`class`#:
 
 [.tabset]
 Java::
+src/main/java/shopping/cart/ShoppingCartServer.java:
 +
 [source,java,indent=0]
 ----
@@ -95,6 +93,7 @@ include::example$01-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 ----
 
 Scala::
+src/main/scala/shopping/cart/ShoppingCartServer.scala
 +
 [source,scala,indent=0]
 ----
@@ -126,7 +125,7 @@ include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Mai
 
 <1> Start an `ActorSystem` with the `Main` actor `Behavior`.
 <2> Initialization of Akka Management that is used for forming the Akka Cluster.
-<3> Initialize the gRPC server.
+<3> Initialize the gRPC server. This is the code you should add to the existing `Main`.
 <4> This actor doesn't handle any messages. It is so far only used for initialization of the different components.
 
 The `grpc.port` configuration is defined in `local1.conf`, which is included in the generated template project.
@@ -154,6 +153,8 @@ Note the log output from the `ShoppingCartServer`
 Shopping online at gRPC server 127.0.0.1:8101
 ----
 
+=== Exercise the service
+
 Try exercising the service with https://github.com/fullstorydev/grpcurl[grpcurl].
 
 Add 3 socks to a cart:
@@ -171,6 +172,8 @@ grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127
 ----
 
 Note the logging from the `ShoppingCartServiceImpl` in the console.
+
+=== Stop the service
 
 You can stop the service with `ctrl-c`.
 

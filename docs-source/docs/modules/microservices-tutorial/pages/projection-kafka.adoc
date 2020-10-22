@@ -224,7 +224,7 @@ Scala::
 include::example$shopping-analytics-service-scala/src/main/scala/shopping/analytics/Main.scala[]
 ----
 
-== Run
+== Run locally
 
 In addition to Cassandra we now also need Kafka. Kafka is also started by the `docker-compose` script.
 
@@ -276,6 +276,15 @@ Look at the log output in the terminal of the `shopping-analytics-service`. Ther
 
 ----
 ItemAdded: 1 pencil to cart cart1
+----
+
+=== Stop the service
+
+When finished, stop the service with `ctrl-c`. Leave Cassandra and Kafka running for the next set of steps, or stop it with:
+
+[source,shell script]
+----
+docker-compose down
 ----
 
 ifdef::todo[TODO: deploy the updated shopping-cart-service and the new shopping-analytics-service to the cloud and try it]

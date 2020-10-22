@@ -232,7 +232,7 @@ include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 For this you have to add the `ItemPopularityRepository` as a constructor parameter to the `ShoppingCartServiceImpl`. The `ItemPopularityRepository` instance is created in [.group-scala]#`Main.scala`# [.group-java]#`Main.java`# so pass that instance as parameter to `ShoppingCartServer.start` and then to  `ShoppingCartServiceImpl`.
 
-== Run
+== Run locally
 
 Start Cassandra, unless it's already running:
 
@@ -274,6 +274,8 @@ mvn compile exec:exec -DAPP_CONFIG=local1.conf
 sbt -Dconfig.resource=local1.conf run
 ----
 
+=== Exercise the service
+
 Try it with `grpcurl`. Add 5 hoodies to a cart:
 
 [source,shell script]
@@ -300,6 +302,15 @@ Popularity count should now have increased to 7:
 [source,shell script]
 ----
 grpcurl -d '{"itemId":"hoodie"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetItemPopularity
+----
+
+=== Stop the service
+
+When finished, stop the service with `ctrl-c`. Leave Cassandra running for the next set of steps, or stop it with:
+
+[source,shell script]
+----
+docker-compose down
 ----
 
 ifdef::todo[TODO: deploy the updated version to the cloud and try it]

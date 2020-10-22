@@ -188,7 +188,7 @@ The gRPC client is using service discovery to locate the `ShoppingOrderService`.
 include::example$shopping-cart-service-scala/src/main/resources/local-shared.conf[tag=grpc]
 ----
 
-== Run
+== Run locally
 
 Start Cassandra and Kafka, unless it's already running:
 
@@ -247,6 +247,15 @@ In the terminal of the `shopping-order-service` you should see the log of the or
 
 ----
 Order 12 items from cart cart1
+----
+
+=== Stop the service
+
+When finished, stop the services with `ctrl-c`. Stop Cassandra and Kafka with:
+
+[source,shell script]
+----
+docker-compose down
 ----
 
 ifdef::todo[TODO: deploy the updated shopping-cart-service and the new shopping-order-service to the cloud and try it]

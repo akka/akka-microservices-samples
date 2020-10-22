@@ -310,7 +310,7 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 As mentioned at the beginning of this page, `RemoveItem` and `AdjustItemQuantity` commands are not mandatory for the subsequent steps of the tutorial. A zip file with the completed for this page implementing the optional commands is available for [.group-scala]#link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[download]# [.group-java]#link:_attachments/3-shopping-cart-event-sourced-complete-java.zip[download]#.
 
-== Run
+== Run locally
 
 Start Cassandra, unless it's already running:
 
@@ -334,6 +334,7 @@ sbt -Dconfig.resource=local1.conf run
 mvn compile exec:exec -DAPP_CONFIG=local1.conf
 ----
 
+=== Exercise the service
 
 Try it with `grpcurl`.
 
@@ -365,6 +366,15 @@ Check out cart:
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.Checkout
+----
+
+=== Stop the service
+
+When finished, stop the service with `ctrl-c`. Leave Cassandra running for the next set of steps, or stop it with:
+
+[source,shell script]
+----
+docker-compose down
 ----
 
 == Learn more

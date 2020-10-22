@@ -20,7 +20,7 @@ public final class ShoppingCartServer {
   private ShoppingCartServer() {}
 
   static void start(String host, int port, ActorSystem<?> system) {
-    ShoppingCartServiceImpl impl = new ShoppingCartServiceImpl(system);
+    ShoppingCartServiceImpl impl = new ShoppingCartServiceImpl();
     @SuppressWarnings("unchecked")
     Function<HttpRequest, CompletionStage<HttpResponse>> service =
         ServiceHandler.concatOrNotFound(
