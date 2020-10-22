@@ -91,6 +91,7 @@ public final class ShoppingCart
     }
     // tag::state-with-checkout[]
   }
+
   // end::state-with-checkout[]
 
   /** This interface defines all the commands (messages) that the ShoppingCart actor supports. */
@@ -163,6 +164,7 @@ public final class ShoppingCart
   // end::getCommand[]
 
   /** Summary of the shopping cart state, used in reply messages. */
+  // tag::state-with-checkout[]
   public static final class Summary implements CborSerializable {
     final Map<String, Integer> items;
     final boolean checkedOut;
@@ -173,6 +175,7 @@ public final class ShoppingCart
       this.checkedOut = checkedOut;
     }
   }
+  // end::state-with-checkout[]
 
   abstract static class Event implements CborSerializable {
     public final String cartId;

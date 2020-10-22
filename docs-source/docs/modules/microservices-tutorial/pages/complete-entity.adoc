@@ -5,6 +5,10 @@ include::ROOT:partial$include.adoc[]
 
 In this part, we will complete the `ShoppingCart` entity with more commands and events. The `ShoppingCart` is using Event Sourcing to persist events that represents changes to the state of the cart.
 
+.This part of the xref:overview.adoc[full example] will focus on the shopping cart entity.
+[caption=""]
+image::example-entity.png[Example entity]
+
 On this page you will learn how to:
 
 * implement an Event Sourced entity by expanding the xref:entity.adoc[previous step]
@@ -28,10 +32,6 @@ Scala::
 
 
 == More commands and events
-
-.This part of the xref:overview.adoc[full example] will focus on the shopping cart entity.
-[caption=""]
-image::example-entity.png[Example entity]
 
 Add the following commands to the `ShoppingCart`:
 
@@ -286,24 +286,9 @@ sbt compile
 mvn compile
 ----
 
-You will see a compilation error in [.group-scala]#`ShoppingCartServiceImpl.scala`# [.group-java]#`ShoppingCartServiceImpl.java`#, but that is expected with the changed Protobuf definition. We will fix that now. You have to include the new `checkedOut` flag when converting from `ShoppingCart.Summary` to `proto.Cart`.
+You will see a compilation error in [.group-scala]#`ShoppingCartServiceImpl.scala`# [.group-java]#`ShoppingCartServiceImpl.java`#, but that is expected with the changed Protobuf definition. We will fix that now.
 
-[.tabset]
-Java::
-+
-[source,java,indent=0]
-----
-include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServiceImpl.java[tag=toProtoCart]
-----
-
-Scala::
-+
-[source,scala,indent=0]
-----
-include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=toProtoCart]
-----
-
-Then you can add implementations of the new operations in `ShoppingCartServiceImpl` in the same way as `addItem`:
+Add implementations of the new operations in `ShoppingCartServiceImpl` in the same way as `addItem`:
 
 [.tabset]
 Java::
@@ -318,6 +303,23 @@ Scala::
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=checkoutAndGet]
+----
+
+We also have to include the new `checkedOut` flag when converting from `ShoppingCart.Summary` to `proto.Cart`.
+
+[.tabset]
+Java::
++
+[source,java,indent=0]
+----
+include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServiceImpl.java[tag=toProtoCart]
+----
+
+Scala::
++
+[source,scala,indent=0]
+----
+include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=toProtoCart]
 ----
 
 As mentioned at the beginning of this page, `RemoveItem` and `AdjustItemQuantity` commands are not mandatory for the subsequent steps of the tutorial. A zip file with the completed steps on this page and implementing the optional commands is available for download (link:_attachments/3-shopping-cart-event-sourced-complete-java.zip[java sources]/link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[scala sources]).

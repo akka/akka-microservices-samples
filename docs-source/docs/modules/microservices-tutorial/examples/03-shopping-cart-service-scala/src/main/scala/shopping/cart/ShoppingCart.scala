@@ -75,6 +75,7 @@ object ShoppingCart {
     val empty =
       State(items = Map.empty, checkoutDate = None)
   }
+
   // end::state-with-checkout[]
 
   /**
@@ -131,10 +132,12 @@ object ShoppingCart {
   /**
    * Summary of the shopping cart state, used in reply messages.
    */
+  // tag::state-with-checkout[]
   final case class Summary(
       items: Map[String, Int],
       checkedOut: Boolean)
       extends CborSerializable
+  // end::state-with-checkout[]
 
   /**
    * This interface defines all the events that the ShoppingCart supports.
