@@ -118,6 +118,29 @@ cp ${SRC} ${tutorial_root}/shopping-cart-service-java/
 cp ${SRC} ${tutorial_root}/shopping-analytics-service-java/
 cp ${SRC} ${tutorial_root}/shopping-order-service-java/
 
+declare SRC="${tutorial_root}/00-shopping-cart-service-scala/.gitignore"
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/
+cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/
+cp ${SRC} ${tutorial_root}/shopping-order-service-scala/
+
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/
+cp ${SRC} ${tutorial_root}/shopping-cart-service-java/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-java/
+cp ${SRC} ${tutorial_root}/shopping-analytics-service-java/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-java/
+cp ${SRC} ${tutorial_root}/shopping-order-service-java/
+
 
 declare SRC="${tutorial_root}/00-shopping-cart-service-scala/ddl-scripts/create_tables.cql"
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/ddl-scripts/
