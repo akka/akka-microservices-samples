@@ -1,3 +1,4 @@
+// tag::imports[]
 package shopping.cart;
 
 import akka.actor.typed.ActorRef;
@@ -16,6 +17,8 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+
+// end::imports[]
 
 /**
  * This is an event sourced actor (`EventSourcedBehavior`). An entity managed by Cluster Sharding.
@@ -191,12 +194,13 @@ public final class ShoppingCart
             .restartWithBackoff(Duration.ofMillis(200), Duration.ofSeconds(5), 0.1));
     this.cartId = cartId;
   }
-  // end::init[]
 
   @Override
   public State emptyState() {
     return new State();
   }
+  // end::init[]
+
   // tag::commandHandler[]
   // ...
   @Override

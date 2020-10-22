@@ -13,7 +13,6 @@ For now, we'll implement the command to add items to the Cart. In the next part 
 * unit test the entity
 * distribute the entities over the nodes in the Akka Cluster
 * send requests from the gRPC service implementation to the entities
-* update the deployment from the previous step
 
 ifdef::review[REVIEWERS: re: bullet 3 above, the Initialization section only contains a brief statement about distributing among nodes. I think we should introduce and motivate use in the overview of this page or maybe in the architectural overview to explain that this is one thing that helps us achieve Reactive?]
 
@@ -40,19 +39,23 @@ Scala::
 :sectnums:
 == Commands and events
 
-Commands are the "external" API of an entity. Entity state can only be changed by commands. The results of commands are emitted as events. A command can request state changes, but different events might be generated depending on the current state of the entity. To add a command and an event, follow these steps:
+Commands are the "external" API of an entity. Entity state can only be changed by commands. The results of commands are emitted as events. A command can request state changes, but different events might be generated depending on the current state of the entity. A command can also be validated and be rejected if it has invalid input or can't be handled by current state of the entity.
+
+To add a command and an event, follow these steps:
 
 . [.group-scala]#Define a `ShoppingCart` object and the `AddItem` command:# [.group-java]#Define a `ShoppingCart` class extending `EventSourcedBehaviorWithEnforcedReplies` and the `AddItem` command:#
 +
 [.tabset]
 Java::
+src/main/java/shopping/cart/ShoppingCart.java:
 +
 [source,java,indent=0]
 ----
-include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;commands]
+include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=imports;shoppingCart;commands]
 ----
 
 Scala::
+src/main/scala/shopping/cart/ShoppingCart.scala:
 +
 [source,scala,indent=0]
 ----
@@ -79,7 +82,7 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 == State
 
-Items added to the Cart are added to a `Map`. The contents of the `Map` comprise the Cart's state. Add the `Map` to the `ShoppingCart` object as shown:
+Items added to the Cart are added to a `Map`. The contents of the `Map` comprise the Cart's state. Add the `Map` to the `ShoppingCart` [.group-scala]#object# [.group-java]#class# as shown:
 
 [.tabset]
 Java::
@@ -177,12 +180,11 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 <4> Restarting with backoff in case of failures.
 
-ifdef::todo[TODO: add Java]
-
-Then we need to call [.group-scala]#`ShoppingCart.init` from `Main.scala`#:
+Then we need to call `ShoppingCart.init` from `Main`. Add the following before the gRPC `ShoppingCartServer` initialization:
 
 [.tabset]
 Java::
+src/main/java/shopping/cart/Main.java:
 +
 [source,java,indent=0]
 ----
@@ -190,10 +192,25 @@ include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/Main.
 ----
 
 Scala::
+src/main/scala/shopping/cart/Main.scala:
 +
 [source,scala,indent=0]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=ShoppingCart]
+----
+
+Verify that everything compiles with:
+
+[.group-scala]
+[source,shell script]
+----
+sbt compile
+----
+
+[.group-java]
+[source,shell script]
+----
+mvn compile
 ----
 
 == Serialization
@@ -204,6 +221,7 @@ The state, commands and events are marked as `CborSerializable` which is configu
 
 [.tabset]
 Java::
+src/main/java/shopping/cart/CborSerializable.java:
 +
 [source,java,indent=0]
 ----
@@ -211,6 +229,7 @@ include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/CborS
 ----
 
 Scala::
+src/main/scala/shopping/cart/CborSerializable.scala:
 +
 [source,scala,indent=0]
 ----
@@ -232,6 +251,7 @@ A test for the `AddItem` command looks like this in [.group-scala]#`src/test/sca
 
 [.tabset]
 Java::
+src/test/java/shopping/cart/ShoppingCartTest.java:
 +
 [source,java,indent=0]
 ----
@@ -239,6 +259,7 @@ include::example$02-shopping-cart-service-java/src/test/java/shopping/cart/Shopp
 ----
 
 Scala::
+src/test/scala/shopping/cart/ShoppingCartSpec.scala
 +
 [source,scala,indent=0]
 ----
@@ -267,6 +288,7 @@ We want to send commands to the entities from the gRPC service implementation. I
 
 [.tabset]
 Java::
+src/main/java/shopping/cart/ShoppingCartServiceImpl.java:
 +
 [source,java,indent=0]
 ----
@@ -274,6 +296,7 @@ include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 ----
 
 Scala::
+src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala:
 +
 [source,scala,indent=0]
 ----
@@ -282,7 +305,7 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 If the command is successful, the entity will reply with `StatusReply.Success` with the updated `ShoppingCart.Summary`. If the validation in the entity fails it will reply with `StatusReply.Error`, which will fail the [.group-scala]#`Future`# [.group-java]#`CompletionStage`# that is returned from `askWithStatus`.
 
-Also, we included the new `ActorSystem` parameter to the constructor when creating an instance of `ShoppingCartServiceImpl` from the `ShoppingCartServer`.
+Also, we added an `ActorSystem` parameter to the constructor of `ShoppingCartServiceImpl`. Edit the `ShoppingCartServer` to include the `system` as the parameter when creating a new instance of the `ShoppingCartServiceImpl`.
 
 == Cassandra
 
@@ -293,7 +316,7 @@ The events are stored in Cassandra and the template project includes configurati
 include::example$02-shopping-cart-service-scala/src/main/resources/application.conf[tag=persistenceInclude]
 ----
 
-== Run
+== Run locally
 
 To run the service, we first need to start Cassandra to persist the events. Then we can run the service:
 
