@@ -115,7 +115,9 @@ cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-java/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-java/
 cp ${SRC} ${tutorial_root}/shopping-analytics-service-java/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-java/
 cp ${SRC} ${tutorial_root}/shopping-order-service-java/
 
 
