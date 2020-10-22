@@ -199,7 +199,7 @@
                         <argument>-Dconfig.resource=${APP_CONFIG}</argument>
                         <argument>-classpath</argument>
                         <classpath />
-                        <argument>shopping.cart.Main</argument>
+                        <argument>shopping.order.Main</argument>
                     </arguments>
                 </configuration>
             </plugin>
