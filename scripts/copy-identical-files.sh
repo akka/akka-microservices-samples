@@ -408,6 +408,9 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/scala/shoppin
 declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServer.scala"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/scala/shopping/cart/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/scala/shopping/cart/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/main/scala/shopping/cart/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/scala/shopping/cart/
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/src/main/scala/shopping/cart/
 
 declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/scala/shopping/cart/
@@ -459,6 +462,9 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/java/shopping/
 declare SRC="${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServer.java"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/java/shopping/cart/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/java/shopping/cart/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/src/main/java/shopping/cart/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/src/main/java/shopping/cart/
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/src/main/java/shopping/cart/
 
 declare SRC="${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServiceImpl.java"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/java/shopping/cart/
@@ -496,13 +502,6 @@ cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/resources/
 
 cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/src/main/resources/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/src/main/resources/
-
-# from 03
-declare SRC="${tutorial_root}/03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServer.scala"
-cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/scala/shopping/cart/
-
-declare SRC="${tutorial_root}/03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServer.java"
-cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/src/main/java/shopping/cart/
 
 # from 02
 declare SRC="${tutorial_root}/02-shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto"

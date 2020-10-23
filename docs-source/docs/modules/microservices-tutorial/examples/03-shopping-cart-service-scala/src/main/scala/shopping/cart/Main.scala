@@ -33,7 +33,8 @@ class Main(context: ActorContext[Nothing])
       .getString("shopping-cart-service.grpc.interface")
   val grpcPort = system.settings.config
     .getInt("shopping-cart-service.grpc.port")
-  ShoppingCartServer.start(grpcInterface, grpcPort, system)
+  val grpcService = new ShoppingCartServiceImpl(system)
+  ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService)
 
   override def onMessage(msg: Nothing): Behavior[Nothing] =
     this

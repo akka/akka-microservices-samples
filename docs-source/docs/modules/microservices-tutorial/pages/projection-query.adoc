@@ -252,7 +252,7 @@ Scala::
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=getItemPopularity]
 ----
 
-For this you have to add the `ItemPopularityRepository` as a constructor parameter to the `ShoppingCartServiceImpl`. The `ItemPopularityRepository` instance is created in [.group-scala]#`Main.scala`# [.group-java]#`Main.java`# so pass that instance as parameter to `ShoppingCartServer.start` and then to  `ShoppingCartServiceImpl`.
+For this you have to add the `ItemPopularityRepository` as a constructor parameter to the `ShoppingCartServiceImpl`. The `ItemPopularityRepository` instance is created in [.group-scala]#`Main.scala`# [.group-java]#`Main.java`# so pass that instance as parameter to `ShoppingCartServiceImpl`.
 
 == Run locally
 

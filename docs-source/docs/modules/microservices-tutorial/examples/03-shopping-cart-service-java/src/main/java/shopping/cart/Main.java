@@ -32,7 +32,8 @@ public class Main extends AbstractBehavior<Void> {
     String grpcInterface =
         system.settings().config().getString("shopping-cart-service.grpc.interface");
     int grpcPort = system.settings().config().getInt("shopping-cart-service.grpc.port");
-    ShoppingCartServer.start(grpcInterface, grpcPort, system);
+    ShoppingCartServiceImpl grpcService = new ShoppingCartServiceImpl(system);
+    ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService);
   }
 
   @Override

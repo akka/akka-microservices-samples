@@ -18,7 +18,8 @@ object ShoppingOrderServer {
   def start(
       interface: String,
       port: Int,
-      system: ActorSystem[_]): Unit = {
+      system: ActorSystem[_],
+      grpcService: proto.ShoppingOrderService): Unit = {
     implicit val sys: ActorSystem[_] = system
     implicit val ec: ExecutionContext =
       system.executionContext
@@ -26,7 +27,7 @@ object ShoppingOrderServer {
     val service: HttpRequest => Future[HttpResponse] =
       ServiceHandler.concatOrNotFound(
         proto.ShoppingOrderServiceHandler.partial(
-          new ShoppingOrderServiceImpl),
+          grpcService),
         // ServerReflection enabled to support grpcurl without import-path and proto parameters
         ServerReflection.partial(
           List(proto.ShoppingOrderService)))

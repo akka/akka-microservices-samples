@@ -68,11 +68,14 @@ class Main(context: ActorContext[Nothing])
   val grpcPort =
     system.settings.config
       .getInt("shopping-cart-service.grpc.port")
+  val grpcService = new ShoppingCartServiceImpl(
+    system,
+    itemPopularityRepository)
   ShoppingCartServer.start(
     grpcInterface,
     grpcPort,
     system,
-    itemPopularityRepository)
+    grpcService)
 
   // tag::PublishEventsProjection[]
   PublishEventsProjection.init(system)

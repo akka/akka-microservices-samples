@@ -19,12 +19,12 @@ public final class ShoppingOrderServer {
 
   private ShoppingOrderServer() {}
 
-  static void start(String host, int port, ActorSystem<?> system) {
-    ShoppingOrderServiceImpl impl = new ShoppingOrderServiceImpl();
+  static void start(
+      String host, int port, ActorSystem<?> system, ShoppingOrderService grpcService) {
     @SuppressWarnings("unchecked")
     Function<HttpRequest, CompletionStage<HttpResponse>> service =
         ServiceHandler.concatOrNotFound(
-            ShoppingOrderServiceHandlerFactory.create(impl, system),
+            ShoppingOrderServiceHandlerFactory.create(grpcService, system),
             // ServerReflection enabled to support grpcurl without import-path and proto parameters
             ServerReflection.create(
                 Collections.singletonList(ShoppingOrderService.description), system));
