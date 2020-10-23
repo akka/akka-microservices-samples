@@ -24,9 +24,8 @@ public class Main extends AbstractBehavior<Void> {
 
     ActorSystem<?> system = context.getSystem();
 
-    // FIXME no get(ClassicActorSystemProvider) for Java?
-    AkkaManagement.get(system.classicSystem()).start();
-    ClusterBootstrap.get(system.classicSystem()).start();
+    AkkaManagement.get(system).start();
+    ClusterBootstrap.get(system).start();
 
     ShoppingCartEventConsumer.init(system);
   }

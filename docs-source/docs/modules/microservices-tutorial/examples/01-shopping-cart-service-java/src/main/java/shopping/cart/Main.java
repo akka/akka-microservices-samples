@@ -25,8 +25,8 @@ public class Main extends AbstractBehavior<Void> {
     ActorSystem<?> system = context.getSystem(); // <1>
 
     // FIXME no get(ClassicActorSystemProvider) for Java?
-    AkkaManagement.get(system.classicSystem()).start(); // <2>
-    ClusterBootstrap.get(system.classicSystem()).start();
+    AkkaManagement.get(system).start(); // <2>
+    ClusterBootstrap.get(system).start();
 
     String grpcInterface =
         system.settings().config().getString("shopping-cart-service.grpc.interface");
