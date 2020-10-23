@@ -29,14 +29,14 @@ public final class ItemPopularityProjectionHandler
     if (event instanceof ShoppingCart.ItemAdded) { // <3>
       ShoppingCart.ItemAdded added = (ShoppingCart.ItemAdded) event;
       dbEffect = this.repo.update(added.itemId, added.quantity);
-    // end::handler[]
+      // end::handler[]
     } else if (event instanceof ShoppingCart.ItemQuantityAdjusted) {
       ShoppingCart.ItemQuantityAdjusted adjusted = (ShoppingCart.ItemQuantityAdjusted) event;
       dbEffect = this.repo.update(adjusted.itemId, adjusted.newQuantity - adjusted.oldQuantity);
     } else if (event instanceof ShoppingCart.ItemRemoved) {
       ShoppingCart.ItemRemoved removed = (ShoppingCart.ItemRemoved) event;
       dbEffect = this.repo.update(removed.itemId, -removed.oldQuantity);
-    // tag::handler[]
+      // tag::handler[]
     } else {
       // skip all other events, such as `CheckedOut`
       dbEffect = CompletableFuture.completedFuture(Done.getInstance());

@@ -61,7 +61,7 @@ public final class PublishEventsProjectionHandler
               .build()
               .toByteString();
       fullName = shopping.cart.proto.ItemAdded.getDescriptor().getFullName();
-    // end::handler[]
+      // end::handler[]
     } else if (event instanceof ShoppingCart.ItemQuantityAdjusted) {
       ShoppingCart.ItemQuantityAdjusted itemQuantityAdjusted =
           (ShoppingCart.ItemQuantityAdjusted) event;
@@ -82,7 +82,7 @@ public final class PublishEventsProjectionHandler
               .build()
               .toByteString();
       fullName = shopping.cart.proto.ItemRemoved.getDescriptor().getFullName();
-    // tag::handler[]
+      // tag::handler[]
     } else if (event instanceof ShoppingCart.CheckedOut) {
       ShoppingCart.CheckedOut checkedOut = (ShoppingCart.CheckedOut) event;
       protoMessage =
