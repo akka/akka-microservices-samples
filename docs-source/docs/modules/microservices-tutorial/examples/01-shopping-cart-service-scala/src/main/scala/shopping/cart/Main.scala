@@ -33,7 +33,7 @@ class Main(context: ActorContext[Nothing])
     .getString("shopping-cart-service.grpc.interface")
   val grpcPort = system.settings.config
     .getInt("shopping-cart-service.grpc.port")
-  val grpcService = new ShoppingCartServiceImpl(system)
+  val grpcService = new ShoppingCartServiceImpl
   ShoppingCartServer.start(
     grpcInterface,
     grpcPort,
