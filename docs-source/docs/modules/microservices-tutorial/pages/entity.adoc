@@ -17,6 +17,7 @@ For now, we'll implement the command to add items to the Cart. In the next part 
 ifdef::review[REVIEWERS: re: bullet 3 above, the Initialization section only contains a brief statement about distributing among nodes. I think we should introduce and motivate use in the overview of this page or maybe in the architectural overview to explain that this is one thing that helps us achieve Reactive?]
 
 If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sourcing.adoc[Event Sourcing] section for an explanation.
+The {akka-blog}/news/2020/01/07/akka-event-sourcing-video[Event Sourcing with Akka 2.6 video {tab-icon}, window="tab"] is also a good starting point for learning Event Sourcing.
 
 [.tabset]
 Java::

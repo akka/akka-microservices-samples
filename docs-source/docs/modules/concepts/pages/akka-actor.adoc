@@ -41,4 +41,6 @@ NOTE: Embracing failure (using, for example, supervision) is one of the {reactiv
 
 == Learn more
 
-Learn more about Akka and the Actor Model on the {akka}/typed/guide/actors-intro.html[Akka documentation {tab-icon}, window="tab"], window="tab"].
+* The {akka-blog}/news/2019/12/03/akka-typed-actor-intro-video[Akka Actor introduction video {tab-icon}, window="tab"] is a good starting point for learning Akka Actors.
+
+* Learn more about Akka and the Actor Model on the {akka}/typed/guide/actors-intro.html[Akka documentation {tab-icon}, window="tab"], window="tab"].

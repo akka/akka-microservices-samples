@@ -22,6 +22,7 @@ That makes it well-suited for:
 
 == Learn more
 
+* The {akka-blog}/news/2020/04/08/akka-grpc-intro-video[Introduction to Akka gRPC video {tab-icon}, window="tab"] is a good starting point for learning Akka gRPC.
 * {akka-grpc}/whygrpc.html[Akka gRPC "Why gRPC?" {tab-icon}, window="tab"]
 * {akka-grpc}/server/walkthrough.html[Akka gRPC server walk-through {tab-icon}, window="tab"]
 * {akka-grpc}/client/walkthrough.html[Akka gRPC client walk-through {tab-icon}, window="tab"]

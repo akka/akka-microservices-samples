@@ -16,4 +16,6 @@ NOTE: The xref:microservices-tutorial:index.adoc[Implementing Microservices with
 
 == Learn more
 
-To know more, check the {akka-projection}[Akka Projections reference documentation {tab-icon}, window="tab"].
+* The {akka-blog}/news/2020/09/10/akka-projection-intro-video[Introduction to Akka Projections video {tab-icon}, window="tab"] is a good starting point for learning Akka Projections.
+
+* To know more, check the {akka-projection}[Akka Projections reference documentation {tab-icon}, window="tab"].

@@ -35,5 +35,7 @@ Summing up, in a CQRS applications, the write-side and the read-side operate {re
 
 * To see a project implementing CQRS in action, have a look at the xref:microservices-tutorial:index.adoc["Implementing Microservices with Akka" tutorial]. In steps xref:microservices-tutorial:entity.adoc[], and xref:microservices-tutorial:complete-entity.adoc[] you will implement a write-side using {akka}/typed/persistence.html[Akka Persistence {tab-icon}, window="tab"]  which implements Event Sourcing. Then, in the step xref:microservices-tutorial:projection-query.adoc[] you will implement a read-side using {akka-projection}[Akka Projection {tab-icon}, window="tab"].
 
+* The {akka-blog}/news/2020/09/10/akka-projection-intro-video[Introduction to Akka Projections video {tab-icon}, window="tab"] is a good starting point for learning Akka Projections.
+
 * See also the CQRS documentation in the {akka-projection}/use-cases.html[Akka Projections documentation {tab-icon}, window="tab"] for more details on how Akka Projection can be used to build a Query side.
 

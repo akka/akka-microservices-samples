@@ -22,4 +22,6 @@ Storage backends for journals and snapshot stores are pluggable in the Akka pers
 
 == Learn more
 
-Learn more about Akka Persistence in the {akka}/typed/index-persistence.html[Akka Persistence reference documentation {tab-icon}, window="tab"].
+* The {akka-blog}/news/2020/01/07/akka-event-sourcing-video[Event Sourcing with Akka 2.6 video {tab-icon}, window="tab"] is a good starting point for learning Event Sourcing.
+
+* Learn more about Akka Persistence in the {akka}/typed/index-persistence.html[Akka Persistence reference documentation {tab-icon}, window="tab"].

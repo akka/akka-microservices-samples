@@ -15,7 +15,7 @@ On this page you will learn how to:
 * distribute the Projection instances over the nodes in the Akka Cluster
 * work with an asynchronous API for Cassandra
 
-Read the xref:concepts:cqrs.adoc[CQRS] section as a background to why it is good to build a query representation from the events of the entities with a Projection.
+Read the xref:concepts:cqrs.adoc[CQRS] section as a background to why it is good to build a query representation from the events of the entities with a Projection. The {akka-blog}/news/2020/09/10/akka-projection-intro-video[Introduction to Akka Projections video {tab-icon}, window="tab"] is also a good starting point for learning Akka Projections.
 
 
 [.tabset]
