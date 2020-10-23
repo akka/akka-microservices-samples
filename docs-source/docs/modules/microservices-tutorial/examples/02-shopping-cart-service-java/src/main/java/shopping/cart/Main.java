@@ -24,7 +24,6 @@ public class Main extends AbstractBehavior<Void> {
 
     ActorSystem<?> system = context.getSystem();
 
-    // FIXME no get(ClassicActorSystemProvider) for Java?
     AkkaManagement.get(system).start();
     ClusterBootstrap.get(system).start();
 
