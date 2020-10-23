@@ -1,3 +1,4 @@
+// tag::projection[]
 package shopping.cart
 
 import akka.actor.typed.ActorSystem
@@ -61,3 +62,4 @@ object ItemPopularityProjection {
   }
 
 }
+// end::projection[]

@@ -10,7 +10,9 @@ import akka.actor.typed.Behavior
 import akka.actor.typed.SupervisorStrategy
 import akka.cluster.sharding.typed.scaladsl.ClusterSharding
 import akka.cluster.sharding.typed.scaladsl.Entity
+// tag::importEntityContext[]
 import akka.cluster.sharding.typed.scaladsl.EntityContext
+// end::importEntityContext[]
 import akka.cluster.sharding.typed.scaladsl.EntityTypeKey
 import akka.pattern.StatusReply
 import akka.persistence.typed.PersistenceId
@@ -174,8 +176,8 @@ object ShoppingCart {
 
   val EntityKey: EntityTypeKey[Command] =
     EntityTypeKey[Command]("ShoppingCart")
-
   // tag::tagging[]
+
   val tags = Vector.tabulate(5)(i => s"carts-$i")
 
   // tag::howto-write-side-without-role[]

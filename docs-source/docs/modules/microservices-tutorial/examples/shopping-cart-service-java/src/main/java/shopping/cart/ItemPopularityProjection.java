@@ -1,3 +1,4 @@
+// tag::projection[]
 package shopping.cart;
 
 import akka.actor.typed.ActorSystem;
@@ -47,3 +48,4 @@ public final class ItemPopularityProjection {
         () -> new ItemPopularityProjectionHandler(tag, repository));
   }
 }
+// end::projection[]

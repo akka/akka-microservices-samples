@@ -1,3 +1,4 @@
+// tag::handler[]
 package shopping.cart
 
 import scala.concurrent.ExecutionContext
@@ -27,6 +28,7 @@ class ItemPopularityProjectionHandler(
       case ShoppingCart.ItemAdded(_, itemId, quantity) =>
         repo.update(itemId, quantity)
 
+      // end::handler[]
       case ShoppingCart.ItemQuantityAdjusted(
             _,
             itemId,
@@ -39,6 +41,7 @@ class ItemPopularityProjectionHandler(
             itemId,
             oldQuantity) =>
         repo.update(itemId, 0 - oldQuantity)
+      // tag::handler[]
 
       case _: ShoppingCart.CheckedOut =>
         Future.successful(Done)
@@ -72,3 +75,4 @@ class ItemPopularityProjectionHandler(
     }
 
 }
+// end::handler[]

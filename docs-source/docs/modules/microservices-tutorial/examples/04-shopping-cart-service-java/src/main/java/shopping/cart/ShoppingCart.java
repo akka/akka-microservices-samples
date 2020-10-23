@@ -299,12 +299,12 @@ public final class ShoppingCart
   // end::howto-write-side-without-role[]
   // end::tagging[]
 
+  // tag::withTagger[]
   public static Behavior<Command> create(String cartId, String projectionTag) {
     return Behaviors.setup(
         ctx -> EventSourcedBehavior.start(new ShoppingCart(cartId, projectionTag), ctx));
   }
 
-  // tag::withTagger[]
   private final String projectionTag;
 
   private final String cartId;

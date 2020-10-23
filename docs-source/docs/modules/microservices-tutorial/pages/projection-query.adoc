@@ -35,29 +35,25 @@ Scala::
 * link:_attachments/4-shopping-cart-projection-scala.zip[Source] with the steps on this page completed.
 ****
 
-.Source downloads:
-****
-* [.group-scala]#link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[Source]# [.group-java]#link:_attachments/3-shopping-cart-event-sourced-complete-java.zip[Source]# that includes all previous tutorial steps and allows you to start with the steps on this page.
-* [.group-scala]#link:_attachments/4-shopping-cart-projection-scala.zip[Source]# [.group-java]#link:_attachments/4-shopping-cart-projection-java.zip[Source]# with the steps on this page completed.
-****
-
 == Processing events in a Projection
 
 You implement the event processing of the Projection in a `Handler`. Add a class `ItemPopularityProjectionHandler`:
 
 [.tabset]
 Java::
+src/main/java/shopping/cart/ItemPopularityProjectionHandler.java:
 +
 [source,java,indent=0]
 ----
-include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjectionHandler.java[]
+include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjectionHandler.java[tags=handler]
 ----
 
 Scala::
+src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala:
 +
 [source,scala,indent=0]
 ----
-include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala[]
+include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala[tags=handler]
 ----
 
 <1> extends [.group-scala]#`akka.projection.scaladsl.Handler`# [.group-java]#`akka.projection.javadsl.Handler`#
@@ -68,6 +64,7 @@ The `ItemPopularityRepository` encapsulates the database access and can have a s
 
 [.tabset]
 Java::
+src/main/java/shopping/cart/ItemPopularityRepository.java:
 +
 [source,java,indent=0]
 ----
@@ -75,6 +72,7 @@ include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemP
 ----
 
 Scala::
+src/main/scala/shopping/cart/ItemPopularityRepository.scala:
 +
 [source,scala,indent=0]
 ----
@@ -83,6 +81,7 @@ include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Ite
 
 [.tabset]
 Java::
+src/main/java/shopping/cart/ItemPopularityRepositoryImpl.java:
 +
 [source,java,indent=0]
 ----
@@ -90,6 +89,7 @@ include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemP
 ----
 
 Scala::
+src/main/scala/shopping/cart/ItemPopularityRepository.scala:
 +
 [source,scala,indent=0]
 ----
@@ -124,7 +124,7 @@ Scala::
 +
 [source,scala,indent=0]
 ----
-include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=tagging]
+include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=importEntityContext;tagging]
 ----
 
 One of the tags is selected based on the `cartId`, which is the `entityContext.entityId`.
@@ -152,21 +152,23 @@ Here we use five different tags. The tagging is not easy to change later without
 
 === Create Projection
 
-Place the initialization code of the Projection in an `ItemPopularityProjection` object:
+Place the initialization code of the Projection in an `ItemPopularityProjection` [.group-scala]#object# [.group-java]#class#:
 
 [.tabset]
 Java::
+src/main/java/shopping/cart/ItemPopularityProjection.java:
 +
 [source,java,indent=0]
 ----
-include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjection.java[]
+include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjection.java[tag=projection]
 ----
 
 Scala::
+src/main/scala/shopping/cart/ItemPopularityProjection.scala:
 +
 [source,scala,indent=0]
 ----
-include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[]
+include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[tag=projection]
 ----
 
 <1> `ShardedDaemonProcess` will manage the Projection instances. It ensures the Projection instances are always running and distributes them over the nodes in the Akka Cluster.
