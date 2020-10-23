@@ -154,6 +154,7 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 ----
 
 == Initialization
+[#initialization]
 
 To glue the command handler, event handler, and state together, we need some initialization code. Our code will distribute the Cart entities over nodes in the Akka Cluster with https://doc.akka.io/docs/akka/current/cluster-sharding.html[Cluster Sharding {tab-icon}, window="tab"], enable snapshots to reduce recovery time when the entity is started, and restart with backoff in the case of failure. 
 

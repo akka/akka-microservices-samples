@@ -93,6 +93,7 @@ include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 <1> The method corresponding to the `rpc AddItem` in the service definition. Defined in the generated `proto.ShoppingCartService`.
 
 == HTTP Server
+[#server]
 
 We will run the gRPC service implementation in an Akka HTTP server. Add the following server initialization code in a `ShoppingCartServer` [.group-scala]#`object`# [.group-java]#`class`#:
 

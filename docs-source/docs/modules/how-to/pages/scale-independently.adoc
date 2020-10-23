@@ -41,7 +41,7 @@ Let's see these two changes in more detail.
 
 === Configure the Sharding
 
-When you initialize the Sharding of a persistent entity, as described in the xref:microservices-tutorial:entity.adoc#_initialization[tutorial], you may specify a role. Take for example the final code on the initialization of the persistent entity (from the tutorial):
+When you initialize the Sharding of a persistent entity, as described in the xref:microservices-tutorial:entity.adoc#initialization[tutorial], you may specify a role. Take for example the final code on the initialization of the persistent entity (from the tutorial):
 
 [source,scala,indent=0]
 ----
@@ -96,7 +96,7 @@ Let's see these two changes in more detail.
 
 === Configure the Sharding
 
-When you initialize the {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[Sharded Daemon Processes {tab-icon}, window="tab"] for the projections, as described in the xref:microservices-tutorial:projection-query.html#_create_projection[tutorial], you may specify a role. Take for example the final code on the initialization of the Sharded Daemon Process for the popularity projection (from the tutorial):
+When you initialize the {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[Sharded Daemon Processes {tab-icon}, window="tab"] for the projections, as described in the xref:microservices-tutorial:projection-query.adoc#projection[tutorial], you may specify a role. Take for example the final code on the initialization of the Sharded Daemon Process for the popularity projection (from the tutorial):
 
 [source,scala,indent=0]
 ----

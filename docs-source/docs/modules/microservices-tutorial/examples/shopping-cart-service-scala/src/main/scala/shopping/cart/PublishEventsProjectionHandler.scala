@@ -1,3 +1,4 @@
+// tag::handler[]
 package shopping.cart
 
 import scala.concurrent.ExecutionContext
@@ -54,6 +55,7 @@ class PublishEventsProjectionHandler(
             itemId,
             quantity) =>
         proto.ItemAdded(cartId, itemId, quantity)
+      // end::handler[]
       case ShoppingCart.ItemQuantityAdjusted(
             cartId,
             itemId,
@@ -62,6 +64,7 @@ class PublishEventsProjectionHandler(
         proto.ItemQuantityAdjusted(cartId, itemId, quantity)
       case ShoppingCart.ItemRemoved(cartId, itemId, _) =>
         proto.ItemRemoved(cartId, itemId)
+      // tag::handler[]
       case ShoppingCart.CheckedOut(cartId, _) =>
         proto.CheckedOut(cartId)
     }
@@ -71,3 +74,4 @@ class PublishEventsProjectionHandler(
       .toByteArray // <3>
   }
 }
+// end::handler[]

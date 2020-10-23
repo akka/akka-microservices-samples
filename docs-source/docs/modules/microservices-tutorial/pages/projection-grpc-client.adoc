@@ -157,7 +157,7 @@ If the call to the `ShoppingOrderService` fails the returned [.group-scala]#`Fut
 
 == Initialize the Projection
 
-The tagging of the events is already in place from a xref:projection-query.adoc#_tagging[previous step].
+The tagging of the events is already in place from a xref:projection-query.adoc#tagging[previous step].
 
 Place the initialization code of the Projection in an `SendOrderProjection` object:
 

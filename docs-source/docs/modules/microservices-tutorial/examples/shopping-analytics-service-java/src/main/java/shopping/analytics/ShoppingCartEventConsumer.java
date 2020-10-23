@@ -1,3 +1,4 @@
+// tag::consumer[]
 package shopping.analytics;
 
 import akka.Done;
@@ -83,6 +84,7 @@ class ShoppingCartEventConsumer {
                 event.getCartId());
             break;
           }
+        // end::consumer[]
         case "shopping-cart-service/shoppingcart.ItemQuantityAdjusted":
           {
             ItemQuantityAdjusted event = ItemQuantityAdjusted.parseFrom(inputBytes);
@@ -99,6 +101,7 @@ class ShoppingCartEventConsumer {
             log.info("ItemRemoved: {} removed from cart {}", event.getItemId(), event.getCartId());
             break;
           }
+        // tag::consumer[]
         case "shopping-cart-service/shoppingcart.CheckedOut":
           {
             CheckedOut event = CheckedOut.parseFrom(inputBytes);
@@ -115,3 +118,4 @@ class ShoppingCartEventConsumer {
     return CompletableFuture.completedFuture(Done.getInstance());
   }
 }
+// end::consumer[]

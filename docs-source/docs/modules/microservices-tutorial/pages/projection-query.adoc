@@ -107,6 +107,7 @@ NOTE: The example will persist the item popularity count with a https://docs.dat
 We want to connect the events from the `ShoppingCart` with the Projection. Several instances of the Projection may run on different nodes of the Akka Cluster. Each Projection instance will consume a slice of the events to distribute the load. All events from a specific entity (cart id) will always be processed by the same Projection instance so that it can build a stateful model from the events if needed.
 
 === Tagging
+[#tagging]
 
 To connect the events from the entities with the Projection we need to tag the events. We should use several tags, each with a slice number, to distribute the events over several Projection instances. The tag is selected based on the modulo of the entity id's hash code (stable identifier) and the total number of tags. Each entity instance will tag its events using one of those tags, and the entity instance will always use the same tag.
 
@@ -151,6 +152,7 @@ include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 Here we use five different tags. The tagging is not easy to change later without system downtime. Before going live in production you should consider how many tags to use, see {akka-projection}/running.html[Akka Projections reference documentation {tab-icon}, window="tab"] for more information.
 
 === Create Projection
+[#projection]
 
 Place the initialization code of the Projection in an `ItemPopularityProjection` [.group-scala]#object# [.group-java]#class#:
 

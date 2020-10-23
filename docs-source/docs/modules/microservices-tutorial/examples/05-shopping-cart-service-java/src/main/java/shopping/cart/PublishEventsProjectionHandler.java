@@ -1,3 +1,4 @@
+// tag::handler[]
 package shopping.cart;
 
 import static akka.Done.done;
@@ -60,6 +61,7 @@ public final class PublishEventsProjectionHandler
               .build()
               .toByteString();
       fullName = shopping.cart.proto.ItemAdded.getDescriptor().getFullName();
+    // end::handler[]
     } else if (event instanceof ShoppingCart.ItemQuantityAdjusted) {
       ShoppingCart.ItemQuantityAdjusted itemQuantityAdjusted =
           (ShoppingCart.ItemQuantityAdjusted) event;
@@ -80,6 +82,7 @@ public final class PublishEventsProjectionHandler
               .build()
               .toByteString();
       fullName = shopping.cart.proto.ItemRemoved.getDescriptor().getFullName();
+    // tag::handler[]
     } else if (event instanceof ShoppingCart.CheckedOut) {
       ShoppingCart.CheckedOut checkedOut = (ShoppingCart.CheckedOut) event;
       protoMessage =
@@ -99,3 +102,4 @@ public final class PublishEventsProjectionHandler
         .toByteArray(); // <3>
   }
 }
+// end::handler[]

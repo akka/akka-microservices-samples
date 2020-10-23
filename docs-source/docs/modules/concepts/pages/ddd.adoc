@@ -20,6 +20,7 @@ A model within these bounds may need to be shared to interact with external cont
 When building Microservices, each service is a Bounded Context encapsulating an autonomous domain model and its external APIs play the role of an Anti-Corruption Layer.
 
 == Ubiquitous Language
+[#ubiquitous_language]
 
 Business specialists and other members of the team (both technical and non-technical) should collaborate into creating a single, meaningful naming for the use cases, entities, actions and events modelling the business. Using a single, common language will align all parties and improve communication.
 

@@ -1,3 +1,4 @@
+// tag::consumer[]
 package shopping.analytics
 
 import scala.concurrent.ExecutionContext
@@ -76,10 +77,12 @@ object ShoppingCartEventConsumer {
         typeUrl match {
           case "shopping-cart-service/shoppingcart.ItemAdded" =>
             proto.ItemAdded.parseFrom(inputBytes)
+          // end::consumer[]
           case "shopping-cart-service/shoppingcart.ItemQuantityAdjusted" =>
             proto.ItemQuantityAdjusted.parseFrom(inputBytes)
           case "shopping-cart-service/shoppingcart.ItemRemoved" =>
             proto.ItemRemoved.parseFrom(inputBytes)
+          // tag::consumer[]
           case "shopping-cart-service/shoppingcart.CheckedOut" =>
             proto.CheckedOut.parseFrom(inputBytes)
           case _ =>
@@ -94,6 +97,7 @@ object ShoppingCartEventConsumer {
             quantity,
             itemId,
             cartId)
+        // end::consumer[]
         case proto.ItemQuantityAdjusted(
               cartId,
               itemId,
@@ -109,6 +113,7 @@ object ShoppingCartEventConsumer {
             "ItemRemoved: {} removed from cart {}",
             itemId,
             cartId)
+        // tag::consumer[]
         case proto.CheckedOut(cartId, _) =>
           log.info(
             "CheckedOut: cart {} checked out",
@@ -128,3 +133,4 @@ object ShoppingCartEventConsumer {
   }
 
 }
+// end::consumer[]

@@ -29,6 +29,14 @@ This diagram illustrates each of these types of inter- and intra-service communi
 [caption=""]
 image::concepts/internal-and-external-communication.png[Internal and External Communication]
 
+[NOTE]
+====
+* The xref:microservices-tutorial:projection-kafka.adoc[] in the tutorial illustrates how to use Kafka for asynchronous communication between Microservices.
+* The xref:microservices-tutorial:projection-grpc-client.adoc[] uses Akka gRPC for synchronous communication between two Microservices.
+* The xref:microservices-tutorial:entity.adoc[] uses Akka Cluster Sharding for communication within a Microservice.
+* The xref:microservices-tutorial:projection-query.adoc[] uses the event journal (database) for communication within a Microservice.
+====
+
 == Communication with parties outside of a Microservices system
 
 Akka promotes use of asynchronous communication without preventing use of synchronous communication where necessary. Third parties can obtain data asynchronously from Akka services that publish to the Broker API. Akka services can also expose an API for third parties to exchange data synchronously. This is usually mapped to gRPC or HTTP.

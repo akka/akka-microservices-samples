@@ -9,12 +9,12 @@ In this part, we will add another Projection from the events of the `ShoppingCar
 [caption=""]
 image::example-projection-kafka.png[Example Kafka]
 
+As described in xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts] we can publishing messages to a broker, such as Apache Kafka, to decouple communication between different Microservices.
+
 On this page you will learn how to:
 
 * send messages to a Kafka topic from a Projection
 * consume messages from a Kafka topic
-
-ifdef::todo[TODO link to asynchronous communication concepts]
 
 [.tabset]
 Java::
@@ -66,17 +66,19 @@ Add a `PublishEventsProjectionHandler` class that is the Projection `Handler` fo
 
 [.tabset]
 Java::
+src/main/java/shopping/cart/PublishEventsProjectionHandler.java:
 +
 [source,java,indent=0]
 ----
-include::example$05-shopping-cart-service-java/src/main/java/shopping/cart/PublishEventsProjectionHandler.java[]
+include::example$05-shopping-cart-service-java/src/main/java/shopping/cart/PublishEventsProjectionHandler.java[tag=handler]
 ----
 
 Scala::
+src/main/scala/shopping/cart/PublishEventsProjectionHandler.scala:
 +
 [source,scala,indent=0]
 ----
-include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjectionHandler.scala[]
+include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjectionHandler.scala[tag=handler]
 ----
 
 <1> `SendProducer` comes from the Kafka connector in Alpakka.
@@ -87,12 +89,13 @@ The serialization converts the `ShoppingCart.Event` classes to the Protobuf repr
 
 == Initialize the Projection
 
-The tagging of the events is already in place from the xref:projection-query.adoc#_tagging[previous step].
+The tagging of the events is already in place from the xref:projection-query.adoc#tagging[previous step].
 
-Place the initialization code of the Projection in an `PublishEventsProjection` object:
+Place the initialization code of the Projection in an `PublishEventsProjection` [.group-scala]#object# [.group-java]#class#:
 
 [.tabset]
 Java::
+src/main/java/shopping/cart/PublishEventsProjection.java:
 +
 [source,java,indent=0]
 ----
@@ -100,15 +103,16 @@ include::example$05-shopping-cart-service-java/src/main/java/shopping/cart/Publi
 ----
 
 Scala::
+src/main/scala/shopping/cart/PublishEventsProjection.scala:
 +
 [source,scala,indent=0]
 ----
 include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjection.scala[]
 ----
 
-The `SendProducer` is initialized using some configuration that you need to add. It defines how to connect to the Kafka broker.
+The `SendProducer` is initialized using some configuration that we need to add. It defines how to connect to the Kafka broker.
 
-Add the following to `src/main/resources/kafka.conf`:
+Add the following to a new `src/main/resources/kafka.conf` file:
 
 [source,hocon]
 ----
@@ -124,7 +128,7 @@ And for local development add the following to `src/main/resources/local-shared.
 include::example$05-shopping-cart-service-scala/src/main/resources/local-shared.conf[tag=kafka]
 ----
 
-Then you need to call the `PublishEventsProjection.init` from `Main`:
+Then we need to call the `PublishEventsProjection.init` from `Main`:
 
 [.tabset]
 Java::
@@ -169,21 +173,23 @@ Note that different services should not share code, but the Protobuf specificati
 
 === Consumer
 
-Create a `ShoppingCartEventConsumer` object that runs an Akka Stream with a Kafka `Consumer.committableSource` from Alpakka Kafka.
+Create a `ShoppingCartEventConsumer` [.group-scala]#object# [.group-java]#class# in `shopping-analytics-service`. It runs an Akka Stream with a Kafka `Consumer.committableSource` from Alpakka Kafka.
 
 [.tabset]
 Java::
+src/main/java/shopping/analytics/ShoppingCartEventConsumer.java:
 +
 [source,java,indent=0]
 ----
-include::example$shopping-analytics-service-java/src/main/java/shopping/analytics/ShoppingCartEventConsumer.java[]
+include::example$shopping-analytics-service-java/src/main/java/shopping/analytics/ShoppingCartEventConsumer.java[tag=consumer]
 ----
 
 Scala::
+src/main/scala/shopping/analytics/ShoppingCartEventConsumer.scala:
 +
 [source,scala,indent=0]
 ----
-include::example$shopping-analytics-service-scala/src/main/scala/shopping/analytics/ShoppingCartEventConsumer.scala[]
+include::example$shopping-analytics-service-scala/src/main/scala/shopping/analytics/ShoppingCartEventConsumer.scala[tag=consumer]
 ----
 
 <1> `RestartSource` will restart the stream in case of failures.
@@ -198,9 +204,9 @@ Note how the deserialization is using the type information from the Protobuf `An
 
 === Configuration
 
-The `Consumer` is initialized using some configuration that you need to add. It defines how to connect to the Kafka broker.
+The `Consumer` is initialized using some configuration that we need to add. It defines how to connect to the Kafka broker.
 
-Add the following to `src/main/resources/kafka.conf`:
+Add the following to a new `src/main/resources/kafka.conf` file in `shopping-analytics-service`:
 
 [source,hocon]
 ----
@@ -239,7 +245,7 @@ include::example$shopping-analytics-service-scala/src/main/scala/shopping/analyt
 
 In addition to Cassandra we now also need Kafka. Kafka is also started by the `docker-compose` script.
 
-Start Cassandra and Kafka, unless it's already running:
+Start Cassandra and Kafka, unless it's already running, from `shopping-cart-service`:
 
 [source,shell script]
 ----
@@ -276,6 +282,8 @@ mvn compile exec:exec -DAPP_CONFIG=local1.conf
 sbt -Dconfig.resource=local1.conf run
 ----
 
+=== Exercise the service
+
 Try it with `grpcurl`. Add 1 pencil to a cart:
 
 [source,shell script]
@@ -291,7 +299,7 @@ ItemAdded: 1 pencil to cart cart1
 
 === Stop the service
 
-When finished, stop the service with `ctrl-c`. Leave Cassandra and Kafka running for the next set of steps, or stop it with:
+When finished, stop the `shopping-cart-service` and `shopping-analytics-service` with `ctrl-c`. Leave Cassandra and Kafka running for the next set of steps, or stop it with:
 
 [source,shell script]
 ----
