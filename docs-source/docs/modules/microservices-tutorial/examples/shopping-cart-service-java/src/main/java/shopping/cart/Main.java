@@ -69,7 +69,6 @@ public class Main extends AbstractBehavior<Void> {
     // end::SendOrderProjection[]
   }
 
-  // can be overridden in tests
   // tag::SendOrderProjection[]
   // can be overridden in tests
   protected ShoppingOrderService orderServiceClient(ActorSystem<?> system) {

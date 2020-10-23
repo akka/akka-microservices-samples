@@ -185,20 +185,13 @@ public final class ShoppingCart
     }
   }
 
-  abstract static class ItemEvent extends Event {
+  static final class ItemAdded extends Event {
     public final String itemId;
-
-    public ItemEvent(String cartId, String itemId) {
-      super(cartId);
-      this.itemId = itemId;
-    }
-  }
-
-  static final class ItemAdded extends ItemEvent {
     public final int quantity;
 
     public ItemAdded(String cartId, String itemId, int quantity) {
-      super(cartId, itemId);
+      super(cartId);
+      this.itemId = itemId;
       this.quantity = quantity;
     }
 
@@ -206,21 +199,30 @@ public final class ShoppingCart
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      ItemAdded itemAdded = (ItemAdded) o;
-      return quantity == itemAdded.quantity;
+
+      ItemAdded other = (ItemAdded) o;
+
+      if (quantity != other.quantity) return false;
+      if (!cartId.equals(other.cartId)) return false;
+      return itemId.equals(other.itemId);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(quantity);
+      int result = cartId.hashCode();
+      result = 31 * result + itemId.hashCode();
+      result = 31 * result + quantity;
+      return result;
     }
   }
 
-  static final class ItemRemoved extends ItemEvent {
+  static final class ItemRemoved extends Event {
+    public final String itemId;
     public final int oldQuantity;
 
     public ItemRemoved(String cartId, String itemId, int oldQuantity) {
-      super(cartId, itemId);
+      super(cartId);
+      this.itemId = itemId;
       this.oldQuantity = oldQuantity;
     }
 
@@ -228,22 +230,31 @@ public final class ShoppingCart
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      ItemRemoved that = (ItemRemoved) o;
-      return oldQuantity == that.oldQuantity;
+
+      ItemRemoved other = (ItemRemoved) o;
+
+      if (oldQuantity != other.oldQuantity) return false;
+      if (!cartId.equals(other.cartId)) return false;
+      return itemId.equals(other.itemId);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(oldQuantity);
+      int result = cartId.hashCode();
+      result = 31 * result + itemId.hashCode();
+      result = 31 * result + oldQuantity;
+      return result;
     }
   }
 
-  static final class ItemQuantityAdjusted extends ItemEvent {
+  static final class ItemQuantityAdjusted extends Event {
+    public final String itemId;
     final int oldQuantity;
     final int newQuantity;
 
     public ItemQuantityAdjusted(String cartId, String itemId, int oldQuantity, int newQuantity) {
-      super(cartId, itemId);
+      super(cartId);
+      this.itemId = itemId;
       this.oldQuantity = oldQuantity;
       this.newQuantity = newQuantity;
     }
@@ -252,13 +263,22 @@ public final class ShoppingCart
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      ItemQuantityAdjusted that = (ItemQuantityAdjusted) o;
-      return oldQuantity == that.oldQuantity && newQuantity == that.newQuantity;
+
+      ItemQuantityAdjusted other = (ItemQuantityAdjusted) o;
+
+      if (oldQuantity != other.oldQuantity) return false;
+      if (newQuantity != other.newQuantity) return false;
+      if (!cartId.equals(other.cartId)) return false;
+      return itemId.equals(other.itemId);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(oldQuantity, newQuantity);
+      int result = cartId.hashCode();
+      result = 31 * result + itemId.hashCode();
+      result = 31 * result + oldQuantity;
+      result = 31 * result + newQuantity;
+      return result;
     }
   }
 

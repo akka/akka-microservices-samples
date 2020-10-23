@@ -25,43 +25,39 @@ public final class ItemPopularityProjectionHandler
       throws Exception, Exception {
     ShoppingCart.Event event = envelope.event();
 
-    CompletionStage<Done> dbEffect = null;
     if (event instanceof ShoppingCart.ItemAdded) { // <3>
       ShoppingCart.ItemAdded added = (ShoppingCart.ItemAdded) event;
-      dbEffect = this.repo.update(added.itemId, added.quantity);
+      CompletionStage<Done> result = this.repo.update(added.itemId, added.quantity);
+      result.thenAccept(done -> logItemCount(added.itemId));
+      return result;
       // end::handler[]
     } else if (event instanceof ShoppingCart.ItemQuantityAdjusted) {
       ShoppingCart.ItemQuantityAdjusted adjusted = (ShoppingCart.ItemQuantityAdjusted) event;
-      dbEffect = this.repo.update(adjusted.itemId, adjusted.newQuantity - adjusted.oldQuantity);
+      CompletionStage<Done> result =
+          this.repo.update(adjusted.itemId, adjusted.newQuantity - adjusted.oldQuantity);
+      result.thenAccept(done -> logItemCount(adjusted.itemId));
+      return result;
     } else if (event instanceof ShoppingCart.ItemRemoved) {
       ShoppingCart.ItemRemoved removed = (ShoppingCart.ItemRemoved) event;
-      dbEffect = this.repo.update(removed.itemId, -removed.oldQuantity);
+      CompletionStage<Done> result = this.repo.update(removed.itemId, -removed.oldQuantity);
+      result.thenAccept(done -> logItemCount(removed.itemId));
+      return result;
       // tag::handler[]
     } else {
       // skip all other events, such as `CheckedOut`
-      dbEffect = CompletableFuture.completedFuture(Done.getInstance());
+      return CompletableFuture.completedFuture(Done.getInstance());
     }
-
-    dbEffect.thenAccept(done -> logItemCount(event));
-
-    return dbEffect;
   }
 
-  /** Log the popularity of the item in every `ItemEvent` every `LogInterval`. */
-  private void logItemCount(ShoppingCart.Event event) {
-    if (event instanceof ShoppingCart.ItemEvent) {
-      ShoppingCart.ItemEvent itemEvent = (ShoppingCart.ItemEvent) event;
-
-      String itemId = itemEvent.itemId;
-      repo.getItem(itemId)
-          .thenAccept(
-              opt ->
-                  logger.info(
-                      "ItemPopularityProjectionHandler({}) item popularity for '{}': [{}]",
-                      this.tag,
-                      itemId,
-                      opt.orElse(0L)));
-    }
+  private void logItemCount(String itemId) {
+    repo.getItem(itemId)
+        .thenAccept(
+            optCount ->
+                logger.info(
+                    "ItemPopularityProjectionHandler({}) item popularity for '{}': [{}]",
+                    this.tag,
+                    itemId,
+                    optCount.orElse(0L)));
   }
 }
 // end::handler[]

@@ -144,28 +144,24 @@ object ShoppingCart {
     def cartId: String
   }
 
-  sealed trait ItemEvent extends Event {
-    def itemId: String
-  }
-
   final case class ItemAdded(
       cartId: String,
       itemId: String,
       quantity: Int)
-      extends ItemEvent
+      extends Event
 
   final case class ItemRemoved(
       cartId: String,
       itemId: String,
       oldQuantity: Int)
-      extends ItemEvent
+      extends Event
 
   final case class ItemQuantityAdjusted(
       cartId: String,
       itemId: String,
       newQuantity: Int,
       oldQuantity: Int)
-      extends ItemEvent
+      extends Event
 
   // tag::checkedOutEvent[]
   final case class CheckedOut(

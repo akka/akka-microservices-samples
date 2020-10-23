@@ -3,7 +3,6 @@ package shopping.cart
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
-import scala.util.Success
 
 import akka.Done
 import akka.actor.typed.ActorSystem
@@ -24,9 +23,11 @@ class ItemPopularityProjectionHandler(
   override def process(
       envelope: EventEnvelope[ShoppingCart.Event])
       : Future[Done] = { // <2>
-    val processed = envelope.event match { // <3>
+    envelope.event match { // <3>
       case ShoppingCart.ItemAdded(_, itemId, quantity) =>
-        repo.update(itemId, quantity)
+        val result = repo.update(itemId, quantity)
+        result.foreach(_ => logItemCount(itemId))
+        result
 
       // end::handler[]
       case ShoppingCart.ItemQuantityAdjusted(
@@ -34,45 +35,35 @@ class ItemPopularityProjectionHandler(
             itemId,
             newQuantity,
             oldQuantity) =>
-        repo.update(itemId, newQuantity - oldQuantity)
+        val result =
+          repo.update(itemId, newQuantity - oldQuantity)
+        result.foreach(_ => logItemCount(itemId))
+        result
 
       case ShoppingCart.ItemRemoved(
             _,
             itemId,
             oldQuantity) =>
-        repo.update(itemId, 0 - oldQuantity)
+        val result = repo.update(itemId, 0 - oldQuantity)
+        result.foreach(_ => logItemCount(itemId))
+        result
+
       // tag::handler[]
 
       case _: ShoppingCart.CheckedOut =>
         Future.successful(Done)
     }
-    processed.onComplete {
-      case Success(_) => logItemCount(envelope.event)
-      case _          => ()
-    }
-    processed
   }
 
-  private def logItemCount(
-      event: ShoppingCart.Event): Unit =
-    event match {
-      case itemEvent: ShoppingCart.ItemEvent =>
-        val itemId = itemEvent.itemId
-        repo.getItem(itemId).foreach {
-          case Some(count) =>
-            log.info(
-              "ItemPopularityProjectionHandler({}) item popularity for '{}': [{}]",
-              tag,
-              itemId,
-              count)
-          case None =>
-            log.info(
-              "ItemPopularityProjectionHandler({}) item popularity for '{}': [0]",
-              tag,
-              itemId)
-        }
-      case _ => ()
+  private def logItemCount(itemId: String): Unit = {
+    repo.getItem(itemId).foreach { optCount =>
+      log.info(
+        "ItemPopularityProjectionHandler({}) item popularity for '{}': [{}]",
+        tag,
+        itemId,
+        optCount.getOrElse(0))
     }
+  }
 
 }
 // end::handler[]

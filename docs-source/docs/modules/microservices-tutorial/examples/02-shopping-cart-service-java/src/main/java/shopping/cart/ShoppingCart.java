@@ -16,7 +16,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 // end::imports[]
 
@@ -127,20 +126,13 @@ public final class ShoppingCart
     }
   }
 
-  abstract static class ItemEvent extends Event {
+  static final class ItemAdded extends Event {
     public final String itemId;
-
-    public ItemEvent(String cartId, String itemId) {
-      super(cartId);
-      this.itemId = itemId;
-    }
-  }
-
-  static final class ItemAdded extends ItemEvent {
     public final int quantity;
 
     public ItemAdded(String cartId, String itemId, int quantity) {
-      super(cartId, itemId);
+      super(cartId);
+      this.itemId = itemId;
       this.quantity = quantity;
     }
 
@@ -148,13 +140,20 @@ public final class ShoppingCart
     public boolean equals(Object o) {
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
-      ItemAdded itemAdded = (ItemAdded) o;
-      return quantity == itemAdded.quantity;
+
+      ItemAdded other = (ItemAdded) o;
+
+      if (quantity != other.quantity) return false;
+      if (!cartId.equals(other.cartId)) return false;
+      return itemId.equals(other.itemId);
     }
 
     @Override
     public int hashCode() {
-      return Objects.hash(quantity);
+      int result = cartId.hashCode();
+      result = 31 * result + itemId.hashCode();
+      result = 31 * result + quantity;
+      return result;
     }
   }
   // end::events[]
