@@ -22,5 +22,5 @@ Isolation also makes it easier to scale each service, as well as allowing them t
 include::partial$reactive-microservices-ebook.adoc[]
 
 
-NOTE: Decoupling Time, Decoupling Space and Embracing Failure are three of the {reactive-principles}/principles[Reactive Principles {tab-icon}, window="tab"].
+NOTE: Decoupling Time, Decoupling Space and Embracing Failure are three of the {reactive-principles}/principles/[Reactive Principles {tab-icon}, window="tab"].
 

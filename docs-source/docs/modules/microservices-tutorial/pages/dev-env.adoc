@@ -39,16 +39,16 @@ To install IntelliJ and prepare to develop the Scala example, follow these steps
 [.tabset]
 Java::
 +
-For the Java Shopping Cart example, we use `Maven` as the build tool. http://maven.apache.org/install.html[Install Maven] if you haven't already.
+For the Java Shopping Cart example, we use `Maven` as the build tool. https://maven.apache.org/install.html[Install Maven] if you haven't already.
 
 Scala::
 +
 For the Scala Shopping Cart example, we use `sbt` as the build tool. https://www.scala-sbt.org/download.html[Install sbt] if you haven't already.
-
++
 [TIP.Scala]
 ====
 `sbt` is an interactive shell. If you start it with the `sbt` command, you can repeatedly run tasks like `compile` and `test` in the sbt shell. In the tutorial we use the full command for clarity, such as `sbt compile`. You can run tasks independently in this way, but it's faster to leave the `sbt` shell running and only enter the tasks. For example:
-
++
 ----
 $ sbt
 ...
