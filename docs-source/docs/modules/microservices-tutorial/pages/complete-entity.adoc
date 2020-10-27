@@ -87,7 +87,7 @@ Scala::
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEvent]
 ----
 
-=== Handle state
+=== State changes
 
 The state should include a value for if and when the cart was checked out:
 
