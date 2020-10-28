@@ -23,7 +23,6 @@ At the end, we also provide a list of <<Optional commands and events>> that you 
 
 == Source downloads
 
-ifdef::review[REVIEWERS: the title over the tabs looked strange without some introductory text. I like this, if you like it, I'll make the others the same way.]
 
 If you prefer to simply view and run the example, download a zip file containing the completed code:
 

@@ -3,7 +3,7 @@
 
 include::ROOT:partial$include.adoc[]
 
-In this part, we will add another Projection from the events of the `ShoppingCart` entity. This Projection calls another service when the shopping carts are checked out. We will also add the other service, the `ShoppingOrderService` that provides the gRPC service that is called.
+On this page, we will add another Projection from the events of the `ShoppingCart` entity. This Projection calls another service when the shopping carts are checked out. We will also add the other service, the `ShoppingOrderService` that provides the gRPC service that is called.
 
 .This part of the xref:overview.adoc[full example] will focus on the gRPC client in the `SendOrderProjection`.
 [caption=""]
@@ -13,6 +13,10 @@ On this page you will learn how to:
 
 * call another service with xref:concepts:akka-grpc.adoc[Akka gRPC]
 * repeat how to implement a gRPC service by adding the `ShoppingOrderService`
+
+== Source downloads
+
+If you prefer to simply view and run the example, download a zip file containing the completed code:
 
 [.tabset]
 Java::

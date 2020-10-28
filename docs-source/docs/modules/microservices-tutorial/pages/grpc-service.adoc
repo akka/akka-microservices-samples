@@ -15,6 +15,9 @@ First, we will create the `ShoppingCartService` with a single operation that add
 * interact with the service from the command line
 * deploy to the cloud
 
+== Source downloads
+
+If you prefer to simply view and run the example, download a zip file containing the completed code:
 
 [.tabset]
 Java::
