@@ -64,7 +64,7 @@ include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemP
 +
 <1> extends `akka.projection.javadsl.Handler`
 <2> the `process` method to implement
-<3> match events and increment or decrement the count via the `ItemPopularityRepository`
+<3> match events and increment or decrement the count via the `ItemPopularityRepository`, which encapsulates the database access
 
 Scala::
 +
