@@ -12,7 +12,7 @@ content:
 
 ui:
   bundle:
-    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+    url: https://lightbend.github.io/antora-supplemental-ui-lightbend-theme/default_ui/ui-bundle.zip
     snapshot: true
   supplemental_files: ./supplemental_ui
     
@@ -23,7 +23,7 @@ asciidoc:
 
   attributes:
     # the following two attributes cause review and todo notes to display
-    #review: ''
+    # review: ''
     todo: ''
     doc-title: 'Akka Platform Guide'
     # the following turns on next and previous links in the new template

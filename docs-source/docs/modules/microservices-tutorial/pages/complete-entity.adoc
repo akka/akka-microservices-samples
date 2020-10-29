@@ -3,7 +3,7 @@
 
 include::ROOT:partial$include.adoc[]
 
-In this part, we will complete the `ShoppingCart` entity with more commands and events. The `ShoppingCart` is using Event Sourcing to persist events that represents changes to the state of the cart.
+On this page, we will complete the cart entity with more commands and events. This `ShoppingCart` entity will use Event Sourcing to persist events that represent changes to the state of the cart.
 
 .This part of the xref:overview.adoc[full example] will focus on the shopping cart entity.
 [caption=""]
@@ -11,12 +11,25 @@ image::example-entity.png[Example entity]
 
 On this page you will learn how to:
 
-* implement an Event Sourced entity by expanding the xref:entity.adoc[previous step]
+* implement an Event Sourced entity by expanding work from the xref:entity.adoc[previous steps] and adding to the `ShoppingCart`:
+
+** `Checkout` - a command to checkout the shopping cart
+** `CheckedOut` - an event to capture checkouts
+** `Get` - a way get the current state of the shopping cart
+
+
+At the end, we also provide a list of <<Optional commands and events>> that you can add on your own to test your knowledge.
+
+
+== Source downloads
+
+ifdef::review[REVIEWERS: the title over the tabs looked strange without some introductory text. I like this, if you like it, I'll make the others the same way.]
+
+If you prefer to simply view and run the example, download a zip file containing the completed code:
 
 [.tabset]
 Java::
 +
-.Source downloads:
 ****
 * link:_attachments/2-shopping-cart-event-sourced-java.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
 * link:_attachments/3-shopping-cart-event-sourced-complete-java.zip[Source] with the steps on this page completed.
@@ -24,39 +37,20 @@ Java::
 
 Scala::
 +
-.Source downloads:
 ****
 * link:_attachments/2-shopping-cart-event-sourced-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
 * link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[Source] with the steps on this page completed.
 ****
 
 
-== More commands and events
+:sectnums:
+== Add the command and event for checkout
 
-Add the following commands to the `ShoppingCart`:
+When the cart has been checked out it should not accept any commands that change its state. However, it should still be possible to `Get` the current state of a checked out cart. We suggest you try implementing `Checkout` on your own and then compare it with the solution shown below. Add the `Checkout` command alongside the existing `AddItem` command.
 
-* `Checkout` - checkout the shopping cart
-* `Get` - get the current state of the shopping cart
-* (Optional) `RemoveItem` - remove an item from the cart
-* (Optional) `AdjustItemQuantity` - adjust the quantity of an item in the cart
+The following sections show our solution.
 
-If you want to reduce the scope of the exercise you can skip `RemoveItem` and `AdjustItemQuantity`. They are not mandatory for subsequent steps of the tutorial and its details won't be covered on this page. This is intentionally left out as an optional exercise.
-
-Corresponding events:
-
-* `CheckedOut`
-* (Optional) `ItemRemoved`
-* (Optional) `ItemQuantityAdjusted`
-
-When the cart has been checked out it should not accept any more changes from `AddItem`, `RemoveItem` and `AdjustItemQuantity` commands. It should still be possible to `Get` the current state of a checked out cart.
-
-Adding those commands, events and adjusting the `State` is very similar to the `AddItem` command and `ItemAdded` event in the xref:entity.adoc[previous step], which means that this is a good exercise for you to solidify your knowledge of how to implement an `EventSourcedBehavior`.
-
-=== Add Checkout command
-
-It is good if you try yourself first, as an exercise, and then you can compare with the following solution.
-
-Add the `Checkout` command alongside the existing `AddItem` command:
+=== Checkout command
 
 [.tabset]
 Java::
@@ -73,7 +67,9 @@ Scala::
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkoutCommand]
 ----
 
-Add corresponding `CheckedOut` event:
+=== CheckedOut event
+
+The corresponding `CheckedOut` event:
 
 [.tabset]
 Java::
@@ -89,6 +85,8 @@ Scala::
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEvent]
 ----
+
+=== State changes
 
 The state should include a value for if and when the cart was checked out:
 
@@ -107,7 +105,9 @@ Scala::
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=state-with-checkout]
 ----
 
-Add unit test for the new `Checkout` command in [.group-scala]#`ShoppingCartSpec`# [.group-java]#`ShoppingCartTest`#:
+=== Unit test
+
+Add a unit test for the new `Checkout` command in [.group-scala]#`ShoppingCartSpec`# [.group-java]#`ShoppingCartTest`#:
 
 [.tabset]
 Java::
@@ -158,7 +158,9 @@ Scala::
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutShoppingCart]
 ----
 
-Remaining is to add the event handler for the `CheckedOut` event  in the `handleEvent` method:
+=== Event handler
+
+We still need to add the event handler for the `CheckedOut` event  in the `handleEvent` method:
 
 [.tabset]
 Java::
@@ -175,6 +177,8 @@ Scala::
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEventHandler]
 ----
 
+=== Run unit tests
+
 That should cover everything for the `Checkout` command. Let's confirm by running the unit tests with:
 
 [.group-scala]
@@ -189,7 +193,7 @@ sbt test
 mvn test
 ----
 
-=== Add Get command
+== Add Get command
 
 Add the `Get` command alongside the existing `AddItem` and `Checkout` commands:
 
@@ -208,7 +212,7 @@ Scala::
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommand]
 ----
 
-Add unit test for the new `Get` command in `ShoppingCartSpec`:
+Add a unit test for the new `Get` command in `ShoppingCartSpec`:
 
 [.tabset]
 Java::
@@ -225,7 +229,7 @@ Scala::
 include::example$03-shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=get]
 ----
 
-The command handler for `Get` is the same independent of the `checkedOut` state, [.group-scala]#so add it to both `openShoppingCart` and `checkedOutShoppingCart`# [.group-java]#so it can be added to the command handler builder using `forAnyState()`#:
+The command handler for `Get` is independent of the `checkedOut` state, [.group-scala]#so add it to both `openShoppingCart` and `checkedOutShoppingCart`# [.group-java]#so it can be added to the command handler builder using `forAnyState()`#:
 
 [.tabset]
 Java::
@@ -257,9 +261,10 @@ sbt test
 mvn test
 ----
 
-== Add to ShoppingCartService
+== Add new operations to the service descriptor
 
-Let's add corresponding operations as the commands in `ShoppingCartService.proto`:
+
+Let's add corresponding operation definitions in `ShoppingCartService.proto`:
 
 [source,protobuf]
 ----
@@ -270,6 +275,8 @@ include::example$03-shopping-cart-service-scala/src/main/protobuf/ShoppingCartSe
 <2> Defines the `GetCart` operation.
 <3> For simplicity, most requests share a common response, for easier evolution of an interface, separate responses are often a better choice.
 <4> Note the new `checkedOut` flag.
+
+
 
 Generate code by compiling the project:
 
@@ -322,7 +329,7 @@ Scala::
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=toProtoCart]
 ----
 
-As mentioned at the beginning of this page, `RemoveItem` and `AdjustItemQuantity` commands are not mandatory for the subsequent steps of the tutorial. A zip file with the completed steps on this page and implementing the optional commands is available for download (link:_attachments/3-shopping-cart-event-sourced-complete-java.zip[java sources]/link:_attachments/3-shopping-cart-event-sourced-complete-scala.zip[scala sources]).
+
 
 == Run locally
 
@@ -352,29 +359,18 @@ mvn compile exec:exec -DAPP_CONFIG=local1.conf
 
 Try it with `grpcurl`.
 
-Add item to cart:
+Add an item to the cart:
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
-Get cart:
+Check the quantity of the cart:
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
 ----
 
-(Optional) Update quantity of item:
-[source,shell script]
-----
-grpcurl -d '{"cartId":"cart2", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.UpdateItem
-----
-
-(Optional) Get cart again:
-[source,shell script]
-----
-grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
-----
 
 Check out cart:
 [source,shell script]
@@ -390,6 +386,31 @@ When finished, stop the service with `ctrl-c`. Leave Cassandra running for the n
 ----
 docker-compose down
 ----
+
+:!sectnums:
+== Optional commands and events
+
+The commands and events listed in this section are not mandatory for subsequent steps of the tutorial and their details won't be covered on this page. You can implement the commands, events, and `State` management following the pattern we used for the `AddItem` command and `ItemAdded` event in the xref:entity.adoc[previous step]. This is a good exercise to help solidify your knowledge of how to implement `EventSourcedBehavior`. Optional commands and corresponding events that you can add on your own:
+
+* `RemoveItem` - remove an item from the cart
+* `AdjustItemQuantity` - adjust the quantity of an item in the cart
+* `ItemRemoved`
+* `ItemQuantityAdjusted`
+
+After adding the optional commands, you can build and run again and try them out:
+
+Update the quantity of an item:
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart2", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.UpdateItem
+----
+
+Get the cart state again:
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
+----
+
 
 == Learn more
 
