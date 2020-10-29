@@ -23,7 +23,6 @@ If you prefer to simply view and run the example, download a zip file containing
 [.tabset]
 Java::
 +
-.Source downloads:
 ****
 * link:_attachments/4-shopping-cart-projection-java.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
 * link:_attachments/5-shopping-cart-projection-kafka-java.zip[Source] with the steps on this page completed.
@@ -31,7 +30,6 @@ Java::
 
 Scala::
 +
-.Source downloads:
 ****
 * link:_attachments/4-shopping-cart-projection-scala.zip[Source] that includes all previous tutorial steps and allows you to start with the steps on this page.
 * link:_attachments/5-shopping-cart-projection-kafka-scala.zip[Source] with the steps on this page completed.
