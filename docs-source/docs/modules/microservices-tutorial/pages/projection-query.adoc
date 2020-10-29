@@ -129,7 +129,6 @@ We want to connect the events from the `ShoppingCart` with the Projection. Sever
 
 To connect the events from the entities with the Projection we need to tag the events. We should use several tags, each with a slice number, to distribute the events over several Projection instances. The tag is selected based on the modulo of the entity id's hash code (stable identifier) and the total number of tags. Each entity instance will tag its events using one of those tags, and the entity instance will always use the same tag.
 
-In this example, we use five different tags. Tagging is not easy to change later without system downtime. Before going live in production you should consider how many tags to use, see {akka-projection}/running.html[Akka Projections reference documentation {tab-icon}, window="tab"] for more information.
 
 Create tags as follows:
 
@@ -172,7 +171,7 @@ include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 <1> [.group-scala]#`withTagger` to assign the `projectionTag`# [.group-java]#`tagsFor` to assign the `projectionTag`#
 
-
+NOTE: In this example, we use five different tags. Tagging is not easy to change later without system downtime. Before going live in production you should consider how many tags to use, see {akka-projection}/running.html[Akka Projections reference documentation {tab-icon}, window="tab"] for more information.
 
 === Create Projection
 [#projection]
@@ -278,7 +277,7 @@ For this you have to add the `ItemPopularityRepository` as a constructor paramet
 
 == Run locally
 
-Test your solution by running locally:
+Try your solution by running locally:
 
 . Start Cassandra, unless it's already running:
 +
