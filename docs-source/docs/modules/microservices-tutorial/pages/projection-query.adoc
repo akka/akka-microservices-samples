@@ -3,7 +3,7 @@
 
 include::ROOT:partial$include.adoc[]
 
-Next, we will create an {akka-projection}/[Akka Projection {tab-icon}, window="tab"] from the events emitted by the `ShoppingCart` entity. The Projection will update counts in the database to track item popularity. Then, we can query the database to find how popular an item is. This is a question that `ShoppingCart` entities can't answer since they can only be addressed by individual cart identifiers.
+Next, we will create an {akka-projection}/[Akka Projection {tab-icon}, window="tab"] from the events emitted by the `ShoppingCart` entity. The Projection will update counts in the database to track item popularity. Then, we can query the database to find how popular an item is. Since `ShoppingCart` entities can only be addressed by individual cart identifiers, we can find a particular cart, but we can't find all carts that contain a particular item.
 
 ifdef::review[REVIEWERS: I don't follow the logic at the end of the last sentence in the prev para. Is it that each shopping cart only knows about it's own items?]
 
