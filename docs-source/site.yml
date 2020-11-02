@@ -4,12 +4,10 @@ site:
   
 content:
   sources:
-#  - url: git@github.com:akka/akka-platform-guide.git
-  - url: ./../
+  - url: git@github.com:akka/akka-platform-guide.git
     start-paths:
     - docs-source/docs
-#    branches: [main]
-    branches: [HEAD]
+    branches: [main]
 
 
 ui: 

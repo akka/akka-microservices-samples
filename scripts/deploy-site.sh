@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-make html-author-mode
+make all
 eval "$(ssh-agent -s)"
 echo $SCP_SECRET | base64 -d > /tmp/id_rsa
 chmod 600 /tmp/id_rsa
