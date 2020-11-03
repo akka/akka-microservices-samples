@@ -3,15 +3,16 @@
 
 include::ROOT:partial$include.adoc[]
 
-In this part, we will add another Projection from the events of the `ShoppingCart` entity. This Projection publishes the events to a Kafka message broker. We will also add another service, the `ShoppingAnalyticsService` that consumes the events from the Kafka topic.
+To decouple communication between different Microservices, we can publish messages to a broker, such as Apache Kafka. See xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts] for more information. 
 
-.This part of the xref:overview.adoc[full example] will focus on the Kafka producer in the `PublishEventsProjection` and Kafka consumer in `ShoppingAnalyticsService`.
+To accomplish this, we will add another Projection from the events of the `ShoppingCart` entity. The new Projection will be similar to what we developed in the xref:projection-query.adoc[previous step], but it will send the events to a Kafka topic instead of updating a database. As shown below, we will also add an Analytics service, the `ShoppingAnalyticsService`, that consumes the events from the Kafka topic.
+
+
 [caption=""]
 image::example-projection-kafka.png[Example Kafka]
 
-As described in xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts] we can publish messages to a broker, such as Apache Kafka, to decouple communication between different Microservices.
 
-On this page you will learn how to:
+This part of the xref:overview.adoc[full example] will focus on the Kafka producer in the `PublishEventsProjection` and the Kafka consumer in `ShoppingAnalyticsService`. On this page you will learn how to:
 
 * send messages to a Kafka topic from a Projection
 * consume messages from a Kafka topic
@@ -35,34 +36,37 @@ Scala::
 * link:_attachments/5-shopping-cart-projection-kafka-scala.zip[Source] with the steps on this page completed.
 ****
 
+:sectnums:
 == External representation of the events
 
-For external APIs of a service, such as a Kafka topic that is consumed by other services, it is good to have a well defined format of the data. Therefore we define that in Protobuf, rather than using the internal representation of the events. This also makes it easier to evolve representation over time without breaking downstream consumers.
+For external APIs of a service, such as a Kafka topic that is consumed by other services, it is good to have a well defined data format. Therefore we define event data formats in Protobuf rather than using the internal event representation. This also makes it easier to evolve the representation of events over time without breaking downstream consumers. 
 
-Add a new `ShoppingCartEvents.proto` with the specification of the events:
+To define the external representation:
 
+. Add a new `ShoppingCartEvents.proto` with the specification of the events:
++
 [source,protobuf]
 ----
 include::example$05-shopping-cart-service-scala/src/main/protobuf/ShoppingCartEvents.proto[]
 ----
 
-Generate code by compiling the project:
-
+. Generate code by compiling the project:
++
 [.group-scala]
 [source,shell script]
 ----
 sbt compile
 ----
-
++
 [.group-java]
 [source,shell script]
 ----
 mvn compile
 ----
 
-== Sending to Kafka from a Projection
+== Send to Kafka from a Projection
 
-The new Projection will be similar to what we developed in the xref:projection-query.adoc[previous step], but it will send the events to a Kafka topic instead of updating a database.
+ifdef::todo[TODO: add a sentence or two about using the Alpakka Kafka connector, benefits, etc, maybe a link to the doc.]
 
 Add a `PublishEventsProjectionHandler` class that is the Projection `Handler` for processing the events:
 
@@ -91,10 +95,10 @@ The serialization converts the `ShoppingCart.Event` classes to the Protobuf repr
 
 == Initialize the Projection
 
-The tagging of the events is already in place from the xref:projection-query.adoc#tagging[previous step].
+If this were our first Projection, we would need to add tags for the events. However, the tagging of the events is already in place from the xref:projection-query.adoc#tagging[previous step]. So, we can simply add the appropriate initialization as follows:
 
-Place the initialization code of the Projection in an `PublishEventsProjection` [.group-scala]#object# [.group-java]#class#:
-
+. Place the initialization code of the Projection in an `PublishEventsProjection` [.group-scala]#object# [.group-java]#class#:
++
 [.tabset]
 Java::
 +
@@ -111,27 +115,29 @@ Scala::
 ----
 include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjection.scala[]
 ----
-
++
 The `SendProducer` is initialized using some configuration that we need to add. It defines how to connect to the Kafka broker.
 
-Add the following to a new `src/main/resources/kafka.conf` file:
-
+. Add the following to a new `src/main/resources/kafka.conf` file:
++
 [source,hocon]
 ----
 include::example$05-shopping-cart-service-scala/src/main/resources/kafka.conf[]
 ----
 
-Include `kafka.conf` from `application.conf`.
+. Include `kafka.conf` in `application.conf`.
++
+ifdef::todo[TODO: we want to show the include line here, right?]
 
-And for local development add the following to `src/main/resources/local-shared.conf`, which is loaded when running locally:
-
+. For local development add the following to `src/main/resources/local-shared.conf`, which is loaded when running locally:
++
 [source,hocon]
 ----
 include::example$05-shopping-cart-service-scala/src/main/resources/local-shared.conf[tag=kafka]
 ----
 
-Then we need to call the `PublishEventsProjection.init` from `Main`:
-
+. Call `PublishEventsProjection.init` from `Main`:
++
 [.tabset]
 Java::
 +
@@ -147,36 +153,32 @@ Scala::
 include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=PublishEventsProjection]
 ----
 
-== Consuming the events
+== Consume the events
 
-=== New project
+Let's add another service that consumes the events from the Kafka topic. The xref:template.adoc#seed-template[template download] (or other source downloads) includes a directory named `shopping-analytics-service`. This service will receive the events in the Protobuf format defined in the `ShoppingCartEvents.proto` from the `shopping-cart-service` so we can copy the `.proto` file we created earlier. 
 
-Let's add another service that consumes the events from the Kafka topic.
+NOTE: Different services should not share code, but we can copy the Protobuf specification since that is the published interface of the service.
 
-The xref:template.adoc#seed-template[template download] (or other source downloads) includes a directory named `shopping-analytics-service`. Open the `shopping-analytics-service` xref:template.adoc#intellij[in IntelliJ in the same way as you did with the shopping-cart-service].
+To add the service, follow these steps:
 
-=== Protobuf
+. Open the `shopping-analytics-service` in IntelliJ just as you did with xref:template.adoc#intellij[the shopping-cart-service].
 
-This service will receive the events in the Protobuf format defined in the `ShoppingCartEvents.proto` from the `shopping-cart-service`. Copy that file to the `shopping-analytics-service/src/main/protobuf` and generate code by compiling the project:
-
+. Copy the `ShoppingCartEvents.proto` from the `shopping-cart-service` to the `shopping-analytics-service/src/main/protobuf` and generate code by compiling the project:
++
 [.group-scala]
 [source,shell script]
 ----
 sbt compile
 ----
-
++
 [.group-java]
 [source,shell script]
 ----
 mvn compile
 ----
 
-Note that different services should not share code, but the Protobuf specification can be copied since that is the published interface of the service.
-
-=== Consumer
-
-Create a `ShoppingCartEventConsumer` [.group-scala]#object# [.group-java]#class# in `shopping-analytics-service`. It runs an Akka Stream with a Kafka `Consumer.committableSource` from Alpakka Kafka.
-
+. Create a `ShoppingCartEventConsumer` [.group-scala]#object# [.group-java]#class# in `shopping-analytics-service`. It runs an Akka Stream with a Kafka `Consumer.committableSource` from Alpakka Kafka.
++
 [.tabset]
 Java::
 +
@@ -195,18 +197,15 @@ include::example$shopping-analytics-service-scala/src/main/scala/shopping/analyt
 ----
 
 <1> `RestartSource` will restart the stream in case of failures.
-
 <2> Kafka Consumer stream.
-
 <3> Offset is committed to Kafka when records have been processed.
-
 <4> Protobuf `Any` for type information.
-
++
 Note how the deserialization is using the type information from the Protobuf `Any` to decide which type of event to deserialize.
 
 === Configuration
 
-The `Consumer` is initialized using some configuration that we need to add. It defines how to connect to the Kafka broker.
+We need to add configuration to initialize the `Consumer` and define how to connect to the Kafka broker.
 
 Add the following to a new `src/main/resources/kafka.conf` file in `shopping-analytics-service`:
 
@@ -245,39 +244,39 @@ include::example$shopping-analytics-service-scala/src/main/scala/shopping/analyt
 
 == Run locally
 
-In addition to Cassandra we now also need Kafka. Kafka is also started by the `docker-compose` script.
+In addition to Cassandra we now also need Kafka. The `docker-compose` script starts Cassandra and Kafka:
 
-Start Cassandra and Kafka, unless it's already running, from `shopping-cart-service`:
-
+. Start Cassandra and Kafka, unless it's already running, from the `shopping-cart-service`:
++
 [source,shell script]
 ----
 docker-compose up -d
 ----
 
-Run the `shopping-cart-service` with:
-
+. Run the `shopping-cart-service` with:
++
 [.group-java]
 [source,shell script]
 ----
 # make sure to compile before running exec:exec
 mvn compile exec:exec -DAPP_CONFIG=local1.conf
 ----
-
++
 [.group-scala]
 [source,shell script]
 ----
 sbt -Dconfig.resource=local1.conf run
 ----
 
-Run the new `shopping-analytics-service` with:
-
+. Run the new `shopping-analytics-service` with:
++
 [.group-java]
 [source,shell script]
 ----
 # make sure to compile before running exec:exec
 mvn compile exec:exec -DAPP_CONFIG=local1.conf
 ----
-
++
 [.group-scala]
 [source,shell script]
 ----
@@ -286,14 +285,14 @@ sbt -Dconfig.resource=local1.conf run
 
 === Exercise the service
 
-Try it with `grpcurl`. Add 1 pencil to a cart:
+Use `grpcurl` to add 1 pencil to a cart:
 
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"pencil", "quantity":1}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
-Look at the log output in the terminal of the `shopping-analytics-service`. There you should see the logging from the ``:
+Look at the log output in the terminal of the `shopping-analytics-service`. You should see the logging from the `AddItem`, showing that the new service consumed the event from Kafka:
 
 ----
 ItemAdded: 1 pencil to cart cart1
@@ -308,6 +307,7 @@ When finished, stop the `shopping-cart-service` and `shopping-analytics-service`
 docker-compose down
 ----
 
+:!sectnums:
 == Learn more
 
 * xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts].

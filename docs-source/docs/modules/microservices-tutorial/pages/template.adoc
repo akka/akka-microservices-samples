@@ -85,7 +85,11 @@ The keyspace as created by the script works fine for local development but is pr
 
 // # end::docker[]
 
+:!sectnums:
+
 == Configuration for local development
+
+The template contains configuration files for local development. We will be using them in the procedures that follow, but this section provides an overview. 
 
 By default, when using [.group-scala]#`sbt run`# [.group-java]#`mvn exec:exec`# the `Main` class will start an `ActorSystem` with `application.conf` which is the configuration intended to be used in production. When running Microservices locally each service must use unique Akka port numbers when running on the same machine.
 
@@ -93,7 +97,7 @@ To simplify the process of running multiple nodes locally, we've provided three 
 
 You can override the configuration by passing one of the provided `local` configuration files to the build tool using a `-D` option.
 
-Run one Akka Cluster node with `local1.conf` as follows:
+For example, once a piece of functionality is complete, you can run one Akka Cluster node with `local1.conf` as follows:
 
 [.group-java]
 [source,shell script]
