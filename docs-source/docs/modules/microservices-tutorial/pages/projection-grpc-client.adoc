@@ -33,7 +33,7 @@ Scala::
 ****
 
 :sectnums:
-== Add the gRPC service
+== Add the Order gRPC service
 
 Let's add the service that handles shopping cart orders. The template and source downloads include a directory named `shopping-order-service` for this purpose. To add the order gRPC service, follow these steps:
 
