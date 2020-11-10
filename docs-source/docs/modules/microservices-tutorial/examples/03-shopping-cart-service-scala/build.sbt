@@ -20,7 +20,7 @@ Global / cancelable := false // ctrl-c
 val AkkaVersion = "2.6.10"
 val AkkaHttpVersion = "10.2.1"
 val AkkaManagementVersion = "1.0.9"
-val AkkaPersistenceCassandraVersion = "1.0.3"
+val AkkaPersistenceCassandraVersion = "1.0.4"
 val AlpakkaKafkaVersion = "2.0.5"
 val AkkaProjectionVersion = "1.0.0"
 

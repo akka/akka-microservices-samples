@@ -3,12 +3,19 @@ version := "1.0"
 
 organization := "com.lightbend.akka.samples"
 organizationHomepage := Some(url("https://akka.io"))
-licenses := Seq(("CC0", url("https://creativecommons.org/publicdomain/zero/1.0")))
+licenses := Seq(
+  ("CC0", url("https://creativecommons.org/publicdomain/zero/1.0"))
+)
 
 scalaVersion := "2.13.3"
 
-
-Compile / scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlog-reflective-calls", "-Xlint")
+Compile / scalacOptions ++= Seq(
+  "-deprecation",
+  "-feature",
+  "-unchecked",
+  "-Xlog-reflective-calls",
+  "-Xlint"
+)
 Compile / javacOptions ++= Seq("-Xlint:unchecked", "-Xlint:deprecation")
 
 Test / parallelExecution := false
@@ -23,7 +30,7 @@ val AkkaHttpVersion = "10.2.1"
 val AkkaManagementVersion = "1.0.9"
 
 // tag::remove-akka-persistence-cassandra-version[]
-val AkkaPersistenceCassandraVersion = "1.0.3"
+val AkkaPersistenceCassandraVersion = "1.0.4"
 // end::remove-akka-persistence-cassandra-version[]
 // tag::add-akka-persistence-jdbc-version[]
 val AkkaPersistenceJdbcVersion = "4.0.0"
@@ -38,8 +45,6 @@ val AkkaProjectionVersion = "1.0.0"
 // tag::remove-grpc-plugin[]
 enablePlugins(AkkaGrpcPlugin)
 // end::remove-grpc-plugin[]
-
-
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-cluster-sharding-typed" % AkkaVersion,
@@ -88,5 +93,5 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-actor-testkit-typed" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-persistence-testkit" % AkkaVersion % Test,
   "com.typesafe.akka" %% "akka-stream-testkit" % AkkaVersion % Test,
-  "org.scalatest" %% "scalatest" % "3.1.2" % Test)
-
+  "org.scalatest" %% "scalatest" % "3.1.2" % Test
+)
