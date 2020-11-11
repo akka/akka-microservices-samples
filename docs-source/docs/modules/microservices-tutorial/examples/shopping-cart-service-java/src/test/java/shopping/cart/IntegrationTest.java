@@ -75,7 +75,7 @@ public class IntegrationTest {
             + "akka.management.http.port = "
             + managementPorts.get(managementPortIndex)
             + "\n"
-            + "akka.discovery.config.services.shoppingcartservice.endpoints = [\n"
+            + "akka.discovery.config.services.shopping-cart-service.endpoints = [\n"
             + "  { host = \"127.0.0.1\", port = "
             + managementPorts.get(0)
             + "},\n"
