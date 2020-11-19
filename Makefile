@@ -22,7 +22,10 @@ clean:
 docker-image:
 	(cd ${ROOT_DIR}/antora-docker;  docker build -t ${antora_docker_image}:${antora_docker_image_tag} .)
 
-build: clean html
+build: clean prepare-downloads html
+
+prepare-downloads:
+	${ROOT_DIR}/scripts/prepare-downloads.sh
 
 html: clean docker-image
 	docker run \
