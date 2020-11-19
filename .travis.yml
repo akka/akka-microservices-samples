@@ -1,3 +1,5 @@
+version: ~> 1.0
+
 language: scala
 services:
   - docker
@@ -172,11 +174,6 @@ jobs:
       name: "Run the link checker"
       if: type == cron
 
-#    - stage: publish
-#      script:
-#        - scripts/deploy-site.sh
-#      name: "Publish snapshot site"
-
 stages:
   - name: drop-travis-caches
     # to drop caches trigger a custom build with
@@ -192,9 +189,6 @@ stages:
     if: (NOT tag =~ ^v) AND (type != cron)
 
   - name: site
-
-#  - name: publish
-#    if: (branch = main AND type = push) AND NOT fork
 
 after_failure:
   - docker-compose logs
