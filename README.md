@@ -6,7 +6,7 @@ Review and feedback
 
 This Akka Platform Guide is under development, and we would love to hear your feedback.
 
-A preview is available at https://akka.io/platform-guide/
+This guide is published at https://developer.lightbend.com/docs/akka-platform-guide/
 
 Feel free to give your feedback in the form of issues/PRs, or chat in https://gitter.im/akka/dev.
 
