@@ -12,7 +12,7 @@ Feel free to give your feedback in the form of issues/PRs, or chat in https://gi
 
 Contributing
 ------------
-Contributions are *very* welcome!
+Contributions are *very* welcome to this project!
 
 If you see an issue that you'd like to see fixed, the best way to make it happen is to help out by submitting a pull request implementing it.
 
