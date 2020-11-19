@@ -1,10 +1,10 @@
-Akka Microservices
-==================
+Akka Platform Guide
+===================
 
 Review and feedback
 -------------------
 
-This Akka Platform Guide is under development, and we would love to hear your feedback.
+This is the repository for the Akka Platform Guide and we would love to hear your feedback.
 
 This guide is published at https://developer.lightbend.com/docs/akka-platform-guide/
 
