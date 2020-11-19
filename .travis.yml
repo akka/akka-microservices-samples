@@ -172,10 +172,10 @@ jobs:
       name: "Run the link checker"
       if: type == cron
 
-    - stage: publish
-      script:
-        - scripts/deploy-site.sh
-      name: "Publish snapshot site"
+#    - stage: publish
+#      script:
+#        - scripts/deploy-site.sh
+#      name: "Publish snapshot site"
 
 stages:
   - name: drop-travis-caches
@@ -193,8 +193,8 @@ stages:
 
   - name: site
 
-  - name: publish
-    if: (branch = main AND type = push) AND NOT fork
+#  - name: publish
+#    if: (branch = main AND type = push) AND NOT fork
 
 after_failure:
   - docker-compose logs
