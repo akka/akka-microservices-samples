@@ -74,4 +74,12 @@ We encourage you to enter the example code, even if by copying and pasting. If y
 
 In xref:template.adoc[next step] you will find instructions of how to download the starting template for the tutorial.
 
-If you would like to run the full example, you can download the link:_attachments/6-shopping-cart-complete-scala.zip[full implementation]. In this case, we suggest you scan the tutorial instructions to identify the source files that you can learn from.
+[.tabset]
+Java::
++
+If you would like to run the full example, you can download the link:_attachments/6-shopping-cart-complete-java.zip[full Java sources]. In this case, we suggest you scan the tutorial instructions to identify the source files that you can learn from.
+
+Scala::
++
+If you would like to run the full example, you can download the link:_attachments/6-shopping-cart-complete-scala.zip[full Scala sources]. In this case, we suggest you scan the tutorial instructions to identify the source files that you can learn from.
+
