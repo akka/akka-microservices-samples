@@ -1,0 +1,188 @@
+name: Compile and Test, Create Site
+on:
+  push:
+    branches: [main]
+  pull_request_target:
+    branches: [main]
+
+jobs:
+  compile-and-test:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          # See https://github.com/actions/checkout/issues/299#issuecomment-677674415
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Set up JDK 11
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: adopt@1.11-0
+
+      - name: Cache Coursier cache
+        uses: coursier/cache-action@v5
+
+      - uses: actions/cache@v2.1.3
+        with:
+          path: ~/.m2/repository
+          key: maven-repo-${{ hashFiles('**/pom.xml') }}
+          restore-keys: maven-repo-
+
+      - name: copy-identical-files
+        run: |
+          scripts/copy-identical-files.sh
+          git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
+
+      - name: "Shopping analytics service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+      - name: "Shopping analytics service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
+          mvn spotless:check test
+
+      - name: "Shopping cart service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala
+          docker-compose up -d
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          docker-compose stop
+      - name: "Shopping cart service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-java
+          docker-compose up -d
+          mvn spotless:check test
+          docker-compose stop
+
+      - name: "Shopping order service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+      - name: "Shopping order service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-java
+          mvn spotless:check test
+
+      - name: "00 Shopping analytics service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-scala
+          docker-compose up -d
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          docker-compose stop
+      - name: "00 Shopping analytics service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-java
+          docker-compose up -d
+          mvn spotless:check test
+          docker-compose stop
+
+      - name: "00 Shopping cart service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-scala
+          docker-compose up -d
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          docker-compose stop
+      - name: "00 Shopping cart service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-java
+          docker-compose up -d
+          mvn spotless:check test
+          docker-compose stop
+
+      - name: "00 Shopping order service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-scala
+          docker-compose up -d
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          docker-compose stop
+      - name: "00 Shopping order service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-java
+          docker-compose up -d
+          mvn spotless:check test
+          docker-compose stop
+
+      - name: "01 Shopping cart service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-scala
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+      - name: "01 Shopping cart service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-java
+          docker-compose up -d
+          mvn spotless:check test
+          docker-compose stop
+
+      - name: "02 Shopping cart service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-scala
+          docker-compose up -d
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          docker-compose stop
+      - name: "02 Shopping cart service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-java
+          docker-compose up -d
+          mvn spotless:check test
+          docker-compose stop
+
+      - name: "03 Shopping cart service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-scala
+          docker-compose up -d
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          docker-compose stop
+      - name: "03 Shopping cart service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-java
+          docker-compose up -d
+          mvn spotless:check test
+          docker-compose stop
+
+      - name: "04 Shopping cart service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala
+          docker-compose up -d
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          docker-compose stop
+      - name: "04 Shopping cart service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-java
+          docker-compose up -d
+          mvn spotless:check test
+          docker-compose stop
+
+      - name: "05 Shopping cart service (Scala)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-scala
+          docker-compose up -d
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          docker-compose stop
+      - name: "05 Shopping cart service (Java)"
+        run: |
+          cd ~/docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-java
+          docker-compose up -d
+          mvn spotless:check test
+          docker-compose stop
+
+      - name: "Howto example code"
+        run: |
+          cd ~/docs-source/docs/modules/how-to/examples/shopping-cart-service-scala
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+      - name: "Howto cleanup dependencies"
+        run: |
+          cd ~/docs-source/docs/modules/how-to/examples/cleanup-dependencies-project
+          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+
+  create-site:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: "Run Antora to create site"
+        run: make html-author-mode
