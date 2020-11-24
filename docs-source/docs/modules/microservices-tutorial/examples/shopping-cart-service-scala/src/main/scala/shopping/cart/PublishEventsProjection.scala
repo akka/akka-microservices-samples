@@ -39,9 +39,6 @@ object PublishEventsProjection {
       system: ActorSystem[_]): SendProducer[String, Array[Byte]] = {
     val producerSettings =
       ProducerSettings(system, new StringSerializer, new ByteArraySerializer)
-        .withBootstrapServers(
-          system.settings.config
-            .getString("shopping-cart-service.kafka.bootstrap-servers"))
     val sendProducer =
       SendProducer(producerSettings)(system)
     CoordinatedShutdown(system).addTask(

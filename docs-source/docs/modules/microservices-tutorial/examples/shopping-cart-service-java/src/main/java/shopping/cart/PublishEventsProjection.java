@@ -40,12 +40,7 @@ public final class PublishEventsProjection {
 
   private static SendProducer<String, byte[]> createProducer(ActorSystem<?> system) {
     ProducerSettings<String, byte[]> producerSettings =
-        ProducerSettings.create(system, new StringSerializer(), new ByteArraySerializer())
-            .withBootstrapServers(
-                system
-                    .settings()
-                    .config()
-                    .getString("shopping-cart-service.kafka.bootstrap-servers"));
+        ProducerSettings.create(system, new StringSerializer(), new ByteArraySerializer());
     SendProducer<String, byte[]> sendProducer = new SendProducer<>(producerSettings, system);
     CoordinatedShutdown.get(system)
         .addTask(

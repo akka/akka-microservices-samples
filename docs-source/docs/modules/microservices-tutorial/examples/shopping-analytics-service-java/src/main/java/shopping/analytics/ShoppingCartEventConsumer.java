@@ -13,7 +13,6 @@ import akka.stream.javadsl.RestartSource;
 import com.google.protobuf.Any;
 import com.google.protobuf.CodedInputStream;
 import com.google.protobuf.InvalidProtocolBufferException;
-import com.typesafe.config.Config;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -36,15 +35,8 @@ class ShoppingCartEventConsumer {
             .settings()
             .config()
             .getString("shopping-analytics-service.shopping-cart-kafka-topic");
-    Config config =
-        system.settings().config().getConfig("shopping-analytics-service.kafka.consumer");
     ConsumerSettings<String, byte[]> consumerSettings =
-        ConsumerSettings.create(config, new StringDeserializer(), new ByteArrayDeserializer())
-            .withBootstrapServers(
-                system
-                    .settings()
-                    .config()
-                    .getString("shopping-analytics-service.kafka.bootstrap-servers"))
+        ConsumerSettings.create(system, new StringDeserializer(), new ByteArrayDeserializer())
             .withGroupId("shopping-cart-analytics");
     CommitterSettings committerSettings = CommitterSettings.create(system);
 
