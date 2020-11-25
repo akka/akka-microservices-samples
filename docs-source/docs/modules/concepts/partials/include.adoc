@@ -28,7 +28,7 @@ include::ROOT:partial$include.adoc[]
 
 :reactive-principles:  https://principles.reactive.foundation
 
-:reactive-streams:  http://www.reactive-streams.org
+:reactive-streams:  https://www.reactive-streams.org
 
 :reactive-microservices-ebook: https://www.lightbend.com/ebooks/reactive-microservices-architecture-design-principles-for-distributed-systems-oreilly
 
