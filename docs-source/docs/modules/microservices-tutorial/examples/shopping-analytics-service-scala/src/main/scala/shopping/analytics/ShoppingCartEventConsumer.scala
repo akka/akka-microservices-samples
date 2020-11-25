@@ -36,8 +36,7 @@ object ShoppingCartEventConsumer {
       ConsumerSettings(
         system,
         new StringDeserializer,
-        new ByteArrayDeserializer)
-        .withGroupId("shopping-cart-analytics")
+        new ByteArrayDeserializer).withGroupId("shopping-cart-analytics")
     val committerSettings = CommitterSettings(system)
 
     RestartSource // <1>
