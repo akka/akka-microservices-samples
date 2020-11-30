@@ -1,13 +1,10 @@
 name: Link Validator
 
 on:
-  # TODO remove `on push` and `on pull_request_target`
-  push:
-    branches: [main]
   pull_request_target:
     branches: [main]
   schedule:
-    - cron:  '0 6 * * *'
+    - cron:  '0 6 * * 1-5'
 
 jobs:
   validate-links:
@@ -15,6 +12,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Run Antora
         run: make all
@@ -27,8 +25,8 @@ jobs:
       - name: Cache Coursier cache
         uses: coursier/cache-action@v5
 
-      - name: Install Coursier comman line tool
+      - name: Install Coursier command line tool
         run: curl -fLo cs https://git.io/coursier-cli-linux && chmod +x cs && ./cs
 
       - name: Run Link Validator
-        run: ./cs launch net.runne::site-link-validator:0.1.11 -- scripts/validator.conf
+        run: ./cs launch net.runne::site-link-validator:0.2.0 -- scripts/validator.conf

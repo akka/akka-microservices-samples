@@ -54,7 +54,7 @@ image::events-first.png[Events First]
 
 Events provide a record of what happens to each entity and when it happened. A Microservice can publish events to durable storage, a so-called event log. Other Microservices or external systems can then access those events. This decouples Microservices from each other. The event log supports recovery with a history that can be replayed. It also provides an excellent basis for auditing and debugging.
 
-For more information about DDD and Events-First design, take the free, self paced https://cognitiveclass.ai/courses/reactive-architecture-introduction/[Introduction to Reactive Architecture] course.
+For more information about DDD and Events-First design, take the free, self paced https://cognitiveclass.ai/courses/course-v1:Lightbend+LB0101ENv1+2018[Introduction to Reactive Architecture] course.
 
 == Eventual Consistency
 
