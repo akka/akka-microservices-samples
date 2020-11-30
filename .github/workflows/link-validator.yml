@@ -12,6 +12,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+        # See https://github.com/actions/checkout/issues/299#issuecomment-677674415
         ref: ${{ github.event.pull_request.head.sha }}
 
       - name: Run Antora
