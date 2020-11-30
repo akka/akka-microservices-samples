@@ -168,11 +168,6 @@ jobs:
       script:
         - make html-author-mode
       name: "Run Antora to create site"
-      if: type != cron
-    - script:
-        - make check-links
-      name: "Run the link checker"
-      if: type == cron
 
 stages:
   - name: drop-travis-caches
@@ -183,10 +178,10 @@ stages:
     if: env(RUN_DROP_TRAVIS_CACHES_STAGE) = true
 
   - name: check-files
-    if: (NOT tag =~ ^v) AND (type != cron)
+    if: (NOT tag =~ ^v)
 
   - name: test
-    if: (NOT tag =~ ^v) AND (type != cron)
+    if: (NOT tag =~ ^v)
 
   - name: site
 

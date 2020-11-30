@@ -1,6 +1,5 @@
 FROM antora/antora:2.3.1
 
-RUN yarn global add asciidoc-link-check
 # https://github.com/Mogztter/antora-lunr
 RUN yarn global add antora-lunr
 # https://github.com/Mogztter/antora-site-generator-lunr
