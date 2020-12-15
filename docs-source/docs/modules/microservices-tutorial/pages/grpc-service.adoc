@@ -192,6 +192,115 @@ Note the logging from the `ShoppingCartServiceImpl` in the console.
 
 You can stop the service with `ctrl-c`.
 
+== Run in Kubernetes
+
+To run in Kubernetes you need ... FIXME:
+
+* Create Kubernetes cluster in Amazon Elastic Kubernetes Service (EKS)
+* Install `kubectl` and authenticate to the Kubernetes cluster
+* Install the Akka Platform operator from Amazon Marketplace
+
+=== Build Docker image
+
+Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon ECR].
+
+The [.group-scala]#`build.sbt and project/plugins.sbt`# [.group-java]#`pom.xml`# contains build plugin settings for building a Docker image.
+
+[.tabset]
+Java::
++
+----
+mvn -DskipTests -Ddocker.username=AWS -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com clean package docker:push
+----
+
+Scala::
++
+----
+sbt -Ddocker.username=<user> -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com docker:publish
+----
+
+=== Update the deployment manifest
+
+In `kubernetes/shopping-cart-service-cr.yml` you find the definition of the `AkkaMicroservice` custom resource (CR) that the Akka Platform operator will use when deploying the application in Kubernetes.
+
+Update the image reference in `kubernetes/shopping-cart-service-cr.yml` with the image tag from the output of the Docker build above, for example:
+
+[source,shell script]
+----
+DOCKER> Tagging image shopping-cart-service:20201209-135004-363ae2b successful!
+----
+
+[source,protobuf]
+----
+include::example$01-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
+----
+
+=== Apply to Kubernetes
+
+Deploy the `shopping-cart-service-cr.yml` to Kubernetes:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+It will also create the namespace `shopping`
+
+It can be convenient to set that namespace as current instead of specifying the `--namespace` parameter in all `kubectl` commands.
+
+[source,shell script]
+----
+kubectl config set-context --current --namespace=shopping
+----
+
+The Akka Platform operator will notice the CR and deploy the `shopping-cart-service`. You can see progress by viewing the status:
+
+[source,shell script]
+----
+kubectl get akkamicroservices/shopping-cart-service
+----
+
+=== Exercise the service in Kubernetes
+
+You can list the pods with:
+
+[source,shell script]
+----
+kubectl get pods -l app=shopping-cart-service
+----
+
+Inspect logs from a separate terminal window:
+
+[source,shell script]
+----
+kubectl logs -f <pod name from above>
+----
+
+Add port forwarding for the gRPC endpoint from a separate terminal:
+
+[source,shell script]
+----
+kubectl port-forward svc/shopping-cart-service-grpc 8101:8101
+----
+
+Try exercising the service with https://github.com/fullstorydev/grpcurl[grpcurl].
+
+Add 3 socks to a cart:
+
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
+----
+
+Add 2 t-shirts to the same cart:
+
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
+----
+
+Note the logging from the `ShoppingCartServiceImpl` in the console that is running `kubectl logs -f`.
+
 :!sectnums:
 == Learn more
 

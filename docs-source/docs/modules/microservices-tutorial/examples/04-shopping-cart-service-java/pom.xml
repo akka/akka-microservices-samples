@@ -21,13 +21,25 @@
         <akka.version>2.6.10</akka.version>
         <akka-http.version>10.2.1</akka-http.version>
         <akka-management.version>1.0.9</akka-management.version>
-        <akka-persistence-cassandra.version>1.0.4</akka-persistence-cassandra.version>
         <alpakka-kafka.version>2.0.5</alpakka-kafka.version>
-        <akka-projection.version>1.0.0</akka-projection.version>
+        <akka-projection.version>1.0.0+30-e500e7ee</akka-projection.version>
         <akka-grpc.version>1.0.2</akka-grpc.version>
         <!-- needs to be defined to allow for overriding through mvn exec:exec -DAPP_CONFIG=local1.conf -->
         <APP_CONFIG>application.conf</APP_CONFIG>
+        <version.number>${git.commit.time}-${git.commit.id.abbrev}</version.number>
     </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.data</groupId>
+                <artifactId>spring-data-bom</artifactId>
+                <version>2020.0.1</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <dependency>
@@ -67,11 +79,6 @@
         </dependency>
         <dependency>
             <groupId>com.typesafe.akka</groupId>
-            <artifactId>akka-persistence-cassandra_${scala.binary.version}</artifactId>
-            <version>${akka-persistence-cassandra.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-http_${scala.binary.version}</artifactId>
             <version>${akka-http.version}</version>
         </dependency>
@@ -92,12 +99,17 @@
         </dependency>
         <dependency>
             <groupId>com.lightbend.akka</groupId>
+            <artifactId>akka-persistence-jdbc_${scala.binary.version}</artifactId>
+            <version>4.0.0+41-3b3310e9</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lightbend.akka</groupId>
             <artifactId>akka-projection-eventsourced_${scala.binary.version}</artifactId>
             <version>${akka-projection.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightbend.akka</groupId>
-            <artifactId>akka-projection-cassandra_${scala.binary.version}</artifactId>
+            <artifactId>akka-projection-jdbc_${scala.binary.version}</artifactId>
             <version>${akka-projection.version}</version>
         </dependency>
         <dependency>
@@ -119,6 +131,21 @@
             <groupId>com.lightbend.akka.grpc</groupId>
             <artifactId>akka-grpc-runtime_${scala.binary.version}</artifactId>
             <version>${akka-grpc.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>5.4.13.Final</version>
+        </dependency>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.2.18</version>
         </dependency>
 
         <dependency>
@@ -226,6 +253,57 @@
                         </googleJavaFormat>
                     </java>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>pl.project13.maven</groupId>
+                <artifactId>git-commit-id-plugin</artifactId>
+                <version>4.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>revision</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <dateFormat>yyyyMMdd-HHmmss</dateFormat>
+                    <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <generateGitPropertiesFile>false</generateGitPropertiesFile>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>0.34.1</version>
+                <configuration>
+                    <images>
+                        <image>
+                            <name>%a</name>
+                            <build>
+                                <from>adoptopenjdk:11-jre-hotspot</from>
+                                <tags>
+                                    <tag>${version.number}</tag>
+                                </tags>
+                                <entryPoint>
+                                    java $JAVA_OPTS -cp '/maven/*' shopping.cart.Main
+                                </entryPoint>
+                                <assembly>
+                                    <descriptorRef>artifact-with-dependencies</descriptorRef>
+                                </assembly>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>build-docker-image</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>build</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

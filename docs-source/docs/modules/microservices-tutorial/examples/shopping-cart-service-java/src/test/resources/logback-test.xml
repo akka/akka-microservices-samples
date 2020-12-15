@@ -10,8 +10,6 @@
     <logger name="org.apache.cassandra" level="ERROR"/>
     <logger name="com.codahale.metrics" level="INFO"/>
 
-<!--    <logger name="akka.persistence.jdbc.testkit.javadsl.SchemaUtils" level="DEBUG"/>-->
-    
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>

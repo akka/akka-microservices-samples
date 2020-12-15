@@ -1,0 +1,32 @@
+= Amazon ECR
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 3
+
+Elastic Container Registry (ECR)
+
+Create a private repository from https://console.aws.amazon.com/ecr/repositories[Amazon Container Services console]. Select the region you are working in. You need one repository for each application that you will deploy, with the same name as the application.
+
+For example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service`
+
+Authenticate Docker using the first part of the URI, for example:
+
+[source,shell script]
+----
+aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 803424716218.dkr.ecr.eu-central-1.amazonaws.com
+----
+
+Then you can build the Docker image and publish to ECR with:
+
+[.tabset]
+Java::
++
+----
+mvn -DskipTests -Ddocker.username=AWS -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com clean package docker:push
+----
+
+Scala::
++
+----
+sbt -Ddocker.username=<user> -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com docker:publish
+----
