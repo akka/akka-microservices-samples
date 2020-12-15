@@ -1,0 +1,20 @@
+name: Deploy WIP to akka.io
+on:
+  push:
+    branches: [ main-with-operator ]
+
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          ref: main-with-operator
+
+      - name: Downloads, Antora, SCP to Gustav
+        run: |
+          ./scripts/prepare-downloads.sh
+          ./scripts/deploy-site.sh
+        env:
+          SCP_SECRET: ${{ secrets.GUSTAV_SCP_SECRET }}

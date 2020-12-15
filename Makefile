@@ -24,6 +24,8 @@ docker-image:
 
 build: clean html prepare-downloads done
 
+build-wip: html-author-mode prepare-downloads done
+
 prepare-downloads:
 	${ROOT_DIR}/scripts/prepare-downloads.sh
 
