@@ -1,9 +1,7 @@
 name: Compile and Test, Create Site
 on:
   push:
-    branches: [main]
-  pull_request_target:
-    branches: [main]
+  pull_request:
 
 jobs:
   compile-and-test:
@@ -37,144 +35,111 @@ jobs:
       - name: "Shopping analytics service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          ~/scripts/sbt-test.sh
       - name: "Shopping analytics service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
-          mvn spotless:check test
+          ~/scripts/mvn-test.sh
 
       - name: "Shopping cart service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala
-          docker-compose up -d
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
-          docker-compose stop
+          ~/scripts/sbt-test.sh
       - name: "Shopping cart service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-java
-          docker-compose up -d
-          mvn spotless:check test
-          docker-compose stop
+          ~/scripts/mvn-test.sh
 
       - name: "Shopping order service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          ~/scripts/sbt-test.sh
       - name: "Shopping order service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-java
-          mvn spotless:check test
+          ~/scripts/mvn-test.sh
 
       - name: "00 Shopping analytics service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-scala
-          docker-compose up -d
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
-          docker-compose stop
+          ~/scripts/sbt-test.sh
       - name: "00 Shopping analytics service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-java
-          docker-compose up -d
-          mvn spotless:check test
-          docker-compose stop
+          ~/scripts/mvn-test.sh
 
       - name: "00 Shopping cart service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-scala
-          docker-compose up -d
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
-          docker-compose stop
+          ~/scripts/sbt-test.sh
       - name: "00 Shopping cart service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-java
-          docker-compose up -d
-          mvn spotless:check test
-          docker-compose stop
+          ~/scripts/mvn-test.sh
 
       - name: "00 Shopping order service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-scala
-          docker-compose up -d
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
-          docker-compose stop
+          scripts/sbt-test.sh
       - name: "00 Shopping order service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-java
-          docker-compose up -d
-          mvn spotless:check test
-          docker-compose stop
+          ~/scripts/mvn-test.sh
 
       - name: "01 Shopping cart service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-scala
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          scripts/sbt-test.sh
       - name: "01 Shopping cart service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-java
-          docker-compose up -d
-          mvn spotless:check test
-          docker-compose stop
+          ~/scripts/mvn-test.sh
 
       - name: "02 Shopping cart service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-scala
-          docker-compose up -d
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
-          docker-compose stop
+          scripts/sbt-test.sh
       - name: "02 Shopping cart service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-java
-          docker-compose up -d
-          mvn spotless:check test
-          docker-compose stop
+          ~/scripts/mvn-test.sh
 
       - name: "03 Shopping cart service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-scala
-          docker-compose up -d
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
-          docker-compose stop
+          scripts/sbt-test.sh
       - name: "03 Shopping cart service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-java
-          docker-compose up -d
-          mvn spotless:check test
-          docker-compose stop
+          ~/scripts/mvn-test.sh
 
       - name: "04 Shopping cart service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala
-          docker-compose up -d
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
-          docker-compose stop
+          scripts/sbt-test.sh
       - name: "04 Shopping cart service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-java
-          docker-compose up -d
-          mvn spotless:check test
-          docker-compose stop
+          ~/scripts/mvn-test.sh
 
       - name: "05 Shopping cart service (Scala)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-scala
-          docker-compose up -d
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
-          docker-compose stop
+          scripts/sbt-test.sh
       - name: "05 Shopping cart service (Java)"
         run: |
           cd ~/docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-java
-          docker-compose up -d
-          mvn spotless:check test
-          docker-compose stop
+          ~/scripts/mvn-test.sh
 
       - name: "Howto example code"
         run: |
           cd ~/docs-source/docs/modules/how-to/examples/shopping-cart-service-scala
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          scripts/sbt-test.sh
+
       - name: "Howto cleanup dependencies"
         run: |
           cd ~/docs-source/docs/modules/how-to/examples/cleanup-dependencies-project
-          sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+          scripts/sbt-test.sh
 
   create-site:
     runs-on: ubuntu-18.04
