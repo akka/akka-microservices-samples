@@ -33,113 +33,65 @@ jobs:
           git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
 
       - name: "Shopping analytics service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
-          ~/scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
       - name: "Shopping analytics service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
-          ~/scripts/mvn-test.sh
+        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
 
       - name: "Shopping cart service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala
-          ~/scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala
       - name: "Shopping cart service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-java
-          ~/scripts/mvn-test.sh
+        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-java
 
       - name: "Shopping order service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala
-          ~/scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala
       - name: "Shopping order service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-java
-          ~/scripts/mvn-test.sh
+        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-java
 
       - name: "00 Shopping analytics service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-scala
-          ~/scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-scala
       - name: "00 Shopping analytics service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-java
-          ~/scripts/mvn-test.sh
+        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-java
 
       - name: "00 Shopping cart service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-scala
-          ~/scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-scala
       - name: "00 Shopping cart service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-java
-          ~/scripts/mvn-test.sh
+        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-java
 
       - name: "00 Shopping order service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-scala
-          scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-scala
       - name: "00 Shopping order service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-java
-          ~/scripts/mvn-test.sh
+        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-java
 
       - name: "01 Shopping cart service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-scala
-          scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-scala
       - name: "01 Shopping cart service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-java
-          ~/scripts/mvn-test.sh
+        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-java
 
       - name: "02 Shopping cart service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-scala
-          scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-scala
       - name: "02 Shopping cart service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-java
-          ~/scripts/mvn-test.sh
+        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-java
 
       - name: "03 Shopping cart service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-scala
-          scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-scala
       - name: "03 Shopping cart service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-java
-          ~/scripts/mvn-test.sh
+        run: ~/scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-java
 
       - name: "04 Shopping cart service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala
-          scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala
       - name: "04 Shopping cart service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-java
-          ~/scripts/mvn-test.sh
+        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-java
 
       - name: "05 Shopping cart service (Scala)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-scala
-          scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-scala
       - name: "05 Shopping cart service (Java)"
-        run: |
-          cd ~/docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-java
-          ~/scripts/mvn-test.sh
+        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-java
 
       - name: "Howto example code"
-        run: |
-          cd ~/docs-source/docs/modules/how-to/examples/shopping-cart-service-scala
-          scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-scala
 
       - name: "Howto cleanup dependencies"
-        run: |
-          cd ~/docs-source/docs/modules/how-to/examples/cleanup-dependencies-project
-          scripts/sbt-test.sh
+        run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/cleanup-dependencies-project
 
   create-site:
     runs-on: ubuntu-18.04
