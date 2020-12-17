@@ -48,7 +48,7 @@ function zipAndAttach() {
    zip_name=$1
    pushd ${temporal_folder}
    removeTags
-   zip -r ${tutorial_attachments}/${zip_name} *
+   zip --quiet -r ${tutorial_attachments}/${zip_name} *
    cp ${tutorial_attachments}/${zip_name} ${temporal_attachments}
    popd
 }
