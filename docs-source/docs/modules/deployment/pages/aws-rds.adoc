@@ -61,7 +61,7 @@ To enable the JDBC integration you define the name of the secret in `jdbc` secti
 include::microservices-tutorial:example$02-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
 ----
 
-The Akka Operator will automatically provide the configuration for the connection based on the Secret in the configuration that will be used when the application starts the `ActorSystem` without specifying a configuration.
+The Akka Operator will automatically provide the configuration for the connection based on the Secret when the application starts the `ActorSystem`.
 
 === The configuration in the Pod
 
@@ -69,3 +69,4 @@ For troubleshooting it can be good to know how the configuration is loaded.
 
 The configuration that the Akka Operator provides via a Secret is located in `/etc/config-volume/main.conf` in the Pod. The `main.conf` includes `application.conf` and the JVM system property `config.file` is set to `main.conf` by the operator. In other words, `main.conf` will be used when the application starts the `ActorSystem` without specifying a configuration, or when using `ConfigFactory.load()`.
 
+FIXME the details of main.conf should probably be described in a separate (general) page.

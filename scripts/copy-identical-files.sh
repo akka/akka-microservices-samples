@@ -58,6 +58,19 @@ cp ${SRC} ${tutorial_root}/shopping-order-service-scala/project/
 cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/project/
 cp ${SRC} ${howto_root}/shopping-cart-service-scala/project/
 
+declare SRC="${tutorial_root}/00-shopping-cart-service-scala/docker-compose.yml"
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/
+cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/
+cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/
+cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/
+cp ${SRC} ${tutorial_root}/shopping-order-service-scala/
+
+
 # java only project build files
 declare SRC="${tutorial_root}/00-shopping-cart-service-java/pom.xml"
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/
@@ -73,20 +86,7 @@ cp ${SRC} ${tutorial_root}/shopping-analytics-service-java/
 declare SRC="${tutorial_root}/00-shopping-order-service-java/pom.xml"
 cp ${SRC} ${tutorial_root}/shopping-order-service-java/
 
-# scala and java project files
-# Each time we copy the file from the scala variant. They are language agnostic.
-declare SRC="${tutorial_root}/00-shopping-cart-service-scala/docker-compose.yml"
-cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/
-cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/
-cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/
-cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/
-cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/
-cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/
-cp ${SRC} ${tutorial_root}/00-shopping-analytics-service-scala/
-cp ${SRC} ${tutorial_root}/shopping-analytics-service-scala/
-cp ${SRC} ${tutorial_root}/00-shopping-order-service-scala/
-cp ${SRC} ${tutorial_root}/shopping-order-service-scala/
-
+declare SRC="${tutorial_root}/00-shopping-cart-service-java/docker-compose.yml"
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/
 cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/
@@ -96,6 +96,8 @@ cp ${SRC} ${tutorial_root}/shopping-cart-service-java/
 cp ${SRC} ${tutorial_root}/shopping-analytics-service-java/
 cp ${SRC} ${tutorial_root}/shopping-order-service-java/
 
+# scala and java project files
+# Each time we copy the file from the scala variant. They are language agnostic.
 
 declare SRC="${tutorial_root}/00-shopping-cart-service-scala/LICENSE"
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/
