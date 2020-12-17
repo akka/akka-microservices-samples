@@ -3,9 +3,7 @@
 :toc-title: ON THIS PAGE
 :toclevels: 3
 
-Elastic Container Registry (ECR)
-
-Create a private repository from https://console.aws.amazon.com/ecr/repositories[Amazon Container Services console]. Select the region you are working in. You need one repository for each application that you will deploy, with the same name as the application.
+Create a private repository from https://console.aws.amazon.com/ecr/repositories[Amazon Container Services (ECR) console]. Select the region you are working in. You need one repository for each application that you will deploy, with the same name as the application.
 
 For example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service`
 

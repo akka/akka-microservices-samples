@@ -1,0 +1,71 @@
+= Amazon RDS
+:toc:
+:toc-title: ON THIS PAGE
+:toclevels: 3
+
+== Create RDS PostgrSQL database
+
+Create new database from https://console.aws.amazon.com/rds/home:[Amazon Container Services console]. Select the region you are working in.
+
+The example in the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] is using PostgreSQL.
+
+For a trial PostgreSQL you can select the following aside from defaults:
+
+- Standard create
+- PostgreSQL
+- Free tier
+- DB instance identifier: `shopping-cart`
+- Master password: <a password>
+- Disable storage autoscaling
+- Public access: Yes
+- Existing VPC security groups: default
+- Disable Additional configuration / Enable automatic backups
+
+You find more detailed instructions in the https://aws.amazon.com/getting-started/tutorials/create-connect-postgresql-db/[Amazon RDS PostgreSQL documentation]
+
+== Connect with SQL tool
+
+To create tables and inspect the data it's useful to be able to connect a SQL tool such as https://www.pgadmin.org[https://www.pgadmin.org].
+
+FIXME: describe security group setting for external TCP access to port 5432
+
+See [documentation of how to retrieve connection settings](https://aws.amazon.com/getting-started/tutorials/create-connect-postgresql-db/).
+
+Create the tables with the ddl-scripts directory in the example:
+
+- `ddl-scripts/create_tables.cql`
+- `ddl-scripts/create_user_tables.cql`
+
+== JDBC configuration
+
+To use the JDBC integration in the Akka Platform operator you place the connection credentials in a [Secret](https://kubernetes.io/docs/concepts/configuration/secret/). The Secret must contain three entries:
+
+* `connectionUrl` - the JDBC connection URL `jdbc:postgresql://<endpoint>:5432/<database name>?reWriteBatchedInserts=true`, for example `jdbc:postgresql://shopping-cart.c46wxwryhegl.eu-central-1.rds.amazonaws.com:5432/postgres?reWriteBatchedInserts=true`
+* `username` - the database username, default master user in RDS PostgrSQL is `postgres`
+* `password` - the database password, the password you defined when creating the RDS PostgrSQL database
+
+See [documentation of how to retrieve connection settings](https://aws.amazon.com/getting-started/tutorials/create-connect-postgresql-db/).
+
+The Secret can be created with the following `kubectl` command, replacing the values for your database:
+
+[source,shell script]
+----
+kubectl create secret generic shopping-cart-service-jdbc-secret --from-literal=username=postgres --from-literal=password=tiger --from-literal=connectionUrl="jdbc:postgresql://shopping-cart.c46wxwryhegl.eu-central-1.rds.amazonaws.com:5432/postgres?reWriteBatchedInserts=true"
+----
+
+To enable the JDBC integration you define the name of the secret in `jdbc` section of the CR:
+
+.kubernetes/shopping-cart-service-cr.yml:
+[source,yaml]
+----
+include::microservices-tutorial:example$02-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
+----
+
+The Akka Operator will automatically provide the configuration for the connection based on the Secret in the configuration that will be used when the application starts the `ActorSystem` without specifying a configuration.
+
+=== The configuration in the Pod
+
+For troubleshooting it can be good to know how the configuration is loaded.
+
+The configuration that the Akka Operator provides via a Secret is located in `/etc/config-volume/main.conf` in the Pod. The `main.conf` includes `application.conf` and the JVM system property `config.file` is set to `main.conf` by the operator. In other words, `main.conf` will be used when the application starts the `ActorSystem` without specifying a configuration, or when using `ConfigFactory.load()`.
+

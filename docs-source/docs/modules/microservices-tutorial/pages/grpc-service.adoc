@@ -247,7 +247,8 @@ Update the image reference in `kubernetes/shopping-cart-service-cr.yml` with the
 DOCKER> Tagging image shopping-cart-service:20201209-135004-363ae2b successful!
 ----
 
-[source,protobuf]
+.kubernetes/shopping-cart-service-cr.yml:
+[source,yaml]
 ----
 include::example$01-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
 ----
