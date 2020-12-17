@@ -20,11 +20,11 @@ Then you can build the Docker image and publish to ECR with:
 Java::
 +
 ----
-mvn -DskipTests -Ddocker.username=AWS -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com clean package docker:push
+mvn -DskipTests -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com clean package docker:push
 ----
 
 Scala::
 +
 ----
-sbt -Ddocker.username=<user> -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com docker:publish
+sbt -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com docker:publish
 ----
