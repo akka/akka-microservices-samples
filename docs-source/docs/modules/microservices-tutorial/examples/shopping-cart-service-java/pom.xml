@@ -26,6 +26,8 @@
         <akka-grpc.version>1.0.2</akka-grpc.version>
         <!-- needs to be defined to allow for overriding through mvn exec:exec -DAPP_CONFIG=local1.conf -->
         <APP_CONFIG>application.conf</APP_CONFIG>
+        <!-- Version of the Docker image is derived from git commit.
+             It can be defined with -Dversion.number=0.1-SNAPSHOT if git is not used -->
         <version.number>${git.commit.time}-${git.commit.id.abbrev}</version.number>
     </properties>
 
@@ -268,7 +270,9 @@
                 </executions>
                 <configuration>
                     <dateFormat>yyyyMMdd-HHmmss</dateFormat>
+                    <!-- Version can be defined with -Dversion.number=0.1-SNAPSHOT if git is not used -->
                     <dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+                    <failOnNoGitDirectory>false</failOnNoGitDirectory>
                     <generateGitPropertiesFile>false</generateGitPropertiesFile>
                 </configuration>
             </plugin>

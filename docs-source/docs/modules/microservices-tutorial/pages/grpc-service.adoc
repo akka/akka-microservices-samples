@@ -206,18 +206,35 @@ Create a Docker repository and authenticate Docker as described in xref:deployme
 
 The [.group-scala]#`build.sbt and project/plugins.sbt`# [.group-java]#`pom.xml`# contains build plugin settings for building a Docker image.
 
+The version number of the image is derived from the git commit. You can enable git for the directory with the following commands. Alternatively the version can be specified with `-Dversion.number=0.1-SNAPSHOT`.
+
+[source,shell script]
+----
+git init
+git add .
+git commit -m "first gRPC"
+----
+
 [.tabset]
 Java::
 +
 ----
-mvn -DskipTests -Ddocker.username=AWS -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com clean package docker:push
+mvn -DskipTests -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com clean package docker:push
+----
++
+If you see error "Given Docker name 'shopping-cart-service:${git.commit.time}-${git.commit.id.abbrev}' is invalid" it is because the directory is not a git repository. You can specify the version number with:
++
+----
+mvn -Dversion.number=0.1-SNAPSHOT -DskipTests -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com clean package docker:push
 ----
 
 Scala::
 +
 ----
-sbt -Ddocker.username=<user> -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com docker:publish
+sbt -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com docker:publish
 ----
+
+
 
 === Update the deployment manifest
 
