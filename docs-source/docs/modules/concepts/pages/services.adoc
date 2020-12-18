@@ -25,7 +25,7 @@ NOTE: The xref:microservices-tutorial:grpc-service.adoc[] and xref:microservices
 
 === HTTP with JSON / RESTful
 
-The ubiquitous communication protocol is HTTP with text-based messages in JSON. Even though JSON lacks a commonly used schema description, its simplicity, human-readability and support in Javascript has made the de-facto standard for synchronous communication over system boundaries.
+The ubiquitous communication protocol is HTTP with text-based messages in JSON. Even though JSON lacks a commonly used schema description, its simplicity, human-readability and support in JavaScript has made the de-facto standard for synchronous communication over system boundaries.
 
 NOTE: This guide doesn't cover how REST services can be implemented with Akka HTTP.
 

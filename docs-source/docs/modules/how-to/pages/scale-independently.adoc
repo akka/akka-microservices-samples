@@ -7,7 +7,7 @@ include::partial$include.adoc[]
 
 Not all nodes in an Akka Cluster need to be identical. When starting each process you can add some metadata to it to give that instance a special purpose. {akka}/typed/cluster.html#node-roles[Node Roles {tab-icon}, window="tab"] in Akka Cluster will handle that metadata.
 
-This feature can be used to scale portions of your application indenpendently. Let's take for example the shopping cart Microservice from the xref:microservices-tutorial:index.adoc[tutorial]:
+This feature can be used to scale portions of your application independently. Let's take for example the shopping cart Microservice from the xref:microservices-tutorial:index.adoc[tutorial]:
 
 [#e-commerce-app]
 .An e-Commerce application built with 3 Microservices

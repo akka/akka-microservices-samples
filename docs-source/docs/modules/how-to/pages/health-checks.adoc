@@ -18,7 +18,7 @@ This matches Kubernetes Health checks. See https://blog.colinbreck.com/kubernete
 
 The {akka-management}/[Akka Management {tab-icon}, window="tab"] library includes support for exposing readiness and liveness checks via HTTP.
 
-The depedencies for Akka Management include the core module and the cluster HTTP module for cluster inspection. As Akka Management uses Spray JSON internally, make sure to add that dependency of the exact same version as other Akka HTTP libraries.
+The dependencies for Akka Management include the core module and the cluster HTTP module for cluster inspection. As Akka Management uses Spray JSON internally, make sure to add that dependency of the exact same version as other Akka HTTP libraries.
 
 .build.sbt
 [source,scala,indent=0]
@@ -56,7 +56,7 @@ Akka Persistence Cassandra includes a check to validate connectivity, as the ser
 include::microservices-tutorial:example$shopping-cart-service-scala/src/main/resources/persistence.conf[tag=healthchecks-for-cassandra]
 ----
 
-Following Colin Breck's advice, we do not include Cassandra connectivity checks in oue liveness probe.
+Following Colin Breck's advice, we do not include Cassandra connectivity checks in our liveness probe.
 
 Try the readiness check with `curl`
 

@@ -43,7 +43,7 @@ Sharing entities across <<Bounded Context>>'s adds coupling since a change on th
 
 == Events-First DDD
 
-Spliting your business domain model into <<Bounded Context>>'s will provide some spatial decoupling. Then, you can use asynchronous communication between them to achieve some temporal decoupling. Implement that asynchronous communication using xref:message-driven-event-driven.adoc[event-driven] design.
+Splitting your business domain model into <<Bounded Context>>'s will provide some spatial decoupling. Then, you can use asynchronous communication between them to achieve some temporal decoupling. Implement that asynchronous communication using xref:message-driven-event-driven.adoc[event-driven] design.
 
 In parallel, you can use xref:event-sourcing.adoc[] to model the <<Stateful Aggregate>>'s on each context.
 

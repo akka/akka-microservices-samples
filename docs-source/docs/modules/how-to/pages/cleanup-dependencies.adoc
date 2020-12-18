@@ -5,7 +5,7 @@ include::partial$include.adoc[]
 
 This guide will help you clean up the build scripts, so your build only includes the dependencies, plugins, and settings you need.
 
-This guide assumes you created a new project using the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservicies template].
+This guide assumes you created a new project using the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservices template].
 
 The project from the template uses sbt as a build tool. The build is split in two files:
 
@@ -47,7 +47,7 @@ include::example$cleanup-dependencies-project/build.sbt[tag=remove-grpc-optional
 
 == Replace the Persistence plugin
 
-The project produced with the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservicies template] assumes the application will use the {akka-persistence-cassandra}[Akka Persistence Cassandra plugin {tab-icon}, window="tab"]. You can opt out from using that plugin and use the {akka-persistence-jdbc}[Akka Persistence JDBC {tab-icon}, window="tab"] or other plugins instead.
+The project produced with the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservices template] assumes the application will use the {akka-persistence-cassandra}[Akka Persistence Cassandra plugin {tab-icon}, window="tab"]. You can opt out from using that plugin and use the {akka-persistence-jdbc}[Akka Persistence JDBC {tab-icon}, window="tab"] or other plugins instead.
 
 [start=1]
 . The first thing you must do is to remove the dependency to the Akka Persistence Cassandra plugin:
@@ -91,7 +91,7 @@ include::example$cleanup-dependencies-project/build.sbt[tag=add-akka-persistence
 
 == Replace the Offset Store database
 
-The project produced with the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservicies template] assumes the application will use a Cassandra database to store the {akka-projection}/overview.html#overview[offset tracking {tab-icon}, window="tab"] required by the projections. You can replace the artifact to use an RDBMS:
+The project produced with the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservices template] assumes the application will use a Cassandra database to store the {akka-projection}/overview.html#overview[offset tracking {tab-icon}, window="tab"] required by the projections. You can replace the artifact to use an RDBMS:
 
 [source,diff]
 .build.sbt
@@ -105,7 +105,7 @@ Replacing the artifact is only the first step. Each of the implementations of Of
 
 == Remove support for Kafka
 
-The project produced with the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservicies template] projects data include the necessary dependencies to project data to a Kafka topic. If you are not projecting data into Kafka, remove the version declaration and the artifact:
+The project produced with the xref:microservices-tutorial:template.adoc#seed-template[Akka Microservices template] projects data include the necessary dependencies to project data to a Kafka topic. If you are not projecting data into Kafka, remove the version declaration and the artifact:
 
 [source,diff]
 .build.sbt

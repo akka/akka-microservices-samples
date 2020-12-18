@@ -17,7 +17,7 @@ An Event is some data emitted from a component for anyone listening to consume.
 
 In traditional programming models, _Component A_ invoking a method in _Component B_ was coupled in time. If _Component B_ was busy or if it was slow when handling the method invocation, then _Component A_ had to wait.
 
-In Message Driven systems, _Component A_ produces a message indicating it must be deliverd to the address of _Component B_. _Component A_ then send the message and gets control back immediately instead of waiting for _Component B_ to complete the handling of the message. Components on a message driven system often have a queue where incoming messages can be stored in case of a load spike. Message passing is a building block for {reactive-principles}/principles/decouple-space.html[space decoupling {tab-icon}, window="tab"].
+In Message Driven systems, _Component A_ produces a message indicating it must be delivered to the address of _Component B_. _Component A_ then send the message and gets control back immediately instead of waiting for _Component B_ to complete the handling of the message. Components on a message driven system often have a queue where incoming messages can be stored in case of a load spike. Message passing is a building block for {reactive-principles}/principles/decouple-space.html[space decoupling {tab-icon}, window="tab"].
 
 In Event Driven systems, components announce a location where they expose their events. So a _Component A_ emitting events will use a well-known location to publish them but not know which components are consuming the events. This well-known location is implemented using an ordered queue. Sometimes the queue is indexable so consumers can keep track of the events already consumed and the events pending.
 

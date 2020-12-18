@@ -80,7 +80,7 @@ The desired outcome determines how you handle the message. Effectively, you need
 
 In contrast, with asynchronous messaging, the requestor simply sends a message and continues with its business. Since Microservices depend on the health of their host and network connections, asynchronous messaging offers an obvious advantage. The illustration below illustrates how processing requests asynchronously can speed up execution.
 
-image::async-sync.png[Synchronous vs Ascynchronous]
+image::async-sync.png[Synchronous vs Asynchronous]
 
 If the message is important, you need some way of persisting it to make sure it will be dealt with at some point in time. An event-driven architecture offers several ways of handling this. For example, in a Microservices system, you could use a message broker with delivery guarantees, or write such messages to a database or log. If a reply is required, the sender could just wait for an acknowledgement that the request was received and continue its work, expecting the answer to the question later.
 
