@@ -38,43 +38,37 @@ public class Main extends AbstractBehavior<Void> {
   public Main(ActorContext<Void> context) {
     super(context);
 
-    ApplicationContext springContext =
-        SpringIntegration.applicationContext(context.getSystem().settings().config());
-    ItemPopularityRepository itemPopularityRepository =
-        springContext.getBean(ItemPopularityRepository.class);
-    JpaTransactionManager transactionManager = springContext.getBean(JpaTransactionManager.class);
-
     ActorSystem<?> system = context.getSystem();
-
-    AsyncItemPopularityRepository asyncItemPopularityRepository =
-        new AsyncItemPopularityRepository(
-            system.dispatchers().lookup(DispatcherSelector.blocking()), itemPopularityRepository);
 
     AkkaManagement.get(system).start();
     ClusterBootstrap.get(system).start();
 
     ShoppingCart.init(system);
 
-    // tag::ItemPopularityProjection[]
-    ItemPopularityProjection.init(system, transactionManager, itemPopularityRepository); // <3>
-    // end::ItemPopularityProjection[]
+    ApplicationContext springContext =
+        SpringIntegration.applicationContext(system.settings().config());
+    JpaTransactionManager transactionManager = springContext.getBean(JpaTransactionManager.class);
+
+    ItemPopularityRepository itemPopularityRepository =
+        springContext.getBean(ItemPopularityRepository.class);
+    
+    ItemPopularityProjection.init(system, transactionManager, itemPopularityRepository);
 
     String grpcInterface =
         system.settings().config().getString("shopping-cart-service.grpc.interface");
     int grpcPort = system.settings().config().getInt("shopping-cart-service.grpc.port");
-    ShoppingCartService grpcService =
-        new ShoppingCartServiceImpl(system, asyncItemPopularityRepository);
+
+    AsyncItemPopularityRepository asyncItemPopularityRepository =
+        new AsyncItemPopularityRepository(
+            system.dispatchers().lookup(DispatcherSelector.blocking()), itemPopularityRepository);
+    ShoppingCartService grpcService = new ShoppingCartServiceImpl(system, asyncItemPopularityRepository);
+
     ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService);
 
-    // tag::PublishEventsProjection[]
     PublishEventsProjection.init(system, transactionManager);
-    // end::PublishEventsProjection[]
 
-    // tag::SendOrderProjection[]
     ShoppingOrderService orderService = orderServiceClient(system);
     SendOrderProjection.init(system, transactionManager, orderService);
-
-    // end::SendOrderProjection[]
   }
 
   // tag::SendOrderProjection[]

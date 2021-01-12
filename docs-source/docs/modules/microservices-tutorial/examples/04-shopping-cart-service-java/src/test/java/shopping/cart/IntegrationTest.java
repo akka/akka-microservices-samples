@@ -12,7 +12,6 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.cluster.MemberStatus;
 import akka.cluster.typed.Cluster;
 import akka.grpc.GrpcClientSettings;
-import akka.persistence.testkit.javadsl.PersistenceInit;
 import akka.testkit.SocketUtil;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -27,27 +26,19 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import scala.jdk.CollectionConverters;
 import shopping.cart.proto.*;
+import shopping.cart.repository.SpringIntegration;
+
 
 public class IntegrationTest {
 
   private static final Logger logger = LoggerFactory.getLogger(IntegrationTest.class);
 
-  private static final long UNIQUE_QUALIFIER = System.currentTimeMillis();
-  private static final String KEYSPACE = "ItemPopularityIntegrationTest_" + UNIQUE_QUALIFIER;
-
   private static Config sharedConfig() {
-    return ConfigFactory.parseString(
-            "akka.persistence.cassandra.journal.keyspace = "
-                + KEYSPACE
-                + "\n"
-                + "akka.persistence.cassandra.snapshot.keyspace = "
-                + KEYSPACE
-                + "\n"
-                + "akka.projection.cassandra.offset-store.keyspace = "
-                + KEYSPACE)
-        .withFallback(ConfigFactory.load("integration-test.conf"));
+    return ConfigFactory.load("integration-test.conf");
   }
 
   private static Config nodeConfig(
@@ -95,6 +86,7 @@ public class IntegrationTest {
     }
   }
 
+
   private static TestNodeFixture testNode1;
   private static TestNodeFixture testNode2;
   private static TestNodeFixture testNode3;
@@ -103,6 +95,7 @@ public class IntegrationTest {
 
   @BeforeClass
   public static void setup() throws Exception {
+
     List<InetSocketAddress> inetSocketAddresses =
         CollectionConverters.SeqHasAsJava(
                 SocketUtil.temporaryServerAddresses(6, "127.0.0.1", false))
@@ -120,11 +113,11 @@ public class IntegrationTest {
     testNode3 = new TestNodeFixture(grpcPorts.get(2), managementPorts, 2);
     systems = Arrays.asList(testNode1.system, testNode2.system, testNode3.system);
 
-    // avoid concurrent creation of keyspace and tables
-    PersistenceInit.initializeDefaultPlugins(testNode1.system, Duration.ofSeconds(10))
-        .toCompletableFuture()
-        .get(10, SECONDS);
-    CreateTableTestUtils.createTables(testNode1.system);
+    ApplicationContext springContext =
+        SpringIntegration.applicationContext(testNode1.system.settings().config());
+    JpaTransactionManager transactionManager = springContext.getBean(JpaTransactionManager.class);
+    // create schemas
+    CreateTableTestUtils.createTables(transactionManager, testNode1.system);
 
     testNode1.testKit.spawn(createMainBehavior(), "guardian");
     testNode2.testKit.spawn(createMainBehavior(), "guardian");
@@ -161,7 +154,7 @@ public class IntegrationTest {
   }
 
   @Test
-  public void updateAndProjectFromDifferentNodesViaGrpc() throws Exception {
+  public void updateFromDifferentNodesViaGrpc() throws Exception {
     // add from client1
     CompletionStage<Cart> response1 =
         testNode1
@@ -189,56 +182,5 @@ public class IntegrationTest {
     Cart updatedCart2 = response2.toCompletableFuture().get(requestTimeout.getSeconds(), SECONDS);
     assertEquals("bar", updatedCart2.getItems(0).getItemId());
     assertEquals(17, updatedCart2.getItems(0).getQuantity());
-
-    // update from client2
-    CompletionStage<Cart> response3 =
-        testNode2
-            .getClient()
-            .updateItem(
-                UpdateItemRequest.newBuilder()
-                    .setCartId("cart-2")
-                    .setItemId("bar")
-                    .setQuantity(18)
-                    .build());
-    Cart updatedCart3 = response3.toCompletableFuture().get(requestTimeout.getSeconds(), SECONDS);
-    assertEquals("bar", updatedCart3.getItems(0).getItemId());
-    assertEquals(18, updatedCart3.getItems(0).getQuantity());
-
-    // ItemPopularityProjection has consumed the events and updated db
-    TestProbe<Object> testProbe = testNode1.testKit.createTestProbe();
-    testProbe.awaitAssert(
-        () -> {
-          // FIXME https://github.com/akka/akka/issues/29677 Supplier does not allow throwing
-          // checked
-          try {
-            assertEquals(
-                42,
-                testNode1
-                    .getClient()
-                    .getItemPopularity(
-                        GetItemPopularityRequest.newBuilder().setItemId("foo").build())
-                    .toCompletableFuture()
-                    .get(requestTimeout.getSeconds(), SECONDS)
-                    .getPopularityCount());
-
-            assertEquals(
-                18,
-                testNode1
-                    .getClient()
-                    .getItemPopularity(
-                        GetItemPopularityRequest.newBuilder().setItemId("bar").build())
-                    .toCompletableFuture()
-                    .get(requestTimeout.getSeconds(), SECONDS)
-                    .getPopularityCount());
-            return null;
-          } catch (Exception ex) {
-            throw new RuntimeException(ex);
-          }
-        });
-
-    CompletionStage<Cart> response4 =
-        testNode2.getClient().checkout(CheckoutRequest.newBuilder().setCartId("cart-2").build());
-    Cart cart4 = response4.toCompletableFuture().get(requestTimeout.getSeconds(), SECONDS);
-    assertTrue(cart4.getCheckedOut());
   }
 }

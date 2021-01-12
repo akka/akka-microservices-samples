@@ -1,16 +1,15 @@
 // tag::handler[]
 package shopping.cart;
 
-import akka.Done;
 import akka.projection.eventsourced.EventEnvelope;
-import akka.projection.javadsl.Handler;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
+import akka.projection.jdbc.javadsl.JdbcHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import shopping.cart.repository.HibernateJdbcSession;
+import shopping.cart.repository.ItemPopularityRepository;
 
 public final class ItemPopularityProjectionHandler
-    extends Handler<EventEnvelope<ShoppingCart.Event>> { // <1>
+    extends JdbcHandler<EventEnvelope<ShoppingCart.Event>, HibernateJdbcSession> { // <1>
   private final Logger logger = LoggerFactory.getLogger(getClass());
   private final String tag;
   private final ItemPopularityRepository repo;
@@ -20,44 +19,49 @@ public final class ItemPopularityProjectionHandler
     this.repo = repo;
   }
 
+  private ItemPopularity findOrNew(String itemId) {
+    return repo.findById(itemId).orElseGet(() -> new ItemPopularity(itemId, 0, 0));
+  }
+
   @Override
-  public CompletionStage<Done> process(EventEnvelope<ShoppingCart.Event> envelope) // <2>
-      throws Exception, Exception {
+  public void process(
+      HibernateJdbcSession session, EventEnvelope<ShoppingCart.Event> envelope) { // <2>
     ShoppingCart.Event event = envelope.event();
 
     if (event instanceof ShoppingCart.ItemAdded) { // <3>
       ShoppingCart.ItemAdded added = (ShoppingCart.ItemAdded) event;
-      CompletionStage<Done> result = this.repo.update(added.itemId, added.quantity);
-      result.thenAccept(done -> logItemCount(added.itemId));
-      return result;
+      String itemId = added.itemId;
+
+      ItemPopularity existingItemPop = findOrNew(itemId);
+      ItemPopularity updatedItemPop = existingItemPop.changeCount(added.quantity);
+      repo.save(updatedItemPop);
+
+      logger.info(
+          "ItemPopularityProjectionHandler({}) item popularity for '{}': [{}]",
+          this.tag,
+          itemId,
+          updatedItemPop.getCount());
       // end::handler[]
     } else if (event instanceof ShoppingCart.ItemQuantityAdjusted) {
       ShoppingCart.ItemQuantityAdjusted adjusted = (ShoppingCart.ItemQuantityAdjusted) event;
-      CompletionStage<Done> result =
-          this.repo.update(adjusted.itemId, adjusted.newQuantity - adjusted.oldQuantity);
-      result.thenAccept(done -> logItemCount(adjusted.itemId));
-      return result;
+      String itemId = adjusted.itemId;
+
+      ItemPopularity existingItemPop = findOrNew(itemId);
+      ItemPopularity updatedItemPop =
+          existingItemPop.changeCount(adjusted.newQuantity - adjusted.oldQuantity);
+      repo.save(updatedItemPop);
+
     } else if (event instanceof ShoppingCart.ItemRemoved) {
       ShoppingCart.ItemRemoved removed = (ShoppingCart.ItemRemoved) event;
-      CompletionStage<Done> result = this.repo.update(removed.itemId, -removed.oldQuantity);
-      result.thenAccept(done -> logItemCount(removed.itemId));
-      return result;
+      String itemId = removed.itemId;
+
+      ItemPopularity existingItemPop = findOrNew(itemId);
+      ItemPopularity updatedItemPop = existingItemPop.changeCount(-removed.oldQuantity);
+      repo.save(updatedItemPop);
       // tag::handler[]
     } else {
       // skip all other events, such as `CheckedOut`
-      return CompletableFuture.completedFuture(Done.getInstance());
     }
-  }
-
-  private void logItemCount(String itemId) {
-    repo.getItem(itemId)
-        .thenAccept(
-            optCount ->
-                logger.info(
-                    "ItemPopularityProjectionHandler({}) item popularity for '{}': [{}]",
-                    this.tag,
-                    itemId,
-                    optCount.orElse(0L)));
   }
 }
 // end::handler[]

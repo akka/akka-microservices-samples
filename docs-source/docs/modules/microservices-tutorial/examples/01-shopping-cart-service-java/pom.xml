@@ -23,6 +23,7 @@
         <akka-management.version>1.0.9</akka-management.version>
         <alpakka-kafka.version>2.0.5</alpakka-kafka.version>
         <akka-projection.version>1.0.0+27-d86ee5c7</akka-projection.version>
+        <akka-persistence-jdbc.version>5.0.0-RC1</akka-persistence-jdbc.version>
         <akka-grpc.version>1.0.2</akka-grpc.version>
         <!-- needs to be defined to allow for overriding through mvn exec:exec -DAPP_CONFIG=local1.conf -->
         <APP_CONFIG>application.conf</APP_CONFIG>
@@ -110,7 +111,7 @@
         <dependency>
             <groupId>com.lightbend.akka</groupId>
             <artifactId>akka-persistence-jdbc_${scala.binary.version}</artifactId>
-            <version>4.0.0+43-de9fbab0</version>
+            <version>${akka-persistence-jdbc.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightbend.akka</groupId>
