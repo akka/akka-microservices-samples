@@ -13,7 +13,6 @@ import akka.management.javadsl.AkkaManagement;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import shopping.cart.proto.ShoppingCartService;
-import shopping.cart.repository.AsyncItemPopularityRepository;
 import shopping.cart.repository.ItemPopularityRepository;
 import shopping.cart.repository.SpringIntegration;
 
@@ -43,17 +42,14 @@ public class Main extends AbstractBehavior<Void> {
 
     ItemPopularityRepository itemPopularityRepository =
         springContext.getBean(ItemPopularityRepository.class);
-
+    
     ItemPopularityProjection.init(system, transactionManager, itemPopularityRepository);
 
     String grpcInterface =
         system.settings().config().getString("shopping-cart-service.grpc.interface");
     int grpcPort = system.settings().config().getInt("shopping-cart-service.grpc.port");
 
-    AsyncItemPopularityRepository asyncItemPopularityRepository =
-        new AsyncItemPopularityRepository(
-            system.dispatchers().lookup(DispatcherSelector.blocking()), itemPopularityRepository);
-    ShoppingCartService grpcService = new ShoppingCartServiceImpl(system, asyncItemPopularityRepository);
+    ShoppingCartService grpcService = new ShoppingCartServiceImpl(system, itemPopularityRepository);
 
     ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService);
 
