@@ -6,10 +6,6 @@
         </encoder>
     </appender>
 
-    <logger name="com.datastax.oss.driver" level="WARN"/>
-    <logger name="org.apache.cassandra" level="ERROR"/>
-    <logger name="com.codahale.metrics" level="INFO"/>
-
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
