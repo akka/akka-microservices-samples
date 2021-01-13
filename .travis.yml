@@ -205,4 +205,5 @@ cache:
 branches:
   only:
     - main
+    - main-with-operator
     - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
