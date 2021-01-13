@@ -86,7 +86,7 @@ Java::
 .src/main/java/shopping/cart/ItemPopularityRepository.java:
 [source,java,indent=0]
 ----
-include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityRepository.java[]
+include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/repository/ItemPopularityRepository.java[]
 ----
 
 Scala::
@@ -100,14 +100,6 @@ include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Ite
 .  Add the implementation for Cassandra:
 +
 [.tabset]
-Java::
-+
-.src/main/java/shopping/cart/ItemPopularityRepositoryImpl.java:
-[source,java,indent=0]
-----
-include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityRepositoryImpl.java[]
-----
-
 Scala::
 +
 .src/main/scala/shopping/cart/ItemPopularityRepository.scala:
