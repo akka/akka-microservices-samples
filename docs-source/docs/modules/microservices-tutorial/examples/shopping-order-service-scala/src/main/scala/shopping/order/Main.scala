@@ -23,6 +23,8 @@ class Main(context: ActorContext[Nothing])
     extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
+  println(s"# foo=${system.settings.config.getString("foo")} bar=${system.settings.config.getString("bar")}") // FIXME
+
   AkkaManagement(system).start()
   ClusterBootstrap(system).start()
 
