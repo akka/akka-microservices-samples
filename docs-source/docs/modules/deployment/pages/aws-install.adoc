@@ -53,13 +53,81 @@ An Kubernetes cluster can be created from the https://console.aws.amazon.com/iam
 eksctl create cluster --name eks-akka-demo --version 1.17 --region eu-central-1 --nodegroup-name linux-nodes --nodes 3 --nodes-min 1 --nodes-max 4 --with-oidc --managed
 ----
 
+
+
 NOTE: We recommend using EKS with EC2 nodes, and not the Fargate option.
+
+
+== Install metrics server
+
+The Akka Platform Operator depends on the https://github.com/kubernetes-sigs/metrics-server[Kubernetes Metrics Server {tab-icon}, window="tab"] being installed.
+
+You can install the latest version with:
+
+[source, shell script]
+----
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+----
 
 == Amazon Marketplace
 
 FIXME direct link to product page.
 
 Subscribe to the https://aws.amazon.com/marketplace[Lightbend Akka Platform Operator {tab-icon}, window="tab"].
+
+== Create a service account for the Akka Platform Operator
+
+The Akka Operator requires a https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html[service account with IAM roles {tab-icon}, window="tab"]
+
+If you EKS cluster has not been created with https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html[IAM OIDC provider {tab-icon}, window="tab"] (e.g. with the `--with-oidc` option with `eksctl`) then enable with:
+[source,shell script]
+----
+eksctl utils associate-iam-oidc-provider --cluster <cluster_name> --approve
+----
+
+Create an IAM policy for the service account:
+
+[source,shell script]
+----
+aws iam create-policy --policy-name AkkaPlatformOperator --policy-document file://policy
+----
+
+With the file contents as:
+
+[source, json]
+----
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "aws-marketplace:BatchMeterUsage",
+                "aws-marketplace:ResolveCustomer",
+                "aws-marketplace:MeterUsage"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+----
+
+Make a note of the policy ARN for the next step.
+
+Finally, create the `iamserviceaccount`:
+
+[source, shell script]
+----
+eksctl create iamserviceaccount \
+    --name akka-operator \
+    --namespace lightbend \
+    --cluster <cluster_name> \
+    --attach-policy-arn <policy_arn> \
+    --approve \
+    --override-existing-serviceaccounts
+----
+
+
 
 == Install Akka Platform Operator
 
@@ -78,7 +146,12 @@ FIXME update with the Marketplace ECR
 
 [source,shell script]
 ----
-helm install akka-operator target/akka-operator-<version>.tgz --namespace lightbend --set image.repository=803424716218.dkr.ecr.eu-central-1.amazonaws.com/akka-operator --set image.tag=<tag> --create-namespace
+helm install akka-operator target/akka-operator-<version>.tgz \
+  --namespace lightbend  \
+  --set image.repository=803424716218.dkr.ecr.eu-central-1.amazonaws.com/akka-operator  \
+  --set image.tag=<tag>  \
+  --set serviceAccount.name=akka-operator
+  --create-namespace
 ----
 
 Verify that the operator is running:
