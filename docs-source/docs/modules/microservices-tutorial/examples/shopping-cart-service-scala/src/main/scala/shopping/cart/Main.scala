@@ -15,7 +15,6 @@ import akka.grpc.GrpcClientSettings
 // end::SendOrderProjection[]
 
 // tag::ItemPopularityProjection[]
-import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
 
 // end::ItemPopularityProjection[]
 
@@ -39,17 +38,7 @@ class Main(context: ActorContext[Nothing])
   ShoppingCart.init(system)
 
   // tag::ItemPopularityProjection[]
-  val session = CassandraSessionRegistry(system).sessionFor(
-    "akka.persistence.cassandra"
-  ) // <1>
-  // use same keyspace for the item_popularity table as the offset store
-  val itemPopularityKeyspace =
-    system.settings.config
-      .getString("akka.projection.cassandra.offset-store.keyspace")
-  val itemPopularityRepository =
-    new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(
-      system.executionContext
-    ) // <2>
+  val itemPopularityRepository = new ItemPopularityRepositoryImpl() // <2>
 
   ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
   // end::ItemPopularityProjection[]

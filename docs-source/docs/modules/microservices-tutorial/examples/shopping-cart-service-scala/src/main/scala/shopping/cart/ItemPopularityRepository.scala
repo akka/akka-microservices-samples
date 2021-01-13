@@ -2,45 +2,43 @@
 // tag::impl[]
 package shopping.cart
 
-import scala.concurrent.Future
-import akka.Done
+import scalikejdbc._
 // end::trait[]
-import scala.concurrent.ExecutionContext
-import akka.stream.alpakka.cassandra.scaladsl.CassandraSession
 // end::impl[]
 
 // tag::trait[]
 
 trait ItemPopularityRepository {
-  def update(itemId: String, delta: Int): Future[Done]
-  def getItem(itemId: String): Future[Option[Long]]
+  def update(itemId: String, delta: Int): Unit
+  def getItem(itemId: String): Option[Long]
 }
 // end::trait[]
 
 // tag::impl[]
 
-object ItemPopularityRepositoryImpl {
-  val popularityTable = "item_popularity"
-}
+class ItemPopularityRepositoryImpl() extends ItemPopularityRepository {
 
-class ItemPopularityRepositoryImpl(session: CassandraSession, keyspace: String)(
-    implicit val ec: ExecutionContext)
-    extends ItemPopularityRepository {
-  import ItemPopularityRepositoryImpl.popularityTable
-
-  override def update(itemId: String, delta: Int): Future[Done] = {
-    session.executeWrite(
-      s"UPDATE $keyspace.$popularityTable SET count = count + ? WHERE item_id = ?",
-      java.lang.Long.valueOf(delta),
-      itemId)
+  override def update(itemId: String, delta: Int): Unit = {
+    // TODO hook into transaction
+    DB.localTx { implicit session =>
+      // This uses the PostgreSQL `ON CONFLICT` feature
+      // Alternatively, this can be implemented by first issuing the `UPDATE`
+      // and checking for the updated rows count. If no rows got updated issue
+      // the `INSERT` instead.
+      sql"""
+           INSERT INTO item_popularity (itemid, count) VALUES ($itemId, $delta)
+           ON CONFLICT (itemid) DO UPDATE SET count = item_popularity.count + $delta
+         """.executeUpdate().apply()
+    }
   }
 
-  override def getItem(itemId: String): Future[Option[Long]] = {
-    session
-      .selectOne(
-        s"SELECT item_id, count FROM $keyspace.$popularityTable WHERE item_id = ?",
-        itemId)
-      .map(opt => opt.map(row => row.getLong("count").longValue()))
+  override def getItem(itemId: String): Option[Long] = {
+    DB.readOnly { implicit session =>
+      sql"SELECT count FROM item_popularity WHERE itemid = $itemId"
+        .map(_.long("count"))
+        .toOption()
+        .apply()
+    }
   }
 }
 // end::impl[]

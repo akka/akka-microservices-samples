@@ -107,7 +107,8 @@ class ShoppingCartServiceImpl(
   // tag::getItemPopularity[]
   override def getItemPopularity(in: proto.GetItemPopularityRequest)
       : Future[proto.GetItemPopularityResponse] = {
-    itemPopularityRepository.getItem(in.itemId).map {
+    // TODO proper async
+    Future(itemPopularityRepository.getItem(in.itemId)).map {
       case Some(count) =>
         proto.GetItemPopularityResponse(in.itemId, count)
       case None =>

@@ -4,15 +4,16 @@ package shopping.cart
 import akka.actor.typed.ActorSystem
 import akka.cluster.sharding.typed.ShardedDaemonProcessSettings
 import akka.cluster.sharding.typed.scaladsl.ShardedDaemonProcess
-import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
+import akka.persistence.jdbc.query.scaladsl.JdbcReadJournal
 import akka.persistence.query.Offset
 import akka.projection.ProjectionBehavior
 import akka.projection.ProjectionId
-import akka.projection.cassandra.scaladsl.CassandraProjection
+import akka.projection.jdbc.scaladsl.JdbcProjection
 import akka.projection.eventsourced.EventEnvelope
 import akka.projection.eventsourced.scaladsl.EventSourcedProvider
 import akka.projection.scaladsl.AtLeastOnceProjection
 import akka.projection.scaladsl.SourceProvider
+import shopping.cart.repository.ScalikeJdbcSession
 
 object ItemPopularityProjection {
   // tag::howto-read-side-without-role[]
@@ -40,15 +41,16 @@ object ItemPopularityProjection {
         : SourceProvider[Offset, EventEnvelope[ShoppingCart.Event]] = // <3>
       EventSourcedProvider.eventsByTag[ShoppingCart.Event](
         system = system,
-        readJournalPluginId = CassandraReadJournal.Identifier, // <4>
+        readJournalPluginId = JdbcReadJournal.Identifier, // <4>
         tag = tag)
 
-    CassandraProjection.atLeastOnce( // <5>
+    // TODO exactlyOnce
+    JdbcProjection.atLeastOnce( // <5>
       projectionId = ProjectionId("ItemPopularityProjection", tag),
       sourceProvider,
       handler = () =>
-        new ItemPopularityProjectionHandler(tag, system, repository) // <6>
-    )
+        new ItemPopularityProjectionHandler(tag, system, repository), // <6>
+      sessionFactory = () => new ScalikeJdbcSession())(system)
   }
 
 }

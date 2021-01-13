@@ -1,39 +1,64 @@
 package shopping.cart
 
+import akka.Done
 import akka.actor.typed.ActorSystem
-import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
-import shopping.cart.ItemPopularityRepositoryImpl.popularityTable
+import akka.persistence.jdbc.testkit.scaladsl.SchemaUtils
+import akka.projection.jdbc.scaladsl.JdbcProjection
+import org.slf4j.LoggerFactory
+import scalikejdbc.ConnectionPool
+import shopping.cart.repository.ScalikeJdbcSession
+
+import java.nio.file.Paths
+import scala.concurrent.duration._
+import scala.concurrent.{ Await, ExecutionContext }
 
 object CreateTableTestUtils {
 
-  def createTables(system: ActorSystem[_]): Unit = {
-    import org.slf4j.LoggerFactory
-    import akka.projection.cassandra.scaladsl.CassandraProjection
-    import scala.concurrent.Await
-    import scala.concurrent.duration._
+  def setupScalikeJdbcConnectionPool(system: ActorSystem[_]): Unit = {
+    val c = system.settings.config.getConfig("db.default")
+    ConnectionPool.singleton(
+      c.getString("url"),
+      c.getString("user"),
+      c.getString("password"))
+  }
 
-    // ok to block here, main thread
-    Await.result(
-      CassandraProjection.createOffsetTableIfNotExists()(system),
-      30.seconds)
+  def closeScalikeJdbcConnectionPool(): Unit = {
+    ConnectionPool.close()
+  }
 
-    // use same keyspace for the item_popularity table as the offset store
-    val keyspace = system.settings.config
-      .getString("akka.projection.cassandra.offset-store.keyspace")
-    val session =
-      CassandraSessionRegistry(system).sessionFor("akka.persistence.cassandra")
+  def dropAndRecreateTables(system: ActorSystem[_]): Unit = {
+    implicit val sys: ActorSystem[_] = system
+    implicit val ec: ExecutionContext = system.executionContext
 
-    Await.result(
-      session.executeDDL(
-        s"""CREATE TABLE IF NOT EXISTS $keyspace.$popularityTable (
-      item_id text,
-      count counter,
-      PRIMARY KEY (item_id))
-      """),
-      30.seconds)
+    val scalikeJdbcSession = new ScalikeJdbcSession()
+    try {
+      // ok to block here, main thread
+      Await.result(
+        for {
+          _ <- SchemaUtils.dropIfExists()
+          _ <- SchemaUtils.createIfNotExists()
+          _ <- JdbcProjection.dropOffsetTableIfExists(() => scalikeJdbcSession)
+          _ <- JdbcProjection.createOffsetTableIfNotExists(() =>
+            scalikeJdbcSession)
+          _ <- SchemaUtils.applyScript(
+            fromFileAsString("ddl-scripts/drop_user_tables.sql"))
+          _ <- SchemaUtils.applyScript(
+            fromFileAsString("ddl-scripts/create_user_tables.sql"))
+        } yield Done,
+        30.seconds)
+    } finally {
+      scalikeJdbcSession.close()
+    }
 
     LoggerFactory
       .getLogger("shopping.cart.CreateTableTestUtils")
-      .info("Created keyspace [{}] and tables", keyspace)
+      .info("Created tables")
+  }
+
+  private def fromFileAsString(fileName: String): String = {
+    val source = scala.io.Source.fromFile(Paths.get(fileName).toFile)
+    val contents = source.mkString
+    source.close()
+    contents
   }
 }
