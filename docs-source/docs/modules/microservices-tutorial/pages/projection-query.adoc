@@ -299,7 +299,7 @@ include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 ----
 +
 <1> Add the `ItemPopularityRepository` to the service implementation constructor.
-<2> Use the `ActorSystem` to get an instance of an `Executor` tailored for blocking operations.
+<2> Use the `ActorSystem` to get an instance of an `Executor` tailored for running JDBC blocking operations.
 <3> Implement `getItemPopularity` by calling the repository to find the projected model by id and wrap it with `CompletableFuture.supplyAsync`. 
 
 Scala::
@@ -313,7 +313,9 @@ include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 [.group-java]
 [IMPORTANT]
 ====
-Calls to the repository are blocking therefore we wrap it with `CompletableFuture.supplyAsync` and we use the blocking executor to run it. Make sure to follow that pattern whenever you interact with a DB repository or any blocking service. 
+Calls to the repository are blocking therefore we wrap it with `CompletableFuture.supplyAsync` and we use the JDBC blocking executor to run it. This is a pre-configured dispatcher provided by Akka Projections. Its pool size can be configured with settings `akka.projection.jdbc.blocking-jdbc-dispatcher.thread-pool-executor.fixed-pool-size` (see src/main/resources/persistence.conf).
+
+Make sure to follow that pattern whenever you interact with a DB repository. 
 ====
 
 == Run locally
