@@ -5,6 +5,11 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import akka.actor.typed.ActorSystem;
 import akka.persistence.jdbc.testkit.javadsl.SchemaUtils;
 import akka.projection.jdbc.javadsl.JdbcProjection;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.stream.Stream;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import shopping.cart.repository.HibernateJdbcSession;
@@ -21,20 +26,30 @@ public class CreateTableTestUtils {
     // create schemas
     // ok to block here, main test thread
     SchemaUtils.dropIfExists(system).toCompletableFuture().get(30, SECONDS);
-    ;
     SchemaUtils.createIfNotExists(system).toCompletableFuture().get(30, SECONDS);
 
     JdbcProjection.dropOffsetTableIfExists(
             () -> new HibernateJdbcSession(transactionManager), system)
         .toCompletableFuture()
         .get(30, SECONDS);
-    ;
     JdbcProjection.createOffsetTableIfNotExists(
             () -> new HibernateJdbcSession(transactionManager), system)
         .toCompletableFuture()
         .get(30, SECONDS);
-    ;
+
+    SchemaUtils.applyScript(loadFile("ddl-scripts/drop_user_tables.sql"), system);
+    SchemaUtils.applyScript(loadFile("ddl-scripts/create_user_tables.sql"), system);
 
     LoggerFactory.getLogger(CreateTableTestUtils.class).info("Tables created");
+  }
+
+  private static String loadFile(String filePath) {
+    StringBuilder contentBuilder = new StringBuilder();
+    try (Stream<String> stream = Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)) {
+      stream.forEach(s -> contentBuilder.append(s).append("\n"));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+    return contentBuilder.toString();
   }
 }

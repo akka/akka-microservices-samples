@@ -333,7 +333,7 @@ docker-compose up -d
 +
 [source,sql,indent=0]
 ----
-include::example$04-shopping-cart-service-java/ddl-scripts/create_user_tables.sql[tag=create]
+include::example$04-shopping-cart-service-java/ddl-scripts/create_user_tables.sql[]
 ----
 
 . Load the file into Postgres:

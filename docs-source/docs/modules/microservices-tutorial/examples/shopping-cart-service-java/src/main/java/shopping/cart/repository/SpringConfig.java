@@ -47,7 +47,6 @@ public class SpringConfig {
   public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
 
     HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-    vendorAdapter.setGenerateDdl(true);
     vendorAdapter.setDatabase(Database.POSTGRESQL);
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
