@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.Database;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -35,6 +36,7 @@ public class SpringConfig {
 
     HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
     vendorAdapter.setGenerateDdl(true);
+    vendorAdapter.setDatabase(Database.POSTGRESQL);
 
     LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
     factory.setJpaVendorAdapter(vendorAdapter);
@@ -61,7 +63,7 @@ public class SpringConfig {
     Properties properties = new Properties();
 
     Config additionalProperties =
-        this.config.getConfig("jdbc-connection-settings.additional-properties");
+            this.config.getConfig("jdbc-connection-settings.additional-properties");
     Set<Map.Entry<String, ConfigValue>> entries = additionalProperties.entrySet();
 
     for (Map.Entry<String, ConfigValue> entry : entries) {
