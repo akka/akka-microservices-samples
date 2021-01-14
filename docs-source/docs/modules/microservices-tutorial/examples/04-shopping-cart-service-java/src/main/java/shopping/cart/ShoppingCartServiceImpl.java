@@ -28,12 +28,16 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
 
   // tag::getItemPopularity[]
   private final ItemPopularityRepository repository;
-  private final Executor blockingExecutor;
+  private final Executor blockingJdbcExecutor;
 
   public ShoppingCartServiceImpl(
       ActorSystem<?> system, ItemPopularityRepository repository) { // <1>
-    this.blockingExecutor = system.dispatchers().lookup(DispatcherSelector.blocking()); // <2>
-    this.repository = repository; // <2>
+
+    DispatcherSelector dispatcherSelector =
+        DispatcherSelector.fromConfig("akka.projection.jdbc.blocking-jdbc-dispatcher");
+    this.blockingJdbcExecutor = system.dispatchers().lookup(dispatcherSelector); // <2>
+
+    this.repository = repository;
     timeout = system.settings().config().getDuration("shopping-cart-service.ask-timeout");
     sharding = ClusterSharding.get(system);
   }
@@ -111,7 +115,7 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
 
     CompletionStage<Optional<ItemPopularity>> itemPopularity =
         CompletableFuture.supplyAsync(
-            () -> repository.findById(in.getItemId()), blockingExecutor); // <3>
+            () -> repository.findById(in.getItemId()), blockingJdbcExecutor); // <3>
 
     return itemPopularity.thenApply(
         popularity -> {

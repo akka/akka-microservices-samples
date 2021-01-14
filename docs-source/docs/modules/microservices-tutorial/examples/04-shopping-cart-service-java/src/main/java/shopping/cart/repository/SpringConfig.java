@@ -2,16 +2,17 @@ package shopping.cart.repository;
 
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigValue;
+import com.zaxxer.hikari.HikariDataSource;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.dao.annotation.PersistenceExceptionTranslationPostProcessor;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.Database;
@@ -67,12 +68,26 @@ public class SpringConfig {
    */
   @Bean
   public DataSource dataSource() {
-    // FIXME: this needs to be wrapped in a connection pool
-    DriverManagerDataSource dataSource = new DriverManagerDataSource();
+
+    HikariDataSource dataSource = new HikariDataSource();
+
+    // pool configuration
+    dataSource.setPoolName("read-side-connection-pool");
+    dataSource.setMaximumPoolSize(
+        config.getInt("jdbc-connection-settings.connection-pool.max-pool-size"));
+
+    long timeout =
+        config.getDuration(
+            "jdbc-connection-settings.connection-pool.timeout", TimeUnit.MILLISECONDS);
+    dataSource.setConnectionTimeout(timeout);
+
+    // database configuration
     dataSource.setDriverClassName(config.getString("jdbc-connection-settings.driver"));
-    dataSource.setUrl(config.getString("jdbc-connection-settings.url"));
+    dataSource.setJdbcUrl(config.getString("jdbc-connection-settings.url"));
     dataSource.setUsername(config.getString("jdbc-connection-settings.user"));
     dataSource.setPassword(config.getString("jdbc-connection-settings.password"));
+    dataSource.setAutoCommit(false);
+
     return dataSource;
   }
 
