@@ -32,6 +32,14 @@
         <version.number>${git.commit.time}-${git.commit.id.abbrev}</version.number>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>akka-maven</id>
+            <name>Akka Bintray Snapshots Repository</name>
+            <url>https://dl.bintray.com/akka/snapshots</url>
+        </repository>
+    </repositories>
+    
     <dependencyManagement>
         <dependencies>
             <dependency>

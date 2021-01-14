@@ -31,6 +31,14 @@
              It can be defined with -Dversion.number=0.1-SNAPSHOT if git is not used -->
         <version.number>${git.commit.time}-${git.commit.id.abbrev}</version.number>
     </properties>
+    
+    <repositories>
+        <repository>
+            <id>akka-maven</id>
+            <name>Akka Bintray Snapshots Repository</name>
+            <url>https://dl.bintray.com/akka/snapshots</url>
+        </repository>
+    </repositories>
 
     <dependencyManagement>
         <dependencies>
