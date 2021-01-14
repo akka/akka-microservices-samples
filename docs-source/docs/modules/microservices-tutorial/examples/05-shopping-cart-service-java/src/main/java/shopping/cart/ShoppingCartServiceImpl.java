@@ -110,7 +110,8 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
   public CompletionStage<GetItemPopularityResponse> getItemPopularity(GetItemPopularityRequest in) {
 
     CompletionStage<Optional<ItemPopularity>> itemPopularity =
-      CompletableFuture.supplyAsync(() -> repository.findById(in.getItemId()), blockingExecutor); // <3>
+      CompletableFuture.supplyAsync(() -> 
+        repository.findById(in.getItemId()), blockingExecutor); // <3>
 
     return itemPopularity.thenApply(
         popularity -> {

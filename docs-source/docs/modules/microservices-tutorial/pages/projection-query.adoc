@@ -88,8 +88,8 @@ Java::
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/Main.java[tag=repo-instance]
 ----
 +
-<1> initialize a Spring application context using ActorSystem's configuration
-<2> get a Spring generated implementation for the `ItemPopularityRepository`
+<1> Initialize a Spring application context using ActorSystem's configuration.
+<2> Get a Spring generated implementation for the `ItemPopularityRepository`.
 
 Scala::
 +
@@ -111,9 +111,9 @@ Java::
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjectionHandler.java[tags=handler]
 ----
 +
-<1> extends `akka.projection.javadsl.Handler`
-<2> the `process` method to implement
-<3> match events and increment or decrement the count via the `ItemPopularityRepository`, which encapsulates the database access
+<1> Extends `akka.projection.javadsl.Handler`.
+<2> The `process` method to implement.
+<3> Match events and increment or decrement the count via the `ItemPopularityRepository`, which encapsulates the database access.
 
 Scala::
 +
@@ -123,9 +123,9 @@ Scala::
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala[tags=handler]
 ----
 +
-<1> extends `akka.projection.scaladsl.Handler`
-<2> the `process` method to implement
-<3> match events and increment or decrement the count via the `ItemPopularityRepository`
+<1> Extends `akka.projection.scaladsl.Handler`.
+<2> The `process` method to implement.
+<3> Match events and increment or decrement the count via the `ItemPopularityRepository`.
 
 == Initialize the Projection
 
@@ -172,7 +172,7 @@ Java::
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=withTagger]
 ----
 +
-<1> `tagsFor` to assign the `projectionTag`
+<1> Use `tagsFor` to assign the `projectionTag`.
 
 Scala::
 +
@@ -182,7 +182,7 @@ Scala::
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=withTagger]
 ----
 +
-<1> `withTagger` to assign the `projectionTag`
+<1> Use `withTagger` to assign the `projectionTag`.
 
 
 NOTE: In this example, we use five different tags. Tagging is not easy to change later without system downtime. Before going live in production you should consider how many tags to use, see {akka-projection}/running.html[Akka Projections reference documentation {tab-icon}, window="tab"] for more information.
@@ -237,10 +237,10 @@ Java::
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/Main.java[tag=ItemPopularityProjection]
 ----
 +
-<1> initialize a Spring application context using ActorSystem's configuration
-<2> get a Spring generated implementation for the `ItemPopularityRepository`
-<3> get a Spring `JpaTransactionManager` to pass to the Projection init method
-<4> initialize the Projection passing all necessary dependencies
+<1> Initialize a Spring application context using ActorSystem's configuration.
+<2> Get a Spring generated implementation for the `ItemPopularityRepository`.
+<3> Get a Spring `JpaTransactionManager` to pass to the Projection init method.
+<4> Initialize the Projection passing all necessary dependencies.
 
 Scala::
 +
@@ -250,9 +250,9 @@ Scala::
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=ItemPopularityProjection]
 ----
 +
-<1> The `CassandraSession` is looked up from the `CassandraSessionRegistry`
-<2> Instantiate the repository for Cassandra
-<3> Call the initialization of the Projection
+<1> The `CassandraSession` is looked up from the `CassandraSessionRegistry`.
+<2> Instantiate the repository for Cassandra.
+<3> Call the initialization of the Projection.
 
 == Query
 
@@ -298,9 +298,9 @@ Java::
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServiceImpl.java[tag=getItemPopularity]
 ----
 +
-<1> add the `ItemPopularityRepository` to the service implementation constructor
-<2> use the `ActorSystem` to get an instance of an `Executor` tailored for blocking operations
-<3> Implement `getItemPopularity` by calling the repository to find the projected model by id. Note that calls to repository are blocking therefore we wrap the call using `CompletableFuture.supplyAsync` and we use the blocking executor to run it.
+<1> Add the `ItemPopularityRepository` to the service implementation constructor.
+<2> Use the `ActorSystem` to get an instance of an `Executor` tailored for blocking operations.
+<3> Implement `getItemPopularity` by calling the repository to find the projected model by id and wrap it with `CompletableFuture.supplyAsync`. 
 
 Scala::
 +
@@ -309,6 +309,12 @@ Scala::
 ----
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=getItemPopularity]
 ----
+
+[.group-java]
+[IMPORTANT]
+====
+Calls to the repository are blocking therefore we wrap it with `CompletableFuture.supplyAsync` and we use the blocking executor to run it. Make sure to follow that pattern whenever you interact with a DB repository or any blocking service. 
+====
 
 == Run locally
 
