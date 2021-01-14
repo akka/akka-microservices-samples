@@ -322,7 +322,7 @@ Make sure to follow that pattern whenever you interact with a DB repository.
 
 Try your solution by running locally:
 
-. Start Cassandra, unless it's already running:
+. Start the docker containers, unless they are already running:
 +
 [source,shell script]
 ----
@@ -340,7 +340,7 @@ include::example$04-shopping-cart-service-java/ddl-scripts/create_user_tables.sq
 +
 [source,shell script]
 ----
-docker exec -i shopping-cart-service_postgres-db_1 psql -U shopping-cart -t < ddl-scripts/create_tables.sql
+docker exec -i shopping-cart-service_postgres-db_1 psql -U shopping-cart -t < ddl-scripts/create_user_tables.sql
 ----
 +
 include::docker-important.adoc[]
@@ -394,7 +394,7 @@ grpcurl -d '{"itemId":"hoodie"}' -plaintext 127.0.0.1:8101 shoppingcart.Shopping
 
 === Stop the service
 
-When finished, stop the service with `ctrl-c`. Leave Cassandra running for the next set of steps, or stop it with:
+When finished, stop the service with `ctrl-c`. Leave Postgres running for the next set of steps, or stop it with:
 
 [source,shell script]
 ----
