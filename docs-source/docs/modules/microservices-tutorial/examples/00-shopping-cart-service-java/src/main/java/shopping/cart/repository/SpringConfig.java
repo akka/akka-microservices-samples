@@ -19,7 +19,6 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-
 @Configuration
 @EnableJpaRepositories
 @EnableTransactionManagement
@@ -63,7 +62,7 @@ public class SpringConfig {
     Properties properties = new Properties();
 
     Config additionalProperties =
-            this.config.getConfig("jdbc-connection-settings.additional-properties");
+        this.config.getConfig("jdbc-connection-settings.additional-properties");
     Set<Map.Entry<String, ConfigValue>> entries = additionalProperties.entrySet();
 
     for (Map.Entry<String, ConfigValue> entry : entries) {

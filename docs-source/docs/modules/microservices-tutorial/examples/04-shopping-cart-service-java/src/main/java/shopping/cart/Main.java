@@ -8,10 +8,8 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import akka.management.cluster.bootstrap.ClusterBootstrap;
 import akka.management.javadsl.AkkaManagement;
-
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.jpa.JpaTransactionManager;
-
 import shopping.cart.proto.ShoppingCartService;
 import shopping.cart.repository.ItemPopularityRepository;
 import shopping.cart.repository.SpringIntegration;
@@ -48,7 +46,8 @@ public class Main extends AbstractBehavior<Void> {
     // end::ItemPopularityProjection[]
 
     // tag::ItemPopularityProjection[]
-    JpaTransactionManager transactionManager = springContext.getBean(JpaTransactionManager.class); // <3>
+    JpaTransactionManager transactionManager =
+        springContext.getBean(JpaTransactionManager.class); // <3>
 
     ItemPopularityProjection.init(system, transactionManager, itemPopularityRepository); // <4>
     // end::ItemPopularityProjection[]

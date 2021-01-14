@@ -2,7 +2,6 @@ package shopping.cart;
 
 import akka.actor.typed.ActorSystem;
 import akka.actor.typed.Behavior;
-import akka.actor.typed.DispatcherSelector;
 import akka.actor.typed.javadsl.AbstractBehavior;
 import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
@@ -50,7 +49,7 @@ public class Main extends AbstractBehavior<Void> {
 
     ItemPopularityRepository itemPopularityRepository =
         springContext.getBean(ItemPopularityRepository.class);
-    
+
     ItemPopularityProjection.init(system, transactionManager, itemPopularityRepository);
 
     String grpcInterface =

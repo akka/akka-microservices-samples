@@ -37,7 +37,7 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
     timeout = system.settings().config().getDuration("shopping-cart-service.ask-timeout");
     sharding = ClusterSharding.get(system);
   }
-  
+
   // end::getItemPopularity[]
 
   @Override
@@ -110,8 +110,8 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
   public CompletionStage<GetItemPopularityResponse> getItemPopularity(GetItemPopularityRequest in) {
 
     CompletionStage<Optional<ItemPopularity>> itemPopularity =
-      CompletableFuture.supplyAsync(() -> 
-        repository.findById(in.getItemId()), blockingExecutor); // <3>
+        CompletableFuture.supplyAsync(
+            () -> repository.findById(in.getItemId()), blockingExecutor); // <3>
 
     return itemPopularity.thenApply(
         popularity -> {
