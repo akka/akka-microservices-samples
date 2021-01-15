@@ -56,7 +56,7 @@ Akka Persistence Cassandra includes a check to validate connectivity, as the ser
 include::microservices-tutorial:example$shopping-cart-service-scala/src/main/resources/persistence.conf[tag=healthchecks-for-cassandra]
 ----
 
-Following Colin Breck's advice, we do not include Cassandra connectivity checks in oue liveness probe.
+Following Colin Breck's advice, we do not include Cassandra connectivity checks in our liveness probe.
 
 Try the readiness check with `curl`
 
