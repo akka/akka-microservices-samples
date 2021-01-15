@@ -55,6 +55,13 @@ eksctl create cluster --name eks-akka-demo --version 1.17 --region eu-central-1 
 
 NOTE: We recommend using EKS with EC2 nodes, and not the Fargate option.
 
+Configure kubectl to connect to the cluster
+
+[source, shell script]
+----
+ aws eks update-kubeconfig --region eu-central-1 --name eks-akka-demo
+----
+
 == Amazon Marketplace
 
 FIXME direct link to product page.
