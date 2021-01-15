@@ -5,9 +5,9 @@ import static java.util.concurrent.TimeUnit.SECONDS;
 import akka.actor.typed.ActorSystem;
 import akka.persistence.jdbc.testkit.javadsl.SchemaUtils;
 import akka.projection.jdbc.javadsl.JdbcProjection;
-import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
 import org.slf4j.LoggerFactory;
@@ -37,18 +37,28 @@ public class CreateTableTestUtils {
         .toCompletableFuture()
         .get(30, SECONDS);
 
-    SchemaUtils.applyScript(loadFile("ddl-scripts/drop_user_tables.sql"), system);
-    SchemaUtils.applyScript(loadFile("ddl-scripts/create_user_tables.sql"), system);
+    dropCreateUserTables(system);
 
     LoggerFactory.getLogger(CreateTableTestUtils.class).info("Tables created");
   }
 
-  private static String loadFile(String filePath) {
-    try {
-      return Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)
-          .collect(Collectors.joining("\n"));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+  /**
+   * Drops and create user tables (if applicable)
+   *
+   * <p>This file is only created on step 4 (projection query). Calling this method has no effect on
+   * previous steps.
+   */
+  private static void dropCreateUserTables(ActorSystem<?> system) throws Exception {
+
+    Path path = Paths.get("ddl-scripts/create_user_tables.sql");
+    if (path.toFile().exists()) {
+      SchemaUtils.applyScript("DROP TABLE IF EXISTS public.item_popularity;", system)
+          .toCompletableFuture()
+          .get(30, SECONDS);
+
+      String script = Files.lines(path, StandardCharsets.UTF_8).collect(Collectors.joining("\n"));
+      SchemaUtils.applyScript(script, system).toCompletableFuture().get(30, SECONDS);
+      ;
     }
   }
 }
