@@ -72,7 +72,7 @@ FIXME update with the Marketplace ECR
 aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 803424716218.dkr.ecr.eu-central-1.amazonaws.com
 ----
 
-Install the Akka Platform operator with Helm:
+Install the Akka Platform Operator with Helm:
 
 FIXME update with the Marketplace ECR
 
