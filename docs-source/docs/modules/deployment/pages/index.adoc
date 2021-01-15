@@ -11,7 +11,7 @@ The Akka Platform Operator provides the following high level features:
 * convenient deployment without having to define detailed Kubernetes manifests
 * integration with Akka Cluster Bootstrap
 * integration with Akka Management health checks
-* integration with relational databases and Cassandra
+* integration with Relational Databases and Cassandra
 * integration with Kafka
 * support for gRPC and HTTP services and internet facing ingress
 * insights to deployment status
@@ -25,12 +25,12 @@ image::deployment-overview1.png[Deployment 1]
 
 . A https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes Custom Resource Definition {tab-icon}, window="tab"] named `akkamicroservices.akka.lightbend.com` defines the deployment descriptor resource for Akka Microservices applications that that the Akka Operator will deploy.
 . The Akka Operator is installed and is always running in the Kubernetes cluster.
-. A Docker image of the Akka Microservices application is built and published with Maven or sbt.
+. A Docker image of the Akka Microservices application is built and published.
 . The deployment descriptor for the Akka Microservice is defined in a yaml file. It refers to the Docker published image and specifies other operational properties. It is applied to the Kubernetes cluster with `kubectl` (Kubernetes standard command-line tool).
 . The operator sees the new deployment descriptor and creates a https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes Deployment {tab-icon}, window="tab"]
-. The container in the Pod downloads the application image and starts the Akka Microservices application in the JVM using additional configuration provided by the Akka Platform Operator.
+. The application image is downloaded and the Akka Microservices application is started. The Akka Platform Operator automatically provides additional configuration to the application.
 
-When updating the Akka Microservice the steps 3 - 6 are repeated. The Akka Platform Operator sees the changes to the deployment descriptor and updates the Kubernetes Deployment accordingly. Kubernetes performs a rolling update of the application.
+When updating the Akka Microservices application the steps 3 - 6 are repeated. The Akka Platform Operator sees the changes to the deployment descriptor and updates the Kubernetes Deployment accordingly. Kubernetes performs a rolling update of the application.
 
 === Deploying another Akka Microservice
 
