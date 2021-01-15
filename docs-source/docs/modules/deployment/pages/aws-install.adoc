@@ -79,7 +79,7 @@ Subscribe to the https://aws.amazon.com/marketplace[Lightbend Akka Platform Oper
 
 The Akka Operator requires a https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html[service account with IAM roles {tab-icon}, window="tab"]
 
-If you EKS cluster has not been created with https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html[IAM OIDC provider {tab-icon}, window="tab"] (e.g. with the `--with-oidc` option with `eksctl`) then enable with:
+If your EKS cluster has not been created with https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html[IAM OIDC provider {tab-icon}, window="tab"] (e.g. with the `--with-oidc` option with `eksctl`) then enable with:
 [source,shell script]
 ----
 eksctl utils associate-iam-oidc-provider --cluster <cluster_name> --approve
