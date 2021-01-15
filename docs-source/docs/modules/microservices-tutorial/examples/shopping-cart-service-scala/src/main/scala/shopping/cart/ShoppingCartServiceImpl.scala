@@ -1,15 +1,14 @@
 package shopping.cart
 
 import java.util.concurrent.TimeoutException
-
 import scala.concurrent.Future
-
 import akka.actor.typed.ActorSystem
 import akka.cluster.sharding.typed.scaladsl.ClusterSharding
 import akka.grpc.GrpcServiceException
 import akka.util.Timeout
 import io.grpc.Status
 import org.slf4j.LoggerFactory
+import shopping.cart.repository.ScalikeJdbcSession
 
 // tag::moreOperations[]
 import akka.actor.typed.ActorRef
@@ -108,7 +107,14 @@ class ShoppingCartServiceImpl(
   override def getItemPopularity(in: proto.GetItemPopularityRequest)
       : Future[proto.GetItemPopularityResponse] = {
     // TODO proper async
-    Future(itemPopularityRepository.getItem(in.itemId)).map {
+    Future {
+      val session = new ScalikeJdbcSession()
+      try {
+        itemPopularityRepository.getItem(session, in.itemId)
+      } finally {
+        session.close()
+      }
+    }.map {
       case Some(count) =>
         proto.GetItemPopularityResponse(in.itemId, count)
       case None =>

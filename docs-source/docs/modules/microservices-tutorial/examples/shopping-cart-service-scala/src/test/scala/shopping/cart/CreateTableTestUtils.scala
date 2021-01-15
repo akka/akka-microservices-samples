@@ -5,8 +5,7 @@ import akka.actor.typed.ActorSystem
 import akka.persistence.jdbc.testkit.scaladsl.SchemaUtils
 import akka.projection.jdbc.scaladsl.JdbcProjection
 import org.slf4j.LoggerFactory
-import scalikejdbc.ConnectionPool
-import shopping.cart.repository.ScalikeJdbcSession
+import shopping.cart.repository.{ DBsFromConfig, ScalikeJdbcSession }
 
 import java.nio.file.Paths
 import scala.concurrent.duration._
@@ -14,16 +13,16 @@ import scala.concurrent.{ Await, ExecutionContext }
 
 object CreateTableTestUtils {
 
+  private var scalikeJdbc: DBsFromConfig = _
+
   def setupScalikeJdbcConnectionPool(system: ActorSystem[_]): Unit = {
-    val c = system.settings.config.getConfig("db.default")
-    ConnectionPool.singleton(
-      c.getString("url"),
-      c.getString("user"),
-      c.getString("password"))
+    scalikeJdbc = new DBsFromConfig(system.settings.config)
+    scalikeJdbc.loadGlobalSettings()
+    scalikeJdbc.setup()
   }
 
   def closeScalikeJdbcConnectionPool(): Unit = {
-    ConnectionPool.close()
+    scalikeJdbc.closeAll()
   }
 
   def dropAndRecreateTables(system: ActorSystem[_]): Unit = {

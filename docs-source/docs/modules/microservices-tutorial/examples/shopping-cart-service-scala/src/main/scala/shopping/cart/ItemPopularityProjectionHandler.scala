@@ -22,8 +22,8 @@ class ItemPopularityProjectionHandler(
       envelope: EventEnvelope[ShoppingCart.Event]): Unit = { // <2>
     envelope.event match { // <3>
       case ShoppingCart.ItemAdded(_, itemId, quantity) =>
-        repo.update(itemId, quantity)
-        logItemCount(itemId)
+        repo.update(session, itemId, quantity)
+        logItemCount(session, itemId)
 
       // end::handler[]
       case ShoppingCart.ItemQuantityAdjusted(
@@ -31,12 +31,12 @@ class ItemPopularityProjectionHandler(
             itemId,
             newQuantity,
             oldQuantity) =>
-        repo.update(itemId, newQuantity - oldQuantity)
-        logItemCount(itemId)
+        repo.update(session, itemId, newQuantity - oldQuantity)
+        logItemCount(session, itemId)
 
       case ShoppingCart.ItemRemoved(_, itemId, oldQuantity) =>
-        repo.update(itemId, 0 - oldQuantity)
-        logItemCount(itemId)
+        repo.update(session, itemId, 0 - oldQuantity)
+        logItemCount(session, itemId)
 
       // tag::handler[]
 
@@ -44,12 +44,14 @@ class ItemPopularityProjectionHandler(
     }
   }
 
-  private def logItemCount(itemId: String): Unit = {
+  private def logItemCount(
+      session: ScalikeJdbcSession,
+      itemId: String): Unit = {
     log.info(
       "ItemPopularityProjectionHandler({}) item popularity for '{}': [{}]",
       tag,
       itemId,
-      repo.getItem(itemId).getOrElse(0))
+      repo.getItem(session, itemId).getOrElse(0))
   }
 
 }
