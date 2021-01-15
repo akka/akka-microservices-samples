@@ -58,7 +58,7 @@ eksctl create cluster --name eks-akka-demo --version 1.17 --region eu-central-1 
 NOTE: We recommend using EKS with EC2 nodes, and not the Fargate option.
 
 
-== Install metrics server
+== Install the Kubernetes Metrics Server
 
 The Akka Platform Operator depends on the https://github.com/kubernetes-sigs/metrics-server[Kubernetes Metrics Server {tab-icon}, window="tab"] being installed.
 
