@@ -10,7 +10,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import shopping.cart.repository.HibernateJdbcSession;
@@ -46,7 +45,8 @@ public class CreateTableTestUtils {
 
   private static String loadFile(String filePath) {
     try {
-      return Files.lines(Paths.get(filePath), StandardCharsets.UTF_8).collect(Collectors.joining("\n"));
+      return Files.lines(Paths.get(filePath), StandardCharsets.UTF_8)
+          .collect(Collectors.joining("\n"));
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
