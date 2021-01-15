@@ -1,17 +1,40 @@
-name: Compile and Test, Create Site
+name: CI
 on:
-  push:
   pull_request:
+  push:
+    branches: [ main, main-with-operator ]
 
 jobs:
-  java-compile-and-test:
+  copy-identical-files:
+    name: Verify identical files are correct
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          # See https://github.com/actions/checkout/issues/299#issuecomment-677674415
-          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout GitHub merge
+        if: github.event.pull_request
+        run: |-
+          git fetch origin pull/${{ github.event.pull_request.number }}/merge:scratch
+          git checkout scratch
+
+      - name: copy-identical-files
+        run: |
+          scripts/copy-identical-files.sh
+          git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
+
+  java-compile-and-test:
+    name: Compile and Test (Java)
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout GitHub merge
+        if: github.event.pull_request
+        run: |-
+          git fetch origin pull/${{ github.event.pull_request.number }}/merge:scratch
+          git checkout scratch
 
       - name: Set up JDK 11
         uses: olafurpg/setup-scala@v10
@@ -23,11 +46,6 @@ jobs:
           path: ~/.m2/repository
           key: maven-repo-${{ hashFiles('**/pom.xml') }}
           restore-keys: maven-repo-
-
-      - name: copy-identical-files
-        run: |
-          scripts/copy-identical-files.sh
-          git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
 
       - name: "Shopping analytics service (Java)"
         run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
@@ -63,13 +81,17 @@ jobs:
         run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-java
 
   scala-compile-and-test:
+    name: Compile and Test (Scala)
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-        with:
-          # See https://github.com/actions/checkout/issues/299#issuecomment-677674415
-          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout GitHub merge
+        if: github.event.pull_request
+        run: |-
+          git fetch origin pull/${{ github.event.pull_request.number }}/merge:scratch
+          git checkout scratch
 
       - name: Set up JDK 11
         uses: olafurpg/setup-scala@v10
@@ -78,11 +100,6 @@ jobs:
 
       - name: Cache Coursier cache
         uses: coursier/cache-action@v5
-
-      - name: copy-identical-files
-        run: |
-          scripts/copy-identical-files.sh
-          git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
 
       - name: "Shopping analytics service (Scala)"
         run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
@@ -122,14 +139,3 @@ jobs:
 
       - name: "Howto cleanup dependencies"
         run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/cleanup-dependencies-project
-
-  create-site:
-    runs-on: ubuntu-18.04
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: "Run Antora to create site"
-        run: make html-author-mode
