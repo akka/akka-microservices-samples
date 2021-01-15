@@ -93,7 +93,7 @@ Create an IAM policy for the service account:
 
 [source,shell script]
 ----
-aws iam create-policy --policy-name AkkaPlatformOperator --policy-document file://policy
+aws iam create-policy --policy-name AkkaPlatformOperator --policy-document file://policy.json
 ----
 
 With the file `policy.json` contents as:
