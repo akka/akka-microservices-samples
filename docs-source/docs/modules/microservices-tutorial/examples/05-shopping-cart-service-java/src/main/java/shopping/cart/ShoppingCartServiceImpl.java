@@ -1,6 +1,7 @@
 package shopping.cart;
 
 import akka.actor.typed.ActorSystem;
+import akka.actor.typed.DispatcherSelector;
 import akka.cluster.sharding.typed.javadsl.ClusterSharding;
 import akka.cluster.sharding.typed.javadsl.EntityRef;
 import akka.grpc.GrpcServiceException;
@@ -8,28 +9,40 @@ import io.grpc.Status;
 import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import shopping.cart.proto.*;
-import shopping.cart.repository.AsyncItemPopularityRepository;
+import shopping.cart.repository.ItemPopularityRepository;
 
 public final class ShoppingCartServiceImpl implements ShoppingCartService {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  private final AsyncItemPopularityRepository asyncItemPopularityRepository;
   private final Duration timeout;
   private final ClusterSharding sharding;
 
+  // tag::getItemPopularity[]
+  private final ItemPopularityRepository repository;
+  private final Executor blockingJdbcExecutor;
+
   public ShoppingCartServiceImpl(
-      ActorSystem<?> system, AsyncItemPopularityRepository asyncItemPopularityRepository) {
-    this.asyncItemPopularityRepository = asyncItemPopularityRepository;
+      ActorSystem<?> system, ItemPopularityRepository repository) { // <1>
+
+    DispatcherSelector dispatcherSelector =
+        DispatcherSelector.fromConfig("akka.projection.jdbc.blocking-jdbc-dispatcher");
+    this.blockingJdbcExecutor = system.dispatchers().lookup(dispatcherSelector); // <2>
+
+    this.repository = repository;
     timeout = system.settings().config().getDuration("shopping-cart-service.ask-timeout");
     sharding = ClusterSharding.get(system);
   }
+
+  // end::getItemPopularity[]
 
   @Override
   public CompletionStage<Cart> addItem(AddItemRequest in) {
@@ -99,8 +112,10 @@ public final class ShoppingCartServiceImpl implements ShoppingCartService {
   // tag::getItemPopularity[]
   @Override
   public CompletionStage<GetItemPopularityResponse> getItemPopularity(GetItemPopularityRequest in) {
+
     CompletionStage<Optional<ItemPopularity>> itemPopularity =
-        asyncItemPopularityRepository.findById(in.getItemId());
+        CompletableFuture.supplyAsync(
+            () -> repository.findById(in.getItemId()), blockingJdbcExecutor); // <3>
 
     return itemPopularity.thenApply(
         popularity -> {

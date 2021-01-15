@@ -7,7 +7,7 @@ Select your preferred language (Java/Scala) above.
 
 To follow tutorial steps you will need a code editor, a build tool, and `grpcurl` (a CLI for sending gRPC calls). You can use your preferred code editor. We provide the steps for using https://www.jetbrains.com/idea/[IntelliJ IDEA {tab-icon}, window="tab"] from JetBrains. For the [.group-scala]#Scala# [.group-java]#Java# version of the example, we use [.group-scala]#`sbt`# [.group-java]#`Apache Maven`# as the build tool.
 
-This tutorial uses Cassandra and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[Docker {tab-icon}, window="tab"]. The template project's root directory includes a https://docs.docker.com/compose/[Docker Compose {tab-icon}, window="tab"] file that you can use to run Cassandra and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
+This tutorial uses a Postgres database and Kafka. You may run local installations during development, but we recommend running both services using https://docs.docker.com[Docker {tab-icon}, window="tab"]. The template project's root directory includes a https://docs.docker.com/compose/[Docker Compose {tab-icon}, window="tab"] file that you can use to run Postgres and Kafka. The provided Docker Compose file also runs Zookeeper which is required to run a Kafka broker.
 
 The following sections provide links for downloading and installing:
 
@@ -82,4 +82,3 @@ If you would like to run the full example, you can download the link:_attachment
 Scala::
 +
 If you would like to run the full example, you can download the link:_attachments/6-shopping-cart-complete-scala.zip[full Scala sources]. In this case, we suggest you scan the tutorial instructions to identify the source files that you can learn from.
-

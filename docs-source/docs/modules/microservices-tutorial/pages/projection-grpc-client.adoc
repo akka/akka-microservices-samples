@@ -215,7 +215,7 @@ include::example$shopping-cart-service-scala/src/main/resources/local-shared.con
 
 Follow these steps to run locally and exercise the new Projection and service:
 
-. Start Cassandra and Kafka, unless they are already running:
+. Start Postgres and Kafka, unless they are already running:
 +
 [source,shell script]
 ----
@@ -280,7 +280,7 @@ When finished:
 
 . Stop the `shopping-cart-service` and `shopping-order-service` with `ctrl-c`. 
 
-. Stop Cassandra and Kafka with:
+. Stop Postgres and Kafka with:
 +
 [source,shell script]
 ----

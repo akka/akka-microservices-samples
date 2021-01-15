@@ -311,9 +311,9 @@ If the command is successful, the entity will reply with `StatusReply.Success` w
 
 Also, we added an `ActorSystem` parameter to the constructor of `ShoppingCartServiceImpl`. Edit `Main` to include the `system` as the parameter when creating a new instance of the `ShoppingCartServiceImpl`.
 
-== Configure Cassandra
+== Configure Postgres
 
-The events are stored in Cassandra and the template project includes configuration for that in the `src/main/resources/persistence.conf` file. We have to enable this configuration by including `persistence.conf` in `application.conf`:
+The events are stored in a Postgres database and the template project includes configuration for that in the `src/main/resources/persistence.conf` file. We have to enable this configuration by including `persistence.conf` in `application.conf`:
 
 [source,hocon]
 ----
@@ -322,9 +322,9 @@ include::example$02-shopping-cart-service-scala/src/main/resources/application.c
 
 == Run locally
 
-To run the service, we first need to start Cassandra to persist the events. Then we can run the service:
+To run the service, we first need to start the Postgres to persist the events. Then we can run the service:
 
-. Start Cassandra with the following:
+. Start Postgres with the following:
 +
 include::template.adoc[tag=docker]
 

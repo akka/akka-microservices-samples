@@ -507,11 +507,6 @@ declare SRC="${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 
-declare SRC="${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/repository/AsyncItemPopularityRepository.java"
-cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/java/shopping/cart/repository/
-cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/java/shopping/cart/repository/
-
-
 declare SRC="${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/PublishEventsProjection.java"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/java/shopping/cart/
 

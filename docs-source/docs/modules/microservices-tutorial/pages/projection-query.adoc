@@ -15,7 +15,7 @@ This piece of the xref:overview.adoc[full example] focuses on the `ItemPopularit
 
 * implement a Projection
 * distribute the Projection instances over the nodes in the Akka Cluster
-* work with an asynchronous API for Cassandra
+* work with the Projection JDBC API
 
 The xref:concepts:cqrs.adoc[CQRS] section explains why it is a good practice to build a Projection from entity events that can be queried. The {akka-blog}/news/2020/09/10/akka-projection-intro-video[Introduction to Akka Projections video {tab-icon}, window="tab"] is also a good starting point for learning about Akka Projections.
 
@@ -43,40 +43,20 @@ Scala::
 
 To process events in a projection, we will: 
 
-* implement the event processing of the Projection in a `Handler`
 * encapsulate database access with `ItemPopularityRepository`, which can have a stubbed implementation for tests
-* add an implementation for Cassandra
+* add Repository implementation for JDBC
+* implement the event processing of the Projection in a `Handler`
 
-ifdef::todo[TODO: add the source file name consistently in the pages that precede this one just as they are in the following tabset.]
+[.group-java]
+****
+The Java variant uses Spring Data and Hibernate.
+The template provides a few integration classes for that purpose, for instance: `HibernateJdbcSession`, `SpringConfig` and `SpringIntegration`.
+
+How these classes work won't be covered by this tutorial. Consult their respective source code in the template for more information on how they provide the necessary glue code.
+****
 
 Follow these steps to process events in a Projection:
 
-. Add a class `ItemPopularityProjectionHandler`:
-+
-[.tabset]
-Java::
-+
-.src/main/java/shopping/cart/ItemPopularityProjectionHandler.java:
-[source,java,indent=0]
-----
-include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjectionHandler.java[tags=handler]
-----
-+
-<1> extends `akka.projection.javadsl.Handler`
-<2> the `process` method to implement
-<3> match events and increment or decrement the count via the `ItemPopularityRepository`, which encapsulates the database access
-
-Scala::
-+
-.src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala:
-[source,scala,indent=0]
-----
-include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala[tags=handler]
-----
-+
-<1> extends `akka.projection.scaladsl.Handler`
-<2> the `process` method to implement
-<3> match events and increment or decrement the count via the `ItemPopularityRepository`
 
 . Add the `ItemPopularityRepository`:
 +
@@ -97,9 +77,20 @@ Scala::
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityRepository.scala[tag=trait]
 ----
 
-.  Add the implementation for Cassandra:
+.  [.group-java]#Use Spring ApplicationContext to retrieve the implementation for the repository# [.group-scala]#Add the implementation for Postgres:#
 +
 [.tabset]
+Java::
++
+.src/main/java/shopping/cart/Main.java:
+[source,java,indent=0]
+----
+include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/Main.java[tag=repo-instance]
+----
++
+<1> Initialize a Spring application context using ActorSystem's configuration.
+<2> Get a Spring generated implementation for the `ItemPopularityRepository`.
+
 Scala::
 +
 .src/main/scala/shopping/cart/ItemPopularityRepository.scala:
@@ -108,9 +99,33 @@ Scala::
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityRepository.scala[tag=impl]
 ----
 
-The `CassandraSession` comes from the Cassandra connector in Alpakka and provides an asynchronous API for executing __CQL__ statements to Cassandra. In the initialization code, introduced later, we will see how to get access to a `CassandraSession`. You can learn more about the `CassandraSession` in the {alpakka}/cassandra.html[Alpakka reference documentation {tab-icon}, window="tab"].
 
-NOTE: The example will persist the item popularity count with a https://docs.datastax.com/en/cql-oss/3.x/cql/cql_reference/counter_type.html[Cassandra counter {tab-icon}, window="tab"] data type. It's not possible to guarantee that item count updates occur idempotently because we are using at-least-once semantics. However, since the count is only a rough metric to judge how popular an item is it's not critical to have a totally accurate figure.
+. Add a class `ItemPopularityProjectionHandler`:
++
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/ItemPopularityProjectionHandler.java:
+[source,java,indent=0]
+----
+include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjectionHandler.java[tags=handler]
+----
++
+<1> Extends `akka.projection.javadsl.Handler`.
+<2> The `process` method to implement.
+<3> Match events and increment or decrement the count via the `ItemPopularityRepository`, which encapsulates the database access.
+
+Scala::
++
+.src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala:
+[source,scala,indent=0]
+----
+include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala[tags=handler]
+----
++
+<1> Extends `akka.projection.scaladsl.Handler`.
+<2> The `process` method to implement.
+<3> Match events and increment or decrement the count via the `ItemPopularityRepository`.
 
 == Initialize the Projection
 
@@ -129,6 +144,7 @@ Create tags as follows:
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=tagging]
@@ -136,6 +152,7 @@ include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=importEntityContext;tagging]
@@ -149,19 +166,24 @@ One of the tags is selected based on the `cartId`, which is the `entityContext.e
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=withTagger]
 ----
++
+<1> Use `tagsFor` to assign the `projectionTag`.
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=withTagger]
 ----
++
+<1> Use `withTagger` to assign the `projectionTag`.
 
-<1> [.group-scala]#`withTagger` to assign the `projectionTag`# [.group-java]#`tagsFor` to assign the `projectionTag`#
 
 NOTE: In this example, we use five different tags. Tagging is not easy to change later without system downtime. Before going live in production you should consider how many tags to use, see {akka-projection}/running.html[Akka Projections reference documentation {tab-icon}, window="tab"] for more information.
 
@@ -180,6 +202,14 @@ Java::
 ----
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjection.java[tag=projection]
 ----
++
+<1> `ShardedDaemonProcess` will manage the Projection instances. It ensures the Projection instances are always running and distributes them over the nodes in the Akka Cluster.
+<2> The `tag` is selected based on the Projection instance's index, corresponding to *carts-0* to *carts-3* as explained in the tagging in the `ShoppingCart`.
+<3> The source of the Projection is `EventSourcedProvider.eventsByTag` with the selected tag.
+<4> Using the JDBC event journal.
+<5> Using JDBC for offset storage of the Projection using `exactly-once` strategy. Offset and projected model will be persisted transactionally.
+<6> Define a `HibernateJdbcSession` factory. The JDBC connection are create by the projection and used to save the offset and the projected model.
+<7> Define a Projection `Handler` factory for the handler we wrote in the beginning of this part.
 
 Scala::
 +
@@ -201,23 +231,28 @@ include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Ite
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/Main.java
 [source,java,indent=0]
 ----
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/Main.java[tag=ItemPopularityProjection]
 ----
++
+<1> Initialize a Spring application context using ActorSystem's configuration.
+<2> Get a Spring generated implementation for the `ItemPopularityRepository`.
+<3> Get a Spring `JpaTransactionManager` to pass to the Projection init method.
+<4> Initialize the Projection passing all necessary dependencies.
 
 Scala::
 +
+.src/main/scala/shopping/cart/Main.scala
 [source,scala,indent=0]
 ----
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=ItemPopularityProjection]
 ----
 +
-<1> The `CassandraSession` is looked up from the `CassandraSessionRegistry`
-<2> Instantiate the repository for Cassandra
-<3> Call the initialization of the Projection
-
-NOTE: The `CassandraProjection` uses at-least-once processing semantics. The offset is stored after the event has been processed and if the projection is restarted from a previously stored offset some events may be processed more than once. For a {akka-projection}/jdbc.html[JDBC Projection {tab-icon}, window="tab"] it's possible to have exactly-once semantics because the offset can be stored in the same atomic transaction as the database operation in the event handler.
+<1> The `CassandraSession` is looked up from the `CassandraSessionRegistry`.
+<2> Instantiate the repository for Cassandra.
+<3> Call the initialization of the Projection.
 
 == Query
 
@@ -225,6 +260,7 @@ To expose the item popularity to the outside of the service we can add an operat
 
 . Add a new `GetItemPopularity` operation to the `ShoppingCartService.proto`:
 +
+.src/main/protobuf/ShoppingCartService.proto
 [source,protobuf,indent=0]
 ----
 include::example$04-shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[tag=GetItemPopularity]
@@ -250,46 +286,61 @@ sbt compile
 
 . Add the `getItemPopularity` method to the `ShoppingCartServiceImpl`:
 +
+
+For this you have to add the `ItemPopularityRepository` as a constructor parameter to the `ShoppingCartServiceImpl`. The `ItemPopularityRepository` instance is created in [.group-scala]#`Main.scala`# [.group-java]#`Main.java`# so pass that instance as parameter to `ShoppingCartServiceImpl`.
+
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCartServiceImpl.java
 [source,java,indent=0]
 ----
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServiceImpl.java[tag=getItemPopularity]
 ----
++
+<1> Add the `ItemPopularityRepository` to the service implementation constructor.
+<2> Use the `ActorSystem` to get an instance of an `Executor` tailored for running JDBC blocking operations.
+<3> Implement `getItemPopularity` by calling the repository to find the projected model by id and wrap it with `CompletableFuture.supplyAsync`.
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala
 [source,scala,indent=0]
 ----
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=getItemPopularity]
 ----
 
-For this you have to add the `ItemPopularityRepository` as a constructor parameter to the `ShoppingCartServiceImpl`. The `ItemPopularityRepository` instance is created in [.group-scala]#`Main.scala`# [.group-java]#`Main.java`# so pass that instance as parameter to `ShoppingCartServiceImpl`.
+[.group-java]
+[IMPORTANT]
+====
+Calls to the repository are blocking therefore we wrap it with `CompletableFuture.supplyAsync` and we use the JDBC blocking executor to run it. This is a pre-configured dispatcher provided by Akka Projections. Its pool size can be configured with settings `akka.projection.jdbc.blocking-jdbc-dispatcher.thread-pool-executor.fixed-pool-size` (see src/main/resources/persistence.conf).
+
+Make sure to follow that pattern whenever you interact with a DB repository.
+====
 
 == Run locally
 
 Try your solution by running locally:
 
-. Start Cassandra, unless it's already running:
+. Start the docker containers, unless they are already running:
 +
 [source,shell script]
 ----
 docker-compose up -d
 ----
 
-. Create the item popularity table by creating a `ddl-scripts/create_user_tables.cql` file and adding the CQL statement below. 
+. Create the item popularity table by creating a `ddl-scripts/create_user_tables.sql` file and adding the SQL statement below.
 +
-[source,cql,indent=0]
+[source,sql,indent=0]
 ----
-include::example$04-shopping-cart-service-scala/ddl-scripts/create_user_tables.cql[]
+include::example$04-shopping-cart-service-java/ddl-scripts/create_user_tables.sql[]
 ----
 
-. Load the file into Cassandra:
+. Load the file into Postgres:
 +
 [source,shell script]
 ----
-docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_user_tables.cql
+docker exec -i shopping-cart-service_postgres-db_1 psql -U shopping-cart -t < ddl-scripts/create_user_tables.sql
 ----
 +
 include::docker-important.adoc[]
@@ -343,7 +394,7 @@ grpcurl -d '{"itemId":"hoodie"}' -plaintext 127.0.0.1:8101 shoppingcart.Shopping
 
 === Stop the service
 
-When finished, stop the service with `ctrl-c`. Leave Cassandra running for the next set of steps, or stop it with:
+When finished, stop the service with `ctrl-c`. Leave Postgres running for the next set of steps, or stop it with:
 
 [source,shell script]
 ----

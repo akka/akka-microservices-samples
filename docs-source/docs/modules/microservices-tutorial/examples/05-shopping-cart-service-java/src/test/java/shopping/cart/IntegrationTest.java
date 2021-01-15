@@ -25,7 +25,6 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import java.util.stream.Collectors;
 import org.apache.kafka.common.serialization.ByteArrayDeserializer;
@@ -168,7 +167,6 @@ public class IntegrationTest {
     CreateTableTestUtils.createTables(transactionManager, testNode1.system);
 
     kafkaTopicProbe = testNode1.testKit.createTestProbe();
-   
 
     testNode1.testKit.spawn(createMainBehavior(), "guardian");
     testNode2.testKit.spawn(createMainBehavior(), "guardian");

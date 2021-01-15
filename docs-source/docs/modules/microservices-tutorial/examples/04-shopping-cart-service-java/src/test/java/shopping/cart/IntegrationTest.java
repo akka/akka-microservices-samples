@@ -2,7 +2,6 @@ package shopping.cart;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 import akka.actor.testkit.typed.javadsl.ActorTestKit;
 import akka.actor.testkit.typed.javadsl.TestProbe;
@@ -31,7 +30,6 @@ import org.springframework.orm.jpa.JpaTransactionManager;
 import scala.jdk.CollectionConverters;
 import shopping.cart.proto.*;
 import shopping.cart.repository.SpringIntegration;
-
 
 public class IntegrationTest {
 
@@ -85,7 +83,6 @@ public class IntegrationTest {
       return client;
     }
   }
-
 
   private static TestNodeFixture testNode1;
   private static TestNodeFixture testNode2;

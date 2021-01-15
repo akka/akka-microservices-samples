@@ -59,8 +59,8 @@ public final class ItemPopularityProjection {
     return JdbcProjection.exactlyOnce( // <5>
         ProjectionId.of("ItemPopularityProjection", tag),
         sourceProvider,
-        () -> new HibernateJdbcSession(transactionManager),
-        () -> new ItemPopularityProjectionHandler(tag, repository), // <6>
+        () -> new HibernateJdbcSession(transactionManager), // <6>
+        () -> new ItemPopularityProjectionHandler(tag, repository), // <7>
         system);
   }
 }
