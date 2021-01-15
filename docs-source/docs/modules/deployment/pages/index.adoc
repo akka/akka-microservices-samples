@@ -1,0 +1,54 @@
+= Cloud deployment
+
+include::ROOT:partial$include.adoc[]
+
+The easiest way to deploy and manage Akka Microservices in Kubernetes is to use the Akka Platform Operator. You get access to it from the https://aws.amazon.com/marketplace[Amazon Marketplace {tab-icon}, window="tab"] and install it in your Amazon EKS cluster.
+
+FIXME direct link ^ to product page and better product pitch.
+
+The Akka Platform Operator provides the following high level features:
+
+* convenient deployment without having to define detailed Kubernetes manifests
+* integration with Akka Cluster Bootstrap
+* integration with Akka Management health checks
+* integration with Relational Databases and Cassandra
+* integration with Kafka
+* support for gRPC and HTTP services and internet facing ingress
+* insights to deployment status
+
+== Overview of deployment procedure
+[#deployment_procedure]
+
+=== Deploying an Akka Microservices application
+
+image::deployment-overview1.png[Deployment 1]
+
+. A https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes Custom Resource Definition {tab-icon}, window="tab"] named `akkamicroservices.akka.lightbend.com` defines the deployment descriptor resource for Akka Microservices applications that that the Akka Operator will deploy.
+. The Akka Operator is installed and is always running in the Kubernetes cluster.
+. A Docker image of the Akka Microservices application is built and published.
+. The deployment descriptor for the Akka Microservice is defined in a yaml file. It refers to the Docker published image and specifies other operational properties. It is applied to the Kubernetes cluster with `kubectl` (Kubernetes standard command-line tool).
+. The operator sees the new deployment descriptor and creates a https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes Deployment {tab-icon}, window="tab"]
+. The application image is downloaded and the Akka Microservices application is started. The Akka Platform Operator automatically provides additional configuration to the application.
+
+When updating the Akka Microservices application the steps 3 - 6 are repeated. The Akka Platform Operator sees the changes to the deployment descriptor and updates the Kubernetes Deployment accordingly. Kubernetes performs a rolling update of the application.
+
+=== Deploying another Akka Microservice
+
+The Akka Platform Operator manages Akka Microservices in all namespaces of the Kubernetes cluster, which means that you should only install the operator once. It is possible to configure the operator to only manage a specific namespace if that would be needed.
+
+When deploying another Microservice the procedure looks like this.
+
+image::deployment-overview2.png[Deployment 2]
+
+. Build and publish Docker image.
+. Apply deployment descriptor.
+. The operator creates a separate Kubernetes Deployment for the other Microservice.
+. Pods and application is started.
+
+== Learn more
+
+* Each step of the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] has instructions of how to run in Kubernetes.
+* xref:aws-install.adoc[Installation in Amazon EKS]
+* {akka-management}/[Akka Management {tab-icon}, window="tab"] for Akka Cluster formation and health checks
+* {akka-management}/kubernetes-deployment/index.html[Deploying Akka Cluster to Kubernetes without the Akka Platform Operator {tab-icon}, window="tab"]
+

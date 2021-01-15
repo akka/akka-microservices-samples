@@ -53,10 +53,14 @@ An Kubernetes cluster can be created from the https://console.aws.amazon.com/iam
 eksctl create cluster --name eks-akka-demo --version 1.17 --region eu-central-1 --nodegroup-name linux-nodes --nodes 3 --nodes-min 1 --nodes-max 4 --with-oidc --managed
 ----
 
-
-
 NOTE: We recommend using EKS with EC2 nodes, and not the Fargate option.
 
+Configure kubectl to connect to the cluster
+
+[source, shell script]
+----
+ aws eks update-kubeconfig --region eu-central-1 --name eks-akka-demo
+----
 
 == Install the Kubernetes Metrics Server
 
@@ -140,7 +144,7 @@ FIXME update with the Marketplace ECR
 aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 803424716218.dkr.ecr.eu-central-1.amazonaws.com
 ----
 
-Install the Akka Platform operator with Helm:
+Install the Akka Platform Operator with Helm:
 
 FIXME update with the Marketplace ECR
 

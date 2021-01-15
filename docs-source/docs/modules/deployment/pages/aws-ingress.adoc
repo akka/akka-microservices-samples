@@ -3,7 +3,7 @@
 
 include::partial$include.adoc[]
 
-To expose gRPC or HTTPS to the internet you can ues the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/[AWS Load Balancer Controller {tab-icon}, window="tab"] with a https://kubernetes.io/docs/concepts/services-networking/ingress/[Kubernetes Ingress {tab-icon}, window="tab"] created by the Akka Platform operator.
+To expose gRPC or HTTPS to the internet you can use the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/[AWS Load Balancer Controller {tab-icon}, window="tab"] with a https://kubernetes.io/docs/concepts/services-networking/ingress/[Kubernetes Ingress {tab-icon}, window="tab"] created by the Akka Platform Operator.
 
 == Install the LoadBalancer Controller
 
@@ -43,7 +43,7 @@ spec:
 
 Replace the certificate `arn` with the one assigned by the Amazon Certificate Manager.
 
-When the CR has been applied the Akka Platform operator will create an Ingress and you can retrieve the public address with:
+When the CR has been applied the Akka Platform Operator will create an Ingress and you can retrieve the public address with:
 
 [source,shell script]
 ----
