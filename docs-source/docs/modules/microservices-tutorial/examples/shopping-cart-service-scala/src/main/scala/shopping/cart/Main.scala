@@ -15,10 +15,6 @@ import akka.grpc.GrpcClientSettings
 
 // end::SendOrderProjection[]
 
-// tag::ItemPopularityProjection[]
-
-// end::ItemPopularityProjection[]
-
 object Main {
 
   def main(args: Array[String]): Unit = {

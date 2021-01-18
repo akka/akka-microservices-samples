@@ -23,50 +23,7 @@ import org.scalatest.time.Span
 import org.scalatest.wordspec.AnyWordSpec
 
 object IntegrationSpec {
-  private val uniqueQualifier = System.currentTimeMillis()
-  private val keyspace = s"IntegrationSpec_$uniqueQualifier"
-
-  val config: Config = ConfigFactory
-    .parseString(s"""
-      akka.cluster.jmx.multi-mbeans-in-same-jvm = on
-      
-      akka.remote.artery.canonical {
-        hostname = "127.0.0.1"
-        port = 0
-      }
-
-      akka.persistence.cassandra {
-        events-by-tag {
-          eventual-consistency-delay = 200ms
-        }
-        query {
-          refresh-interval = 500 ms
-        }
-        journal.keyspace = $keyspace
-        journal.keyspace-autocreate = on
-        journal.tables-autocreate = on
-        snapshot.keyspace = $keyspace
-        snapshot.keyspace-autocreate = on
-        snapshot.tables-autocreate = on
-      }
-      datastax-java-driver {
-        basic.contact-points = ["127.0.0.1:9042"]
-        basic.load-balancing-policy.local-datacenter = "datacenter1"
-        # lots of ActorSystems in the same JVM
-        advanced.session-leak.threshold = 10
-      }
-      
-      akka.projection.cassandra.offset-store.keyspace = $keyspace
-
-      akka.actor.testkit.typed {
-        single-expect-default = 5s
-        filter-leeway = 5s
-        system-shutdown-default = 30s
-      }
-    """)
-    .withFallback(
-      ConfigFactory.load("local1")
-    ) // pick up local configuration to test it, dynamic ports have been overridden
+  val sharedConfig: Config = ConfigFactory.load("integration-test.conf")
 
   private def nodeConfig(
       grpcPort: Int,
@@ -96,7 +53,7 @@ object IntegrationSpec {
       ActorTestKit(
         "IntegrationSpec",
         nodeConfig(grpcPort, managementPorts, managementPortIndex)
-          .withFallback(IntegrationSpec.config)
+          .withFallback(sharedConfig)
           .resolve())
 
     def system: ActorSystem[_] = testKit.system
@@ -147,7 +104,9 @@ class IntegrationSpec
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    // avoid concurrent creation of keyspace and tables
+    CreateTableTestUtils.setupScalikeJdbcConnectionPool(IntegrationSpec.sharedConfig)
+    CreateTableTestUtils.dropAndRecreateTables(testNode1.system)
+    // avoid concurrent creation of tables
     val timeout = 10.seconds
     Await.result(
       PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout),
@@ -159,6 +118,7 @@ class IntegrationSpec
     testNode3.testKit.shutdownTestKit()
     testNode2.testKit.shutdownTestKit()
     testNode1.testKit.shutdownTestKit()
+    CreateTableTestUtils.closeScalikeJdbcConnectionPool()
   }
 
   "Shopping Cart service" should {
@@ -185,24 +145,12 @@ class IntegrationSpec
       updatedCart1.items.head.itemId should ===("foo")
       updatedCart1.items.head.quantity should ===(42)
 
-      // add from client2, consume event on node3
+      // add from client2
       val response2 = testNode2.client.addItem(
         proto.AddItemRequest(cartId = "cart-2", itemId = "bar", quantity = 17))
       val updatedCart2 = response2.futureValue
       updatedCart2.items.head.itemId should ===("bar")
       updatedCart2.items.head.quantity should ===(17)
-
-      // update from client2
-      val response3 =
-        testNode2.client.updateItem(proto
-          .UpdateItemRequest(cartId = "cart-2", itemId = "bar", quantity = 18))
-      val updatedCart3 = response3.futureValue
-      updatedCart3.items.head.itemId should ===("bar")
-      updatedCart3.items.head.quantity should ===(18)
-
-      val response4 =
-        testNode2.client.checkout(proto.CheckoutRequest(cartId = "cart-2"))
-      response4.futureValue.checkedOut should ===(true)
     }
 
   }

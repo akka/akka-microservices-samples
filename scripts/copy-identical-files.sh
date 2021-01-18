@@ -500,6 +500,12 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/scala/shoppin
 declare SRC="${tutorial_root}/shopping-cart-service-scala/src/test/scala/shopping/cart/CreateTableTestUtils.scala"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/scala/shopping/cart/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/scala/shopping/cart/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/test/scala/shopping/cart/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/test/scala/shopping/cart/
+
+declare SRC="${tutorial_root}/shopping-cart-service-scala/src/test/scala/shopping/cart/CreateTableTestUtils.scala"
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/scala/shopping/cart/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/scala/shopping/cart/
 
 declare SRC="${tutorial_root}/shopping-cart-service-scala/src/test/scala/shopping/cart/ItemPopularityIntegrationSpec.scala"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/scala/shopping/cart/
@@ -512,6 +518,16 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/test/resources/
 declare SRC="${tutorial_root}/shopping-cart-service-scala/src/test/scala/shopping/cart/ItemPopularityProjectionSpec.scala"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/scala/shopping/cart/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/scala/shopping/cart/
+
+declare SRC="${tutorial_root}/02-shopping-cart-service-scala/src/test/scala/shopping/cart/IntegrationSpec.scala"
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/scala/shopping/cart/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/test/scala/shopping/cart/
+
+declare SRC="${tutorial_root}/shopping-cart-service-scala/src/test/resources/integration-test.conf"
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/test/resources/
 
 declare SRC="${tutorial_root}/shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/scala/shopping/cart/

@@ -30,7 +30,6 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.Span
 import org.scalatest.wordspec.AnyWordSpec
 import org.slf4j.LoggerFactory
-import shopping.cart.ItemPopularityIntegrationSpec.config
 import shopping.order.proto.OrderRequest
 import shopping.order.proto.OrderResponse
 import shopping.order.proto.ShoppingOrderService
@@ -139,7 +138,8 @@ class IntegrationSpec
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    CreateTableTestUtils.setupScalikeJdbcConnectionPool(config)
+    CreateTableTestUtils.setupScalikeJdbcConnectionPool(
+      IntegrationSpec.sharedConfig)
     CreateTableTestUtils.dropAndRecreateTables(testNode1.system)
     // avoid concurrent creation of tables
     val timeout = 10.seconds
