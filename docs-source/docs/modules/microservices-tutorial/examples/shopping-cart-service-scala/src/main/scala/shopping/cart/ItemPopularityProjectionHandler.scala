@@ -5,7 +5,7 @@ import akka.actor.typed.ActorSystem
 import akka.projection.eventsourced.EventEnvelope
 import akka.projection.jdbc.scaladsl.JdbcHandler
 import org.slf4j.LoggerFactory
-import shopping.cart.dbaccess.{ ItemPopularityRepository, ScalikeJdbcSession }
+import shopping.cart.repository.{ ItemPopularityRepository, ScalikeJdbcSession }
 
 class ItemPopularityProjectionHandler(
     tag: String,

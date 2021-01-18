@@ -1,4 +1,4 @@
-package shopping.cart.dbaccess
+package shopping.cart.repository
 
 import akka.japi.function.Function
 import akka.projection.jdbc.JdbcSession

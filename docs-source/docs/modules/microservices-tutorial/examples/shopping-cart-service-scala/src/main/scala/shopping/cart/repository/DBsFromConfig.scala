@@ -1,4 +1,4 @@
-package shopping.cart.dbaccess
+package shopping.cart.repository
 
 import akka.actor.typed.ActorSystem
 import com.typesafe.config.Config

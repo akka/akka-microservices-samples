@@ -7,7 +7,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
-import shopping.cart.dbaccess.{ DBsFromConfig, ItemPopularityRepositoryImpl }
+import shopping.cart.repository.{ DBsFromConfig, ItemPopularityRepositoryImpl }
 
 // tag::SendOrderProjection[]
 import shopping.order.proto.{ ShoppingOrderService, ShoppingOrderServiceClient }

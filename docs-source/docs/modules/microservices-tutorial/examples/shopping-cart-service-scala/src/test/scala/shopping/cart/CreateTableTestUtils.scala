@@ -6,7 +6,7 @@ import akka.persistence.jdbc.testkit.scaladsl.SchemaUtils
 import akka.projection.jdbc.scaladsl.JdbcProjection
 import com.typesafe.config.Config
 import org.slf4j.LoggerFactory
-import shopping.cart.dbaccess.{ DBsFromConfig, ScalikeJdbcSession }
+import shopping.cart.repository.{ DBsFromConfig, ScalikeJdbcSession }
 
 import java.nio.file.Paths
 import scala.concurrent.duration._

@@ -70,13 +70,15 @@ docker-compose up -d
 
 . Create the Postgres tables from the SQL script located inside the `ddl-scripts` at the root of the project:
 +
+[source,shell script]
 ----
 docker exec -i shopping-cart-service_postgres-db_1 psql -U shopping-cart -t < ddl-scripts/create_tables.sql
 ----
 +
+It creates all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
++
 include::docker-important.adoc[]
 +
-It will create all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
 
 // # end::docker[]
 

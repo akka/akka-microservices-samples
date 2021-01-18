@@ -13,8 +13,8 @@ import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.scalatest.OptionValues
 import org.scalatest.wordspec.AnyWordSpecLike
-import shopping.cart.dbaccess.ItemPopularityRepositoryImpl
-import shopping.cart.dbaccess.ScalikeJdbcSession
+import shopping.cart.repository.ItemPopularityRepositoryImpl
+import shopping.cart.repository.ScalikeJdbcSession
 
 object ItemPopularityIntegrationSpec {
   val config: Config =

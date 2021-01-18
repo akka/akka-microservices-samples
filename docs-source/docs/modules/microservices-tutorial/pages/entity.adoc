@@ -342,8 +342,6 @@ include::example$02-shopping-cart-service-scala/src/main/resources/application.c
 
 To run the service, we first need to start the Postgres to persist the events. Then we can run the service:
 
-. Start Postgres with the following:
-+
 include::template.adoc[tag=docker]
 
 . Run the service with:
@@ -425,7 +423,7 @@ mvn compile exec:exec -DAPP_CONFIG=local3.conf
 
 === Stop the service
 
-When finished, stop the service with `ctrl-c`. Leave Cassandra running for the next set of steps, or stop it with:
+When finished, stop the service with `ctrl-c`. Leave the Postgres running for the next set of steps, or stop it with:
 
 [source,shell script]
 ----

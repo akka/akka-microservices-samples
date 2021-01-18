@@ -13,7 +13,7 @@ import akka.projection.testkit.scaladsl.TestSourceProvider
 import akka.projection.testkit.scaladsl.ProjectionTestKit
 import akka.stream.scaladsl.Source
 import org.scalatest.wordspec.AnyWordSpecLike
-import shopping.cart.dbaccess.{ ItemPopularityRepository, ScalikeJdbcSession }
+import shopping.cart.repository.{ ItemPopularityRepository, ScalikeJdbcSession }
 
 object ItemPopularityProjectionSpec {
   // stub out the db layer and simulate recording item count updates

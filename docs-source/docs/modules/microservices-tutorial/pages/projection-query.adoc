@@ -51,10 +51,16 @@ To process events in a projection, we will:
 
 [.group-java]
 ****
-The Java variant uses Spring Data and Hibernate.
+This example uses Spring Data and Hibernate to access the database.
 The template provides a few integration classes for that purpose, for instance: `HibernateJdbcSession`, `SpringConfig` and `SpringIntegration`.
 
 How these classes work won't be covered by this tutorial. Consult their respective source code in the template for more information on how they provide the necessary glue code.
+****
+[.group-scala]
+****
+This example uses the link:http://scalikejdbc.org/[ScalikeJDBC library {tab-icon}, window="tab"] to access the database via JDBC. **You may use any other JDBC library to achieve this.**
+
+The code to integrate with ScalikeJDBC is `DBsFromConfig`, `ScalikeJdbcSession` and `ItemPopularityRepositoryImpl`.
 ****
 
 Follow these steps to process events in a Projection:
@@ -65,7 +71,7 @@ Follow these steps to process events in a Projection:
 [.tabset]
 Java::
 +
-.src/main/java/shopping/cart/ItemPopularityRepository.java:
+.src/main/java/shopping/cart/repository/ItemPopularityRepository.java:
 [source,java,indent=0]
 ----
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/repository/ItemPopularityRepository.java[]
@@ -73,13 +79,13 @@ include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/repos
 
 Scala::
 +
-.src/main/scala/shopping/cart/ItemPopularityRepository.scala:
+.src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala:
 [source,scala,indent=0]
 ----
-include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityRepository.scala[tag=trait]
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala[tag=trait]
 ----
 
-.  [.group-java]#Use Spring ApplicationContext to retrieve the implementation for the repository# [.group-scala]#Add the implementation for Postgres:#
+.  [.group-java]#Use the Spring `ApplicationContext` to retrieve the implementation for the repository# [.group-scala]#Add the implementation for Postgres by using the `ScalikeJdbcSession`:#
 +
 [.tabset]
 Java::
@@ -95,10 +101,10 @@ include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/Main.
 
 Scala::
 +
-.src/main/scala/shopping/cart/ItemPopularityRepository.scala:
+.src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala:
 [source,scala,indent=0]
 ----
-include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityRepository.scala[tag=impl]
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala[tag=impl]
 ----
 
 
@@ -113,7 +119,7 @@ Java::
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjectionHandler.java[tags=handler]
 ----
 +
-<1> Extends `akka.projection.javadsl.Handler`.
+<1> Extends `akka.projection.javadsl.JdbcHandler`.
 <2> The `process` method to implement.
 <3> Match events and increment or decrement the count via the `ItemPopularityRepository`, which encapsulates the database access.
 
@@ -122,10 +128,10 @@ Scala::
 .src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala:
 [source,scala,indent=0]
 ----
-include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala[tags=handler]
+include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala[tags=handler]
 ----
 +
-<1> Extends `akka.projection.scaladsl.Handler`.
+<1> Extends `akka.projection.scaladsl.JdbcHandler`.
 <2> The `process` method to implement.
 <3> Match events and increment or decrement the count via the `ItemPopularityRepository`.
 
