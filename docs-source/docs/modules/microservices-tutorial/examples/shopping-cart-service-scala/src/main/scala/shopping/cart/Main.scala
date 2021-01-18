@@ -37,9 +37,8 @@ class Main(context: ActorContext[Nothing])
   ShoppingCart.init(system)
 
   // tag::ItemPopularityProjection[]
-  val itemPopularityRepository = new ItemPopularityRepositoryImpl() // <2>
-
-  ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
+  val itemPopularityRepository = new ItemPopularityRepositoryImpl() // <1>
+  ItemPopularityProjection.init(system, itemPopularityRepository) // <2>
   // end::ItemPopularityProjection[]
 
   val grpcInterface =

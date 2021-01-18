@@ -82,7 +82,7 @@ Scala::
 .src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala:
 [source,scala,indent=0]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala[tag=trait]
+include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala[tag=trait]
 ----
 
 .  [.group-java]#Use the Spring `ApplicationContext` to retrieve the implementation for the repository# [.group-scala]#Add the implementation for Postgres by using the `ScalikeJdbcSession`:#
@@ -104,7 +104,7 @@ Scala::
 .src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala:
 [source,scala,indent=0]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala[tag=impl]
+include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala[tag=impl]
 ----
 
 
@@ -128,7 +128,7 @@ Scala::
 .src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala:
 [source,scala,indent=0]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala[tags=handler]
+include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala[tags=handler]
 ----
 +
 <1> Extends `akka.projection.scaladsl.JdbcHandler`.
@@ -258,9 +258,8 @@ Scala::
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=ItemPopularityProjection]
 ----
 +
-<1> The `CassandraSession` is looked up from the `CassandraSessionRegistry`.
-<2> Instantiate the repository for Cassandra.
-<3> Call the initialization of the Projection.
+<1> Instantiate the repository.
+<2> Call the initialization of the Projection.
 
 == Query
 
@@ -315,7 +314,7 @@ Scala::
 .src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala
 [source,scala,indent=0]
 ----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=getItemPopularity]
+include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=getItemPopularity]
 ----
 +
 <1> Add the `ItemPopularityRepository` to the service implementation constructor.
