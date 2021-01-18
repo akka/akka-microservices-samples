@@ -1,8 +1,7 @@
-package shopping.cart.repository
+package shopping.cart.dbaccess
 
 import akka.japi.function.Function
 import akka.projection.jdbc.JdbcSession
-import org.slf4j.LoggerFactory
 import scalikejdbc._
 
 import java.sql.Connection
@@ -19,9 +18,8 @@ object ScalikeJdbcSession {
 }
 
 final class ScalikeJdbcSession extends JdbcSession {
-  private val log = LoggerFactory.getLogger(getClass)
-
   val db: DB = DB.connect()
+  db.autoClose(false)
 
   override def withConnection[Result](
       func: Function[Connection, Result]): Result = {
@@ -29,12 +27,9 @@ final class ScalikeJdbcSession extends JdbcSession {
     db.withinTxWithConnection(func(_))
   }
 
-  override def commit(): Unit = {
-    db.commit()
-    log.debug("committed {}", db)
-  }
+  override def commit(): Unit = db.commit()
 
   override def rollback(): Unit = db.rollback()
 
-  override def close(): Unit = () //db.close() //db.close()
+  override def close(): Unit = db.close()
 }

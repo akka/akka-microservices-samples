@@ -7,6 +7,7 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
+import shopping.cart.dbaccess.{ DBsFromConfig, ItemPopularityRepositoryImpl }
 
 // tag::SendOrderProjection[]
 import shopping.order.proto.{ ShoppingOrderService, ShoppingOrderServiceClient }
@@ -32,6 +33,8 @@ object Main {
 class Main(context: ActorContext[Nothing])
     extends AbstractBehavior[Nothing](context) {
   val system = context.system
+
+  DBsFromConfig.init(system)
   AkkaManagement(system).start()
   ClusterBootstrap(system).start()
 

@@ -8,7 +8,7 @@ import akka.grpc.GrpcServiceException
 import akka.util.Timeout
 import io.grpc.Status
 import org.slf4j.LoggerFactory
-import shopping.cart.repository.ScalikeJdbcSession
+import shopping.cart.dbaccess.{ ItemPopularityRepository, ScalikeJdbcSession }
 
 // tag::moreOperations[]
 import akka.actor.typed.ActorRef

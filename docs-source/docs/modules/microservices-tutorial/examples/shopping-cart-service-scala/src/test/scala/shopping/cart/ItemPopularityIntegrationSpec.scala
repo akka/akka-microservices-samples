@@ -13,7 +13,8 @@ import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.scalatest.OptionValues
 import org.scalatest.wordspec.AnyWordSpecLike
-import shopping.cart.repository.ScalikeJdbcSession
+import shopping.cart.dbaccess.ItemPopularityRepositoryImpl
+import shopping.cart.dbaccess.ScalikeJdbcSession
 
 object ItemPopularityIntegrationSpec {
   val config: Config =
@@ -29,7 +30,7 @@ class ItemPopularityIntegrationSpec
     new ItemPopularityRepositoryImpl()
 
   override protected def beforeAll(): Unit = {
-    CreateTableTestUtils.setupScalikeJdbcConnectionPool(system)
+    CreateTableTestUtils.setupScalikeJdbcConnectionPool(system.settings.config)
     CreateTableTestUtils.dropAndRecreateTables(system)
     // avoid concurrent creation of keyspace and tables
     val timeout = 10.seconds
@@ -87,12 +88,11 @@ class ItemPopularityIntegrationSpec
         cart2.askWithStatus(ShoppingCart.AddItem(item2, 4, _))
       reply3.futureValue.items.values.sum should ===(4)
 
-      Thread.sleep(10000)
       eventually {
         ScalikeJdbcSession.withSession { session =>
           itemPopularityRepository.getItem(session, item2).value should ===(
             5 + 4)
-//          itemPopularityRepository.getItem(session, item1).value should ===(3)
+          itemPopularityRepository.getItem(session, item1).value should ===(3)
         }
       }
     }

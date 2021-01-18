@@ -11,7 +11,7 @@ import akka.projection.eventsourced.scaladsl.EventSourcedProvider
 import akka.projection.jdbc.scaladsl.JdbcProjection
 import akka.projection.scaladsl.{ ExactlyOnceProjection, SourceProvider }
 import akka.projection.{ ProjectionBehavior, ProjectionId }
-import shopping.cart.repository.ScalikeJdbcSession
+import shopping.cart.dbaccess.{ ItemPopularityRepository, ScalikeJdbcSession }
 
 object ItemPopularityProjection {
   // tag::howto-read-side-without-role[]

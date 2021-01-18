@@ -12,7 +12,7 @@ import akka.projection.eventsourced.scaladsl.EventSourcedProvider
 import akka.projection.jdbc.scaladsl.JdbcProjection
 import akka.projection.scaladsl.AtLeastOnceProjection
 import akka.projection.scaladsl.SourceProvider
-import shopping.cart.repository.ScalikeJdbcSession
+import shopping.cart.dbaccess.ScalikeJdbcSession
 import shopping.order.proto.ShoppingOrderService
 
 object SendOrderProjection {

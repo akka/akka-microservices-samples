@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <configuration>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -6,6 +7,10 @@
         </encoder>
     </appender>
 
+    <logger name="akka" level="INFO" />
+    <logger name="com.zaxxer.hikari" level="INFO" />
+    <logger name="slick" level="INFO" />
+    <logger name="scalikejdbc" level="INFO" />
     <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>

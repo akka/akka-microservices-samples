@@ -1,9 +1,8 @@
 // tag::trait[]
 // tag::impl[]
-package shopping.cart
+package shopping.cart.dbaccess
 
 import scalikejdbc._
-import shopping.cart.repository.ScalikeJdbcSession
 // end::trait[]
 // end::impl[]
 

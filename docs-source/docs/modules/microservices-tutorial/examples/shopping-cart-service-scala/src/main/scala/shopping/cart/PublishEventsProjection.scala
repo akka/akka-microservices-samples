@@ -17,7 +17,7 @@ import org.apache.kafka.common.serialization.{
   ByteArraySerializer,
   StringSerializer
 }
-import shopping.cart.repository.ScalikeJdbcSession
+import shopping.cart.dbaccess.ScalikeJdbcSession
 
 object PublishEventsProjection {
 
