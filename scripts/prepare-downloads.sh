@@ -11,20 +11,21 @@ declare -r temporal_attachments="${PWD}/target/microservices-tutorial/_attachmen
 mkdir -p ${temporal_attachments}
 
 mkdir -p ${tutorial_attachments}
+mkdir -p ${howto_attachments}
 
 ## Remove the tags used by Antora snippets from 
 ## the codebase in the current folder
 function removeTags() {
    ## remove tags from code
-   find . -type f -print0 | xargs -0 sed -i "s/\/\/ tag::[^\[]*\[.*\]//g" 
-   find . -type f -print0 | xargs -0 sed -i "s/\/\/ end::[^\[]*\[.*\]//g" 
+   find . -type f -print0 | xargs -0 sed -i "s/\/\/ tag::[^\[]*\[.*\]//g"
+   find . -type f -print0 | xargs -0 sed -i "s/\/\/ end::[^\[]*\[.*\]//g"
    
    ## remove tags from config
-   find . -type f -print0 | xargs -0 sed -i "s/# tag::[^\[]*\[.*\]//g" 
-   find . -type f -print0 | xargs -0 sed -i "s/# end::[^\[]*\[.*\]//g" 
+   find . -type f -print0 | xargs -0 sed -i "s/# tag::[^\[]*\[.*\]//g"
+   find . -type f -print0 | xargs -0 sed -i "s/# end::[^\[]*\[.*\]//g"
 
    ## remove call-outs
-   find . -type f -print0 | xargs -0 sed -i "s/\/\/ <[0-9]*>//g" 
+   find . -type f -print0 | xargs -0 sed -i "s/\/\/ <[0-9]*>//g"
 }
 
 

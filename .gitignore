@@ -20,3 +20,4 @@ target
 
 # code sample zip files are generated on this path, we don't want them accidentally committed
 docs-source/docs/modules/microservices-tutorial/assets/attachments/*.zip
+docs-source/docs/modules/how-to/assets/attachments/*.zip
