@@ -15,6 +15,8 @@ import scala.concurrent.{ Await, ExecutionContext, Future }
 object CreateTableTestUtils {
 
   private var scalikeJdbc: DBsFromConfig = _
+  private val createUserTablesFile =
+    Paths.get("ddl-scripts/create_user_tables.sql").toFile
 
   def setupScalikeJdbcConnectionPool(config: Config): Unit = {
     scalikeJdbc = DBsFromConfig.fromConfig(config)
@@ -37,9 +39,9 @@ object CreateTableTestUtils {
           new ScalikeJdbcSession())
         _ <- JdbcProjection.createOffsetTableIfNotExists(() =>
           new ScalikeJdbcSession())
+        if createUserTablesFile.exists()
         _ <- dropUserTables()
-        _ <- SchemaUtils.applyScript(
-          fromFileAsString("ddl-scripts/create_user_tables.sql"))
+        _ <- SchemaUtils.applyScript(createUserTablesSql)
       } yield Done,
       30.seconds)
 
@@ -50,14 +52,11 @@ object CreateTableTestUtils {
 
   private def dropUserTables()(
       implicit system: ActorSystem[_]): Future[Done] = {
-    val path = Paths.get("ddl-scripts/create_user_tables.sql")
-    if (path.toFile().exists()) {
-      SchemaUtils.applyScript("DROP TABLE IF EXISTS public.item_popularity;")
-    } else Future.successful(Done)
+    SchemaUtils.applyScript("DROP TABLE IF EXISTS public.item_popularity;")
   }
 
-  private def fromFileAsString(fileName: String): String = {
-    val source = scala.io.Source.fromFile(Paths.get(fileName).toFile)
+  private def createUserTablesSql: String = {
+    val source = scala.io.Source.fromFile(createUserTablesFile)
     val contents = source.mkString
     source.close()
     contents
