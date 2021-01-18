@@ -104,7 +104,8 @@ class IntegrationSpec
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    CreateTableTestUtils.setupScalikeJdbcConnectionPool(IntegrationSpec.sharedConfig)
+    CreateTableTestUtils.setupScalikeJdbcConnectionPool(
+      IntegrationSpec.sharedConfig)
     CreateTableTestUtils.dropAndRecreateTables(testNode1.system)
     // avoid concurrent creation of tables
     val timeout = 10.seconds
