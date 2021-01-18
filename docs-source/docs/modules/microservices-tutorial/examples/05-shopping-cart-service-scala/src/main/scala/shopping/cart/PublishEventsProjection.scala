@@ -6,17 +6,18 @@ import akka.cluster.sharding.typed.ShardedDaemonProcessSettings
 import akka.cluster.sharding.typed.scaladsl.ShardedDaemonProcess
 import akka.kafka.ProducerSettings
 import akka.kafka.scaladsl.SendProducer
-import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
+import akka.persistence.jdbc.query.scaladsl.JdbcReadJournal
 import akka.persistence.query.Offset
-import akka.projection.cassandra.scaladsl.CassandraProjection
 import akka.projection.eventsourced.EventEnvelope
 import akka.projection.eventsourced.scaladsl.EventSourcedProvider
+import akka.projection.jdbc.scaladsl.JdbcProjection
 import akka.projection.scaladsl.{ AtLeastOnceProjection, SourceProvider }
 import akka.projection.{ ProjectionBehavior, ProjectionId }
 import org.apache.kafka.common.serialization.{
   ByteArraySerializer,
   StringSerializer
 }
+import shopping.cart.repository.ScalikeJdbcSession
 
 object PublishEventsProjection {
 
@@ -60,14 +61,15 @@ object PublishEventsProjection {
         : SourceProvider[Offset, EventEnvelope[ShoppingCart.Event]] =
       EventSourcedProvider.eventsByTag[ShoppingCart.Event](
         system = system,
-        readJournalPluginId = CassandraReadJournal.Identifier,
+        readJournalPluginId = JdbcReadJournal.Identifier,
         tag = tag)
 
-    CassandraProjection.atLeastOnce(
+    JdbcProjection.atLeastOnceAsync(
       projectionId = ProjectionId("PublishEventsProjection", tag),
       sourceProvider,
       handler =
-        () => new PublishEventsProjectionHandler(system, topic, sendProducer))
+        () => new PublishEventsProjectionHandler(system, topic, sendProducer),
+      sessionFactory = () => new ScalikeJdbcSession())(system)
   }
 
 }

@@ -20,11 +20,15 @@ Global / cancelable := false // ctrl-c
 val AkkaVersion = "2.6.10"
 val AkkaHttpVersion = "10.2.1"
 val AkkaManagementVersion = "1.0.9"
-val AkkaPersistenceCassandraVersion = "1.0.4"
+val AkkaPersistenceJdbcVersion = "5.0.0-RC1"
 val AlpakkaKafkaVersion = "2.0.5"
-val AkkaProjectionVersion = "1.0.0"
+val AkkaProjectionVersion = "1.0.0+33-53a5bbdd"
+val ScalikeJdbcVersion = "3.5.0"
 
 enablePlugins(AkkaGrpcPlugin)
+
+// Using snapshot versions
+resolvers += Resolver.bintrayRepo("akka", "snapshots")
 
 libraryDependencies ++= Seq(
   // 1. Basic dependencies for a clustered application
@@ -53,15 +57,16 @@ libraryDependencies ++= Seq(
   // 3. Using Akka Persistence
   "com.typesafe.akka" %% "akka-persistence-typed" % AkkaVersion,
   "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion,
-  "com.typesafe.akka" %% "akka-persistence-cassandra" % AkkaPersistenceCassandraVersion,
+  "com.lightbend.akka" %% "akka-persistence-jdbc" % AkkaPersistenceJdbcVersion,
   "com.typesafe.akka" %% "akka-persistence-testkit" % AkkaVersion % Test,
+  "org.postgresql" % "postgresql" % "42.2.18",
 
   // 4. Querying or projecting data from Akka Persistence
   "com.typesafe.akka" %% "akka-persistence-query" % AkkaVersion,
   "com.lightbend.akka" %% "akka-projection-eventsourced" % AkkaProjectionVersion,
-  "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
+  "com.lightbend.akka" %% "akka-projection-jdbc" % AkkaProjectionVersion,
+  "org.scalikejdbc" %% "scalikejdbc" % ScalikeJdbcVersion,
+  "org.scalikejdbc" %% "scalikejdbc-config" % ScalikeJdbcVersion,
   "com.typesafe.akka" %% "akka-stream-kafka" % AlpakkaKafkaVersion,
-  "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
+  "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test
 )
-
-

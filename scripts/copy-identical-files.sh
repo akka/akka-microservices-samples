@@ -146,7 +146,7 @@ cp ${SRC} ${tutorial_root}/00-shopping-order-service-java/
 cp ${SRC} ${tutorial_root}/shopping-order-service-java/
 
 
-declare SRC="${tutorial_root}/00-shopping-cart-service-scala/ddl-scripts/create_tables.cql"
+declare SRC="${tutorial_root}/00-shopping-cart-service-java/ddl-scripts/create_tables.sql"
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/ddl-scripts/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/ddl-scripts/
 cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/ddl-scripts/
@@ -154,7 +154,6 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/ddl-scripts/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/ddl-scripts/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/ddl-scripts/
 
-declare SRC="${tutorial_root}/00-shopping-cart-service-java/ddl-scripts/create_tables.sql"
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/ddl-scripts/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/ddl-scripts/
 cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/ddl-scripts/
@@ -205,6 +204,14 @@ cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/src/main/resources/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/resources/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/resources/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-java/src/main/resources/
+
+declare SRC="${tutorial_root}/00-shopping-cart-service-scala/src/test/resources/persistence-test.conf"
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/src/test/resources/
 
 declare SRC="${tutorial_root}/00-shopping-cart-service-java/src/test/resources/persistence-test.conf"
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/src/test/resources/
@@ -404,6 +411,23 @@ cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/src/main/java/shopping/
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/repository/
 
+
+declare SRC="${tutorial_root}/00-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/DBsFromConfig.scala"
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+
+declare SRC="${tutorial_root}/00-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ScalikeJdbcSession.scala"
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+
 # from full example
 # 05 = after "Projection publishing to Kafka (shopping-analytics-service)", before "Projection calling gRPC service (shopping-order-service)"
 # 04 = after "Projection for queries", before "Projection publishing to Kafka (shopping-analytics-service)"
@@ -425,11 +449,10 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/protobuf/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/protobuf/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/protobuf/
 
-declare SRC="${tutorial_root}/shopping-cart-service-scala/ddl-scripts/create_user_tables.cql"
+declare SRC="${tutorial_root}/shopping-cart-service-java/ddl-scripts/create_user_tables.sql"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/ddl-scripts/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/ddl-scripts/
 
-declare SRC="${tutorial_root}/shopping-cart-service-java/ddl-scripts/create_user_tables.sql"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/ddl-scripts/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/ddl-scripts/
 
@@ -449,9 +472,9 @@ declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/scala/shoppin
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/scala/shopping/cart/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/scala/shopping/cart/
 
-declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityRepository.scala"
-cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/scala/shopping/cart/
-cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/scala/shopping/cart/
+declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala"
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 
 declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjection.scala"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/scala/shopping/cart/
