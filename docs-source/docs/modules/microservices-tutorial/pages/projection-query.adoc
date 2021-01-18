@@ -19,6 +19,8 @@ This piece of the xref:overview.adoc[full example] focuses on the `ItemPopularit
 
 The xref:concepts:cqrs.adoc[CQRS] section explains why it is a good practice to build a Projection from entity events that can be queried. The {akka-blog}/news/2020/09/10/akka-projection-intro-video[Introduction to Akka Projections video {tab-icon}, window="tab"] is also a good starting point for learning about Akka Projections.
 
+This example is using PostgreSQL for storing the Projection result and the Projection offset. An alternative is described in xref:how-to:cassandra-alternative.adoc[].
+
 == Source downloads
 
 If you prefer to simply view and run the example, download a zip file containing the completed code:
@@ -407,3 +409,4 @@ docker-compose down
 * xref:concepts:cqrs.adoc[CQRS concepts].
 * {akka-projection}/[Akka Projection reference documentation {tab-icon}, window="tab"].
 * {akka}/typed/cluster-sharded-daemon-process.html[Akka Sharded Daemon Process reference documentation {tab-icon}, window="tab"].
+* xref:how-to:cassandra-alternative.adoc[]

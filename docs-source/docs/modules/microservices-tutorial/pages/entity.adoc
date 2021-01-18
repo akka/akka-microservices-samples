@@ -19,6 +19,8 @@ ifdef::review[REVIEWERS: re: bullet 3 above, the Initialization section only con
 If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sourcing.adoc[Event Sourcing] section for an explanation.
 The {akka-blog}/news/2020/01/07/akka-event-sourcing-video[Event Sourcing with Akka 2.6 video {tab-icon}, window="tab"] is also a good starting point for learning Event Sourcing.
 
+This example is using PostgreSQL for storing the events. An alternative is described in xref:how-to:cassandra-alternative.adoc[].
+
 == Source downloads
 
 If you prefer to simply view and run the example, download a zip file containing the completed code:
@@ -436,3 +438,4 @@ docker-compose down
 * xref:concepts:event-sourcing.adoc[Event Sourcing concepts].
 * {akka}/typed/persistence.html[Akka Event Sourcing reference documentation {tab-icon}, window="tab"].
 * {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation {tab-icon}, window="tab"].
+* xref:how-to:cassandra-alternative.adoc[]

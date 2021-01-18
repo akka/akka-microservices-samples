@@ -156,6 +156,17 @@ jobs:
       name: "05 Shopping cart service (Java)"
 
     - script:
+      - cd docs-source/docs/modules/how-to/examples/shopping-cart-service-cassandra-scala
+      - docker-compose up -d
+      - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
+      name: "Howto Cassandra (Scala)"
+    - script:
+        - cd docs-source/docs/modules/how-to/examples/shopping-cart-service-cassandra-java
+        - docker-compose up -d
+        - mvn spotless:check test
+      name: "Howto Cassandra (Java)"
+
+    - script:
         - cd docs-source/docs/modules/how-to/examples/shopping-cart-service-scala
         - sbt -jvm-opts .jvmopts-travis "test; scalafmtCheckAll"
       name: "Howto example code"
