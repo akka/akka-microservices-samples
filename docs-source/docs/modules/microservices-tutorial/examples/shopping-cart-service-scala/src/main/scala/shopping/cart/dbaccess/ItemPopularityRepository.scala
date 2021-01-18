@@ -3,18 +3,11 @@
 package shopping.cart.dbaccess
 
 import scalikejdbc._
-// end::trait[]
-// end::impl[]
-
-// tag::trait[]
 
 trait ItemPopularityRepository {
   def update(session: ScalikeJdbcSession, itemId: String, delta: Int): Unit
   def getItem(session: ScalikeJdbcSession, itemId: String): Option[Long]
 }
-// end::trait[]
-
-// tag::impl[]
 
 class ItemPopularityRepositoryImpl() extends ItemPopularityRepository {
 
@@ -55,4 +48,3 @@ class ItemPopularityRepositoryImpl() extends ItemPopularityRepository {
       .apply()
   }
 }
-// end::impl[]
