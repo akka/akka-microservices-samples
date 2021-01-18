@@ -1,8 +1,8 @@
 package shopping.cart
 
 import java.util.concurrent.TimeoutException
-import scala.concurrent.Future
-import akka.actor.typed.ActorSystem
+import scala.concurrent.{ ExecutionContext, Future }
+import akka.actor.typed.{ ActorSystem, DispatcherSelector }
 import akka.cluster.sharding.typed.scaladsl.ClusterSharding
 import akka.grpc.GrpcServiceException
 import akka.util.Timeout
@@ -16,10 +16,13 @@ import akka.pattern.StatusReply
 
 // end::moreOperations[]
 
+// tag::getItemPopularity[]
 class ShoppingCartServiceImpl(
     system: ActorSystem[_],
-    itemPopularityRepository: ItemPopularityRepository)
+    itemPopularityRepository: ItemPopularityRepository) // <1>
     extends proto.ShoppingCartService {
+
+  // end::getItemPopularity[]
   import system.executionContext
 
   private val logger = LoggerFactory.getLogger(getClass)
@@ -30,6 +33,14 @@ class ShoppingCartServiceImpl(
 
   private val sharding = ClusterSharding(system)
 
+  // tag::getItemPopularity[]
+  private val blockingJdbcExecutor: ExecutionContext =
+    system.dispatchers.lookup(
+      DispatcherSelector
+        .fromConfig("akka.projection.jdbc.blocking-jdbc-dispatcher")
+    ) // <2>
+
+  // end::getItemPopularity[]
   override def addItem(in: proto.AddItemRequest): Future[proto.Cart] = {
     logger.info("addItem {} to cart {}", in.itemId, in.cartId)
     val entityRef = sharding.entityRefFor(ShoppingCart.EntityKey, in.cartId)
@@ -106,20 +117,16 @@ class ShoppingCartServiceImpl(
   // tag::getItemPopularity[]
   override def getItemPopularity(in: proto.GetItemPopularityRequest)
       : Future[proto.GetItemPopularityResponse] = {
-    // TODO proper async
-    Future {
-      val session = new ScalikeJdbcSession()
-      try {
+    Future { // <3>
+      ScalikeJdbcSession.withSession { session =>
         itemPopularityRepository.getItem(session, in.itemId)
-      } finally {
-        session.close()
       }
-    }.map {
+    }(blockingJdbcExecutor).map {
       case Some(count) =>
         proto.GetItemPopularityResponse(in.itemId, count)
       case None =>
         proto.GetItemPopularityResponse(in.itemId, 0L)
     }
   }
-  // end::getItemPopularity[]
 }
+// end::getItemPopularity[]

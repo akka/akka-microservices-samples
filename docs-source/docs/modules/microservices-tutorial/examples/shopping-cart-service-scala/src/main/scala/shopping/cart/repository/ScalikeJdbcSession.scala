@@ -7,7 +7,7 @@ import scalikejdbc._
 import java.sql.Connection
 
 object ScalikeJdbcSession {
-  def withSession[R](f: ScalikeJdbcSession => R): Unit = {
+  def withSession[R](f: ScalikeJdbcSession => R): R = {
     val session = new ScalikeJdbcSession()
     try {
       f(session)
