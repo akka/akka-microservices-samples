@@ -450,11 +450,12 @@ cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/protobuf/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/protobuf/
 
 declare SRC="${tutorial_root}/shopping-cart-service-java/ddl-scripts/create_user_tables.sql"
-cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/ddl-scripts/
-cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/ddl-scripts/
-
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/ddl-scripts/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/ddl-scripts/
+
+declare SRC="${tutorial_root}/shopping-cart-service-scala/ddl-scripts/create_user_tables.sql"
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/ddl-scripts/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/ddl-scripts/
 
 declare SRC="${tutorial_root}/shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/kubernetes/
@@ -503,21 +504,15 @@ cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/scala/shoppin
 cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/test/scala/shopping/cart/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/test/scala/shopping/cart/
 
-declare SRC="${tutorial_root}/shopping-cart-service-scala/src/test/scala/shopping/cart/CreateTableTestUtils.scala"
-cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/scala/shopping/cart/
-cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/scala/shopping/cart/
-
 declare SRC="${tutorial_root}/shopping-cart-service-scala/src/test/scala/shopping/cart/ItemPopularityIntegrationSpec.scala"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/scala/shopping/cart/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/scala/shopping/cart/
 
-declare SRC="${tutorial_root}/shopping-cart-service-java/src/test/resources/item-popularity-integration-test.conf"
+declare SRC="${tutorial_root}/shopping-cart-service-scala/src/test/resources/item-popularity-integration-test.conf"
+cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/resources/
+cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/resources/
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/test/resources/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/test/resources/
-
-declare SRC="${tutorial_root}/shopping-cart-service-scala/src/test/scala/shopping/cart/ItemPopularityProjectionSpec.scala"
-cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/test/scala/shopping/cart/
-cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/scala/shopping/cart/
 
 declare SRC="${tutorial_root}/02-shopping-cart-service-scala/src/test/scala/shopping/cart/IntegrationSpec.scala"
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/test/scala/shopping/cart/

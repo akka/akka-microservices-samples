@@ -39,12 +39,16 @@ object CreateTableTestUtils {
           new ScalikeJdbcSession())
         _ <- JdbcProjection.createOffsetTableIfNotExists(() =>
           new ScalikeJdbcSession())
-        if createUserTablesFile.exists()
-        _ <- dropUserTables()
-        _ <- SchemaUtils.applyScript(createUserTablesSql)
       } yield Done,
       30.seconds)
-
+    if (createUserTablesFile.exists()) {
+      Await.result(
+        for {
+          _ <- dropUserTables()
+          _ <- SchemaUtils.applyScript(createUserTablesSql)
+        } yield Done,
+        30.seconds)
+    }
     LoggerFactory
       .getLogger("shopping.cart.CreateTableTestUtils")
       .info("Created tables")
