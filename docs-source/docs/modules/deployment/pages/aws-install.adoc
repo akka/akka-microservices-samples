@@ -156,11 +156,10 @@ helm repo update
 
 [source,shell script]
 ----
-helm install akka-operator akka-operator-helm/charts/akka-operator-<version>.tgz \
-  --namespace lightbend  \
-  --set image.repository=803424716218.dkr.ecr.eu-central-1.amazonaws.com/akka-operator  \
-  --set image.tag=<tag>  \
-  --set serviceAccount.name=akka-operator
+helm install akka-operator akka-operator-helm/akka-operator \
+  --version=<version> \
+  --set serviceAccount.name=akka-operator \
+  --namespace lightbend \
   --create-namespace
 ----
 
@@ -205,9 +204,8 @@ helm repo update
 
 [source,shell script]
 ----
-helm upgrade akka-operator akka-operator-helm/charts/akka-operator-<version>.tgz \
+helm upgrade akka-operator akka-operator-helm/akka-operator \
   --namespace lightbend \
-  --set image.repository=803424716218.dkr.ecr.eu-central-1.amazonaws.com/akka-operator \
   --set image.tag=<version>
 ----
 
