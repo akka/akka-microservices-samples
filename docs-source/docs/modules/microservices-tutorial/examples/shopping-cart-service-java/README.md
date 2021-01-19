@@ -22,19 +22,19 @@
 3. Start a first node:
 
     ```shell
-    mvn exec:exec -DAPP_CONFIG=local1.conf
+    mvn compile exec:exec -DAPP_CONFIG=local1.conf
     ```
 
 4. (Optional) Start another node with different ports:
 
     ```shell
-    mvn exec:exec -DAPP_CONFIG=local2.conf
+    mvn compile exec:exec -DAPP_CONFIG=local2.conf
     ```
 
 5. (Optional) More can be started:
 
     ```shell
-    mvn exec:exec -DAPP_CONFIG=local3.conf
+    mvn compile exec:exec -DAPP_CONFIG=local3.conf
     ```
 
 6. Check for service readiness

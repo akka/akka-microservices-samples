@@ -21,7 +21,7 @@
         <akka.version>2.6.11</akka.version>
         <akka-http.version>10.2.2</akka-http.version>
         <akka-management.version>1.0.9</akka-management.version>
-        <alpakka-kafka.version>2.0.5</alpakka-kafka.version>
+        <alpakka-kafka.version>2.0.6</alpakka-kafka.version>
         <akka-projection.version>1.0.0+33-53a5bbdd</akka-projection.version>
         <akka-persistence-jdbc.version>5.0.0-RC1</akka-persistence-jdbc.version>
         <akka-grpc.version>1.0.2</akka-grpc.version>
