@@ -154,7 +154,7 @@ helm repo add akka-operator-helm https://lightbend.github.io/akka-operator-helm/
 helm repo update
 ----
 
-Optionally pick a version install, or omit the `helm install --version` parameter to install the latest version.
+Optionally pick a version to install, or omit the `helm install --version` parameter to install the latest version.
 
 [source,shell script]
 ----
