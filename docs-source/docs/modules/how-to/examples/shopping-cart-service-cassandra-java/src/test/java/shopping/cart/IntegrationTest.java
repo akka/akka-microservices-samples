@@ -60,7 +60,7 @@ public class IntegrationTest {
                 + "akka.projection.cassandra.offset-store.keyspace = "
                 + KEYSPACE
                 + "\n"
-                + "shopping-cart-service.kafka.topic = \"shopping_cart_events_"
+                + "shopping-cart-service.kafka.topic = \"shopping-cart-events_"
                 + UNIQUE_QUALIFIER
                 + "\"")
         .withFallback(ConfigFactory.load("integration-test.conf"));

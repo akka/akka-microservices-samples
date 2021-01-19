@@ -63,11 +63,11 @@ Save the connect string in an environment variable at the bash prompt of the Pod
 ZOOKEEPER_CONNECT_STRING="<copied ZooKeeper connect string>"
 ----
 
-Create a Kafka `shopping_cart_events` topic with:
+Create a Kafka `shopping-cart-events` topic with:
 
 [source,shell script]
 ----
-bin/kafka-topics.sh --zookeeper ${ZOOKEEPER_CONNECT_STRING} --create --topic shopping_cart_events --replication-factor 3 --partitions 4
+bin/kafka-topics.sh --zookeeper ${ZOOKEEPER_CONNECT_STRING} --create --topic shopping-cart-events --replication-factor 3 --partitions 4
 ----
 
 == Kafka configuration

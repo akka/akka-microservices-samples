@@ -72,7 +72,7 @@ object IntegrationSpec {
       
       akka.projection.cassandra.offset-store.keyspace = $keyspace
       
-      shopping-cart-service.kafka.topic = "shopping_cart_events_$uniqueQualifier"
+      shopping-cart-service.kafka.topic = "shopping-cart-events_$uniqueQualifier"
 
       akka.kafka.consumer {
         kafka-clients {
