@@ -27,6 +27,7 @@ val AkkaProjectionVersion = "1.0.0"
 
 enablePlugins(AkkaGrpcPlugin)
 
+enablePlugins(JavaAppPackaging, DockerPlugin)
 dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
 dockerUsername := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
