@@ -54,7 +54,7 @@ public class ItemPopularityProjectionTest {
     return new Handler<EventEnvelope<ShoppingCart.Event>>() {
       @Override
       public CompletionStage<Done> process(EventEnvelope<ShoppingCart.Event> eventEventEnvelope)
-          throws Exception, Exception {
+          throws Exception {
         return CompletableFuture.supplyAsync(
             () -> {
               itemHandler.process(

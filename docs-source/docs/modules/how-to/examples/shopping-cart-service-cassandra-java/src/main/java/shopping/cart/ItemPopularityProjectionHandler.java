@@ -22,7 +22,7 @@ public final class ItemPopularityProjectionHandler
 
   @Override
   public CompletionStage<Done> process(EventEnvelope<ShoppingCart.Event> envelope) // <2>
-      throws Exception, Exception {
+      throws Exception {
     ShoppingCart.Event event = envelope.event();
 
     if (event instanceof ShoppingCart.ItemAdded) { // <3>

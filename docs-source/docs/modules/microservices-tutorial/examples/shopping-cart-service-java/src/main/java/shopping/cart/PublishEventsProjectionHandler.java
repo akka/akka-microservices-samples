@@ -27,7 +27,7 @@ public final class PublishEventsProjectionHandler
 
   @Override
   public CompletionStage<Done> process(EventEnvelope<ShoppingCart.Event> envelope)
-      throws Exception, Exception {
+      throws Exception {
     ShoppingCart.Event event = envelope.event();
 
     // using the cartId as the key and `DefaultPartitioner` will select partition based on the key
