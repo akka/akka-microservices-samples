@@ -154,6 +154,15 @@ helm repo add akka-operator-helm https://lightbend.github.io/akka-operator-helm/
 helm repo update
 ----
 
+Pick a version install.
+
+[source,shell script]
+----
+helm search repo akka-operator-helm/akka-operator --versions
+----
+
+Install the chart.
+
 [source,shell script]
 ----
 helm install akka-operator akka-operator-helm/charts/akka-operator-<version>.tgz \
@@ -202,6 +211,15 @@ Add the Akka Platform Operator Helm repository and update the local index:
 helm repo add akka-operator-helm https://lightbend.github.io/akka-operator-helm/
 helm repo update
 ----
+
+Pick a version upgrade to.
+
+[source,shell script]
+----
+helm search repo akka-operator-helm/akka-operator --versions
+----
+
+Upgrade the chart.
 
 [source,shell script]
 ----
