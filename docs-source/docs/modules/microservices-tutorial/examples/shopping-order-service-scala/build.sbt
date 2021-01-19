@@ -1,5 +1,4 @@
 name := "shopping-order-service"
-version := "1.0"
 
 organization := "com.lightbend.akka.samples"
 organizationHomepage := Some(url("https://akka.io"))
