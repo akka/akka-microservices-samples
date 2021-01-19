@@ -80,6 +80,9 @@ jobs:
       - name: "05 Shopping cart service (Java)"
         run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-java
 
+      - name: "Howto Cassandra code (Java)"
+        run: scripts/mvn-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-cassandra-java
+
   scala-compile-and-test:
     name: Compile and Test (Scala)
     runs-on: ubuntu-18.04
@@ -139,3 +142,7 @@ jobs:
 
       - name: "Howto cleanup dependencies"
         run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/cleanup-dependencies-project
+
+      - name: "Howto Cassandra code (Scala)"
+        run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-cassandra-scala
+

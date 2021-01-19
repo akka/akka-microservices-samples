@@ -1,8 +1,8 @@
 name: Link Validator
 
 on:
-  pull_request_target:
-    branches: [main]
+  pull_request:
+    branches: [main, main-with-operator]
   schedule:
     - cron:  '0 6 * * 1-5'
 
@@ -15,6 +15,12 @@ jobs:
         with:
           # See https://github.com/actions/checkout/issues/299#issuecomment-677674415
           ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: Checkout GitHub merge
+        if: github.event.pull_request
+        run: |-
+          git fetch origin pull/${{ github.event.pull_request.number }}/merge:scratch
+          git checkout scratch
 
       - name: Run Antora
         run: make all
