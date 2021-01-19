@@ -28,6 +28,11 @@ val AkkaProjectionVersion = "1.0.0"
 
 enablePlugins(AkkaGrpcPlugin)
 
+dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
+dockerUsername := sys.props.get("docker.username")
+dockerRepository := sys.props.get("docker.registry")
+ThisBuild / dynverSeparator := "-"
+
 // tag::dependencies-for-healthchecks[]
 libraryDependencies ++= Seq(
 // end::dependencies-for-healthchecks[]

@@ -46,6 +46,12 @@ val AkkaProjectionVersion = "1.0.0"
 enablePlugins(AkkaGrpcPlugin)
 // end::remove-grpc-plugin[]
 
+enablePlugins(JavaAppPackaging, DockerPlugin)
+dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
+dockerUsername := sys.props.get("docker.username")
+dockerRepository := sys.props.get("docker.registry")
+ThisBuild / dynverSeparator := "-"
+
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-cluster-sharding-typed" % AkkaVersion,
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
