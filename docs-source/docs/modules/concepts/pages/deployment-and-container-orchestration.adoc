@@ -3,7 +3,13 @@
 
 include::partial$include.adoc[]
 
-To deploy an application built using Akka Cluster you can follow the {akka-management}/kubernetes-deployment/index.html[guide in the Akka Management documentation {tab-icon}, window="tab"]. That guide will help you complete your code and configure the application. It will also show you how to create a <<Docker>> container for your application and how to create the <<Kubernetes>> resources to successfully deploy the application. Finally, it will explain which are the relevant settings you need to consider when deploying an Akka Cluster application on a Kubernetes cluster.
+To deploy an application built using Akka Cluster you can use the xref:deployment:index.adoc[Akka Platform Operator].
+
+The example from the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] contains build files for creating a <<Docker>> container for your application.
+
+Each step of the tutorial has instructions of how to run in Kubernetes, for example the xref:microservices-tutorial:grpc-service.adoc#kubernetes[first step]
+
+Alternatively, you can deploy {akka-management}/kubernetes-deployment/index.html[Akka Cluster applications to Kubernetes without the Akka Platform Operator {tab-icon}, window="tab"], but that requires more expertise of Kubernetes.
 
 == Docker
 [#docker]
