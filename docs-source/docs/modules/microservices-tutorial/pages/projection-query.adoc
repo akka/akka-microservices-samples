@@ -51,16 +51,15 @@ To process events in a projection, we will:
 
 [.group-java]
 ****
-This example uses Spring Data and Hibernate to access the database.
-The template provides a few integration classes for that purpose, for instance: `HibernateJdbcSession`, `SpringConfig` and `SpringIntegration`.
+This example uses Spring Data and Hibernate to access the database. You may use any other JDBC library to achieve this.
 
-How these classes work won't be covered by this tutorial. Consult their respective source code in the template for more information on how they provide the necessary glue code.
+The template provides a few classes for integration with Spring Data: `HibernateJdbcSession`, `SpringConfig`, `SpringIntegration` and `CreateTableTestUtils`. How these classes work won't be covered by this tutorial. Consult their respective source code in the template for more information on how they provide the necessary glue code.
 ****
 [.group-scala]
 ****
-This example uses the link:http://scalikejdbc.org/[ScalikeJDBC library {tab-icon}, window="tab"] to access the database via JDBC. **You may use any other JDBC library to achieve this.**
+This example uses the link:http://scalikejdbc.org/[ScalikeJDBC library {tab-icon}, window="tab"] to access the database.. You may use any other JDBC library to achieve this.
 
-The code to integrate with ScalikeJDBC is `DBsFromConfig`, `ScalikeJdbcSession` and `ItemPopularityRepositoryImpl`.
+The template provides a few classes for integration with ScalikeJDBC, for instance: `DBsFromConfig`, `ScalikeJdbcSession` and `CreateTableTestUtils`. How these classes work won't be covered by this tutorial. Consult their respective source code in the template for more information on how they provide the necessary glue code.
 ****
 
 Follow these steps to process events in a Projection:
@@ -85,7 +84,7 @@ Scala::
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala[tag=trait]
 ----
 
-.  [.group-java]#Use the Spring `ApplicationContext` to retrieve the implementation for the repository# [.group-scala]#Add the implementation for PostgresSQL by using the `ScalikeJdbcSession`:#
+.  [.group-java]#Use the Spring `ApplicationContext` class to retrieve the implementation for the repository. This will be added later to the `Main` class.# [.group-scala]#Add the implementation for PostgresSQL by using the `ScalikeJdbcSession`:#
 +
 [.tabset]
 Java::
@@ -230,8 +229,8 @@ include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Ite
 <1> `ShardedDaemonProcess` will manage the Projection instances. It ensures the Projection instances are always running and distributes them over the nodes in the Akka Cluster.
 <2> The `tag` is selected based on the Projection instance's index, corresponding to *carts-0* to *carts-3* as explained in the tagging in the `ShoppingCart`.
 <3> The source of the Projection is `EventSourcedProvider.eventsByTag` with the selected tag.
-<4> Using the Cassandra event journal.
-<5> Using Cassandra for offset storage of the Projection.
+<4> Using the JDBC event journal.
+<5> Using JDBC for offset storage of the Projection using `exactly-once` strategy. Offset and projected model will be persisted transactionally.
 <6> Creating the Projection `Handler` that we wrote in the beginning of this part.
 
 . Call the `ItemPopularityProjection.init` from `Main`:
@@ -430,7 +429,7 @@ Create a xref:deployment:aws-install.adoc[Kubernetes cluster and install the Akk
 
 Create the item popularity table using the `ddl-scripts/create_user_tables.sql` SQL script. Follow the instructions in xref:deployment:aws-rds.adoc#connect-sql-tool[Connect with SQL tool] to connect to your RDS instance and load the script.
 
-Make sure that `ddl-scripts/create_user_tables.sql` is also loaded as previously described.
+Make sure that `ddl-scripts/create_tables.sql` is also loaded as previously described.
 
 === Build Docker image
 
