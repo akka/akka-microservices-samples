@@ -3,6 +3,7 @@ package shopping.cart
 import scala.concurrent.Await
 import scala.concurrent.Future
 import scala.concurrent.duration._
+
 import akka.actor.testkit.typed.scaladsl.ScalaTestWithActorTestKit
 import akka.cluster.MemberStatus
 import akka.cluster.sharding.typed.scaladsl.ClusterSharding
@@ -14,6 +15,7 @@ import com.typesafe.config.ConfigFactory
 import org.scalatest.OptionValues
 import org.scalatest.wordspec.AnyWordSpecLike
 import shopping.cart.repository.ItemPopularityRepositoryImpl
+import shopping.cart.repository.ScalikeJdbcSetup
 import shopping.cart.repository.ScalikeJdbcSession
 
 object ItemPopularityIntegrationSpec {
@@ -30,7 +32,7 @@ class ItemPopularityIntegrationSpec
     new ItemPopularityRepositoryImpl()
 
   override protected def beforeAll(): Unit = {
-    CreateTableTestUtils.setupScalikeJdbcConnectionPool(system.settings.config)
+    ScalikeJdbcSetup.init(system)
     CreateTableTestUtils.dropAndRecreateTables(system)
     // avoid concurrent creation of keyspace and tables
     val timeout = 10.seconds
@@ -47,7 +49,6 @@ class ItemPopularityIntegrationSpec
 
   override protected def afterAll(): Unit = {
     super.afterAll()
-    CreateTableTestUtils.closeScalikeJdbcConnectionPool()
   }
 
   "Item popularity projection" should {

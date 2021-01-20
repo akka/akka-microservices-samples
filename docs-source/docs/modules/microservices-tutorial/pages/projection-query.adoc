@@ -59,7 +59,7 @@ The template provides a few classes for integration with Spring Data: `Hibernate
 ****
 This example uses the link:http://scalikejdbc.org/[ScalikeJDBC library {tab-icon}, window="tab"] to access the database.. You may use any other JDBC library to achieve this.
 
-The template provides a few classes for integration with ScalikeJDBC, for instance: `DBsFromConfig`, `ScalikeJdbcSession` and `CreateTableTestUtils`. How these classes work won't be covered by this tutorial. Consult their respective source code in the template for more information on how they provide the necessary glue code.
+The template provides a few classes for integration with ScalikeJDBC, for instance: `ScalikeJdbcSetup`, `ScalikeJdbcSession` and `CreateTableTestUtils`. How these classes work won't be covered by this tutorial. Consult their respective source code in the template for more information on how they provide the necessary glue code.
 ****
 
 Follow these steps to process events in a Projection:
@@ -257,8 +257,9 @@ Scala::
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=ItemPopularityProjection]
 ----
 +
-<1> Instantiate the repository.
-<2> Call the initialization of the Projection.
+<1> Call `ScalikeJdbcSetup.init` method to initiate the connection pool for the read-side. The connection pool will be closed when the actor system terminates.
+<2> Instantiate the repository.
+<3> Call the initialization of the Projection.
 
 == Query
 

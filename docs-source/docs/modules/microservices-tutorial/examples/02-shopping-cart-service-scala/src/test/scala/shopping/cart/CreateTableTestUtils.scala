@@ -1,30 +1,23 @@
 package shopping.cart
 
+import java.nio.file.Paths
+
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
+import scala.concurrent.duration._
+
 import akka.Done
 import akka.actor.typed.ActorSystem
 import akka.persistence.jdbc.testkit.scaladsl.SchemaUtils
 import akka.projection.jdbc.scaladsl.JdbcProjection
-import com.typesafe.config.Config
 import org.slf4j.LoggerFactory
-import shopping.cart.repository.{ DBsFromConfig, ScalikeJdbcSession }
-
-import java.nio.file.Paths
-import scala.concurrent.duration._
-import scala.concurrent.{ Await, ExecutionContext, Future }
+import shopping.cart.repository.ScalikeJdbcSession
 
 object CreateTableTestUtils {
 
-  private var scalikeJdbc: DBsFromConfig = _
   private val createUserTablesFile =
     Paths.get("ddl-scripts/create_user_tables.sql").toFile
-
-  def setupScalikeJdbcConnectionPool(config: Config): Unit = {
-    scalikeJdbc = DBsFromConfig.fromConfig(config)
-  }
-
-  def closeScalikeJdbcConnectionPool(): Unit = {
-    scalikeJdbc.closeAll()
-  }
 
   def dropAndRecreateTables(system: ActorSystem[_]): Unit = {
     implicit val sys: ActorSystem[_] = system

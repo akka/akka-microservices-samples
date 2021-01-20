@@ -7,7 +7,10 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
-import shopping.cart.repository.{ DBsFromConfig, ItemPopularityRepositoryImpl }
+import shopping.cart.repository.{
+  ItemPopularityRepositoryImpl,
+  ScalikeJdbcSetup
+}
 
 // tag::SendOrderProjection[]
 import shopping.order.proto.{ ShoppingOrderService, ShoppingOrderServiceClient }
@@ -30,7 +33,7 @@ class Main(context: ActorContext[Nothing])
     extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
-  DBsFromConfig.init(system)
+  ScalikeJdbcSetup.init(system)
   AkkaManagement(system).start()
   ClusterBootstrap(system).start()
 

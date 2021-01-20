@@ -7,7 +7,8 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
-import shopping.cart.repository.{ DBsFromConfig, ItemPopularityRepositoryImpl }
+import shopping.cart.repository.ItemPopularityRepositoryImpl
+import shopping.cart.repository.ScalikeJdbcSetup
 
 object Main {
 
@@ -24,15 +25,15 @@ class Main(context: ActorContext[Nothing])
     extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
-  DBsFromConfig.init(system)
+  ScalikeJdbcSetup.init(system)
   AkkaManagement(system).start()
   ClusterBootstrap(system).start()
 
   ShoppingCart.init(system)
 
   // tag::ItemPopularityProjection[]
-  val itemPopularityRepository = new ItemPopularityRepositoryImpl() // <1>
-  ItemPopularityProjection.init(system, itemPopularityRepository) // <2>
+  val itemPopularityRepository = new ItemPopularityRepositoryImpl()
+  ItemPopularityProjection.init(system, itemPopularityRepository)
   // end::ItemPopularityProjection[]
 
   val grpcInterface =

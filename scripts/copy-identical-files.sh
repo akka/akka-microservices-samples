@@ -387,21 +387,21 @@ cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/java/shopping/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/
 
 # Spring/Hibernate helpers
-declare SRC="${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/repository/HibernateJdbcSession.java"
+declare SRC="${tutorial_root}/00-shopping-cart-service-java/src/main/java/shopping/cart/repository/HibernateJdbcSession.java"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/src/main/java/shopping/cart/repository/
-cp ${SRC} ${tutorial_root}/00-shopping-cart-service-java/src/main/java/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/repository/
 
-declare SRC="${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/repository/SpringIntegration.java"
+declare SRC="${tutorial_root}/00-shopping-cart-service-java/src/main/java/shopping/cart/repository/SpringIntegration.java"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/03-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-java/src/main/java/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/src/main/java/shopping/cart/repository/
-cp ${SRC} ${tutorial_root}/00-shopping-cart-service-java/src/main/java/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/repository/
 
 declare SRC="${tutorial_root}/00-shopping-cart-service-java/src/main/java/shopping/cart/repository/SpringConfig.java"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-java/src/main/java/shopping/cart/repository/
@@ -412,21 +412,21 @@ cp ${SRC} ${tutorial_root}/01-shopping-cart-service-java/src/main/java/shopping/
 cp ${SRC} ${tutorial_root}/shopping-cart-service-java/src/main/java/shopping/cart/repository/
 
 # ScalikeJDBC helpers
-declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/repository/DBsFromConfig.scala"
+declare SRC="${tutorial_root}/00-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ScalikeJdbcSetup.scala"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
-cp ${SRC} ${tutorial_root}/00-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 
-declare SRC="${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ScalikeJdbcSession.scala"
+declare SRC="${tutorial_root}/00-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ScalikeJdbcSession.scala"
 cp ${SRC} ${tutorial_root}/05-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/04-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/03-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/02-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 cp ${SRC} ${tutorial_root}/01-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
-cp ${SRC} ${tutorial_root}/00-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
+cp ${SRC} ${tutorial_root}/shopping-cart-service-scala/src/main/scala/shopping/cart/repository/
 
 # from full example
 # 05 = after "Projection publishing to Kafka (shopping-analytics-service)", before "Projection calling gRPC service (shopping-order-service)"
