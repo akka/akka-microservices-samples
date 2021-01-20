@@ -84,6 +84,17 @@ Scala::
 include::example$04-shopping-cart-service-scala/src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala[tag=trait]
 ----
 
+. Add the `ItemPopularity`:
++
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/ItemPopularity.java:
+[source,java,indent=0]
+----
+include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularity.java[]
+----
+
 .  [.group-java]#Use the Spring `ApplicationContext` class to retrieve the implementation for the repository. This will be added later to the `Main` class.# [.group-scala]#Add the implementation for PostgresSQL by using the `ScalikeJdbcSession`:#
 +
 [.tabset]
