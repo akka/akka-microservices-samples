@@ -46,12 +46,28 @@ aws configure
 :!Sectnums:
 == Create a Kubernetes cluster
 
+Throughout these instructions, replace:
+
+* `eks-akka-demo` with your own EKS cluster name
+* `eu-central-1` with your preferred AWS region
+
 An Kubernetes cluster can be created from the https://console.aws.amazon.com/eks/home[Amazon EKS console {tab-icon}, window="tab"] or with the `eksctl` command line tool. For example:
 
 [source,shell script]
 ----
-eksctl create cluster --name eks-akka-demo --version 1.17 --region eu-central-1 --nodegroup-name linux-nodes --nodes 3 --nodes-min 1 --nodes-max 4 --with-oidc --managed
+eksctl create cluster \
+  --name eks-akka-demo \
+  --version 1.17 \
+  --region eu-central-1 \
+  --nodegroup-name linux-nodes \
+  --nodes 3 \
+  --nodes-min 1 \
+  --nodes-max 4 \
+  --with-oidc \
+  --managed
 ----
+
+
 
 NOTE: We recommend using EKS with EC2 nodes, and not the Fargate option.
 
@@ -83,21 +99,22 @@ Subscribe to the https://aws.amazon.com/marketplace[Lightbend Akka Platform Oper
 
 The Akka Operator requires a https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html[service account with IAM roles {tab-icon}, window="tab"]
 
-If your EKS cluster has not been created with https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html[IAM OIDC provider {tab-icon}, window="tab"] (e.g. with the `--with-oidc` option with `eksctl`) then enable with:
+. If your EKS cluster has not been created with https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html[IAM OIDC provider {tab-icon}, window="tab"] (e.g. with the `--with-oidc` option with `eksctl`) then enable with:
++
 [source,shell script]
 ----
-eksctl utils associate-iam-oidc-provider --cluster <cluster_name> --approve
+eksctl utils associate-iam-oidc-provider --cluster eks-akka-demo --approve
 ----
 
-Create an IAM policy for the service account:
-
+. Create an IAM policy for the service account:
++
 [source,shell script]
 ----
 aws iam create-policy --policy-name AkkaPlatformOperator --policy-document file://policy.json
 ----
-
++
 With the file `policy.json` contents as:
-
++
 [source, json]
 ----
 {
@@ -115,17 +132,24 @@ With the file `policy.json` contents as:
     ]
 }
 ----
-
++
 Make a note of the policy ARN for the next step.
++
+If the `AkkaPlatformOperator` policy already exists you can retrieve the policy ARN with:
++
+[source, shell script]
+----
+aws iam list-policies
+----
 
-Finally, create the `iamserviceaccount`:
-
+. Finally, create the `iamserviceaccount`:
++
 [source, shell script]
 ----
 eksctl create iamserviceaccount \
     --name akka-operator \
     --namespace lightbend \
-    --cluster <cluster_name> \
+    --cluster eks-akka-demo \
     --attach-policy-arn <policy_arn> \
     --approve \
     --override-existing-serviceaccounts
@@ -135,34 +159,34 @@ eksctl create iamserviceaccount \
 
 == Install Akka Platform Operator
 
-Authenticate docker to the Amazon ECR repository:
-
+. Authenticate docker to the Amazon ECR repository:
++
 FIXME update with the Marketplace ECR
-
++
 [source,shell script]
 ----
 aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 803424716218.dkr.ecr.eu-central-1.amazonaws.com
 ----
 
-Install the Akka Platform Operator with Helm.
-
+. Install the Akka Platform Operator with Helm.
++
 Add the Akka Platform Operator Helm repository and update the local index:
-
++
 [source,shell script]
 ----
 helm repo add akka-operator-helm https://lightbend.github.io/akka-operator-helm/
 helm repo update
 ----
-
++
 Optionally pick a version to install, or omit the `helm install --version` parameter to install the latest version.
-
++
 [source,shell script]
 ----
 helm search repo akka-operator-helm/akka-operator --versions
 ----
-
++
 Install the chart.
-
++
 [source,shell script]
 ----
 helm install akka-operator akka-operator-helm/akka-operator \
@@ -172,8 +196,8 @@ helm install akka-operator akka-operator-helm/akka-operator \
   --create-namespace
 ----
 
-Verify that the operator is running:
-
+. Verify that the operator is running:
++
 [source,shell script]
 ----
 kubectl get pods --namespace lightbend
@@ -185,41 +209,41 @@ You can now go back to the xref:microservices-tutorial:grpc-service.adoc#kuberne
 
 To update the Akka Platform Operator version you have to update the Custom Resource Definition (CRD) separately because Helm will not perform that.
 
-Authenticate docker to the Amazon ECR repository:
-
+. Authenticate docker to the Amazon ECR repository:
++
 FIXME update with the Marketplace ECR
-
++
 [source,shell script]
 ----
 aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 803424716218.dkr.ecr.eu-central-1.amazonaws.com
 ----
 
-Update the Akka Microservices CRD (replace the `<version>` in the URL):
-
+. Update the Akka Microservices CRD (replace the `<version>` in the URL):
++
 [source,shell script]
 ----
 kubectl apply -f  https://lightbend.github.io/akka-operator-helm/akka-operator/crds/<version>/akka-microservices-crd.yml
 ----
 
-Update the Akka Platform Operator with Helm.
-
+. Update the Akka Platform Operator with Helm.
++
 Add the Akka Platform Operator Helm repository and update the local index:
-
++
 [source,shell script]
 ----
 helm repo add akka-operator-helm https://lightbend.github.io/akka-operator-helm/
 helm repo update
 ----
-
++
 Pick a version upgrade to.
-
++
 [source,shell script]
 ----
 helm search repo akka-operator-helm/akka-operator --versions
 ----
-
++
 Upgrade the chart.
-
++
 [source,shell script]
 ----
 helm upgrade akka-operator akka-operator-helm/akka-operator \
@@ -257,4 +281,4 @@ kubectl delete customresourcedefinition akkamicroservices.akka.lightbend.com
 eksctl delete cluster --name eks-akka-demo
 ----
 
-NOTE: Deleting the cluster from the https://console.aws.amazon.com/iam/home?#/users[Amazon EKS console {tab-icon}, window="tab"] requires several steps and therefore it's easiest to use `eksctl` for this.
+NOTE: Deleting the cluster from the https://console.aws.amazon.com/eks/home[Amazon EKS console {tab-icon}, window="tab"] requires several steps and therefore it's easiest to use `eksctl` for this.
