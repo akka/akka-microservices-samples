@@ -1,6 +1,6 @@
 :page-partial:
 
-* xref:cassandra-alternative.adoc[]
+* xref:how-to:cassandra-alternative.adoc[]
 * xref:how-to:health-checks.adoc[]
 * xref:how-to:enable-TLS.adoc[]
 * xref:how-to:scale-independently.adoc[]
