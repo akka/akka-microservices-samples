@@ -10,7 +10,7 @@ It assumes that you have already read the xref:deployment:index.adoc[overview of
 :sectnums:
 == Build Docker image
 
-Build and publish a Docker image of the application as described in xref:deployment:aws-ecr.adoc[Amazon Docker repository].
+Build and publish a Docker image of the application as described in xref:deployment:aws-ecr.adoc[Amazon Elastic Container Registry].
 
 == Update the deployment descriptor
 

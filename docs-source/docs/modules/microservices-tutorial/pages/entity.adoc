@@ -451,7 +451,7 @@ kubectl run -i rds-mgmt --image=postgres \
 
 === Build Docker image
 
-Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon Docker repository] if you haven't already.
+Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon Elastic Container Registry] if you haven't already.
 
 Rebuild the Docker image. 
 
