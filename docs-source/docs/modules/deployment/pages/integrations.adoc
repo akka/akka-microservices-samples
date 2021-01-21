@@ -3,9 +3,26 @@
 
 include::partial$include.adoc[]
 
+== Storage
+
+Stateful services need a datastore. The state may be stored with xref:concepts:event-sourcing.adoc[Event Sourcing] or CRUD.
+
+This example in Implementing Microservices with Akka tutorial is using PostgreSQL for xref:microservices-tutorial:entity.adoc[storing the events] and xref:microservices-tutorial:entity.adoc[and creating a Projection for queries]. An alternative is described in xref:how-to:cassandra-alternative.adoc[]
+
+The Akka Platform Operator provides integrations with:
+
 * xref:aws-rds.adoc[]
 * xref:astra.adoc[]
 * xref:cassandra.adoc[]
+
+== Message broker
+
+To decouple communication between different Microservices, we can publish messages to a broker, such as Apache Kafka. See xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts] for more information.
+
+How to use Apache Kafka is illustrated in the xref:microservices-tutorial:projection-kafka.adoc[Projection publishing to Kafka] of the Implementing Microservices with Akka tutorial.
+
+The Akka Platform Operator provides integrations with:
+
 * xref:aws-msk.adoc[]
 * xref:confluent-cloud.adoc[]
 * xref:strimzi.adoc[]

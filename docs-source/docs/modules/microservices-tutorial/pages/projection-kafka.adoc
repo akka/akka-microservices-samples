@@ -338,7 +338,7 @@ The xref:deployment:aws-msk.adoc#create-topic[Amazon MSK] page also covers how t
 
 === Build Docker image
 
-Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon ECR] if you haven't already.
+Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon Docker repository] if you haven't already.
 
 Build and publish the Docker images for both `shopping-cart-service` and `shopping-analytics-service`.
 

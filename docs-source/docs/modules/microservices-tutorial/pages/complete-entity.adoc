@@ -424,7 +424,7 @@ Make sure you have created your database and loaded the schema as decribed in th
 
 === Build Docker image
 
-Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon ECR] if you haven't already.
+Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon Docker repository] if you haven't already.
 
 Rebuild the Docker image.
 

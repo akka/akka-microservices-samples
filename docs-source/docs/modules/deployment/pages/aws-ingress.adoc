@@ -3,7 +3,7 @@
 
 include::partial$include.adoc[]
 
-To expose gRPC or HTTPS to the internet you can use the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/[AWS Load Balancer Controller {tab-icon}, window="tab"] with a https://kubernetes.io/docs/concepts/services-networking/ingress/[Kubernetes Ingress {tab-icon}, window="tab"] created by the Akka Platform Operator.
+To expose gRPC or HTTPS publicly to the internet you can use the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/[AWS Load Balancer Controller {tab-icon}, window="tab"] with a https://kubernetes.io/docs/concepts/services-networking/ingress/[Kubernetes Ingress {tab-icon}, window="tab"] created by the Akka Platform Operator. This is useful when external services or clients outside of the EKS cluster need to consume the gRPC or HTTPS endpoints.
 
 == Install the LoadBalancer Controller
 

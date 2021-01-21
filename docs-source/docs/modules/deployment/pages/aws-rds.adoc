@@ -3,7 +3,9 @@
 
 include::partial$include.adoc[]
 
-== Create RDS PostgrSQL database
+https://aws.amazon.com/rds/[Amazon Relational Database Service (RDS) {tab-icon}, window="tab"] provides managed SQL databases of several database engines. This describes how to use PostgreSQL because that is what is used in the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] but it would be similar for the other database engines.
+
+== Create RDS PostgreSQL database
 
 Create a new database from https://console.aws.amazon.com/rds/home[Amazon RDS console {tab-icon}, window="tab"]. Select the region you are working in.
 
@@ -83,8 +85,8 @@ kubectl run -i --tty rds-mgmt --image=postgres --restart=Never --rm -- \
 To use the JDBC integration in the Akka Platform Operator you place the connection credentials in a https://kubernetes.io/docs/concepts/configuration/secret/[Secret {tab-icon}, window="tab"]. The Secret must contain three entries:
 
 * `connectionUrl` - the JDBC connection URL `jdbc:postgresql://<rds endpoint>:5432/<database name>?reWriteBatchedInserts=true`, for example `jdbc:postgresql://shopping-cart.c46wxwryhegl.eu-central-1.rds.amazonaws.com:5432/postgres?reWriteBatchedInserts=true`
-* `username` - the database username, default master user in RDS PostgrSQL is `postgres`
-* `password` - the database password, the password you defined when creating the RDS PostgrSQL database
+* `username` - the database username, default master user in RDS PostgreSQL is `postgres`
+* `password` - the database password, the password you defined when creating the RDS PostgreSQL database
 
 The connection details are shown in the Connectivity & security tab of the database in https://console.aws.amazon.com/rds/home#databases[Amazon RDS console {tab-icon}, window="tab"], specifically the Endpoint (hostname).
 

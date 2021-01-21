@@ -1,4 +1,4 @@
-= Amazon ECR
+= Amazon Docker repository (ECR)
 :page-supergroup-java-scala: Language
 :page-toclevels: 3
 

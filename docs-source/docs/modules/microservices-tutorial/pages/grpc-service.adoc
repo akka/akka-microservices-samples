@@ -203,7 +203,7 @@ Create a xref:deployment:aws-install.adoc[Kubernetes cluster and install the Akk
 
 === Build Docker image
 
-Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon ECR].
+Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon Docker repository].
 
 The [.group-scala]#`build.sbt and project/plugins.sbt`# [.group-java]#`pom.xml`# contains build plugin settings for building a Docker image.
 
@@ -240,7 +240,7 @@ It can be convenient to set that namespace as current instead of specifying the 
 kubectl config set-context --current --namespace=shopping
 ----
 
-The Akka Platform Operator will notice the CR and deploy the `shopping-cart-service`. You can see progress by viewing the status:
+The Akka Platform Operator will notice the deployment descriptor and deploy the `shopping-cart-service`. You can see progress by viewing the status:
 
 [source,shell script]
 ----
