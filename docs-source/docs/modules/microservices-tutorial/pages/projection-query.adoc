@@ -427,7 +427,7 @@ When finished, stop the service with `ctrl-c`. Leave PostgresSQL running for the
 
 [source,shell script]
 ----
-docker-compose down
+docker-compose stop
 ----
 
 [#kubernetes]

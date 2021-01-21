@@ -293,7 +293,7 @@ When finished:
 +
 [source,shell script]
 ----
-docker-compose down
+docker-compose stop
 ----
 
 [#kubernetes]

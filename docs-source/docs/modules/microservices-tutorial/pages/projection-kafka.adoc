@@ -308,7 +308,7 @@ When finished, stop the `shopping-cart-service` and `shopping-analytics-service`
 
 [source,shell script]
 ----
-docker-compose down
+docker-compose stop
 ----
 
 [#kubernetes]
