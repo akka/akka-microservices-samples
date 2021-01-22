@@ -41,7 +41,7 @@
             <url>https://dl.bintray.com/akka/maven</url>
         </repository>
     </repositories>
-    
+
     <dependencyManagement>
         <dependencies>
             <dependency>
