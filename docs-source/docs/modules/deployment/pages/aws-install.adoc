@@ -165,7 +165,10 @@ To delete run:
 
 [source, shell script]
 ----
-eksctl delete iamserviceaccount akka-operator
+eksctl delete iamserviceaccount  \
+  --name akka-operator \
+  --cluster eks-akka-demo \
+  --region eu-central-1
 ----
 
 
