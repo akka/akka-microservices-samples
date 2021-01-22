@@ -29,7 +29,7 @@ image::deployment-overview1.png[Deployment 1]
 . The operator sees the new deployment descriptor and creates a https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes Deployment {tab-icon}, window="tab"]
 . The application image is downloaded and the Akka Microservices application is started. The Akka Operator automatically provides additional configuration to the application.
 
-When updating the Akka Microservices application the steps 3 - 6 are repeated. The Akka Operator sees the changes to the deployment descriptor and updates the Kubernetes Deployment accordingly. Kubernetes performs a rolling update of the application.
+When updating the Akka Microservices application steps 3 - 6 are repeated. The Akka Operator sees the changes to the deployment descriptor and updates the Kubernetes Deployment accordingly. Kubernetes performs a rolling update of the application.
 
 === Deploying another Akka Microservice
 
