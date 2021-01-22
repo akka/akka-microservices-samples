@@ -32,13 +32,13 @@ val AkkaManagementVersion = "1.0.9"
 val AkkaPersistenceCassandraVersion = "1.0.4"
 // end::remove-akka-persistence-cassandra-version[]
 // tag::add-akka-persistence-jdbc-version[]
-val AkkaPersistenceJdbcVersion = "4.0.0"
+val AkkaPersistenceJdbcVersion = "5.0.0"
 // end::add-akka-persistence-jdbc-version[]
 // tag::remove-alpakka-kafka-version[]
 val AlpakkaKafkaVersion = "2.0.6"
 // end::remove-alpakka-kafka-version[]
 // tag::remove-akka-projection-version[]
-val AkkaProjectionVersion = "1.0.0"
+val AkkaProjectionVersion = "1.1.0"
 // end::remove-akka-projection-version[]
 
 // tag::remove-grpc-plugin[]

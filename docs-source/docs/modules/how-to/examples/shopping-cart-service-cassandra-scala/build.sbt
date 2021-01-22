@@ -24,7 +24,7 @@ val AkkaPersistenceCassandraVersion = "1.0.4"
 
 // end::akka-persistence-cassandra[]
 val AlpakkaKafkaVersion = "2.0.6"
-val AkkaProjectionVersion = "1.0.0"
+val AkkaProjectionVersion = "1.1.0"
 
 enablePlugins(AkkaGrpcPlugin)
 
@@ -33,6 +33,10 @@ dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
 dockerUsername := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
 ThisBuild / dynverSeparator := "-"
+
+// for akka-projection artifacts
+// not yet published in maven central due to instability issues
+resolvers += Resolver.bintrayRepo("akka", "maven")
 
 // tag::akka-persistence-cassandra[]
 libraryDependencies ++= Seq(
@@ -79,5 +83,3 @@ libraryDependencies ++= Seq(
   // tag::akka-persistence-cassandra[]
 )
 // end::akka-persistence-cassandra[]
-
-
