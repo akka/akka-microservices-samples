@@ -21,7 +21,7 @@ val AkkaHttpVersion = "10.2.3"
 val AkkaManagementVersion = "1.0.9"
 val AkkaPersistenceCassandraVersion = "1.0.4"
 val AlpakkaKafkaVersion = "2.0.6"
-val AkkaProjectionVersion = "1.0.0"
+val AkkaProjectionVersion = "1.1.0"
 
 enablePlugins(AkkaGrpcPlugin)
 
@@ -30,6 +30,10 @@ dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
 dockerUsername := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
 ThisBuild / dynverSeparator := "-"
+
+// for akka-projection artifacts
+// not yet published in maven central due to unstability issues
+resolvers += Resolver.bintrayRepo("akka", "maven")
 
 libraryDependencies ++= Seq(
   // 1. Basic dependencies for a clustered application
@@ -68,5 +72,3 @@ libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-stream-kafka" % AlpakkaKafkaVersion,
   "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
 )
-
-

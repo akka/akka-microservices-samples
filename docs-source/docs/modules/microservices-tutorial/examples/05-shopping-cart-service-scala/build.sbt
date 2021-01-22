@@ -27,9 +27,9 @@ Global / cancelable := false // ctrl-c
 val AkkaVersion = "2.6.11"
 val AkkaHttpVersion = "10.2.3"
 val AkkaManagementVersion = "1.0.9"
-val AkkaPersistenceJdbcVersion = "5.0.0-RC1"
+val AkkaPersistenceJdbcVersion = "5.0.0"
 val AlpakkaKafkaVersion = "2.0.6"
-val AkkaProjectionVersion = "1.0.0+33-53a5bbdd"
+val AkkaProjectionVersion = "1.1.0"
 val ScalikeJdbcVersion = "3.5.0"
 
 enablePlugins(AkkaGrpcPlugin)
@@ -40,8 +40,9 @@ dockerUsername := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
 ThisBuild / dynverSeparator := "-"
 
-// Using snapshot versions
-resolvers += Resolver.bintrayRepo("akka", "snapshots")
+// for akka-persistence-jdbc and akka-projection artifacts
+// not yet published in maven central due to unstability issues
+resolvers += Resolver.bintrayRepo("akka", "maven")
 
 libraryDependencies ++= Seq(
   // 1. Basic dependencies for a clustered application
