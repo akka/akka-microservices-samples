@@ -3,9 +3,9 @@
 
 include::partial$include.adoc[]
 
-This page describes the general workflow for deploying an application. Each step of the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] also has instructions of how to run in Kubernetes. The example in the tutorial includes build files for creating Docker images and template deployment descriptors.
+This page describes the general workflow for deploying an application. Each step of the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] also has instructions of how to run in Kubernetes. The tutorial includes build files for creating Docker images and template deployment descriptors.
 
-It assumes that you have already read the xref:deployment:index.adoc[overview of Kubernetes deployment], created a xref:deployment:aws-install.adoc[Kubernetes cluster and installed the Akka Operator].
+The steps below assume that you have already read the xref:deployment:index.adoc[overview of Kubernetes deployment], and have created a xref:deployment:aws-install.adoc[Kubernetes cluster and installed the Akka Operator].
 
 :sectnums:
 == Build Docker image
@@ -65,7 +65,7 @@ kubectl logs -f <shopping-cart-service pod name from above>
 
 == Repeat
 
-When you have updated the application you would repeat the above steps. Kubernetes will perform a rolling update of the application.
+If you change the application, repeat the above steps. Kubernetes will perform a rolling update of the application.
 
 == Delete
 

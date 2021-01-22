@@ -3,11 +3,11 @@
 
 include::partial$include.adoc[]
 
-== Storage
+Stateful services need a datastore. You can store state using xref:concepts:event-sourcing.adoc[Event Sourcing] or CRUD. The example in the tutorial uses PostgreSQL for xref:microservices-tutorial:entity.adoc[storing the events] and xref:microservices-tutorial:entity.adoc[and creating a Projection for queries]. An alternative is described in xref:how-to:cassandra-alternative.adoc[]
 
-Stateful services need a datastore. The state may be stored with xref:concepts:event-sourcing.adoc[Event Sourcing] or CRUD.
+To decouple communication between different Microservices, we can publish messages to a broker, such as Apache Kafka. The tutorial illustrates how to use Apache Kafka in xref:microservices-tutorial:projection-kafka.adoc[Projection publishing to Kafka]. See xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts] for more information.
 
-This example in Implementing Microservices with Akka tutorial is using PostgreSQL for xref:microservices-tutorial:entity.adoc[storing the events] and xref:microservices-tutorial:entity.adoc[and creating a Projection for queries]. An alternative is described in xref:how-to:cassandra-alternative.adoc[]
+== Data store integrations
 
 The Akka Operator provides integrations with:
 
@@ -15,11 +15,7 @@ The Akka Operator provides integrations with:
 * xref:astra.adoc[]
 * xref:cassandra.adoc[]
 
-== Message broker
-
-To decouple communication between different Microservices, we can publish messages to a broker, such as Apache Kafka. See xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts] for more information.
-
-How to use Apache Kafka is illustrated in the xref:microservices-tutorial:projection-kafka.adoc[Projection publishing to Kafka] of the Implementing Microservices with Akka tutorial.
+== Message broker integrations
 
 The Akka Operator provides integrations with:
 

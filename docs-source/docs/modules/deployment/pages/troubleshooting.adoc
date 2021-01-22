@@ -2,8 +2,9 @@
 :page-toclevels: 3
 
 include::partial$include.adoc[]
+When troubleshooting an Akka Microservices system, you will find the items described on this page useful.
 
-== Status of the CR
+== Deployment status
 
 The `akkamicroservices` CR has a status with the purpose to give an overview of the deployment status of the application.
 

@@ -3,55 +3,47 @@
 
 include::partial$include.adoc[]
 
+To install Akka Cloud Platform in EKS, you need to perform the steps described on this page.
+
 :sectnums:
-== Prerequisites
+== Verify Prerequisites
 
-===  Install kubectl
+To install and use the Akka Cloud Platform, you must have the following tools installed. If you do not have them yet, we provide links to installation instructions:
 
-The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters.
+* The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters. Follow the instructions in the https://kubernetes.io/docs/tasks/tools/install-kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
 
-Follow the instructions in the https://kubernetes.io/docs/tasks/tools/install-kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
+* Helm is required to install the Akka Operator in the Kubernetes cluster. Follow the instructions in the https://helm.sh/docs/intro/install/[Helm documentation {tab-icon}, window="tab"]  to install `helm`.
 
-===  Install Helm
+* The AWS Command Line Interface (AWS CLI) enables you to interact with AWS services using commands in your command-line shell. Follow the instructions in the https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html[AWS documentation {tab-icon}, window="tab"]  to install `aws`.
 
-Helm is used for installing the Akka Operator in the Kubernetes cluster.
+* The `eksctl` command line utility provides the ability to create and manage Kubernetes clusters on Amazon EKS. Follow the instructions in the https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html[AWS documentation {tab-icon}, window="tab"]  to install `eksctl`.
 
-Follow the instructions in the https://helm.sh/docs/intro/install/[Helm documentation {tab-icon}, window="tab"]  to install `helm`.
-
-=== Install AWS CLI
-
-The AWS Command Line Interface (AWS CLI) enables you to interact with AWS services using commands in your command-line shell.
-
-Follow the instructions in the https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2.html[AWS documentation {tab-icon}, window="tab"]  to install `aws`.
-
-=== Install eksctl
-
-`eksctl` is a command line utility for creating and managing Kubernetes clusters on Amazon EKS.
-
-Follow the instructions in the https://docs.aws.amazon.com/eks/latest/userguide/eksctl.html[AWS documentation {tab-icon}, window="tab"]  to install `eksctl`.
-
-=== Login to your AWS account
+== Login to your AWS account
 
 For first time AWS user, please register your account at https://aws.amazon.com/[https://aws.amazon.com/ {tab-icon}, window="tab"].
 
-Go to https://console.aws.amazon.com/iam/home?#/users[AWS Identity and Access Management (IAM) console {tab-icon}, window="tab"] to create a user and create access keys under Security Credential tab.
+ifdef::review[REVIEWERS: I was confused whether the following steps need to be done only by the first time user, or by all?]
 
-Install the credentials with the `aws` tool:
+. Navigate to https://console.aws.amazon.com/iam/home?#/users[AWS Identity and Access Management (IAM) console {tab-icon}, window="tab"] to create a user and create access keys under Security Credential tab.
+
+. From a command prompt, use the `aws` tool to install the credentials:
 
 [source,shell script]
 ----
 aws configure
 ----
 
-:!Sectnums:
 == Create a Kubernetes cluster
+We recommend using EKS with EC2 nodes, and not the Fargate option. You should create the cluster with https://docs.aws.amazon.com/eks/latest/userguide/security_iam_service-with-iam.html[IAM] roles for service accounts enabled. A typical cluster takes up to 30 minutes to create.
 
-Throughout these instructions, replace:
+ifdef::review[REVIEWERS: why don't we just put the command to enable IAM roles in our example. Shouldn't we have preceded the steps with the fact that some users might want to install on an existing cluster? Then, there should be an alternative path if they have an existing cluster.]
+
+When following the instructions below, replace:
 
 * `eks-akka-demo` with your own EKS cluster name
 * `eu-central-1` with your preferred AWS region
 
-An Kubernetes cluster can be created from the https://console.aws.amazon.com/eks/home[Amazon EKS console {tab-icon}, window="tab"] or with the `eksctl` command line tool. For example:
+You can create a Kubernetes cluster from the https://console.aws.amazon.com/eks/home[Amazon EKS console {tab-icon}, window="tab"] or with the `eksctl` command line tool. For example:
 
 [source,shell script]
 ----
@@ -67,11 +59,8 @@ eksctl create cluster \
   --managed
 ----
 
-NOTE: We recommend using EKS with EC2 nodes, and not the Fargate option.
 
-A typical cluster takes up to 30 minutes to create.
-
-Configure kubectl to connect to the cluster
+After the cluster is available, configure `kubectl` to connect to the cluster
 
 [source, shell script]
 ----
@@ -89,6 +78,8 @@ You can install the latest version with:
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 ----
 
+ifdef::review[REVIEWERS: this seems like a weird place to put the step to subscribe, I would put it in the prerequisites.]
+
 == Amazon Marketplace
 
 Subscribe to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Akka Cloud Platform {tab-icon}, window="tab"].
@@ -97,7 +88,7 @@ Subscribe to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqj
 
 The Akka Operator requires a https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html[service account with IAM roles {tab-icon}, window="tab"]
 
-. If your EKS cluster has not been created with https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html[IAM OIDC provider {tab-icon}, window="tab"] (e.g. with the `--with-oidc` option with `eksctl`) then enable with:
+. If your EKS cluster has not been created with https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html[IAM OIDC provider {tab-icon}, window="tab"] (e.g. with the `--with-oidc` option with `eksctl`), enable it with:
 +
 [source,shell script]
 ----
@@ -105,8 +96,8 @@ eksctl utils associate-iam-oidc-provider --cluster eks-akka-demo --region eu-cen
 ----
 
 . Create an IAM policy for the service account:
-+
-First create a `policy.json` file with content:
+
+.. Create a `policy.json` file with content:
 +
 [source, json]
 ----
@@ -123,8 +114,8 @@ First create a `policy.json` file with content:
     ]
 }
 ----
-+
-Then create the `AkkaPlatformOperator` policy:
+
+.. Create the `AkkaPlatformOperator` policy:
 +
 [source,shell script]
 ----
@@ -140,7 +131,7 @@ If the `AkkaPlatformOperator` policy already exists you can retrieve the policy 
 aws iam list-policies
 ----
 
-. Finally, create the `iamserviceaccount`:
+. Create the `iamserviceaccount`:
 +
 [source, shell script]
 ----
@@ -154,14 +145,16 @@ eksctl create iamserviceaccount \
     --override-existing-serviceaccounts
 ----
 
-If this fails for any reason it is important to delete the service account before trying to re-create otherwise `eksctl` can skip creation
-of the service account. If this is happening the output will contain:
+[IMPORTANT]
+====
+If creation of the service account fails for any reason, it is important to delete it before trying to re-create it. Otherwise, `eksctl` can skip creation
+of the service account. If this happens the output will contain:
 
 ----
 [ℹ]  2 iamserviceaccounts (kube-system/aws-node, lightbend/akka-operator) were excluded (based on the include/exclude rules)
 ----
 
-To delete run:
+To delete the service account, run the following:
 
 [source, shell script]
 ----
@@ -170,21 +163,21 @@ eksctl delete iamserviceaccount  \
   --cluster eks-akka-demo \
   --region eu-central-1
 ----
-
+====
 
 == Install Akka Operator
 
-. Install the Akka Operator with Helm.
-+
-Add the Akka Operator Helm repository and update the local index:
+Install the Akka Operator with Helm:
+
+. Add the Akka Operator Helm repository and update the local index:
 +
 [source,shell script]
 ----
 helm repo add akka-operator-helm https://lightbend.github.io/akka-operator-helm/
 helm repo update
 ----
-+
-Install latest version with:
+
+. Install the latest version with:
 +
 [source,shell script]
 ----
@@ -201,8 +194,9 @@ helm install akka-operator akka-operator-helm/akka-operator \
 kubectl get pods --namespace lightbend
 ----
 
-You can now go back to the xref:microservices-tutorial:grpc-service.adoc#kubernetes[tutorial] and follow the instructions of how to deploy the application.
+With the Akka Operator running, you can deploy an Akka Microservice. The next page, xref:deploy.adoc[], provides general steps. The  xref:microservices-tutorial:grpc-service.adoc#kubernetes[tutorial] includes examples of build and template files.
 
+:!sectnums:
 == Update Akka Operator
 
 To update the Akka Operator version you have to update the Custom Resource Definition (CRD) separately because Helm will not perform that.
@@ -264,7 +258,7 @@ Delete CRD:
 kubectl delete customresourcedefinition akkamicroservices.akka.lightbend.com
 ----
 
-== Delete Kubernetes cluster
+== Delete a Kubernetes cluster
 
 [source,shell script]
 ----

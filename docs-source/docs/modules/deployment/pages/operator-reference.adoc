@@ -3,13 +3,11 @@
 
 include::partial$include.adoc[]
 
-== AkkaMicroservices deployment descriptor (CRD)
+The deployment descriptor of an Akka Microservice that is managed by the Akka Operator is defined in a https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/[Kubernetes Custom Resource {tab-icon}, window="tab"]. The following sections provide an example and details about configuration of interest.
 
-The deployment descriptor of an Akka Microservice that is managed by the Akka Operator is defined in a https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/[Kubernetes Custom Resource {tab-icon}, window="tab"].
+== AkkaMicroservices deployment descriptor (CRD) example
 
-The https://lightbend.github.io/akka-operator-helm/akka-operator/crds/v1/akka-microservices-crd.yml[schema definition of the AkkaMicroservices deployment descriptor (CRD) {tab-icon}, window="tab"].
-
-A fictive example of a https://lightbend.github.io/akka-operator-helm/api-reference/v1/shopping-cart-service-full-cr.yml[deployment descriptor (CR) containing all properties {tab-icon}, window="tab"].
+You can view the https://lightbend.github.io/akka-operator-helm/akka-operator/crds/v1/akka-microservices-crd.yml[schema definition of the AkkaMicroservices deployment descriptor (CRD) {tab-icon}, window="tab"]. A https://lightbend.github.io/akka-operator-helm/api-reference/v1/shopping-cart-service-full-cr.yml[deployment descriptor (CR) containing all properties {tab-icon}, window="tab"] provides a factitious example.
 
 == Scale the number of Pods
 

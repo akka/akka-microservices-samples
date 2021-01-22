@@ -32,9 +32,11 @@ include::microservices-tutorial:partial$listing.adoc[]
 
 == Cloud deployment
 
-The easiest way to deploy and manage Akka Microservices in Kubernetes is to use the Akka Cloud Platform. The xref:deployment:index.adoc[Cloud deployment] section gives an overview of how the Kubernetes deployment with the Akka Cloud Platform works.
+Kubernetes has become the defacto platform for deploying in the cloud and on hybrid systems. The easiest way to deploy and manage Akka Microservices in Kubernetes is to use the Akka Cloud Platform, which is currently available for Amazon Web Services(AWS). The xref:deployment:index.adoc[Cloud deployment] section provides an overview of how the Kubernetes deployment with the Akka Cloud Platform works.
 
-Each step of the tutorial has instructions of how to run in Kubernetes, for example the xref:microservices-tutorial:grpc-service.adoc#kubernetes[first step].
+Each step of the tutorial has instructions of how to run in Kubernetes using the Akka Cloud Platform.
+
+ifdef::review[REVIEWERS: I removed the link to the first step of the tutorial from here because it is a circular reference, that is, that page just links to another page in the deployment section.]
 
 == How to...
 

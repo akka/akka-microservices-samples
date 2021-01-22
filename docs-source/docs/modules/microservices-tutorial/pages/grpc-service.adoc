@@ -197,9 +197,9 @@ You can stop the service with `ctrl-c`.
 [#kubernetes]
 == Run in Kubernetes
 
-Read the xref:deployment:index.adoc[overview of Kubernetes deployment] to get an understanding of how the Kubernetes deployment with the Akka Operator works.
+We suggest that you read xref:deployment:index.adoc[] to get an understanding of how deployment with the Akka Cloud Platform works.
 
-Create a xref:deployment:aws-install.adoc[Kubernetes cluster and install the Akka Operator].
+Before following the steps below, create a xref:deployment:aws-install.adoc[Kubernetes cluster and install the Akka Operator].
 
 === Build Docker image
 
@@ -211,7 +211,7 @@ include::partial$build-docker-for-kube.adoc[]
 
 === Update the deployment descriptor
 
-In `kubernetes/shopping-cart-service-cr.yml` you find the deployment descriptor of the `AkkaMicroservice` that the Akka Operator will use when deploying the application in Kubernetes.
+In `kubernetes/shopping-cart-service-cr.yml` you will find the deployment descriptor of the `AkkaMicroservice` that the Akka Operator will use when deploying the application in Kubernetes.
 
 .kubernetes/shopping-cart-service-cr.yml:
 [source,yaml]

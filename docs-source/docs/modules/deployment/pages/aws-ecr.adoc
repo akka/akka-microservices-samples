@@ -4,21 +4,19 @@
 
 include::partial$include.adoc[]
 
-Create a private repository from https://console.aws.amazon.com/ecr/repositories[Amazon Container Services (ECR) console {tab-icon}, window="tab"]. Select the region you are working in. You need one repository for each application that you will deploy, with the same name as the application.
+You need one repository for each application that you will deploy, with the same name as the application. The following steps describe how to create a repository and publish an image to it:
 
-For example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service`
+. Create a private repository from https://console.aws.amazon.com/ecr/repositories[Amazon Container Services (ECR) console {tab-icon}, window="tab"]. Select the region you are working in. For example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service`
 
-Authenticate Docker using the first part of the URI, for example:
-
+. Authenticate Docker using the first part of the URI, for example:
++
 [source,shell script]
 ----
 aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 803424716218.dkr.ecr.eu-central-1.amazonaws.com
 ----
 
-Then you can build the Docker image and publish to ECR with:
-
-The [.group-scala]#`build.sbt and project/plugins.sbt`# [.group-java]#`pom.xml`# contains build plugin settings for building a Docker image.
-
+. Build the Docker image and publish to ECR with the following (The [.group-scala]#`build.sbt and project/plugins.sbt`# [.group-java]#`pom.xml`# contains build plugin settings for building a Docker image.):
++
 [.tabset]
 Java::
 +
