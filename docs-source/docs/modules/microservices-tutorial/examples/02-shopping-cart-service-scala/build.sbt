@@ -41,7 +41,7 @@ dockerRepository := sys.props.get("docker.registry")
 ThisBuild / dynverSeparator := "-"
 
 // for akka-persistence-jdbc and akka-projection artifacts
-// not yet published in maven central due to unstability issues
+// not yet published in maven central due to instability issues
 resolvers += Resolver.bintrayRepo("akka", "maven")
 
 libraryDependencies ++= Seq(
