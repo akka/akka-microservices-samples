@@ -40,10 +40,6 @@ dockerUsername := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
 ThisBuild / dynverSeparator := "-"
 
-// for akka-persistence-jdbc and akka-projection artifacts
-// not yet published in maven central due to instability issues
-resolvers += Resolver.bintrayRepo("akka", "maven")
-
 libraryDependencies ++= Seq(
   // 1. Basic dependencies for a clustered application
   "com.typesafe.akka" %% "akka-stream" % AkkaVersion,
