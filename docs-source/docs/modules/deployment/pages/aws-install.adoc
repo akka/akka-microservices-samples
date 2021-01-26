@@ -3,7 +3,7 @@
 
 include::partial$include.adoc[]
 
-To install Akka Cloud Platform in EKS, you need to perform the steps described on this page.
+To install Akka Cloud Platform on Amazon Elastic Kubernetes Service (EKS), you must have an Amazon account and subscribe to the Akka Cloud Platform..
 
 :sectnums:
 == Verify Prerequisites
@@ -78,11 +78,9 @@ You can install the latest version with:
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 ----
 
-ifdef::review[REVIEWERS: this seems like a weird place to put the step to subscribe, I would put it in the prerequisites.]
-
 == Amazon Marketplace
 
-Subscribe to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Akka Cloud Platform {tab-icon}, window="tab"].
+If you have not already done it, subscribe to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Akka Cloud Platform {tab-icon}, window="tab"].
 
 == Create a service account for the Akka Operator
 

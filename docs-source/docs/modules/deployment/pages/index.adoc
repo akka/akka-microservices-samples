@@ -2,9 +2,9 @@
 
 include::ROOT:partial$include.adoc[]
 
-The Akka Cloud Platform is currently available for deploying on Amazon Elastic Kubernetes Service (AKS). It is available through the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Amazon Marketplace {tab-icon}, window="tab"] to install on your Amazon EKS cluster.
+The Akka Cloud Platform is currently available for deploying on Amazon Elastic Kubernetes Service (EKS). It is available through the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Amazon Marketplace {tab-icon}, window="tab"] to install on your Amazon EKS cluster.
 
-Through the Akka Operator, the Akka Cloud Platform provides the following high level features:
+An Akka Cloud Platform subscription includes access to Lightbend Telemetry, Lightbend Academy, and basic support. Through the Akka Operator, the Akka Cloud Platform provides the following high level features:
 
 * convenient deployment without having to define detailed Kubernetes manifests
 * integration with Akka Cluster Bootstrap
@@ -13,12 +13,11 @@ Through the Akka Operator, the Akka Cloud Platform provides the following high l
 * integration with Kafka
 * support for gRPC and HTTP services and internet facing ingress
 * insights to deployment status
-* access to Lightbend Telemetry, Lightbend Academy and basic support
 
 [#deployment_procedure]
 == Overview of deployment
 
-To use the Akka Cloud Platform, you first need to install prerequisites and install the Akka Operator in an EKS cluster. The Akka Operator manages Akka Microservices in all namespaces of the Kubernetes cluster, which means that you should only install the operator once. It is possible to configure the operator to only manage a specific namespace, if required.
+To use the Akka Cloud Platform, you first need to install prerequisites and install the Akka Operator in an Amazon EKS cluster. The Akka Operator manages Akka Microservices in all namespaces of the Kubernetes cluster, which means that you should only install the operator once. It is possible to configure the operator to only manage a specific namespace, if required.
 
 === Deployment example
 
@@ -35,7 +34,7 @@ The call-outs in the illustration highlight the following:
 . The installed Akka Operator runs continuously in the Kubernetes cluster.
 . You publish a Docker image containing the Akka Microservices application.
 . You define the deployment descriptor for the Akka Microservice in a yaml file. It refers to the Docker published image and specifies other operational properties. You apply the `.yaml` file to the Kubernetes cluster with `kubectl` (Kubernetes standard command-line tool).
-. The Akka Cloud Platform sees the new deployment descriptor and creates a https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes Deployment {tab-icon}, window="tab"]
+. The Akka Operator sees the new deployment descriptor and creates a https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes Deployment {tab-icon}, window="tab"]
 . Kubernetes downloads the application image and starts the Akka Microservices application. The Akka Operator automatically provides additional configuration to the application.
 
 To update the Akka Microservices application, you repeat steps 3 - 6. The Akka Operator sees the changes to the deployment descriptor and updates the Kubernetes Deployment accordingly. Kubernetes performs a rolling update of the application as shown in the illustration below.
