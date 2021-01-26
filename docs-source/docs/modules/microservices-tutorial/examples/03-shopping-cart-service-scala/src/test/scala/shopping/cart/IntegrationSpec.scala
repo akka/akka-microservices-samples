@@ -104,8 +104,6 @@ class IntegrationSpec
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    CreateTableTestUtils.setupScalikeJdbcConnectionPool(
-      IntegrationSpec.sharedConfig)
     CreateTableTestUtils.dropAndRecreateTables(testNode1.system)
     // avoid concurrent creation of tables
     val timeout = 10.seconds
@@ -119,7 +117,6 @@ class IntegrationSpec
     testNode3.testKit.shutdownTestKit()
     testNode2.testKit.shutdownTestKit()
     testNode1.testKit.shutdownTestKit()
-    CreateTableTestUtils.closeScalikeJdbcConnectionPool()
   }
 
   "Shopping Cart service" should {
