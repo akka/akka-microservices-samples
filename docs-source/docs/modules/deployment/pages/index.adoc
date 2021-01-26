@@ -6,7 +6,7 @@ The Akka Cloud Platform is currently available for deploying on Amazon Elastic K
 
 An Akka Cloud Platform subscription includes access to Lightbend Telemetry, Lightbend Academy, and basic support. Through the Akka Operator, the Akka Cloud Platform provides the following high level features:
 
-* convenient deployment without having to define detailed Kubernetes manifests
+* convenient deployment without the need to define detailed Kubernetes manifests
 * integration with Akka Cluster Bootstrap
 * integration with Akka Management health checks
 * integration with Relational Databases and Cassandra
