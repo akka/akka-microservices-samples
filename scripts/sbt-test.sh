@@ -12,8 +12,12 @@ fi
 
 sbt "test; scalafmtCheckAll"
 
+THE_EXIT_CODE=$?
+
 if [ -f docker-compose.yml ]; then
   docker-compose stop
 fi
 
 cd ${PROJECT_ROOT}
+
+exit $THE_EXIT_CODE
