@@ -21,6 +21,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.Span
 import org.scalatest.wordspec.AnyWordSpec
+import shopping.cart.repository.ScalikeJdbcSetup
 
 object IntegrationSpec {
   val sharedConfig: Config = ConfigFactory.load("integration-test.conf")
@@ -104,6 +105,7 @@ class IntegrationSpec
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
+    ScalikeJdbcSetup.fromConfig(IntegrationSpec.sharedConfig)
     CreateTableTestUtils.dropAndRecreateTables(testNode1.system)
     // avoid concurrent creation of tables
     val timeout = 10.seconds
