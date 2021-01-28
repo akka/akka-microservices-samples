@@ -21,6 +21,7 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.Span
 import org.scalatest.wordspec.AnyWordSpec
+import scalikejdbc.ConnectionPool
 import shopping.cart.repository.ScalikeJdbcSetup
 
 object IntegrationSpec {
@@ -119,6 +120,7 @@ class IntegrationSpec
     testNode3.testKit.shutdownTestKit()
     testNode2.testKit.shutdownTestKit()
     testNode1.testKit.shutdownTestKit()
+    ConnectionPool.closeAll()
   }
 
   "Shopping Cart service" should {
