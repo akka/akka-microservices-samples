@@ -73,9 +73,3 @@ files. IntelliJ has a good diff tool for propagating changes between files and f
 
 PR validation in Travis will run the `scripts/copy-identical-files.sh` and fail the build if expected identical
 files are different.
-
-# Development requirements
-
-All code and sample should be compilable and runnable using JDK 8.
-
-Caveat, recent versions of the `spotless:check` maven plugin used in the Maven samples for static code analysis and formatting use upstream libraries that require JDK 11. 
