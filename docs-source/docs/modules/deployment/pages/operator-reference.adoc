@@ -62,6 +62,60 @@ For multi-threaded applications such as the JVM, the CFS scheduler limits are an
 
 To avoid CFS scheduler limits, it is best not to use `resources.limits.cpu` limits, but use `resources.requests.cpu` configuration instead.
 
+== Configure logback
+
+A custom logback configuration can be provided to the deployment, make sure that your application is already configured to use the {akka}/typed/logging.html#slf4j-backend[Slf4j backend {tab-icon}, window="tab"] for logging.
+
+Create a logback configuration you want to apply in a `logback.xml` file:
+
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>EASY LOGGING - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="TRACE">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
+----
+
+Create the secret in the cluster:
+
+[source,shell script]
+----
+kubectl create secret generic my-logback --from-file=logback.xml=./logback.xml
+----
+
+Modify the deployment descriptor to use this configuration:
+
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  logbackSecret:
+    secretName: "my-logback"
+----
+
+
+Apply the logback configuration by running:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+And the operator is going to take care of applying it.
+
 == Namespaces
 
 The Akka Operator manages Akka Microservices in all namespaces of the Kubernetes cluster, which means that you should only install the operator once. It is possible to configure the operator to only manage a specific namespace if that would be needed.
