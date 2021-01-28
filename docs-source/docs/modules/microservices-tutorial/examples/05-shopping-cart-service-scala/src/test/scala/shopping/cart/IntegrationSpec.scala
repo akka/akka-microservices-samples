@@ -18,7 +18,7 @@ import akka.kafka.Subscriptions
 import akka.kafka.scaladsl.Consumer
 import akka.persistence.testkit.scaladsl.PersistenceInit
 import akka.testkit.SocketUtil
-import com.google.protobuf.any.{Any => ScalaPBAny}
+import com.google.protobuf.any.{ Any => ScalaPBAny }
 import com.typesafe.config.Config
 import com.typesafe.config.ConfigFactory
 import org.apache.kafka.common.serialization.ByteArrayDeserializer
