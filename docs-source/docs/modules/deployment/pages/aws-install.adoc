@@ -34,16 +34,15 @@ aws configure
 ----
 
 == Create a Kubernetes cluster
-We recommend using EKS with EC2 nodes, and not the Fargate option. You should create the cluster with https://docs.aws.amazon.com/eks/latest/userguide/security_iam_service-with-iam.html[IAM] roles for service accounts enabled. A typical cluster takes up to 30 minutes to create.
 
-ifdef::review[REVIEWERS: why don't we just put the command to enable IAM roles in our example. Shouldn't we have preceded the steps with the fact that some users might want to install on an existing cluster? Then, there should be an alternative path if they have an existing cluster.]
+A typical cluster takes up to 30 minutes to create.
 
 When following the instructions below, replace:
 
 * `eks-akka-demo` with your own EKS cluster name
 * `eu-central-1` with your preferred AWS region
 
-You can create a Kubernetes cluster from the https://console.aws.amazon.com/eks/home[Amazon EKS console {tab-icon}, window="tab"] or with the `eksctl` command line tool. For example:
+You can create a Kubernetes cluster with the `eksctl` command line tool. For example:
 
 [source,shell script]
 ----
@@ -59,6 +58,13 @@ eksctl create cluster \
   --managed
 ----
 
+An alternative is to create it from the https://console.aws.amazon.com/eks/home[Amazon EKS console {tab-icon}, window="tab"].
+
+[NOTE]
+====
+* We recommend using EKS with EC2 nodes, and not the Fargate option that is available in the EKS console.
+* You should create the cluster with https://docs.aws.amazon.com/eks/latest/userguide/security_iam_service-with-iam.html[IAM] roles for service accounts enabled.
+====
 
 After the cluster is available, configure `kubectl` to connect to the cluster
 
