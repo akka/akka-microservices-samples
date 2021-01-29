@@ -19,7 +19,7 @@ The events are persisted to the datastore, while the entity state is kept in mem
 
 == Performance
 
-Event Sourcing improves writing performance thanks to multiple aspects:
+Event Sourcing in Akka improves writing performance thanks to multiple aspects:
 
 * The current state resides in memory so there's no need for a round-trip and several database joins to reconstruct it.
 * The history of events for a single entity can use snapshots so reconstructing an entity with a large list of events is fast: load only the latest snapshot and apply the last few events on top.
