@@ -15,13 +15,13 @@ For a trial PostgreSQL you can select the following aside from defaults:
 
 - Standard create
 - PostgreSQL
-- Free tier
+- Free tier (some regions don't offer free tier)
 - DB instance identifier: `shopping-cart`
 - Master password: <a password>
-- Disable storage autoscaling
+- Turn off storage autoscaling
 - VPC: Use the same as your EKS cluster is running in
 - Create new VPC security group: `rds-shopping-cart-sg`
-- Disable Additional configuration / Enable automatic backups
+- Turn off Automatic Backups in the Additional Configuration section.
 
 The security group will automatically have one role added to it which allows traffic from your current IP to the PostgreSQL port. If your IP changes then you'll need to update the security group.
 
