@@ -39,7 +39,7 @@ Go to the https://console.aws.amazon.com/vpc/home[VPC console {tab-icon}, window
 
 There are 3 security groups for the EKS cluster and you should select the one with description "EKS created security group ...". The one that has a name that doesn't contain `ControlPlaneSecurityGroup` and doesn't contain `ClusterSharedNodeSecurityGroup` . Make a note of this security group id for the EKS cluster.
 
-Go back to the https://console.aws.amazon.com/rds/home#databases[Amazon RDS console {tab-icon}, window="tab"] and click on the "VPC security groups" in the  database tab "Connectivity & security".
+Go back to the https://console.aws.amazon.com/rds/home#databases[Amazon RDS console {tab-icon}, window="tab"]. Select the database that you created. Click on the "VPC security groups" in the tab "Connectivity & security".
 
 Edit inbound rules > add rule > Custom TCP > Port 5432 > Source custom. Add the security group for the EKS cluster. Save rules.
 
