@@ -137,7 +137,7 @@ public final class ShoppingCart
     }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(Object o) { // <1>
       if (this == o) return true;
       if (o == null || getClass() != o.getClass()) return false;
 

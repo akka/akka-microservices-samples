@@ -78,6 +78,8 @@ Java::
 ----
 include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;events]
 ----
++
+<1> `equals` and `hashCode` are not strictly needed, aside from that it can be useful when asserting the result in tests
 
 Scala::
 +
