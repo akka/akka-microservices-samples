@@ -46,7 +46,7 @@ enablePlugins(AkkaGrpcPlugin)
 // end::remove-grpc-plugin[]
 
 enablePlugins(JavaAppPackaging, DockerPlugin)
-dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
+dockerBaseImage := "docker.io/library/adoptopenjdk:11-jre-hotspot"
 dockerUsername := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
 ThisBuild / dynverSeparator := "-"

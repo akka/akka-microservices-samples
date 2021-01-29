@@ -35,7 +35,7 @@ val ScalikeJdbcVersion = "3.5.0"
 enablePlugins(AkkaGrpcPlugin)
 
 enablePlugins(JavaAppPackaging, DockerPlugin)
-dockerBaseImage := "adoptopenjdk:11-jre-hotspot"
+dockerBaseImage := "docker.io/library/adoptopenjdk:11-jre-hotspot"
 dockerUsername := sys.props.get("docker.username")
 dockerRepository := sys.props.get("docker.registry")
 ThisBuild / dynverSeparator := "-"

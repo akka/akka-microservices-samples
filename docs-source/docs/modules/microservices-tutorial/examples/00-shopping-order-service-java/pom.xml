@@ -274,7 +274,7 @@
                         <image>
                             <name>%a</name>
                             <build>
-                                <from>adoptopenjdk:11-jre-hotspot</from>
+                                <from>docker.io/library/adoptopenjdk:11-jre-hotspot</from>
                                 <tags>
                                     <tag>${version.number}</tag>
                                 </tags>
