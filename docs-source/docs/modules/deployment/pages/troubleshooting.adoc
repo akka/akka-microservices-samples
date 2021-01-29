@@ -144,3 +144,20 @@ LAST SEEN   TYPE     REASON                     OBJECT                          
 13m         Normal   ReconciliationSuccessful   pod/akka-operator-74fb867bb4-bhtrp   Reconciliation for [shopping-order-service] was successful
 13m         Normal   ReconciliationSuccessful   pod/akka-operator-74fb867bb4-bhtrp   Reconciliation for [shopping-cart-service] was successful
 ----
+
+== Logs
+
+You can view the logs of the Akka Operator or the application Pods with:
+
+[source,shell script]
+----
+kubectl get pods
+kubectl get pods -n lightbend
+----
+
+[source,shell script]
+----
+kubectl logs -f <pod name from above>
+----
+
+The Logback configuration of the application can be reconfigured without building a new image as described in xref:operator-reference.adoc#logback[Configure logback]

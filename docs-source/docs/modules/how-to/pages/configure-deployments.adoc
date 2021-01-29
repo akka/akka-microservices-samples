@@ -5,13 +5,13 @@ include::partial$include.adoc[]
 
 == Customize AkkaMicroservices deployments
 
-To apply customizations on top of a default deployment descriptor (CR) we recommend using https://kubectl.docs.kubernetes.io/guides/introduction/kustomize/[Kustomize], built into `kubectl`.
+To apply customizations on top of a default deployment descriptor (CR) we recommend using https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/[Kustomize {tab-icon}, window="tab"], built into `kubectl`.
 
 Prepare a folder called `base` containing the following files:
 
 The default deployment descriptor (CR):
 
-.base/shopping-cart-service.yml
+.base/shopping-cart-service-cr.yml
 [source,yaml]
 ----
 apiVersion: akka.lightbend.com/v1
@@ -28,7 +28,7 @@ A basic reference to it for Kustomize:
 [source,yaml,title='']
 ----
 resources:
-- shopping-cart-service.yml
+- shopping-cart-service-cr.yml
 ----
 
 You can already deploy your default service by running:

@@ -13,6 +13,7 @@ You can view the https://lightbend.github.io/akka-operator-helm/akka-operator/cr
 
 The `replicas` field in the deployment descriptor defines the number of Pods that will be used.
 
+.kubernetes/shopping-cart-service-cr.yml
 [source,yaml]
 ----
 apiVersion: akka.lightbend.com/v1
@@ -42,6 +43,7 @@ kubectl scale --replicas=3 akkamicroservices shopping-cart-servics
 
 https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[Resources for Containers {tab-icon}, window="tab"] can be defined in the Akka Microservices deployment descriptor.
 
+.kubernetes/shopping-cart-service-cr.yml
 [source,yaml]
 ----
 apiVersion: akka.lightbend.com/v1
@@ -62,12 +64,14 @@ For multi-threaded applications such as the JVM, the CFS scheduler limits are an
 
 To avoid CFS scheduler limits, it is best not to use `resources.limits.cpu` limits, but use `resources.requests.cpu` configuration instead.
 
-== Configure logback
+[#logback]
+== Configure Logback
 
-A custom logback configuration can be provided to the deployment, make sure that your application is already configured to use the {akka}/typed/logging.html#slf4j-backend[Slf4j backend {tab-icon}, window="tab"] for logging.
+A custom Logback configuration can be provided to the deployment without building a new image. Make sure that your application is already configured to use the {akka}/typed/logging.html#slf4j-backend[Slf4j backend {tab-icon}, window="tab"] for logging.
 
 Create a logback configuration you want to apply in a `logback.xml` file:
 
+.logback.xml
 [source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
@@ -95,6 +99,7 @@ kubectl create secret generic my-logback --from-file=logback.xml=./logback.xml
 
 Modify the deployment descriptor to use this configuration:
 
+.kubernetes/shopping-cart-service-cr.yml
 [source,yaml]
 ----
 apiVersion: akka.lightbend.com/v1
@@ -114,7 +119,7 @@ Apply the logback configuration by running:
 kubectl apply -f kubernetes/shopping-cart-service-cr.yml
 ----
 
-And the operator is going to take care of applying it.
+The Akka Operator will automatically mount the `logback.xml` and include system property `logback.configurationFile` to the application, which means that it will be loaded instead of the default `logback.xml` that is bundled with the application. You have to restart the Pods for it to take effect, which will happen automatically by a rolling update when you apply changes of the deployment descriptor.
 
 == Namespaces
 
@@ -128,3 +133,7 @@ You can define a specific namespace that the operator should manage with the fol
 ----
 
 The operator itself can still be installed in a different namespace, or in the same namespace.
+
+== Learn more
+
+* xref:how-to:configure-deployments.adoc[]
