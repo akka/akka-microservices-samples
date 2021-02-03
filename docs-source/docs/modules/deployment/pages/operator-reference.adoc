@@ -44,7 +44,7 @@ kubectl scale --replicas=3 akkamicroservices shopping-cart-servics
 
 {akka}/typed/cluster.html#node-roles[Akka Cluster node roles {tab-icon}, window="tab"] can be used to scale portions of your application independently. For example, scaling persistent entities separately from projections.
 
-define the roles in the deployment descriptor:
+Define the roles in the deployment descriptor:
 
 .kubernetes/shopping-cart-service-cr.yml
 [source,yaml]
@@ -72,6 +72,17 @@ The `replicasRatio` for a role defines the proportion of the total number of `re
 In this example we have used the ratio 40:60 because the sum is 100 and therefore corresponds to percentage of the total replicas. However, it's not required to have a sum of 100. Same ratio could be defined as 2:3.
 
 The Akka Operator will automatically provide the `akka.cluster.roles` configuration to the application.
+
+See xref:how-to:scale-independently.adoc[] for information about what is needed in the application to make use of the Akka Cluster roles.
+
+The Akka Operator adds a label `akka.lightbend.com/cluster-role` to the Pods, which for example can be used to select Pods with a certain role:
+    
+[source,shell script]
+----
+kubectl get pods -label akka.lightbend.com/cluster-role=entity
+----
+
+Only one role per Akka Cluster member is currently supported.
 
 In addition to the `replicasRatio` you can define minimum and maximum boundaries.
 
@@ -175,8 +186,6 @@ The table below illustrates the outcome from the example with 40/60 ratio and `r
 |===
 
 If `replicasMax` is defined on all roles it can't be satisfied if the total number of replicas exceeds the sum of `replicasMax` of all roles. For example, if `replicasMax: 10` would have been defined on both `entity` and `projection` and scaling to 25 replicas. In that case the exceeding 5 would be evenly distributed over `entity` and `projection` and result in 13 for `entity` and 12 for `projection`.
-
-See xref:how-to:scale-independently.adoc[] for information about what is needed in the application to make use of the Akka Cluster roles.
 
 == Resource requests and limits
 
