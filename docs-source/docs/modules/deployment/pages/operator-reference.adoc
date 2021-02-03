@@ -76,7 +76,7 @@ The Akka Operator will automatically provide the `akka.cluster.roles` configurat
 See xref:how-to:scale-independently.adoc[] for information about what is needed in the application to make use of the Akka Cluster roles.
 
 The Akka Operator adds a label `akka.lightbend.com/cluster-role` to the Pods, which for example can be used to select Pods with a certain role:
-    
+
 [source,shell script]
 ----
 kubectl get pods -label akka.lightbend.com/cluster-role=entity
@@ -184,6 +184,8 @@ The table below illustrates the outcome from the example with 40/60 ratio and `r
 |10 (max)
 
 |===
+
+When assigning the number of replicas for each role it is performed in the order they are defined. That is the reason the `entity` role is given 2 out of 2 replicas the `projection` role still has 0. The `entity` role has a minimum preference of 2. In this way you can give priority to certain roles.
 
 If `replicasMax` is defined on all roles it can't be satisfied if the total number of replicas exceeds the sum of `replicasMax` of all roles. For example, if `replicasMax: 10` would have been defined on both `entity` and `projection` and scaling to 25 replicas. In that case the exceeding 5 would be evenly distributed over `entity` and `projection` and result in 13 for `entity` and 12 for `projection`.
 
