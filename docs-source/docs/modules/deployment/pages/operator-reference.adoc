@@ -9,6 +9,7 @@ The deployment descriptor of an Akka Microservice that is managed by the Akka Op
 
 You can view the https://lightbend.github.io/akka-operator-helm/akka-operator/crds/v1/akka-microservices-crd.yml[schema definition of the AkkaMicroservices deployment descriptor (CRD) {tab-icon}, window="tab"]. A https://lightbend.github.io/akka-operator-helm/api-reference/v1/shopping-cart-service-full-cr.yml[deployment descriptor (CR) containing all properties {tab-icon}, window="tab"] provides a factitious example.
 
+[#scale]
 == Scale the number of Pods
 
 The `replicas` field in the deployment descriptor defines the number of Pods that will be used.
@@ -38,6 +39,144 @@ Another way of changing number of Pods is to use `kubectl scale` without changin
 ----
 kubectl scale --replicas=3 akkamicroservices shopping-cart-servics
 ----
+
+=== Scale Akka Cluster roles
+
+{akka}/typed/cluster.html#node-roles[Akka Cluster node roles {tab-icon}, window="tab"] can be used to scale portions of your application independently. For example, scaling persistent entities separately from projections.
+
+define the roles in the deployment descriptor:
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  replicas: 10 # <1>
+  roles:
+  - name: "entity" # <2>
+    replicasRatio: 40
+  - name: "projection" # <3>
+    replicasRatio: 60
+----
+
+<1> total of 10 replicas means that 10 Pods, corresponding to 10 Akka Cluster members, will be started
+<2> 40% of the Pods will be used for role `entity`
+<3> 60% of the Pods will be used for role `projection`
+
+The `replicasRatio` for a role defines the proportion of the total number of `replicas`, relative to other roles, that will be used for the role. For example, role `entity` with `replicasRatio: 40` and role `projection` with `replicasRatio: 60` means that 10 `replicas` will result in 4 replicas for role `entity` and 6 replicas for role `projection`. Scaling to 15 will result in 6 for `entity` and 9 for `projection`.
+
+In this example we have used the ratio 40:60 because the sum is 100 and therefore corresponds to percentage of the total replicas. However, it's not required to have a sum of 100. Same ratio could be defined as 2:3.
+
+The Akka Operator will automatically provide the `akka.cluster.roles` configuration to the application.
+
+In addition to the `replicasRatio` you can define minimum and maximum boundaries.
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  replicas: 10
+  roles:
+  - name: "entity"
+    replicasRatio: 40
+    replicasMin: 2 # <1>
+  - name: "projection"
+    replicasRatio: 60
+    replicasMax: 10 # <2>
+----
+
+<1> use at least 2 replicas for the `entity` role
+<2> use at most 10 replicas for the `projection` role
+
+When allocating the total number of replicas to the roles those bounds will be honored if possible, but it is not guaranteed. The sum of the role replicas will always be equal to the number of total replicas. If total replicas are less than the sum of replicasMin of all roles the minimum bounds cannot be satisfied.
+
+The table below illustrates the outcome from the example with 40/60 ratio and `replicasMin: 2` for `entity` and `replicasMax: 10` for `projection.
+
+|===
+|replicas |entity |projection
+
+|0
+|0 (< min)
+|0
+
+|1
+|1 (< min)
+|0
+
+|2
+|2 (min)
+|0
+
+|3
+|2 (min)
+|1
+
+|4
+|2 (min)
+|2
+
+|5
+|2
+|3
+
+|6
+|2
+|4
+
+|7
+|3
+|4
+
+|8
+|3
+|5
+
+|9
+|4
+|5
+
+|10
+|4
+|6
+
+|15
+|6
+|9
+
+|16
+|6
+|10
+
+|17
+|7
+|10
+
+|18
+|8
+|10 (max)
+
+|19
+|9
+|10 (max)
+
+|20
+|10
+|10 (max)
+
+|===
+
+If `replicasMax` is defined on all roles it can't be satisfied if the total number of replicas exceeds the sum of `replicasMax` of all roles. For example, if `replicasMax: 10` would have been defined on both `entity` and `projection` and scaling to 25 replicas. In that case the exceeding 5 would be evenly distributed over `entity` and `projection` and result in 13 for `entity` and 12 for `projection`.
+
+See xref:how-to:scale-independently.adoc[] for information about what is needed in the application to make use of the Akka Cluster roles.
 
 == Resource requests and limits
 
@@ -137,3 +276,4 @@ The operator itself can still be installed in a different namespace, or in the s
 == Learn more
 
 * xref:how-to:configure-deployments.adoc[]
+* xref:how-to:scale-independently.adoc[]
