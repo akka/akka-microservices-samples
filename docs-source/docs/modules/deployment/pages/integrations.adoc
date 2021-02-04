@@ -11,7 +11,8 @@ To decouple communication between different Microservices, we can publish messag
 
 The Akka Operator provides integrations with:
 
-* xref:jdbc.adoc[]
+* xref:gcp-sql.adoc[]
+* xref:aws-rds.adoc[]
 * xref:astra.adoc[]
 * xref:cassandra.adoc[]
 
