@@ -25,11 +25,11 @@ NAME                    PHASE     REPLICAS   DESIRED   AGE     UP
 shopping-cart-service   Running   2          2         7h14m   1
 ----
 
-- `REPLICAS` displays how many replicas are currently running.
-- `DESIRED` displays the desired number of replicas of the application.
-- `UP` displays how many replicas are in normal operating state. 
+- `REPLICAS` displays how many replicas are currently running
+- `DESIRED` displays the desired number of replicas of the application
+- `UP` displays how many replicas have successfully joined the Akka cluster
 
-If `REPLICAS` equals `UP` then all the Akka cluster is up and running without any issues on all the allocated pods. If `REPLICAS` is bigger than `UP` then not shown by default `NON-UP` and `UNREACHABLE` will provide details on how many replicas are not in normal operating state or unreachable.
+If `REPLICAS` equals `UP` then all the Akka cluster is up and running without any issues on all the allocated pods.
 
 More information is shown when using `-o wide`:
 
@@ -42,10 +42,12 @@ shopping-cart-service        Running   2          2         7h15m 2     0       
 shopping-order-service       Running   1          1         7h9m  1     0        0            Running 1 pods.   803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-order-service:20201218-061851-566473f
 ----
 
-In this mode, additionally to `UP` there are also `NON-UP` and `UNREACHABLE` that display how many replicas are non-up or unreachable respectively.
+In this detail mode, it also shows `NON-UP` and `UNREACHABLE`
 
-- `NON-UP` displays how many replicas are NOT in normal operating state, e.g. leaving, joining or down. 
-- `UNREACHABLE` displays how many replicas are in unreachable state.
+If `REPLICAS` is higher than `UP` then `NON-UP` will represent the non-zero number of replicas that are NOT in a normal operating state. In other words, the sum of `UP` and `NON-UP` equals to `REPLICAS`.
+
+- `NON-UP` displays how many replicas are NOT in a normal operating state. It could be already leaving or just joining the cluster, or even down
+- `UNREACHABLE` displays how many replicas are in an unreachable state from the oldest replica point of view
 
 See https://doc.akka.io/docs/akka/current/typed/cluster-membership.html#cluster-membership-service[`Akka Cluster Membership`] for more information.
 
