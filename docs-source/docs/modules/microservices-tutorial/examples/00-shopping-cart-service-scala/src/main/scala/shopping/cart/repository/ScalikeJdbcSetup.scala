@@ -36,29 +36,31 @@ object ScalikeJdbcSetup {
     val dbs = new DBsFromConfig(config)
     dbs.loadGlobalSettings()
 
-    val dataSource = new HikariDataSource()
-
-    dataSource.setPoolName("read-side-connection-pool")
-    dataSource.setMaximumPoolSize(
-      config.getInt("jdbc-connection-settings.connection-pool.max-pool-size"))
-
-    val timeout =
-      config
-        .getDuration("jdbc-connection-settings.connection-pool.timeout")
-        .toMillis
-    dataSource.setConnectionTimeout(timeout)
-
-    dataSource.setDriverClassName(
-      config.getString("jdbc-connection-settings.driver"))
-    dataSource.setJdbcUrl(config.getString("jdbc-connection-settings.url"))
-    dataSource.setUsername(config.getString("jdbc-connection-settings.user"))
-    dataSource.setPassword(
-      config.getString("jdbc-connection-settings.password"))
+    val dataSource = buildDataSource(
+      config.getConfig("jdbc-connection-settings"))
 
     ConnectionPool.singleton(
       new DataSourceConnectionPool(
         dataSource = dataSource,
         closer = HikariCloser(dataSource)))
+  }
+
+  private def buildDataSource(config: Config): HikariDataSource = {
+    val dataSource = new HikariDataSource()
+
+    dataSource.setPoolName("read-side-connection-pool")
+    dataSource.setMaximumPoolSize(
+      config.getInt("connection-pool.max-pool-size"))
+
+    val timeout = config.getDuration("connection-pool.timeout").toMillis
+    dataSource.setConnectionTimeout(timeout)
+
+    dataSource.setDriverClassName(config.getString("driver"))
+    dataSource.setJdbcUrl(config.getString("url"))
+    dataSource.setUsername(config.getString("user"))
+    dataSource.setPassword(config.getString("password"))
+
+    dataSource
   }
 
   /**
