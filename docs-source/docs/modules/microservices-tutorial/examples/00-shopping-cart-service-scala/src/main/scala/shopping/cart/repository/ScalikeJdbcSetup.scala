@@ -31,7 +31,7 @@ object ScalikeJdbcSetup {
    * Builds a Hikari DataSource with values from jdbc-connection-settings.
    * The DataSource is then configured as the 'default' connection pool for ScalikeJDBC.
    */
-  def fromConfig(config: Config): Unit = {
+  private def fromConfig(config: Config): Unit = {
 
     val dbs = new DBsFromConfig(config)
     dbs.loadGlobalSettings()
