@@ -49,6 +49,8 @@ The Akka Operator will notice the deployment descriptor and deploy the `shopping
 kubectl get akkamicroservices
 ----
 
+See xref:deployment:troubleshooting.adoc[troubleshooting deployment status] for more details.
+
 You can list the pods with:
 
 [source,shell script]

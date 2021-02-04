@@ -121,6 +121,10 @@ kubectl apply -f kubernetes/shopping-cart-service-cr.yml
 
 The Akka Operator will automatically mount the `logback.xml` and include system property `logback.configurationFile` to the application, which means that it will be loaded instead of the default `logback.xml` that is bundled with the application. You have to restart the Pods for it to take effect, which will happen automatically by a rolling update when you apply changes of the deployment descriptor.
 
+== Akka Cluster status
+
+Akka Operator will check and report the Akka Cluster status. It includes number of replicas that are Up, Non-Up or Unreachable. Comparing it to the current number of replicas can provide understanding whether all running replicas are in normal state or not. It can be useful during rolling updates to make sure that Akka Cluster is in normal state. See xref:troubleshooting.adoc[troubleshooting deployment status] for some examples.
+
 == Namespaces
 
 The Akka Operator manages Akka Microservices in all namespaces of the Kubernetes cluster, which means that you should only install the operator once. It is possible to configure the operator to only manage a specific namespace if that would be needed.

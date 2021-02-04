@@ -331,6 +331,8 @@ You can see progress by viewing the status:
 kubectl get akkamicroservices
 ----
 
+See xref:deployment:troubleshooting.adoc[troubleshooting deployment status] for more details.
+
 === Exercise the service in Kubernetes
 
 . You can list the pods with:

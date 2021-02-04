@@ -11,30 +11,43 @@ The `akkamicroservices` CR has a status with the purpose to give an overview of 
 [source,shell script]
 ----
 kubectl get akkamicroservices
-NAME                         PHASE     REPLICAS   DESIRED   AGE
-shopping-analytics-service   Running   1          1         7h14m
-shopping-cart-service        Running   2          2         7h12m
-shopping-order-service       Running   1          1         7h6m
+NAME                         PHASE     REPLICAS   DESIRED   AGE     UP
+shopping-analytics-service   Running   1          1         7h14m   1
+shopping-cart-service        Running   2          2         7h12m   2
+shopping-order-service       Running   1          1         7h6m    1
 ----
 
 You can specify a specific application by adding the name:
 [source,shell script]
 ----
 kubectl get akkamicroservices shopping-cart-service
-NAME                    PHASE     REPLICAS   DESIRED   AGE
-shopping-cart-service   Running   2          2         7h14m
+NAME                    PHASE     REPLICAS   DESIRED   AGE     UP
+shopping-cart-service   Running   2          2         7h14m   1
 ----
+
+- `REPLICAS` displays how many replicas are currently running.
+- `DESIRED` displays the desired number of replicas of the application.
+- `UP` displays how many replicas are in normal operating state. 
+
+If `REPLICAS` equals `UP` then all the Akka cluster is up and running without any issues on all the allocated pods. If `REPLICAS` is bigger than `UP` then not shown by default `NON-UP` and `UNREACHABLE` will provide details on how many replicas are not in normal operating state or unreachable.
 
 More information is shown when using `-o wide`:
 
 [source,shell script]
 ----
 kubectl get akkamicroservices -o wide
-NAME                         PHASE     REPLICAS   DESIRED   AGE     MESSAGE           IMAGE
-shopping-analytics-service   Running   1          1         7h17m   Running 1 pods.   803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-analytics-service:20201218-061851-566473f
-shopping-cart-service        Running   2          2         7h15m   Running 2 pods.   803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201218-061851-566473f
-shopping-order-service       Running   1          1         7h9m    Running 1 pods.   803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-order-service:20201218-061851-566473f
+NAME                         PHASE     REPLICAS   DESIRED   AGE   UP    NON-UP   UNREACHABLE  MESSAGE           IMAGE
+shopping-analytics-service   Running   1          1         7h17m 1     0        0            Running 1 pods.   803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-analytics-service:20201218-061851-566473f
+shopping-cart-service        Running   2          2         7h15m 2     0        0            Running 2 pods.   803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201218-061851-566473f
+shopping-order-service       Running   1          1         7h9m  1     0        0            Running 1 pods.   803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-order-service:20201218-061851-566473f
 ----
+
+In this mode, additionally to `UP` there are also `NON-UP` and `UNREACHABLE` that display how many replicas are non-up or unreachable respectively.
+
+- `NON-UP` displays how many replicas are NOT in normal operating state, e.g. leaving, joining or down. 
+- `UNREACHABLE` displays how many replicas are in unreachable state.
+
+See https://doc.akka.io/docs/akka/current/typed/cluster-membership.html#cluster-membership-service[`Akka Cluster Membership`] for more information.
 
 Even more information with `kubectl describe`:
 
@@ -48,8 +61,8 @@ The PHASE is `Running` when everything working. It is updated when there is some
 [source,shell script]
 ----
 kubectl get akkamicroservices shopping-cart-service
-NAME                    PHASE      REPLICAS   DESIRED   AGE
-shopping-cart-service   NotReady   2          2         7h20m
+NAME                    PHASE      REPLICAS   DESIRED   AGE   UP
+shopping-cart-service   NotReady   2          2         7h20m 1
 ----
 
 If the deployment failed, for example if referencing a missing secret:
@@ -57,8 +70,8 @@ If the deployment failed, for example if referencing a missing secret:
 [source,shell script]
 ----
 kubectl get akkamicroservices shopping-cart-service -o wide
-NAME                    PHASE              REPLICAS   DESIRED   AGE     MESSAGE
-shopping-cart-service   DeploymentFailed   2          2         7h25m   akka.operator.action.ActionException: Action [GetAction] failed: jdbc Secret [shopping-cart-service-jdbc-zecret] doesn't exist
+NAME                    PHASE              REPLICAS   DESIRED   AGE   UP    NON-UP   UNREACHABLE  MESSAGE
+shopping-cart-service   DeploymentFailed   2          2         7h25m 1     0        0            akka.operator.action.ActionException: Action [GetAction] failed: jdbc Secret [shopping-cart-service-jdbc-zecret] doesn't exist
 ----
 
 You can often get more information by inspecting the pods:

@@ -247,6 +247,8 @@ The Akka Operator will notice the deployment descriptor and deploy the `shopping
 kubectl get akkamicroservices/shopping-cart-service
 ----
 
+See xref:deployment:troubleshooting.adoc[troubleshooting deployment status] for more details.
+
 === Exercise the service in Kubernetes
 
 include::partial$prepare-to-exercise-in-kube.adoc[]
