@@ -279,7 +279,12 @@
                                     <tag>${version.number}</tag>
                                 </tags>
                                 <entryPoint>
-                                    java $JAVA_OPTS -cp '/maven/*' shopping.cart.Main
+                                    <exec>
+                                        <arg>java</arg>
+                                        <arg>-cp</arg>
+                                        <arg>/maven/*</arg>
+                                        <arg>shopping.cart.Main</arg>
+                                    </exec>
                                 </entryPoint>
                                 <assembly>
                                     <descriptorRef>artifact-with-dependencies</descriptorRef>
