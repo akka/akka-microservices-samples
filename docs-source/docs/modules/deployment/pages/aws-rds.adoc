@@ -4,6 +4,7 @@
 include::partial$include.adoc[]
 
 https://aws.amazon.com/rds/[Amazon Relational Database Service (RDS) {tab-icon}, window="tab"] provides managed SQL databases of several database engines. This describes how to use PostgreSQL because that is what is used in the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] but it would be similar for the other database engines.
+Once you've created your Cloud SQL database go back to xref:jdbc.adoc[JDBC integration] to finish the setup.
 
 == Create RDS PostgreSQL database
 
@@ -54,5 +55,11 @@ When using different VPC for RDS and EKS.
 
 More details in https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/USER_VPC.Scenarios.html#USER_VPC.Scenario3[A DB instance in a VPC accessed by an EC2 instance in a different VPC {tab-icon}, window="tab"]
 
-Now that you've created your Cloud SQL database go back to xref:jdbc.adoc[JDBC integration] to finish the setup.
+After the instance has finished initializing make a note of:
+
+- The password you used when creating the instance
+- The default username is 'postgres'
+- The connection details from the Connectivity & security tab of the database in https://console.aws.amazon.com/rds/home#databases[Amazon RDS console {tab-icon}, window="tab"], specifically the Endpoint (hostname).
+
+Now that you've created your RDS database go back to xref:jdbc.adoc[JDBC integration] to finish the setup.
 

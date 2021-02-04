@@ -22,7 +22,7 @@ Regardless of which database you're using you'll need:
 
 To create the tables and other administrative tasks you can connect to the  database from a Pod in your Kubernetes cluster.
 
-Create a temporary Pod and run `psql` to load the ddl sql scripts with:
+For instance to do this for PostgreSQL you can create a temporary Pod and run `psql` to load the ddl sql scripts with:
 
 [source,shell script]
 ----

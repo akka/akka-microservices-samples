@@ -10,7 +10,7 @@ metadata:
   namespace: "shopping"
 spec:
   replicas: 1
-  image: eu.gcr.io/bubbly-observer-178213/shopping-cart:latest
+  image: <docker-registry>/shopping-cart-service:<tag> # <1>
   javaOptions: "-Xlog:gc -XX:InitialRAMPercentage=75 -XX:MaxRAMPercentage=75"
   resources:
     limits:
@@ -20,5 +20,5 @@ spec:
       cpu: "1"
   jdbc:
     credentialsSecret: shopping-cart-service-jdbc-secret
-#  kafka:
-#    credentialsSecret: shopping-cart-service-kafka-secret  # <2>
+  kafka:
+    credentialsSecret: shopping-cart-service-kafka-secret  # <2>

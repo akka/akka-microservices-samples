@@ -37,10 +37,9 @@ Expand more configuration options, under connectivity:
 - Associated network: pick the same network as your GKE cluster
 - Use an automatically allocated IP range. If this has already been done this won't show as an option and then keep any defaults selected.
 
-You may need the help of an admin for your GCP project to get the correct permissions for automatically allocating the IP range. This only needs to be done once
-per network.
+You may need the help of an admin for your GCP project to get the correct permissions for automatically allocating the IP range. This only needs to be done once per network.
 
-After the instance has finished initializing make a note of:
+It will take a few minutes to create. After the instance has finished initializing make a note of:
 
 - The password you used when creating the instance
 - The default username is 'postgres'
