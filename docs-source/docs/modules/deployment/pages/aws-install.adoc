@@ -8,7 +8,7 @@ To install Akka Cloud Platform on Amazon Elastic Kubernetes Service (EKS), you m
 :sectnums:
 == Verify Prerequisites
 
-To install and use the Akka Cloud Platform, you must have the following tools installed. If you do not have them yet, we provide links to installation instructions:
+To install and use the Akka Cloud Platform, you must have the following tools installed. We recommend using the latest versions of these tools. If you do not have them yet or need to update, we provide links to installation instructions:
 
 * The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters. Follow the instructions in the https://kubernetes.io/docs/tasks/tools/install-kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
 
