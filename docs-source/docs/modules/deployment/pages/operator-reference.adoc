@@ -69,9 +69,9 @@ spec:
 
 The `replicasRatio` for a role defines the proportion of the total number of `replicas`, relative to other roles, that will be used for the role. For example, role `entity` with `replicasRatio: 40` and role `projection` with `replicasRatio: 60` means that 10 `replicas` will result in 4 replicas for role `entity` and 6 replicas for role `projection`. Scaling to 15 will result in 6 for `entity` and 9 for `projection`.
 
-In this example we have used the ratio 40:60 because the sum is 100 and therefore corresponds to percentage of the total replicas. However, it's not required to have a sum of 100. Same ratio could be defined as 2:3.
+In this example we have used the ratio 40:60 because the sum is 100 and therefore corresponds to percentage of the total replicas. However, it's not required to have a sum of 100. The same ratio could be defined as 2:3.
 
-The Akka Operator will automatically provide the `akka.cluster.roles` configuration to the application.
+The Akka Operator will automatically provide the `akka.cluster.roles` configuration to the application. Roles defined in `application.conf` will be overridden.
 
 See xref:how-to:scale-independently.adoc[] for information about what is needed in the application to make use of the Akka Cluster roles.
 
