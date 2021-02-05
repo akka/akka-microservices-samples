@@ -39,6 +39,9 @@ The building process is managed by `make` using the [makefile](./Makefile) scrip
 
 To build the documentation, use `make` with the following commands:
 
+* `make local-preview`
+    Generates the documentation and serves it at `localhost:8000`.
+
 * `make html-author-mode` 
 
     Generates the documentation, in 'author' mode, to display review comments and TODOs. The result is available at `target/staging/index.html`.
