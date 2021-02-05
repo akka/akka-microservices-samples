@@ -73,7 +73,7 @@ If the deployment failed, for example if referencing a missing secret:
 ----
 kubectl get akkamicroservices shopping-cart-service -o wide
 NAME                    PHASE              REPLICAS   DESIRED   AGE   UP    NON-UP   UNREACHABLE  MESSAGE
-shopping-cart-service   DeploymentFailed   2          2         7h25m 1     0        0            akka.operator.action.ActionException: Action [GetAction] failed: jdbc Secret [shopping-cart-service-jdbc-zecret] doesn't exist
+shopping-cart-service   DeploymentFailed   2          2         7h25m 2     0        0            akka.operator.action.ActionException: Action [GetAction] failed: jdbc Secret [shopping-cart-service-jdbc-zecret] doesn't exist
 ----
 
 You can often get more information by inspecting the pods:
