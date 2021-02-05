@@ -7,7 +7,7 @@ content:
   - url: git@github.com:akka/akka-platform-guide.git
     start-paths:
     - docs-source/docs
-    branches: [main]
+    branches: [current]
 
 
 ui: 
