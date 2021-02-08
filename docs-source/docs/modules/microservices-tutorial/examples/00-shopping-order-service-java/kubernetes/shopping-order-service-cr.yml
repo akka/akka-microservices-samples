@@ -14,7 +14,7 @@ spec:
   javaOptions: "-Xlog:gc -XX:InitialRAMPercentage=75 -XX:MaxRAMPercentage=75"
   resources:
     limits:
-      memory: "250M"
+      memory: 250Mi
     requests:
-      memory: "250M"
-      cpu: "0.2"
+      memory: 250Mi
+      cpu: 200m
