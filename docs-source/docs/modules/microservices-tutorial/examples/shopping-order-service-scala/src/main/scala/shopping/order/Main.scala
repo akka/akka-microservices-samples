@@ -23,8 +23,6 @@ class Main(context: ActorContext[Nothing])
     extends AbstractBehavior[Nothing](context) {
   val system = context.system
 
-  println("v2")
-
   AkkaManagement(system).start()
   ClusterBootstrap(system).start()
 
