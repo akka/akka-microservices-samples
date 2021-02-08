@@ -41,7 +41,8 @@ object IntegrationSpec {
         "shopping-cart-service" {
           endpoints = [
             {host = "127.0.0.1", port = ${managementPorts(0)}},
-            {host = "127.0.0.1", port = ${managementPorts(1)}}
+            {host = "127.0.0.1", port = ${managementPorts(1)}},
+            {host = "127.0.0.1", port = ${managementPorts(2)}}
           ]
         }
       }

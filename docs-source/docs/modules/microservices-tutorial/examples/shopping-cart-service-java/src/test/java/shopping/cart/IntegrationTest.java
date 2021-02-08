@@ -68,6 +68,9 @@ public class IntegrationTest {
             + "  { host = \"127.0.0.1\", port = "
             + managementPorts.get(1)
             + "},\n"
+            + "  { host = \"127.0.0.1\", port = "
+            + managementPorts.get(2)
+            + "},\n"
             + "]");
   }
 
