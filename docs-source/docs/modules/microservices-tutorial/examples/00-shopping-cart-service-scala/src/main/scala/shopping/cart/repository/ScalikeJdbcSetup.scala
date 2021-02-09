@@ -20,7 +20,7 @@ object ScalikeJdbcSetup {
    * The connection pool will be closed when the actor system terminates.
    */
   def init(system: ActorSystem[_]): Unit = {
-    fromConfig(system.settings.config)
+    initFromConfig(system.settings.config)
     system.whenTerminated.map { _ =>
       ConnectionPool.closeAll()
     }(scala.concurrent.ExecutionContext.Implicits.global)
@@ -31,7 +31,7 @@ object ScalikeJdbcSetup {
    * Builds a Hikari DataSource with values from jdbc-connection-settings.
    * The DataSource is then configured as the 'default' connection pool for ScalikeJDBC.
    */
-  private def fromConfig(config: Config): Unit = {
+  private def initFromConfig(config: Config): Unit = {
 
     val dbs = new DBsFromConfig(config)
     dbs.loadGlobalSettings()
