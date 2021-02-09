@@ -70,24 +70,27 @@ public class SpringConfig {
 
     HikariDataSource dataSource = new HikariDataSource();
 
+    Config jdbcConfig = jdbcConfig();
+
     // pool configuration
     dataSource.setPoolName("read-side-connection-pool");
-    dataSource.setMaximumPoolSize(
-        config.getInt("jdbc-connection-settings.connection-pool.max-pool-size"));
+    dataSource.setMaximumPoolSize(jdbcConfig.getInt("connection-pool.max-pool-size"));
 
-    long timeout =
-        config.getDuration(
-            "jdbc-connection-settings.connection-pool.timeout", TimeUnit.MILLISECONDS);
+    long timeout = jdbcConfig.getDuration("connection-pool.timeout", TimeUnit.MILLISECONDS);
     dataSource.setConnectionTimeout(timeout);
 
     // database configuration
-    dataSource.setDriverClassName(config.getString("jdbc-connection-settings.driver"));
-    dataSource.setJdbcUrl(config.getString("jdbc-connection-settings.url"));
-    dataSource.setUsername(config.getString("jdbc-connection-settings.user"));
-    dataSource.setPassword(config.getString("jdbc-connection-settings.password"));
+    dataSource.setDriverClassName(jdbcConfig.getString("driver"));
+    dataSource.setJdbcUrl(jdbcConfig.getString("url"));
+    dataSource.setUsername(jdbcConfig.getString("user"));
+    dataSource.setPassword(jdbcConfig.getString("password"));
     dataSource.setAutoCommit(false);
 
     return dataSource;
+  }
+
+  private Config jdbcConfig() {
+    return config.getConfig("jdbc-connection-settings");
   }
 
   /**
@@ -98,8 +101,7 @@ public class SpringConfig {
   Properties additionalProperties() {
     Properties properties = new Properties();
 
-    Config additionalProperties =
-        this.config.getConfig("jdbc-connection-settings.additional-properties");
+    Config additionalProperties = jdbcConfig().getConfig("additional-properties");
     Set<Map.Entry<String, ConfigValue>> entries = additionalProperties.entrySet();
 
     for (Map.Entry<String, ConfigValue> entry : entries) {
