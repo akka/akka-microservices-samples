@@ -1,17 +1,16 @@
 ## Running the sample code
 
-1. Start a local Cassandra server on default port 9042 and a Kafka broker on port 9092. The included `docker-compose.yml` starts everything required for running locally.
+1. Start a local PostgresSQL server on default port 5432 and a Kafka broker on port 9092. The included `docker-compose.yml` starts everything required for running locally.
 
     ```shell
     docker-compose up -d
-    ```
 
-2. Create Cassandra keyspace and tables:
-
-    ```shell
-    # creates keyspace and all tables needed for Akka Persistence
+    # creates the tables needed for Akka Persistence
     # as well as the offset store table for Akka Projection
-    docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_tables.cql
+    docker exec -i shopping-cart-service_postgres-db_1 psql -U shopping-cart -t < ddl-scripts/create_tables.sql
+    
+    # creates the user defined projection table.
+    docker exec -i shopping-cart-service_postgres-db_1 psql -U shopping-cart -t < ddl-scripts/create_user_tables.sql
     ```
 
     ```shell
@@ -19,31 +18,31 @@
     docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_user_tables.cql
     ```
 
-3. Start a first node:
+2. Start a first node:
 
     ```shell
     sbt -Dconfig.resource=local1.conf run
     ```
 
-4. (Optional) Start another node with different ports:
+3. (Optional) Start another node with different ports:
 
     ```shell
     sbt -Dconfig.resource=local2.conf run
     ```
 
-5. (Optional) More can be started:
+4. (Optional) More can be started:
 
     ```shell
     sbt -Dconfig.resource=local3.conf run
     ```
 
-6. Check for service readiness
+5. Check for service readiness
 
     ```shell
     curl http://localhost:9101/ready
     ```
 
-7. Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
+6. Try it with [grpcurl](https://github.com/fullstorydev/grpcurl):
 
     ```shell
     # add item to cart

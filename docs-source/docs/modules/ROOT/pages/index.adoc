@@ -26,9 +26,17 @@ If this is your first experience with Reactive frameworks or with Akka, we prese
 
 The xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] illustrates how to implement an Event Sourced CQRS application with Akka Persistence and Akka Projections.
 
-The tutorial shows how to build the services piece by piece:
+The tutorial shows how to build and run the services step by step:
 
 include::microservices-tutorial:partial$listing.adoc[]
+
+== Cloud deployment
+
+Kubernetes has become the defacto platform for deploying in the cloud. The easiest way to deploy and manage Akka Microservices in Kubernetes is to use the Akka Cloud Platform, which is currently available for Amazon Web Services(AWS). The xref:deployment:index.adoc[Cloud deployment] section provides an overview of how the Kubernetes deployment with the Akka Cloud Platform works.
+
+Each step of the tutorial has instructions of how to run in Kubernetes using the Akka Cloud Platform.
+
+ifdef::review[REVIEWERS: I removed the link to the first step of the tutorial from here because it is a circular reference, that is, that page just links to another page in the deployment section.]
 
 == How to...
 

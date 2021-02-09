@@ -1,13 +1,11 @@
 = How to scale command-side and query-side independently
-
+:page-supergroup-java-scala: Language
 
 include::partial$include.adoc[]
 
+Not all nodes in an Akka Cluster need to be identical. When starting each process you can add some metadata to it to give that instance a special purpose. {akka}/typed/cluster.html#node-roles[Node Roles {tab-icon}, window="tab"] in Akka Cluster will handle that metadata. The code (image) should still be the same for all roles, but it can select behavior at runtime based on the role configuration.
 
-
-Not all nodes in an Akka Cluster need to be identical. When starting each process you can add some metadata to it to give that instance a special purpose. {akka}/typed/cluster.html#node-roles[Node Roles {tab-icon}, window="tab"] in Akka Cluster will handle that metadata.
-
-This feature can be used to scale portions of your application indenpendently. Let's take for example the shopping cart Microservice from the xref:microservices-tutorial:index.adoc[tutorial]:
+This feature can be used to scale portions of your application independently. Let's take for example the shopping cart Microservice from the xref:microservices-tutorial:index.adoc[tutorial]:
 
 [#e-commerce-app]
 .An e-Commerce application built with 3 Microservices
@@ -23,7 +21,7 @@ A single process running the `shopping-cart-service` (the dotted blue box in the
 If there is a spike in traffic, the number of `Cart Entity` 's in memory may increase (or it may even be a high volume in regular traffic situations) so we would like to scale up the cluster. But, if the persistent entity is the bulk of the process load, it will be more efficient if the new nodes have fewer responsibilities.
 
 For example:
-[#node-for-eventsourcing]
+[#node-for-entity]
 .Node dedicated to event sourcing
 [caption=""]
 image::microservices-tutorial:example-entity.png[Node dedicated to event sourcing]
@@ -43,6 +41,18 @@ Let's see these two changes in more detail.
 
 When you initialize the Sharding of a persistent entity, as described in the xref:microservices-tutorial:entity.adoc#initialization[tutorial], you may specify a role. Take for example the final code on the initialization of the persistent entity (from the tutorial):
 
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/ShoppingCart.java:
+[source,java,indent=0]
+----
+include::microservices-tutorial:example$shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=howto-write-side-without-role]
+----
+
+Scala::
++
+.src/main/scala/shopping/cart/ShoppingCart.scala:
 [source,scala,indent=0]
 ----
 include::microservices-tutorial:example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=howto-write-side-without-role]
@@ -50,40 +60,62 @@ include::microservices-tutorial:example$shopping-cart-service-scala/src/main/sca
 
 You can {akka}/typed/cluster-sharding.html[specify a role when declaring the entity {tab-icon}, window="tab"]:
 
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/ShoppingCart.java:
+[source,java,indent=0]
+----
+include::example$shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=write-side-with-role]
+----
+
+Scala::
++
+.src/main/scala/shopping/cart/ShoppingCart.scala:
 [source,scala,indent=0]
 ----
 include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=write-side-with-role]
 ----
 
+<1> Define the role to be used for the `ShoppingCart` entities when initializing `ClusterSharding`.
+
 === Set up the role in some nodes
 
-Then, when you deploy this new code you must make sure some nodes on your deployment include the role `eventsourcing`. These are the only nodes where the `ShoppingCart` entity will be run on. You can either:
+Then, when you deploy this new code you must make sure some nodes on your deployment include the role `entity`. These are the only nodes where the `ShoppingCart` entity will be run on.
 
-[start=1]
-. deploy each node with a custom `application-eventsourcing.conf`:
+When using the xref:deployment:index.adoc[Akka Operator] you should define the roles in the deployment descriptor:
 
-[source,conf]
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
 ----
-include::example$shopping-cart-service-scala/src/main/resources/application-eventsourcing.conf[tag=roles-in-conf]
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  replicas: 10 # <1>
+  roles:
+  - name: "entity" # <2>
+    replicasRatio: 40
+  - name: "projection" # <3>
+    replicasRatio: 60
 ----
 
-and use that from the command line:
+<1> total of 10 replicas means that 10 Pods, corresponding to 10 Akka Cluster members, will be started
+<2> 40% of the Pods will be used for role `entity`
+<3> 60% of the Pods will be used for role `projection`
+
+The `replicasRatio` for a role defines the proportion of the total number of `replicas`, relative to other roles, that will be used for the role. For example, role `entity` with `replicasRatio: 40` and role `projection` with `replicasRatio: 60` means that 10 `replicas` will result in 4 replicas for role `entity` and 6 replicas for role `projection`. Scaling to 15 will result in 6 for `entity` and 9 for `projection`.
+
+The Akka Operator will automatically provide the `akka.cluster.roles` configuration to the application.
+
+If you are not using the Akka Operator you would have to define the roles in configuration or from the command line:
 
 [source]
 ----
-... -Dconfig.resource=application-eventsourcing.conf
+... -Dakka.cluster.roles.0=entity ...
 ----
-
-Or
-
-[start=2]
-. you can set the property `akka.cluster.roles` from the command line:
-
-[source]
-----
-... -Dakka.cluster.roles.0=eventsourcing ...
-----
-
 
 == Tuning the Read-Side
 
@@ -98,6 +130,18 @@ Let's see these two changes in more detail.
 
 When you initialize the {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[Sharded Daemon Processes {tab-icon}, window="tab"] for the projections, as described in the xref:microservices-tutorial:projection-query.adoc#projection[tutorial], you may specify a role. Take for example the final code on the initialization of the Sharded Daemon Process for the popularity projection (from the tutorial):
 
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/ItemPopularityProjection.java:
+[source,java,indent=0]
+----
+include::microservices-tutorial:example$shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjection.java[tag=howto-read-side-without-role]
+----
+
+Scala::
++
+.src/main/scala/shopping/cart/ItemPopularityProjection.scala:
 [source,scala,indent=0]
 ----
 include::microservices-tutorial:example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[tag=howto-read-side-without-role]
@@ -105,68 +149,63 @@ include::microservices-tutorial:example$shopping-cart-service-scala/src/main/sca
 
 You can {akka}/typed/cluster-sharding.html[specify a role when declaring the entity {tab-icon}, window="tab"]:
 
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/ItemPopularityProjection.java:
+[source,java,indent=0]
+----
+include::example$shopping-cart-service-java/src/main/java/shopping/cart/ItemPopularityProjection.java[tag=read-side-with-role]
+----
+
+Scala::
++
+.src/main/scala/shopping/cart/ItemPopularityProjection.scala:
 [source,scala,indent=0]
 ----
 include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[tag=read-side-with-role]
 ----
 
+<1> Define the role to be used for the `ItemPopularityProjection` when initializing `ShardedDaemonProcess`.
+
 === Set up the role in some nodes
 
-Then, when you deploy this new code you must make sure some nodes on your deployment include the role `projections`. These are the only nodes where the `ItemPopularityProjection` projection daemon processes will be run on. You can either:
 
-[start=1]
-. deploy each node with a custom `application-projections.conf`:
 
-[source,conf]
+Then, when you deploy this new code you must make sure some nodes on your deployment include the role `projection`. These are the only nodes where the `ItemPopularityProjection` projection daemon processes will be run on.
+
+When using the xref:deployment:index.adoc[Akka Operator] you should define the roles in the deployment descriptor as described for the `entity` role above:
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
 ----
-include::example$shopping-cart-service-scala/src/main/resources/application-projections.conf[tag=roles-in-conf]
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  replicas: 10
+  roles:
+  - name: "entity"
+    replicasRatio: 40
+  - name: "projection"
+    replicasRatio: 60
 ----
 
-and use that from the command line:
+The Akka Operator will automatically provide the `akka.cluster.roles` configuration to the application.
+
+If you are not using the Akka Operator you would have to define the roles in configuration or from the command line:
 
 [source]
 ----
-... -Dconfig.resource=application-projections.conf ...
-----
-
-Or
-
-[start=2]
-. you can set the property `akka.cluster.roles` from the command line:
-
-[source]
-----
-... -Dakka.cluster.roles.0=projections ...
-----
-
-== Fine-grained tuning
-
-The sections above describe how to scale the write-side or scaling all the projections separately. But roles can be used in a more fine grained setup. Imagine for example you wanted the persistent entities ran on the same nodes where the popularity projection runs (but only that projection).
-
-You can use a dedicated role for each of your projections:
-
-[source,scala,indent=0]
-----
-include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[tag=read-side-with-dedicated-role]
-----
-
-And then set multiple roles into the nodes:
-
-[source,conf]
-----
-include::example$shopping-cart-service-scala/src/main/resources/application-fine-tuned.conf[tag=roles-in-conf]
-----
-
-Or, using the JVM arguments syntax:
-
-[source]
-----
-... -Dakka.cluster.roles.0=eventsourcing -Dakka.cluster.roles.1=projections-popularity ...
+... -Dakka.cluster.roles.0=projection ...
 ----
 
 
 == Learn more
 
 * {akka}/typed/cluster.html#node-roles[Akka Cluster Node Roles {tab-icon}, window="tab"]
+* xref:deployment:operator-reference.adoc#scale[Scale the number of Pods]
 * {akka}/typed/cluster-sharding.html[Akka Cluster Sharding {tab-icon}, window="tab"]
 * {akka}/typed/cluster-sharded-daemon-process.html#sharded-daemon-process[Sharded Daemon Process {tab-icon}, window="tab"]

@@ -1,0 +1,75 @@
+= JDBC (custom, Amazon RDS, GCP Cloud SQL)
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+The Akka Operator can provide configuration for JDBC databases for use as the event store or in projection.
+This can be either:
+
+- Your own JDBC managed data base
+- xref:aws-rds.adoc[Amazon RDS]
+- xref:gcp-sql.adoc[Google Cloud Platform's Cloud SQL]
+
+Regardless of which database you're using you'll need:
+
+- Database instance hostname
+- JDBC connection URL e.g. jdbc:postgresql://<hostname>:5432/<database name>?reWriteBatchedInserts=true
+- Username
+- Password
+
+[#create-tables]
+== Create tables
+
+To create the tables and other administrative tasks you can connect to the  database from a Pod in your Kubernetes cluster.
+
+For instance to do this for PostgreSQL you can create a temporary Pod and run `psql` to load the ddl sql scripts with:
+
+[source,shell script]
+----
+kubectl run -i rds-mgmt --image=postgres \
+  --restart=Never --rm --env "PGPASSWORD=<password>" -- \
+  psql -h <hostname> -U postgres -t < ddl-scripts/create_tables.sql
+----
+
+It creates all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
+
+For an interactive `psql` session you can use:
+
+[source,shell script]
+----
+kubectl run -i --tty rds-mgmt --image=postgres --restart=Never --rm -- \
+  psql -h <hostname> -U <username>
+----
+
+== JDBC configuration
+
+To use the JDBC integration in the Akka Operator you place the connection credentials in a
+https://kubernetes.io/docs/concepts/configuration/secret/[Secret {tab-icon}, window="tab"]. The Secret must contain three entries:
+
+* `connectionUrl` - the JDBC connection URL
+* `username` - the database username
+* `password` - the database password
+
+The Secret can be created with the following `kubectl` command, replacing the values for your database:
+
+[source,shell script]
+----
+kubectl create secret generic shopping-cart-service-jdbc-secret --from-literal=username=postgres --from-literal=password=tiger --from-literal=connectionUrl="<connection url>"
+----
+
+To enable the JDBC integration you define the name of the secret in `jdbc` section of the deployment descriptor:
+
+.kubernetes/shopping-cart-service-cr.yml:
+[source,yaml]
+----
+include::microservices-tutorial:example$02-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
+----
+
+Apply the deployment descriptor:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+The Akka Operator will automatically xref:config-secret.adoc#main-conf[provide the configuration] for the connection based on the Secret when the application starts the `ActorSystem`.

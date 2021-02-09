@@ -3,7 +3,7 @@
 
 include::partial$include.adoc[]
 
-Event Sourcing is a modelling technique were you not only model the state of your business but also the transitions between states. Then, instead of storing the current state the datastore saves these increments.
+Event Sourcing is a modelling technique where you not only model the state of your business but also the transitions between states. Then, instead of storing the current state the datastore saves these increments.
 
 A difference to persistence based on Create-Read-Update-Delete (CRUD) data-stores is that we don't need to map our imagined entities to a database model up-front. Instead, we model the entities, and the events that affect their state.
 
@@ -19,14 +19,14 @@ The events are persisted to the datastore, while the entity state is kept in mem
 
 == Performance
 
-Event Sourcing improves writing performance thanks to multiple aspects:
+Event Sourcing in Akka improves writing performance thanks to multiple aspects:
 
 * The current state resides in memory so there's no need for a round-trip and several database joins to reconstruct it.
 * The history of events for a single entity can use snapshots so reconstructing an entity with a large list of events is fast: load only the latest snapshot and apply the last few events on top.
 * Creating aggregates or other projections over multiple entities happens asynchronously to write operations producing xref:eventual-consistency.adoc[eventually consistent] representations of the data. That happens without impacting write throughput since the events Journal is an append-only table so no locking is required to ensure consistency between the journal and the projections.
 
-== Advantages of Event Sourcing
 [#advantages]
+== Advantages of Event Sourcing
 
 Event Sourcing achieves persistence by storing state changes as historical events that capture business activity. This decouples the events from the storage mechanism, allowing them to be aggregated, or placed in a group with logical boundaries. Event Sourcing is one of the patterns that enables concurrent, distributed systems to achieve high performance, scalability and resilience.
 
@@ -57,5 +57,3 @@ https://hackernoon.com/events-as-first-class-citizens-8633e8479493[Events As Fir
 * The {akka-blog}/news/2020/01/07/akka-event-sourcing-video[Event Sourcing with Akka 2.6 video {tab-icon}, window="tab"] is a good starting point for learning Event Sourcing.
 
 * {akka}/typed/persistence.html#introduction[Akka Event Sourcing documentation {tab-icon}, window="tab"].
-
-

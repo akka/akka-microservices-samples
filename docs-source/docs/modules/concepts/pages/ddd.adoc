@@ -8,8 +8,8 @@ ____
 Domain-driven design (DDD) is the concept that the structure and language of software code (class names, class methods, class variables) should match the business domain. For example, if a software processes loan applications, it might have classes such as LoanApplication and Customer, and methods such as AcceptOffer and Withdraw.
 ____
 
-== Bounded Context
 [#bounded_context]
+== Bounded Context
 
 As the modelling covers a more extensive area of your business, {reactive-principles}/patterns/partition-state.html[split the models {tab-icon}, window="tab"] into very well-delimited contexts in which each model applies. Each of these contexts will have xref:autonomy.adoc[autonomy] to evolve the models it owns.
 
@@ -19,13 +19,13 @@ A model within these bounds may need to be shared to interact with external cont
 
 When building Microservices, each service is a Bounded Context encapsulating an autonomous domain model and its external APIs play the role of an Anti-Corruption Layer.
 
-== Ubiquitous Language
 [#ubiquitous_language]
+== Ubiquitous Language
 
 Business specialists and other members of the team (both technical and non-technical) should collaborate into creating a single, meaningful naming for the use cases, entities, actions and events modelling the business. Using a single, common language will align all parties and improve communication.
 
-== Stateful Aggregate
 [#aggregate]
+== Stateful Aggregate
 
 The Aggregate is a graph of related domain objects that can only be mutated in an atomic operation. The Aggregate is responsible for keeping the invariants of the model. It decides which mutations are allowed according to its business rules and current state.
 
@@ -36,18 +36,18 @@ We can take the xref:microservices-tutorial:entity.adoc#event_sourced_entity[Sho
 All operations must pass through the Shopping Cart, so it can check its validity. You may add or remove an item, or change its quantity, you can checkout the cart. All those operations are atomic and sequential. It should not be allowed to change its content at the same time the cart is being checkout, nor it should be allowed to checkout an empty cart. The Shopping Cart Aggregate will act as the guardian of the model integrity ensuring that only valid mutations are allowed.
 
 
-== Anti-Corruption Layer
 [#anti_corruption_layer]
+== Anti-Corruption Layer
 
 Sharing entities across <<Bounded Context>>'s adds coupling since a change on the entity model affects the code consuming it. An Anti-Corruption Layer is a transformation mapping the external model (controlled by a third party bounded context) into an internal model that's stable to the actual bounded context consuming the model.
 
 == Events-First DDD
 
-Spliting your business domain model into <<Bounded Context>>'s will provide some spatial decoupling. Then, you can use asynchronous communication between them to achieve some temporal decoupling. Implement that asynchronous communication using xref:message-driven-event-driven.adoc[event-driven] design.
+Splitting your business domain model into <<Bounded Context>>'s will provide some spatial decoupling. Then, you can use asynchronous communication between them to achieve some temporal decoupling. Implement that asynchronous communication using xref:message-driven-event-driven.adoc[event-driven] design.
 
 In parallel, you can use xref:event-sourcing.adoc[] to model the <<Stateful Aggregate>>'s on each context.
 
-Both external event-driven modeling and xref:event-sourcing.adoc[] are a perfect match. You can use an <<Anti-Corruption Layer>> and directly publish the Domain events for cross-context consumption.
+Both external event-driven modelling and xref:event-sourcing.adoc[] are a perfect match. You can use an <<Anti-Corruption Layer>> and directly publish the Domain events for cross-context consumption.
 
 
 [discrete]

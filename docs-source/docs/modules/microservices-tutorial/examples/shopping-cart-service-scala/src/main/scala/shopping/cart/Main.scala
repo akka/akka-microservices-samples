@@ -7,17 +7,16 @@ import akka.actor.typed.ActorSystem
 import akka.actor.typed.Behavior
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
+import shopping.cart.repository.{
+  ItemPopularityRepositoryImpl,
+  ScalikeJdbcSetup
+}
 
 // tag::SendOrderProjection[]
 import shopping.order.proto.{ ShoppingOrderService, ShoppingOrderServiceClient }
 import akka.grpc.GrpcClientSettings
 
 // end::SendOrderProjection[]
-
-// tag::ItemPopularityProjection[]
-import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
-
-// end::ItemPopularityProjection[]
 
 object Main {
 
@@ -33,25 +32,16 @@ object Main {
 class Main(context: ActorContext[Nothing])
     extends AbstractBehavior[Nothing](context) {
   val system = context.system
+
+  ScalikeJdbcSetup.init(system)
   AkkaManagement(system).start()
   ClusterBootstrap(system).start()
 
   ShoppingCart.init(system)
 
   // tag::ItemPopularityProjection[]
-  val session = CassandraSessionRegistry(system).sessionFor(
-    "akka.persistence.cassandra"
-  ) // <1>
-  // use same keyspace for the item_popularity table as the offset store
-  val itemPopularityKeyspace =
-    system.settings.config
-      .getString("akka.projection.cassandra.offset-store.keyspace")
-  val itemPopularityRepository =
-    new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace)(
-      system.executionContext
-    ) // <2>
-
-  ItemPopularityProjection.init(system, itemPopularityRepository) // <3>
+  val itemPopularityRepository = new ItemPopularityRepositoryImpl() // <1>
+  ItemPopularityProjection.init(system, itemPopularityRepository) // <2>
   // end::ItemPopularityProjection[]
 
   val grpcInterface =

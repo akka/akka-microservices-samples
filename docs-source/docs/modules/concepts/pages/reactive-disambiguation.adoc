@@ -14,8 +14,8 @@ Introduced in 2013, the Reactive Manifesto summarizes the properties a system mu
 
 Read the whole manifesto at {reactive-manifesto}[https://www.reactivemanifesto.org/ {tab-icon}, window="tab"].
 
-== Reactive Principles (and Patterns)
 [#reactive_principles]
+== Reactive Principles (and Patterns)
 
 [quote]
 As a companion to the <<Reactive Manifesto>>, the Reactive Principles incorporate the ideas, paradigms, methods, and patterns from both <<Reactive Programming>> and <<Reactive Systems>> into a set of practical principles that software architects and developers can apply in their transformative work.

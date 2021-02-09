@@ -3,15 +3,16 @@ package shopping.cart
 import akka.actor.typed.ActorSystem
 import akka.cluster.sharding.typed.ShardedDaemonProcessSettings
 import akka.cluster.sharding.typed.scaladsl.ShardedDaemonProcess
-import akka.persistence.cassandra.query.scaladsl.CassandraReadJournal
+import akka.persistence.jdbc.query.scaladsl.JdbcReadJournal
 import akka.persistence.query.Offset
 import akka.projection.ProjectionBehavior
 import akka.projection.ProjectionId
-import akka.projection.cassandra.scaladsl.CassandraProjection
 import akka.projection.eventsourced.EventEnvelope
 import akka.projection.eventsourced.scaladsl.EventSourcedProvider
+import akka.projection.jdbc.scaladsl.JdbcProjection
 import akka.projection.scaladsl.AtLeastOnceProjection
 import akka.projection.scaladsl.SourceProvider
+import shopping.cart.repository.ScalikeJdbcSession
 import shopping.order.proto.ShoppingOrderService
 
 object SendOrderProjection {
@@ -36,13 +37,14 @@ object SendOrderProjection {
         : SourceProvider[Offset, EventEnvelope[ShoppingCart.Event]] =
       EventSourcedProvider.eventsByTag[ShoppingCart.Event](
         system = system,
-        readJournalPluginId = CassandraReadJournal.Identifier,
+        readJournalPluginId = JdbcReadJournal.Identifier,
         tag = tag)
 
-    CassandraProjection.atLeastOnce(
+    JdbcProjection.atLeastOnceAsync(
       projectionId = ProjectionId("SendOrderProjection", tag),
       sourceProvider,
-      handler = () => new SendOrderProjectionHandler(system, orderService))
+      handler = () => new SendOrderProjectionHandler(system, orderService),
+      sessionFactory = () => new ScalikeJdbcSession())(system)
   }
 
 }

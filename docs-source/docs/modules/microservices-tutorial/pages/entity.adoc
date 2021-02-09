@@ -19,6 +19,8 @@ ifdef::review[REVIEWERS: re: bullet 3 above, the Initialization section only con
 If you are unfamiliar with Event Sourcing, refer to the xref:concepts:event-sourcing.adoc[Event Sourcing] section for an explanation.
 The {akka-blog}/news/2020/01/07/akka-event-sourcing-video[Event Sourcing with Akka 2.6 video {tab-icon}, window="tab"] is also a good starting point for learning Event Sourcing.
 
+This example is using PostgreSQL for storing the events. An alternative is described in xref:how-to:cassandra-alternative.adoc[].
+
 == Source downloads
 
 If you prefer to simply view and run the example, download a zip file containing the completed code:
@@ -71,13 +73,17 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;events]
 ----
++
+<1> `equals` and `hashCode` are not strictly needed, aside from that it can be useful when asserting the result in tests
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;events]
@@ -90,6 +96,7 @@ Items added to the Cart are added to a `Map`. The contents of the `Map` comprise
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;state]
@@ -97,6 +104,7 @@ include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;state]
@@ -113,20 +121,25 @@ The Cart entity will receive commands that request changes to Cart state. We wil
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;commandHandler]
 ----
++
+<1> Matching the `AddItem` command.
+<2> Persisting the `ItemAdded` event and replying to the sender.
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;commandHandler]
 ----
-
-<1> Matching the `AddItem` command
-<2> Persisting the `ItemAdded` event and replying to the sender
++
+<1> Matching the `AddItem` command.
+<2> Persisting the `ItemAdded` event and replying to the sender.
 
 If an `AddItem` command is accepted, the `Effect.persist` applies an event to the cart's state and makes sure this event is stored before replying to the command. The returned `ReplyEffect` reacts on the commands by deciding which effect they should have on the entity. If the validation fails we want to send back an error message. The reply can be a success or an error and that is the reason for using the `StatusReply`.
 
@@ -144,6 +157,7 @@ Add the event handler as follows:
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;eventHandler]
@@ -151,37 +165,42 @@ include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;eventHandler]
 ----
 
-== Add initialization
 [#initialization]
+== Add initialization
 
 To glue the command handler, event handler, and state together, we need some initialization code. Our code will distribute the Cart entities over nodes in the Akka Cluster with https://doc.akka.io/docs/akka/current/cluster-sharding.html[Cluster Sharding {tab-icon}, window="tab"], enable snapshots to reduce recovery time when the entity is started, and restart with backoff in the case of failure. 
 
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$02-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tags=shoppingCart;init]
 ----
++
+<1> The entities are distributed over the nodes in the Akka Cluster with Cluster Sharding.
+<2> An `EventSourcedBehavior` is created for the `ShoppingCart`.
+<3> Snapshotting is an optimization to reduce recovery when the entity is started.
+<4> Restarting with backoff in case of failures.
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tags=obj;init]
 ----
-
++
 <1> The entities are distributed over the nodes in the Akka Cluster with Cluster Sharding.
-
-<2> [.group-scala]#Command and event handler are defined with the `EventSourcedBehavior`.# [.group-java]#An `EventSourcedBehavior` is created for the `ShoppingCart`.#
-
+<2> Command and event handler are defined with the `EventSourcedBehavior`.
 <3> Snapshotting is an optimization to reduce recovery when the entity is started.
-
 <4> Restarting with backoff in case of failures.
 
 Then we need to call `ShoppingCart.init` from `Main`. Add the following before the gRPC `ShoppingCartServer` initialization:
@@ -242,6 +261,7 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Cbo
 
 The interface is configured in the `serialization.conf` file to enable CBOR serialization. `serialization.conf` is included in `application.conf`.
 
+.src/main/resources/serialization.conf
 [source,hocon]
 ----
 include::example$02-shopping-cart-service-scala/src/main/resources/serialization.conf[]
@@ -311,9 +331,9 @@ If the command is successful, the entity will reply with `StatusReply.Success` w
 
 Also, we added an `ActorSystem` parameter to the constructor of `ShoppingCartServiceImpl`. Edit `Main` to include the `system` as the parameter when creating a new instance of the `ShoppingCartServiceImpl`.
 
-== Configure Cassandra
+== Configure Postgres
 
-The events are stored in Cassandra and the template project includes configuration for that in the `src/main/resources/persistence.conf` file. We have to enable this configuration by including `persistence.conf` in `application.conf`:
+The events are stored in a PostgresSQL database and the template project includes configuration for that in the `src/main/resources/persistence.conf` file. We have to enable this configuration by including `persistence.conf` in `application.conf`:
 
 [source,hocon]
 ----
@@ -322,10 +342,8 @@ include::example$02-shopping-cart-service-scala/src/main/resources/application.c
 
 == Run locally
 
-To run the service, we first need to start Cassandra to persist the events. Then we can run the service:
+To run the service, we first need to start the PostgresSQL to persist the events. Then we can run the service:
 
-. Start Cassandra with the following:
-+
 include::template.adoc[tag=docker]
 
 . Run the service with:
@@ -344,7 +362,8 @@ mvn compile exec:exec -DAPP_CONFIG=local1.conf
 ----
 
 === Exercise the service
-Try the following to exercise the service:
+
+Use `https://github.com/fullstorydev/grpcurl[grpcurl]` to exercise the service:
 
 . Use `grpcurl` to add 3 socks to a cart:
 +
@@ -407,12 +426,101 @@ mvn compile exec:exec -DAPP_CONFIG=local3.conf
 
 === Stop the service
 
-When finished, stop the service with `ctrl-c`. Leave Cassandra running for the next set of steps, or stop it with:
+When finished, stop the service with `ctrl-c`. Leave the PostgresSQL running for the next set of steps, or stop it with:
 
 [source,shell script]
 ----
 docker-compose down
 ----
+
+[#kubernetes]
+== Run in Kubernetes
+
+Create a xref:deployment:aws-install.adoc[Kubernetes cluster and install the Akka Operator] if you haven't already.
+
+=== Create PostgreSQL database
+
+Follow the xref:deployment:jdbc.adoc[JDBC] instructions to setup a PostgresSQL database in GCP or AWS and create a secret to access it.
+
+Create the PostgresSQL tables using the `ddl-scripts/create_tables.sql` SQL script located at the root of the project. Follow the instructions in xref:deployment:jdbc.adoc[JDBC integration] to connect to your database instance and load the script.
+
+[source,shell script]
+----
+kubectl run -i rds-mgmt --image=postgres \
+  --restart=Never --rm --env "PGPASSWORD=<password>" -- \
+  psql -h <db hostname> -U postgres -t < ddl-scripts/create_tables.sql
+----
+
+=== Build Docker image
+
+Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon Elastic Container Registry] if you haven't already.
+
+Rebuild the Docker image. 
+
+include::partial$build-docker-for-kube.adoc[]
+
+=== Update the deployment descriptor
+
+Update the `kubernetes/shopping-cart-service-cr.yml` deployment descriptor with the new image tag and the JDBC credential secret.
+
+.kubernetes/shopping-cart-service-cr.yml:
+[source,yaml]
+----
+include::example$02-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
+----
+
+<1> Replace `<docker-registry>` with your docker registry address and update the image reference with the image tag from the output of the Docker build above, for example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201209-135004-363ae2b`. 
+<2> Add a `jdbc.credentialsSecret` section pointing to the secret created in the xref:deployment:jdbc.adoc[JDBC] instructions.
+
+
+=== Apply to Kubernetes
+
+Re-apply the `shopping-cart-service-cr.yml` to Kubernetes:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+You can see progress by viewing the status:
+
+[source,shell script]
+----
+kubectl get akkamicroservices/shopping-cart-service
+----
+
+See xref:deployment:troubleshooting.adoc[troubleshooting deployment status] for more details.
+
+=== Exercise the service in Kubernetes
+
+include::partial$prepare-to-exercise-in-kube.adoc[]
+
+Use `https://github.com/fullstorydev/grpcurl[grpcurl]` to exercise the service:
+
+. Use `grpcurl` to add 3 socks to a cart:
++
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
+----
+
+. Test the validation logic by trying to add the same item again, which should result in an error:
++
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
+----
+
+. Add 2 t-shirts to the same cart:
++
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
+----
++
+The returned updated cart should still contain the 3 socks.
+
+Note the logging from the `ShoppingCartServiceImpl` in the console that is running `kubectl logs -f`.
 
 :!sectnums:
 == Learn more
@@ -420,3 +528,4 @@ docker-compose down
 * xref:concepts:event-sourcing.adoc[Event Sourcing concepts].
 * {akka}/typed/persistence.html[Akka Event Sourcing reference documentation {tab-icon}, window="tab"].
 * {akka}/typed/cluster-sharding.html[Akka Cluster Sharding reference documentation {tab-icon}, window="tab"].
+* xref:how-to:cassandra-alternative.adoc[]

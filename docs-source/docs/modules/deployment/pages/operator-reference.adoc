@@ -1,0 +1,300 @@
+= Akka Operator reference
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+The deployment descriptor of an Akka Microservice that is managed by the Akka Operator is defined in a https://kubernetes.io/docs/tasks/extend-kubernetes/custom-resources/custom-resource-definitions/[Kubernetes Custom Resource {tab-icon}, window="tab"]. The following sections provide an example and details about configuration of interest.
+
+== AkkaMicroservices deployment descriptor (CRD) example
+
+You can view the https://lightbend.github.io/akka-operator-helm/akka-operator/crds/v1/akka-microservices-crd.yml[schema definition of the AkkaMicroservices deployment descriptor (CRD) {tab-icon}, window="tab"]. A https://lightbend.github.io/akka-operator-helm/api-reference/v1/shopping-cart-service-full-cr.yml[deployment descriptor (CR) containing all properties {tab-icon}, window="tab"] provides a factitious example.
+
+[#scale]
+== Scale the number of Pods
+
+The `replicas` field in the deployment descriptor defines the number of Pods that will be used.
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  replicas: 3
+----
+
+You can scale the number of pods by applying the changed deployment descriptor. Kubernetes will add or remove Pods to adjust to the desired number.
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+Another way of changing number of Pods is to use `kubectl scale` without changing the deployment descriptor:
+
+[source,shell script]
+----
+kubectl scale --replicas=3 akkamicroservices shopping-cart-servics
+----
+
+=== Scale Akka Cluster roles
+
+{akka}/typed/cluster.html#node-roles[Akka Cluster node roles {tab-icon}, window="tab"] can be used to scale portions of your application independently. For example, scaling persistent entities separately from projections.
+
+Define the roles in the deployment descriptor:
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  replicas: 10 # <1>
+  roles:
+  - name: "entity" # <2>
+    replicasRatio: 40
+  - name: "projection" # <3>
+    replicasRatio: 60
+----
+
+<1> total of 10 replicas means that 10 Pods, corresponding to 10 Akka Cluster members, will be started
+<2> 40% of the Pods will be used for role `entity`
+<3> 60% of the Pods will be used for role `projection`
+
+The `replicasRatio` for a role defines the proportion of the total number of `replicas`, relative to other roles, that will be used for the role. For example, role `entity` with `replicasRatio: 40` and role `projection` with `replicasRatio: 60` means that 10 `replicas` will result in 4 replicas for role `entity` and 6 replicas for role `projection`. Scaling to 15 will result in 6 for `entity` and 9 for `projection`.
+
+In this example we have used the ratio 40:60 because the sum is 100 and therefore corresponds to percentage of the total replicas. However, it's not required to have a sum of 100. The same ratio could be defined as 2:3.
+
+The Akka Operator will automatically provide the `akka.cluster.roles` configuration to the application. Roles defined in `application.conf` will be overridden.
+
+See xref:how-to:scale-independently.adoc[] for information about what is needed in the application to make use of the Akka Cluster roles.
+
+The Akka Operator adds a label `akka.lightbend.com/cluster-role` to the Pods, which for example can be used to select Pods with a certain role:
+
+[source,shell script]
+----
+kubectl get pods -label akka.lightbend.com/cluster-role=entity
+----
+
+Only one role per Akka Cluster member is currently supported.
+
+In addition to the `replicasRatio` you can define minimum and maximum boundaries.
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  replicas: 10
+  roles:
+  - name: "entity"
+    replicasRatio: 40
+    replicasMin: 2 # <1>
+  - name: "projection"
+    replicasRatio: 60
+    replicasMax: 10 # <2>
+----
+
+<1> use at least 2 replicas for the `entity` role
+<2> use at most 10 replicas for the `projection` role
+
+When allocating the total number of replicas to the roles those bounds will be honored if possible, but it is not guaranteed. The sum of the role replicas will always be equal to the number of total replicas. If total replicas are less than the sum of replicasMin of all roles the minimum bounds cannot be satisfied.
+
+The table below illustrates the outcome from the example with 40/60 ratio and `replicasMin: 2` for `entity` and `replicasMax: 10` for `projection.
+
+|===
+|replicas |entity |projection
+
+|0
+|0 (< min)
+|0
+
+|1
+|1 (< min)
+|0
+
+|2
+|2 (min)
+|0
+
+|3
+|2 (min)
+|1
+
+|4
+|2 (min)
+|2
+
+|5
+|2
+|3
+
+|6
+|2
+|4
+
+|7
+|3
+|4
+
+|8
+|3
+|5
+
+|9
+|4
+|5
+
+|10
+|4
+|6
+
+|15
+|6
+|9
+
+|16
+|6
+|10
+
+|17
+|7
+|10
+
+|18
+|8
+|10 (max)
+
+|19
+|9
+|10 (max)
+
+|20
+|10
+|10 (max)
+
+|===
+
+When assigning the number of replicas for each role it is performed in the order they are defined. That is the reason the `entity` role is given 2 out of 2 replicas the `projection` role still has 0. The `entity` role has a minimum preference of 2. In this way you can give priority to certain roles.
+
+If `replicasMax` is defined on all roles it can't be satisfied if the total number of replicas exceeds the sum of `replicasMax` of all roles. For example, if `replicasMax: 10` would have been defined on both `entity` and `projection` and scaling to 25 replicas. In that case the exceeding 5 would be evenly distributed over `entity` and `projection` and result in 13 for `entity` and 12 for `projection`.
+
+== Resource requests and limits
+
+https://kubernetes.io/docs/concepts/configuration/manage-resources-containers/[Resources for Containers {tab-icon}, window="tab"] can be defined in the Akka Microservices deployment descriptor.
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  resources:
+    limits:
+      memory: "2Gi"
+    requests:
+      memory: "2Gi"
+      cpu: "1"
+----
+
+For multi-threaded applications such as the JVM, the CFS scheduler limits are an ill fit, because they will restrict the allowed CPU usage even when more CPU cycles are available from the host system. This means your application may be starved of CPU time, but your system appears idle.
+
+To avoid CFS scheduler limits, it is best not to use `resources.limits.cpu` limits, but use `resources.requests.cpu` configuration instead.
+
+[#logback]
+== Configure Logback
+
+A custom Logback configuration can be provided to the deployment without building a new image. Make sure that your application is already configured to use the {akka}/typed/logging.html#slf4j-backend[Slf4j backend {tab-icon}, window="tab"] for logging.
+
+Create a logback configuration you want to apply in a `logback.xml` file:
+
+.logback.xml
+[source,xml]
+----
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>EASY LOGGING - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <root level="TRACE">
+        <appender-ref ref="STDOUT"/>
+    </root>
+
+</configuration>
+----
+
+Create the secret in the cluster:
+
+[source,shell script]
+----
+kubectl create secret generic my-logback --from-file=logback.xml=./logback.xml
+----
+
+Modify the deployment descriptor to use this configuration:
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  logbackSecret:
+    secretName: "my-logback"
+----
+
+
+Apply the logback configuration by running:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+The Akka Operator will automatically mount the `logback.xml` and include system property `logback.configurationFile` to the application, which means that it will be loaded instead of the default `logback.xml` that is bundled with the application. You have to restart the Pods for it to take effect, which will happen automatically by a rolling update when you apply changes of the deployment descriptor.
+
+== Akka Cluster status
+
+Akka Operator checks and reports the Akka cluster membership status. It includes the number of members that have joined the Akka cluster and their state from the Akka cluster point of view. This can be Up or Non-Up. The total number of members is a sum of Up plus Non-Up. Up means that a replica has successfully joined the cluster.
+
+Comparing the number of Up nodes to the current number of replicas can provide an understanding of whether all running replicas are in a normal state or not. Similarly, the number of Non-Up replicas tells us how many replicas are not in the normal operating state, such as Joining or Exiting.
+
+Additionally to Up and Non-Up, there is also Unreachable. This is the number of unreachable nodes from the view of one (the oldest node). For example, if the oldest node was partitioned from the rest of a cluster of Up nodes it would have a high number of unreachable, while if you ask the other nodes they would only say that one node, the oldest, is unreachable.
+
+These numbers can be useful to watch the Akka cluster state during rolling updates to make sure it is in a normal state. See xref:troubleshooting.adoc[troubleshooting deployment status] for some examples.
+
+== Namespaces
+
+The Akka Operator manages Akka Microservices in all namespaces of the Kubernetes cluster, which means that you should only install the operator once. It is possible to configure the operator to only manage a specific namespace if that would be needed.
+
+You can define a specific namespace that the operator should manage with the following value of the Helm chart when installing the operator.
+
+[source,shell script]
+----
+--set java_tool_options="-Dakka.operator.application-namespace=the-app-ns -Xlog:gc -XX:InitialRAMPercentage=75 -XX:MaxRAMPercentage=75"
+----
+
+The operator itself can still be installed in a different namespace, or in the same namespace.
+
+== Learn more
+
+* xref:how-to:configure-deployments.adoc[]
+* xref:how-to:scale-independently.adoc[]

@@ -31,60 +31,11 @@ import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.Span
 import org.scalatest.wordspec.AnyWordSpec
 import org.slf4j.LoggerFactory
+import scalikejdbc.ConnectionPool
+import shopping.cart.repository.ScalikeJdbcSetup
 
 object IntegrationSpec {
-  private val uniqueQualifier = System.currentTimeMillis()
-  private val keyspace = s"IntegrationSpec_$uniqueQualifier"
-
-  val config: Config = ConfigFactory
-    .parseString(s"""
-      akka.cluster.jmx.multi-mbeans-in-same-jvm = on
-      
-      akka.remote.artery.canonical {
-        hostname = "127.0.0.1"
-        port = 0
-      }
-
-      akka.persistence.cassandra {
-        events-by-tag {
-          eventual-consistency-delay = 200ms
-        }
-        query {
-          refresh-interval = 500 ms
-        }
-        journal.keyspace = $keyspace
-        journal.keyspace-autocreate = on
-        journal.tables-autocreate = on
-        snapshot.keyspace = $keyspace
-        snapshot.keyspace-autocreate = on
-        snapshot.tables-autocreate = on
-      }
-      datastax-java-driver {
-        basic.contact-points = ["127.0.0.1:9042"]
-        basic.load-balancing-policy.local-datacenter = "datacenter1"
-        # lots of ActorSystems in the same JVM
-        advanced.session-leak.threshold = 10
-      }
-      
-      akka.projection.cassandra.offset-store.keyspace = $keyspace
-      
-      shopping-cart-service.kafka.topic = "shopping_cart_events_$uniqueQualifier"
-
-      akka.kafka.consumer {
-        kafka-clients {
-          auto.offset.reset = "earliest"
-        }
-      }
-      
-      akka.actor.testkit.typed {
-        single-expect-default = 5s
-        filter-leeway = 5s
-        system-shutdown-default = 30s
-      }
-    """)
-    .withFallback(
-      ConfigFactory.load("local1")
-    ) // pick up local configuration to test it, dynamic ports have been overridden
+  val sharedConfig: Config = ConfigFactory.load("integration-test.conf")
 
   private def nodeConfig(
       grpcPort: Int,
@@ -100,7 +51,8 @@ object IntegrationSpec {
         "shopping-cart-service" {
           endpoints = [
             {host = "127.0.0.1", port = ${managementPorts(0)}},
-            {host = "127.0.0.1", port = ${managementPorts(1)}}
+            {host = "127.0.0.1", port = ${managementPorts(1)}},
+            {host = "127.0.0.1", port = ${managementPorts(2)}}
           ]
         }
       }
@@ -114,7 +66,7 @@ object IntegrationSpec {
       ActorTestKit(
         "IntegrationSpec",
         nodeConfig(grpcPort, managementPorts, managementPortIndex)
-          .withFallback(IntegrationSpec.config)
+          .withFallback(sharedConfig)
           .resolve())
 
     def system: ActorSystem[_] = testKit.system
@@ -171,12 +123,13 @@ class IntegrationSpec
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    // avoid concurrent creation of keyspace and tables
+    ScalikeJdbcSetup.fromConfig(IntegrationSpec.sharedConfig)
+    CreateTableTestUtils.dropAndRecreateTables(testNode1.system)
+    // avoid concurrent creation of tables
     val timeout = 10.seconds
     Await.result(
       PersistenceInit.initializeDefaultPlugins(testNode1.system, timeout),
       timeout)
-    CreateTableTestUtils.createTables(testNode1.system)
   }
 
   private def initializeKafkaTopicProbe(): Unit = {
@@ -224,6 +177,7 @@ class IntegrationSpec
     testNode3.testKit.shutdownTestKit()
     testNode2.testKit.shutdownTestKit()
     testNode1.testKit.shutdownTestKit()
+    ConnectionPool.closeAll()
   }
 
   "Shopping Cart service" should {

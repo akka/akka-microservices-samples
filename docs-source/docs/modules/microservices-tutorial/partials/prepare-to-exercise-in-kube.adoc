@@ -1,0 +1,20 @@
+. You can list the pods with:
++
+[source,shell script]
+----
+kubectl get pods
+----
+
+. Inspect logs from a separate terminal window:
++
+[source,shell script]
+----
+kubectl logs -f <shopping-cart-service pod name from above>
+----
+
+. Add port forwarding for the gRPC endpoint from a separate terminal:
++
+[source,shell script]
+----
+kubectl port-forward svc/shopping-cart-service-grpc 8101:8101
+----

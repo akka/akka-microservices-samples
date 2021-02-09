@@ -1,7 +1,6 @@
-
 ## Running the sample code
 
-1. Start a node
+1. Start a node:
 
     ```
     sbt -Dconfig.resource=local1.conf run

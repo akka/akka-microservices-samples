@@ -1,0 +1,505 @@
+= How to use Cassandra instead of PostgreSQL
+:page-supergroup-java-scala: Language
+
+include::partial$include.adoc[]
+
+This guide describes how to use Cassandra instead of Relational Database. It assumes that you created the project using the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] and it describes the changes relative to the JDBC setup that is used in the tutorial.
+
+== Source downloads
+
+If you prefer to view the full example with Cassandra you can download a zip file containing the completed code:
+
+[.tabset]
+Java::
++
+****
+* link:_attachments/shopping-cart-cassandra-java.zip[Source] that includes the full `shopping-cart-service` example from the tutorial with the steps on this page completed.
+****
+
+Scala::
++
+****
+* link:_attachments/shopping-cart-cassandra-scala.zip[Source] that includes the full `shopping-cart-service` example from the tutorial with the steps on this page completed.
+****
+
+== Use Cassandra for the write side
+
+To use Cassandra for the xref:microservices-tutorial:entity.adoc[Event Sourced Cart entity] the following changes are needed.
+
+=== Dependencies
+
+Replace `akka-persistence-jdbc` with `akka-persistence-cassandra`:
+
+[.tabset]
+Java::
++
+.pom.xml:
+[source,xml,indent=0]
+----
+include::example$shopping-cart-service-cassandra-java/pom.xml[tag=akka-persistence-cassandra]
+----
+
+Scala::
++
+.build.sbt:
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/build.sbt[tag=akka-persistence-cassandra]
+----
+
+=== Configuration
+
+Change the configuration in `src/main/resources/persistence.conf` to the following to enable `akka-persistence-cassandra`:
+
+.src/main/resources/persistence.conf
+[source,hocon]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/resources/persistence.conf[tag=akka-persistence-cassandra]
+----
+
+To make the Projections faster in development environment and tests you can add the following to
+
+.src/main/resources/local-shared.conf
+[source,hocon]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/resources/local-shared.conf[tag=projection-delay]
+----
+
+=== Projection with JDBC
+
+Note that it's possible to keep JDBC for the projection when the events are stored in Cassandra. Then you would only change the following in the Projection initialization:
+
+* `JdbcReadJournal.Identifier` to `CassandraReadJournal.Identifier`
+* `JdbcProjection.exactlyOnce` to `CassandraProjection.atLeastOnce`
+* `ExactlyOnceProjection` to `AtLeastOnceProjection`
+
+== Use Cassandra for the read side
+
+To use Cassandra for the Projections the following changes are needed.
+
+=== Dependencies
+
+Replace `akka-projection-jdbc` with `akka-projection-cassandra`:
+
+[.tabset]
+Java::
++
+.pom.xml:
+[source,xml,indent=0]
+----
+include::example$shopping-cart-service-cassandra-java/pom.xml[tag=akka-projection-cassandra]
+----
+
+Scala::
++
+.build.sbt:
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/build.sbt[tag=akka-projection-cassandra]
+----
+
+=== Configuration
+
+Change the configuration in `src/main/resources/persistence.conf` and add following for `akka-projection-cassandra`:
+
+.src/main/resources/persistence.conf
+[source,hocon]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/resources/persistence.conf[tag=akka-projection-cassandra]
+----
+
+=== Projection for queries
+
+Now we will change the Projection corresponding to the xref:microservices-tutorial:projection-query.adoc[Projection for queries in the tutorial].
+
+Several things are rather different from JDBC variant so we start with removing those files and we will add the corresponding for Cassandra. Remove:
+
+[.tabset]
+Java::
++
+* src/main/java/shopping/cart/repository/HibernateJdbcSession.java
+* src/main/java/shopping/cart/repository/ItemPopularityRepository.java
+* src/main/java/shopping/cart/repository/SpringConfig.java
+* src/main/java/shopping/cart/repository/SpringIntegration.java
+src/main/java/shopping/cart/ItemPopularity.java
+* src/main/java/shopping/cart/ItemPopularityProjection.java
+* src/main/java/shopping/cart/ItemPopularityProjectionHandler.java
+* remove the `springContext`, `ItemPopularityRepository` and `ItemPopularityProjection.init` in `Main.java`.
+
+Scala::
++
+* src/main/scala/shopping/cart/repository/ItemPopularityRepository.scala
+* src/main/scala/shopping/cart/repository/ScalikeJdbcSession.scala
+* src/main/scala/shopping/cart/repository/ScalikeJdbcSetup.scala
+* src/main/scala/shopping/cart/ItemPopularityProjection.scala
+* src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala
+* remove the `ScalikeJdbcSetup.init`, `ItemPopularityRepository` and `ItemPopularityProjection.init` in `Main.scala`.
+
+Follow these steps to process events in a Projection that stores the offset in Cassandra and updates an `item_popularity` table in Cassandra.
+
+. Add a class `ItemPopularityProjectionHandler`:
++
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/ItemPopularityProjectionHandler.java:
+[source,java,indent=0]
+----
+include::example$shopping-cart-service-cassandra-java/src/main/java/shopping/cart/ItemPopularityProjectionHandler.java[tags=handler]
+----
++
+<1> extends `akka.projection.javadsl.Handler`
+<2> the `process` method to implement
+<3> match events and increment or decrement the count via the `ItemPopularityRepository`, which encapsulates the database access
+
+Scala::
++
+.src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala:
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/scala/shopping/cart/ItemPopularityProjectionHandler.scala[tags=handler]
+----
++
+<1> extends `akka.projection.scaladsl.Handler`
+<2> the `process` method to implement
+<3> match events and increment or decrement the count via the `ItemPopularityRepository`
+
+. Add the `ItemPopularityRepository`:
++
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/ItemPopularityRepository.java:
+[source,java,indent=0]
+----
+include::example$shopping-cart-service-cassandra-java/src/main/java/shopping/cart/ItemPopularityRepository.java[]
+----
+
+Scala::
++
+.src/main/scala/shopping/cart/ItemPopularityRepository.scala:
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/scala/shopping/cart/ItemPopularityRepository.scala[tag=trait]
+----
+
+. Add the implementation for Cassandra:
++
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/ItemPopularityRepositoryImpl.java:
+[source,java,indent=0]
+----
+include::example$shopping-cart-service-cassandra-java/src/main/java/shopping/cart/ItemPopularityRepositoryImpl.java[]
+----
+
+Scala::
++
+.src/main/scala/shopping/cart/ItemPopularityRepository.scala:
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/scala/shopping/cart/ItemPopularityRepository.scala[tag=impl]
+----
++
+The `CassandraSession` comes from the Cassandra connector in Alpakka and provides an asynchronous API for executing __CQL__ statements to Cassandra. In the initialization code, introduced later, we will see how to get access to a `CassandraSession`. You can learn more about the `CassandraSession` in the {alpakka}/cassandra.html[Alpakka reference documentation {tab-icon}, window="tab"].
++
+NOTE: The example will persist the item popularity count with a https://docs.datastax.com/en/cql-oss/3.x/cql/cql_reference/counter_type.html[Cassandra counter {tab-icon}, window="tab"] data type. It's not possible to guarantee that item count updates occur idempotently because we are using at-least-once semantics. However, since the count is only a rough metric to judge how popular an item is it's not critical to have a totally accurate figure.
+
+. Initialize the Projection
++
+Place the initialization code of the Projection in an `ItemPopularityProjection` [.group-scala]#object# [.group-java]#class#:
++
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/ItemPopularityProjection.java:
+[source,java,indent=0]
+----
+include::example$shopping-cart-service-cassandra-java/src/main/java/shopping/cart/ItemPopularityProjection.java[tag=projection]
+----
++
+<1> `ShardedDaemonProcess` will manage the Projection instances. It ensures the Projection instances are always running and distributes them over the nodes in the Akka Cluster.
+<2> The `tag` is selected based on the Projection instance's index, corresponding to *carts-0* to *carts-3* as explained in the tagging in the `ShoppingCart`.
+<3> The source of the Projection is `EventSourcedProvider.eventsByTag` with the selected tag.
+<4> Using the Cassandra event journal.
+<5> Using Cassandra for offset storage of the Projection.
+<6> Creating the Projection `Handler` that we wrote in the beginning of this part.
+
+Scala::
++
+.src/main/scala/shopping/cart/ItemPopularityProjection.scala:
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/scala/shopping/cart/ItemPopularityProjection.scala[tag=projection]
+----
++
+<1> `ShardedDaemonProcess` will manage the Projection instances. It ensures the Projection instances are always running and distributes them over the nodes in the Akka Cluster.
+<2> The `tag` is selected based on the Projection instance's index, corresponding to *carts-0* to *carts-3* as explained in the tagging in the `ShoppingCart`.
+<3> The source of the Projection is `EventSourcedProvider.eventsByTag` with the selected tag.
+<4> Using the Cassandra event journal.
+<5> Using Cassandra for offset storage of the Projection.
+<6> Creating the Projection `Handler` that we wrote in the beginning of this part.
+
+
+. Call the `ItemPopularityProjection.init` from `Main`:
++
+[.tabset]
+Java::
++
+[source,java,indent=0]
+----
+include::example$shopping-cart-service-cassandra-java/src/main/java/shopping/cart/Main.java[tag=ItemPopularityProjection]
+----
++
+<1> The `CassandraSession` is looked up from the `CassandraSessionRegistry`
+<2> Instantiate the repository for Cassandra
+<3> Call the initialization of the Projection
+
+Scala::
++
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/scala/shopping/cart/Main.scala[tag=ItemPopularityProjection]
+----
++
+<1> The `CassandraSession` is looked up from the `CassandraSessionRegistry`
+<2> Instantiate the repository for Cassandra
+<3> Call the initialization of the Projection
+
++
+NOTE: The `CassandraProjection` uses at-least-once processing semantics. The offset is stored after the event has been processed and if the projection is restarted from a previously stored offset some events may be processed more than once. For a {akka-projection}/jdbc.html[JDBC Projection {tab-icon}, window="tab"] it's possible to have exactly-once semantics because the offset can be stored in the same atomic transaction as the database operation in the event handler.
+
+
+. Query
++
+To expose the item popularity to the outside of the service we have the `GetItemPopularity` operation in the gRPC `ShoppingCartService`.
++
+Replace the `getItemPopularity` implementation in the `ShoppingCartServiceImpl`:
++
+[.tabset]
+Java::
++
+[source,java,indent=0]
+----
+include::example$shopping-cart-service-cassandra-java/src/main/java/shopping/cart/ShoppingCartServiceImpl.java[tag=getItemPopularity]
+----
+
+Scala::
++
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=getItemPopularity]
+----
+
++
+You can remove the unused `blockingJdbcExecutor`.
+
+=== Projection publishing to Kafka
+
+Now we will change the Projection corresponding to the xref:microservices-tutorial:projection-kafka.adoc[Projection publishing to Kafka].
+
+The `PublishEventsProjectionHandler` can be the same as for JDBC.
+
+Replace the initialization code of the Projection in an `PublishEventsProjection` [.group-scala]#object# [.group-java]#class#:
+
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/PublishEventsProjection.java:
+[source,java,indent=0]
+----
+include::example$shopping-cart-service-cassandra-java/src/main/java/shopping/cart/PublishEventsProjection.java[]
+----
+
+Scala::
++
+.src/main/scala/shopping/cart/PublishEventsProjection.scala:
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/scala/shopping/cart/PublishEventsProjection.scala[]
+----
+
+<1> `AtLeastOnceProjection` instead of `ExactlyOnceProjection`
+<2> `CassandraReadJournal.Identifier` instead of `JdbcReadJournal.Identifier`
+<3> `CassandraProjection.atLeastOnce` instead of `JdbcProjection.exactlyOnce`
+
+The `PublishEventsProjection.init` call from the `Main` class can remain the same as for JDBC.
+
+=== Projection calling gRPC service
+
+Now we will change the Projection corresponding to the xref:microservices-tutorial:projection-grpc-client.adoc[Projection calling gRPC service].
+
+The `SendOrderProjectionHandler` can be the same as for JDBC.
+
+Replace the initialization code of the Projection in `SendOrderProjection` [.group-scala]#object# [.group-java]#class#:
+
+[.tabset]
+Java::
++
+.src/main/java/shopping/cart/SendOrderProjection.java:
+[source,java,indent=0]
+----
+include::example$shopping-cart-service-cassandra-java/src/main/java/shopping/cart/SendOrderProjection.java[]
+----
+
+Scala::
++
+.src/main/scala/shopping/cart/SendOrderProjection.scala:
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/src/main/scala/shopping/cart/SendOrderProjection.scala[]
+----
+
+<1> `AtLeastOnceProjection` instead of `ExactlyOnceProjection`
+<2> `CassandraReadJournal.Identifier` instead of `JdbcReadJournal.Identifier`
+<3> `CassandraProjection.atLeastOnce` instead of `JdbcProjection.exactlyOnce`
+
+The `SendOrderProjection.init` call from the `Main` class can remain the same as for JDBC.
+
+== DDL scripts
+
+Replace the `sql` scripts in the `ddl_scripts` folder with corresponding `cql` scripts for Cassandra.
+
+`create_tables.cql` will create the keyspace and all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
+
+.ddl-scripts/create_tables.cql
+[source,cql,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/ddl-scripts/create_tables.cql[]
+----
+
+[CAUTION]
+====
+The keyspace as created by the script works fine for local development but is probably not what you need in a production environment.
+====
+
+`create_user_tables.cql` will create the table needed for the item popularity Projection.
+
+.ddl-scripts/create_user_tables.cql
+[source,cql,indent=0]
+----
+include::example$shopping-cart-service-cassandra-scala/ddl-scripts/create_user_tables.cql[]
+----
+
+== Run locally
+
+=== Docker compose
+
+. Change the `docker-compose.yml` to start Cassandra instead of PostgreSQL in Docker:
++
+.docker-compose.yml:
+[source,yaml]
+----
+include::example$shopping-cart-service-cassandra-scala/docker-compose.yml[]
+----
+
+. Start Cassandra and Kafka from the `shopping-cart-service`:
++
+[source,shell script]
+----
+docker-compose up -d
+----
+
+. Create the Cassandra keyspace and tables from the CQL script located inside the `ddl-scripts` at the root of the project:
++
+----
+docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_tables.cql
+----
++
+----
+docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_user_tables.cql
+----
++
+[IMPORTANT]
+====
+When loading the CQL script, make sure to use the same name as your running Cassandra container name. The container name is not fixed and depends on the parent folder of the docker-compose file. The above example assumes the project was created using the seed template and named `shopping-cart-service`.
+
+If you get a connection error with the message *_Unable to connect to any servers_*, it means the Cassandra container is still starting. Wait a few seconds and re-try the command.
+====
+It will create the keyspace and all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
++
+[CAUTION]
+====
+The keyspace as created by the script works fine for local development but is probably not what you need in a production environment.
+====
+
+=== Run the service
+
+Run the service with:
+
+[.group-scala]
+[source,shell script]
+----
+sbt -Dconfig.resource=local1.conf run
+----
+
+[.group-java]
+[source,shell script]
+----
+# make sure to compile before running exec:exec
+mvn compile exec:exec -DAPP_CONFIG=local1.conf
+----
+
+=== Exercise the service
+
+Try the following to exercise the service:
+
+. Use `grpcurl` to add 3 socks to a cart:
++
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
+----
+
+. Add 2 t-shirts to the same cart:
++
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
+----
++
+The returned updated cart should still contain the 3 socks.
+
+. Check the quantity of the cart:
++
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
+----
+
+. Check the popularity of the item:
++
+[source,shell script]
+----
+grpcurl -d '{"itemId":"t-shirt"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetItemPopularity
+----
+
+. Check out cart:
++
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.Checkout
+----
+
+=== Stop the service
+
+When finished, stop the service with `ctrl-c`.
+
+Stop Cassandra and Kafka with:
+
+[source,shell script]
+----
+docker-compose down
+----
+
+== Run in Kubernetes
+
+Create a Cassandra cluster and credentials secret as described in xref:deployment:astra.adoc[DataStax Astra].
+
+FIXME more instructions
+
+== Learn more
+
+* {akka-persistence-cassandra}[Akka Persistence Cassandra plugin reference documentation {tab-icon}, window="tab"]
+* {akka-projection}/[Akka Projection reference documentation {tab-icon}, window="tab"].

@@ -1,0 +1,117 @@
+= Kafka - Amazon MSK
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+https://aws.amazon.com/msk/[Amazon Managed Streaming for Apache Kafka {tab-icon}, window="tab"] (Amazon MSK) is a fully managed Apache Kafka service.
+
+== Create Amazon MSK cluster
+
+Create a new Kafka cluster from https://console.aws.amazon.com/msk/home[Amazon MSK console {tab-icon}, window="tab"]. Select the region you are working in.
+
+Select the following aside from defaults:
+
+- Create cluster with custom settings
+- VPC: Use the same as your EKS cluster is running in
+- Select the private subnets from the EKS VPC for each zone
+- Both TLS encrypted and plaintext traffic allowed
+
+A typical cluster takes up to 15 minutes to create.
+
+You find more detailed instructions and alternatives in the https://docs.aws.amazon.com/msk/latest/developerguide/getting-started.html[Amazon MSK documentation {tab-icon}, window="tab"]
+
+== Allow EKS security group
+
+To allow the nodes in the EKS cluster to connect to the MSK cluster you have to add a rule in the security group.
+
+Go to the https://console.aws.amazon.com/vpc/home[VPC console {tab-icon}, window="tab"]. Select "Security Groups".
+
+There are 3 security groups for the EKS cluster and you should select the one with description "EKS created security group ...". The one that has a name that doesn't contain `ControlPlaneSecurityGroup` and doesn't contain `ClusterSharedNodeSecurityGroup` . Make a note of this security group id for the EKS cluster.
+
+Go back to the https://console.aws.amazon.com/msk/home[Amazon MSK console {tab-icon}, window="tab"] and click on the "Security groups applied" in the MSK Cluster summary.
+
+Edit inbound rules > add rule > All traffic > Source custom. Add the security group for the EKS cluster. Save rules.
+
+[#create-topic]
+== Create topic
+
+To create a topic or other administrative tasks you can connect to the MSK cluster from a Pod in your EKS cluster.
+
+You can create a temporary Pod for this with:
+
+[source,shell script]
+----
+kubectl run -i --tty msk-mgmt --image=adoptopenjdk:11-jre-hotspot --restart=Never --rm -- bash
+----
+
+Then install the Kafka command line tools with:
+
+[source,shell script]
+----
+apt-get update
+apt-get install wget -y
+wget https://archive.apache.org/dist/kafka/2.2.1/kafka_2.12-2.2.1.tgz
+tar -xzf kafka_2.12-2.2.1.tgz
+cd kafka_2.12-2.2.1
+----
+
+From https://console.aws.amazon.com/msk/home[Amazon MSK console {tab-icon}, window="tab"] you find the connection URL in the "View client information". Copy the list of ZooKeeper host/port pairs.
+
+Save the connect string in an environment variable at the bash prompt of the Pod you started with `kubectl run`.
+
+[source,shell script]
+----
+ZOOKEEPER_CONNECT_STRING="<copied ZooKeeper connect string>"
+----
+
+Create a Kafka `shopping-cart-events` topic with:
+
+[source,shell script]
+----
+bin/kafka-topics.sh --zookeeper ${ZOOKEEPER_CONNECT_STRING} --create --topic shopping-cart-events --replication-factor 3 --partitions 4
+----
+
+Exit the temporary Pod:
+
+[source,shell script]
+----
+exit
+----
+
+== Kafka configuration
+
+Place the connection credentials in a https://kubernetes.io/docs/concepts/configuration/secret/[Secret {tab-icon}, window="tab"]. The Secret must contain:
+
+* `bootstrapServersKey` - the URL to the Kafka bootstrap servers
+
+From https://console.aws.amazon.com/msk/home[Amazon MSK console {tab-icon}, window="tab"] you find the connection URL in the "View client information". Copy the plaintext bootstrap servers.
+
+The Secret can be created with for example:
+
+[source,shell script]
+----
+kubectl create secret generic shopping-cart-service-kafka-secret --from-literal=bootstrapServers=<copied bootstrap servers connect string>
+----
+
+To enable the Kafka integration you define the name of the secret in `kafka` of the deployment descriptor:
+
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  kafka:
+    credentialsSecret: shopping-cart-service-kafka-secret
+----
+
+Apply the deployment descriptor:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+The Akka Operator will automatically xref:config-secret.adoc#main-conf[provide the configuration] for the connection based on the Secret when the application starts the `ActorSystem`.

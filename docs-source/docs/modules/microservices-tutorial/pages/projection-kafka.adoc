@@ -244,9 +244,9 @@ include::example$shopping-analytics-service-scala/src/main/scala/shopping/analyt
 
 == Run locally
 
-In addition to Cassandra we now also need Kafka. The `docker-compose` script starts Cassandra and Kafka:
+In addition to PostgresSQL we now also need Kafka. The `docker-compose` script starts PostgresSQL and Kafka:
 
-. Start Cassandra and Kafka, unless it's already running, from the `shopping-cart-service`:
+. Start PostgresSQL and Kafka, unless it's already running, from the `shopping-cart-service`:
 +
 [source,shell script]
 ----
@@ -285,27 +285,139 @@ sbt -Dconfig.resource=local1.conf run
 
 === Exercise the service
 
-Use `grpcurl` to add 1 pencil to a cart:
+// # tag::exercise[]
+Use `https://github.com/fullstorydev/grpcurl[grpcurl]` to exercise the service:
 
+. Use `grpcurl` to add 1 pencil to a cart:
++
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"pencil", "quantity":1}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
-Look at the log output in the terminal of the `shopping-analytics-service`. You should see the logging from the `AddItem`, showing that the new service consumed the event from Kafka:
-
+. Look at the log output in the terminal of the `shopping-analytics-service`. You should see the logging from the `AddItem`, showing that the new service consumed the event from Kafka:
++
 ----
 ItemAdded: 1 pencil to cart cart1
 ----
+// # end::exercise[]
 
 === Stop the service
 
-When finished, stop the `shopping-cart-service` and `shopping-analytics-service` with `ctrl-c`. Leave Cassandra and Kafka running for the next set of steps, or stop them with:
+When finished, stop the `shopping-cart-service` and `shopping-analytics-service` with `ctrl-c`. Leave PostgresSQL and Kafka running for the next set of steps, or stop them with:
 
 [source,shell script]
 ----
-docker-compose down
+docker-compose stop
 ----
+
+[#kubernetes]
+== Run in Kubernetes
+
+Create a xref:deployment:aws-install.adoc[Kubernetes cluster and install the Akka Operator] if you haven't already.
+
+=== Create a Kafka cluster
+
+Follow the xref:deployment:aws-msk.adoc[Amazon MSK] instructions to setup a Kafka cluster in EKS.
+
+Create two secrets for it, one for the `shopping-cart-service`:
+
+[source,shell script]
+----
+kubectl create secret generic shopping-cart-service-kafka-secret --from-literal=bootstrapServers=<copied bootstrap servers connect string>
+----
+
+and another secret (with same content) for the `shopping-analytics-service`:
+
+[source,shell script]
+----
+kubectl create secret generic shopping-analytics-service-kafka-secret --from-literal=bootstrapServers=<copied bootstrap servers connect string>
+----
+
+The xref:deployment:aws-msk.adoc#create-topic[Amazon MSK] page also covers how to create the `shopping-cart-events` topic.
+
+=== Build Docker image
+
+Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon Elastic Container Registry] if you haven't already.
+
+Build and publish the Docker images for both `shopping-cart-service` and `shopping-analytics-service`.
+
+include::partial$build-docker-for-kube.adoc[]
+
+=== Update the deployment descriptor
+
+Update the deployment descriptors with the respective image tag and the Kafka credential secret.
+
+For `shopping-cart-service`:
+
+.kubernetes/shopping-cart-service-cr.yml:
+[source,yaml]
+----
+include::example$05-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
+----
+
+<1> Replace `<docker-registry>` with your docker registry address and update the image reference with the image tag from the output of the Docker build above, for example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201209-135004-363ae2b`. 
+<2> Add a `kafka.credentialsSecret` section pointing to the secret created in the xref:deployment:aws-msk.adoc[Amazon MSK] instructions. 
+
+Similar for the `shopping-analytics-service`:
+
+.kubernetes/shopping-analytics-service-cr.yml:
+[source,yaml]
+----
+include::example$shopping-analytics-service-scala/kubernetes/shopping-analytics-service-cr.yml[]
+----
+
+=== Apply to Kubernetes
+
+Apply both `shopping-cart-service/kubernetes/shopping-cart-service-cr.yml` and `shopping-order-service/kubernetes/shopping-analytics-service-cr.yml` to Kubernetes:
+
+[source,shell script]
+----
+kubectl apply -f shopping-cart-service/kubernetes/shopping-cart-service-cr.yml
+----
+[source,shell script]
+----
+kubectl apply -f shopping-analytics-service/kubernetes/shopping-analytics-service-cr.yml
+----
+
+You can see progress by viewing the status:
+
+[source,shell script]
+----
+kubectl get akkamicroservices
+----
+
+See xref:deployment:troubleshooting.adoc[troubleshooting deployment status] for more details.
+
+=== Exercise the service in Kubernetes
+
+. You can list the pods with:
++
+[source,shell script]
+----
+kubectl get pods
+----
+
+. Inspect logs from both services from a separate terminal window:
++
+[source,shell script]
+----
+kubectl logs -f <shopping-cart-service pod name from above>
+----
++
+[source,shell script]
+----
+kubectl logs -f <shopping-analytics-service pod name from above>
+----
+
+. Add port forwarding for the gRPC endpoint from a separate terminal:
++
+[source,shell script]
+----
+kubectl port-forward svc/shopping-cart-service-grpc 8101:8101
+----
+
+include::projection-kafka.adoc[tag=exercise]
 
 :!sectnums:
 == Learn more

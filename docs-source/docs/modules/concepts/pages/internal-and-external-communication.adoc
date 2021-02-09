@@ -5,7 +5,7 @@ include::partial$include.adoc[]
 
 Microservices should be xref:isolation.adoc[isolated] and xref:autonomy.adoc[autonomous].
 
-Mulitple services communicate with each other (*inter-service*) by sending messages over a network. To achieve performance and resilience, you will often run multiple instances of the same service, typically on different nodes, and such *intra-service* communication also goes over the network. In addition, third-party and/or legacy systems might also consume or provide information for your microservice system.
+Multiple services communicate with each other (*inter-service*) by sending messages over a network. To achieve performance and resilience, you will often run multiple instances of the same service, typically on different nodes, and such *intra-service* communication also goes over the network. In addition, third-party and/or legacy systems might also consume or provide information for your microservice system.
 
 == Communication within a Microservices system
 

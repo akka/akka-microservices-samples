@@ -1,0 +1,31 @@
+
+[.tabset]
+Java::
++
+----
+mvn -DskipTests -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com clean package docker:push
+----
+
+Scala::
++
+----
+sbt -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com docker:publish
+----
+
+Take note of the image tag as displayed by the [.group-scala]#`docker:publish`# [.group-java]#`docker:push`# command. 
+
+[.tabset]
+
+Java::
++
+[source,shell script]
+----
+DOCKER> Tagging image shopping-cart-service:20201209-135004-363ae2b successful!
+----
+
+Scala::
++
+[source,shell script]
+----
+[info] Successfully tagged shopping-cart-service:20201209-135004-363ae2b
+----

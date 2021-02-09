@@ -93,8 +93,8 @@ include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 <1> The method corresponding to the `rpc AddItem` in the service definition. Defined in the generated `proto.ShoppingCartService`.
 
-== Initialize HTTP Server
 [#server]
+== Initialize HTTP Server
 
 We will run the gRPC service implementation in an Akka HTTP server. Add the following server initialization code in a `ShoppingCartServer` [.group-scala]#`object`# [.group-java]#`class`#:
 
@@ -170,27 +170,92 @@ Shopping online at gRPC server 127.0.0.1:8101
 
 === Exercise the service
 
-Try exercising the service with https://github.com/fullstorydev/grpcurl[grpcurl].
+// # tag::exercise[]
+Use `https://github.com/fullstorydev/grpcurl[grpcurl]` to exercise the service:
 
-Add 3 socks to a cart:
-
+. Add 3 socks to a cart:
++
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
-Add 2 t-shirts to the same cart:
-
+. Add 2 t-shirts to the same cart:
++
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"t-shirt", "quantity":2}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
+// # end::exercise[]
 
 Note the logging from the `ShoppingCartServiceImpl` in the console.
 
 === Stop the service
 
 You can stop the service with `ctrl-c`.
+
+[#kubernetes]
+== Run in Kubernetes
+
+We suggest that you read xref:deployment:index.adoc[] to get an understanding of how deployment with the Akka Cloud Platform works.
+
+Before following the steps below, create a xref:deployment:aws-install.adoc[Kubernetes cluster and install the Akka Operator].
+
+=== Build Docker image
+
+Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon Elastic Container Registry].
+
+The [.group-scala]#`build.sbt and project/plugins.sbt`# [.group-java]#`pom.xml`# contains build plugin settings for building a Docker image.
+
+include::partial$build-docker-for-kube.adoc[]
+
+=== Update the deployment descriptor
+
+In `kubernetes/shopping-cart-service-cr.yml` you will find the deployment descriptor of the `AkkaMicroservice` that the Akka Operator will use when deploying the application in Kubernetes.
+
+.kubernetes/shopping-cart-service-cr.yml:
+[source,yaml]
+----
+include::example$01-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
+----
+
+<1> Replace `<docker-registry>` with your docker registry address and update the image reference with the image tag from the output of the Docker build above, for example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201209-135004-363ae2b`. 
+
+
+=== Apply to Kubernetes
+
+Deploy the `shopping-cart-service-cr.yml` to Kubernetes:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+It will also create the namespace `shopping`
+
+It can be convenient to set that namespace as current instead of specifying the `--namespace` parameter in all `kubectl` commands.
+
+[source,shell script]
+----
+kubectl config set-context --current --namespace=shopping
+----
+
+The Akka Operator will notice the deployment descriptor and deploy the `shopping-cart-service`. You can see progress by viewing the status:
+
+[source,shell script]
+----
+kubectl get akkamicroservices/shopping-cart-service
+----
+
+See xref:deployment:troubleshooting.adoc[troubleshooting deployment status] for more details.
+
+=== Exercise the service in Kubernetes
+
+include::partial$prepare-to-exercise-in-kube.adoc[]
+
+include::grpc-service.adoc[tag=exercise]
+
+Note the logging from the `ShoppingCartServiceImpl` in the console that is running `kubectl logs -f`.
 
 :!sectnums:
 == Learn more

@@ -8,9 +8,11 @@ import akka.actor.typed.javadsl.Behaviors;
 import akka.actor.typed.javadsl.Receive;
 import akka.management.cluster.bootstrap.ClusterBootstrap;
 import akka.management.javadsl.AkkaManagement;
-import akka.stream.alpakka.cassandra.javadsl.CassandraSession;
-import akka.stream.alpakka.cassandra.javadsl.CassandraSessionRegistry;
+import org.springframework.context.ApplicationContext;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import shopping.cart.proto.ShoppingCartService;
+import shopping.cart.repository.ItemPopularityRepository;
+import shopping.cart.repository.SpringIntegration;
 
 public class Main extends AbstractBehavior<Void> {
 
@@ -33,21 +35,29 @@ public class Main extends AbstractBehavior<Void> {
     ShoppingCart.init(system);
 
     // tag::ItemPopularityProjection[]
-    CassandraSession session =
-        CassandraSessionRegistry.get(system).sessionFor("akka.persistence.cassandra"); // <1>
-    // use same keyspace for the item_popularity table as the offset store
-    String itemPopularityKeyspace =
-        system.settings().config().getString("akka.projection.cassandra.offset-store.keyspace");
-    ItemPopularityRepository itemPopularityRepository =
-        new ItemPopularityRepositoryImpl(session, itemPopularityKeyspace); // <2>
+    // tag::repo-instance[]
+    ApplicationContext springContext =
+        SpringIntegration.applicationContext(system.settings().config()); // <1>
 
-    ItemPopularityProjection.init(system, itemPopularityRepository); // <3>
+    ItemPopularityRepository itemPopularityRepository =
+        springContext.getBean(ItemPopularityRepository.class); // <2>
+    // end::repo-instance[]
+
+    // end::ItemPopularityProjection[]
+
+    // tag::ItemPopularityProjection[]
+    JpaTransactionManager transactionManager =
+        springContext.getBean(JpaTransactionManager.class); // <3>
+
+    ItemPopularityProjection.init(system, transactionManager, itemPopularityRepository); // <4>
     // end::ItemPopularityProjection[]
 
     String grpcInterface =
         system.settings().config().getString("shopping-cart-service.grpc.interface");
     int grpcPort = system.settings().config().getInt("shopping-cart-service.grpc.port");
+
     ShoppingCartService grpcService = new ShoppingCartServiceImpl(system, itemPopularityRepository);
+
     ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService);
   }
 

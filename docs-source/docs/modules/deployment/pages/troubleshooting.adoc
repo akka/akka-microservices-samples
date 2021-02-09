@@ -1,0 +1,178 @@
+= Troubleshooting
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+When troubleshooting an Akka Microservices system, you will find the items described on this page useful.
+
+== Deployment status
+
+The `akkamicroservices` CR has a status with the purpose to give an overview of the deployment status of the application.
+
+[source,shell script]
+----
+kubectl get akkamicroservices
+NAME                         PHASE     REPLICAS   DESIRED   AGE     UP
+shopping-analytics-service   Running   1          1         7h14m   1
+shopping-cart-service        Running   2          2         7h12m   2
+shopping-order-service       Running   1          1         7h6m    1
+----
+
+You can specify a specific application by adding the name:
+[source,shell script]
+----
+kubectl get akkamicroservices shopping-cart-service
+NAME                    PHASE     REPLICAS   DESIRED   AGE     UP
+shopping-cart-service   Running   2          2         7h14m   1
+----
+
+- `REPLICAS` displays how many replicas are currently running
+- `DESIRED` displays the desired number of replicas of the application
+- `UP` displays how many replicas have successfully joined the Akka cluster
+
+If `REPLICAS` equals `UP` then all the Akka cluster is up and running without any issues on all the allocated pods.
+
+More information is shown when using `-o wide`:
+
+[source,shell script]
+----
+kubectl get akkamicroservices -o wide
+NAME                         PHASE     REPLICAS   DESIRED   AGE   UP    NON-UP   UNREACHABLE  MESSAGE           IMAGE
+shopping-analytics-service   Running   1          1         7h17m 1     0        0            Running 1 pods.   803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-analytics-service:20201218-061851-566473f
+shopping-cart-service        Running   2          2         7h15m 2     0        0            Running 2 pods.   803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201218-061851-566473f
+shopping-order-service       Running   1          1         7h9m  1     0        0            Running 1 pods.   803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-order-service:20201218-061851-566473f
+----
+
+In this detail mode, it also shows `NON-UP` and `UNREACHABLE`
+
+If `REPLICAS` is higher than `UP` then `NON-UP` will represent the non-zero number of replicas that are NOT in a normal operating state. In other words, the sum of `UP` and `NON-UP` equals to `REPLICAS`.
+
+- `NON-UP` displays how many replicas are NOT in a normal operating state. It could be already leaving or just joining the cluster, or even down
+- `UNREACHABLE` displays how many replicas are in an unreachable state from the oldest replica point of view
+
+See https://doc.akka.io/docs/akka/current/typed/cluster-membership.html#cluster-membership-service[`Akka Cluster Membership`] for more information.
+
+Even more information with `kubectl describe`:
+
+[source,shell script]
+----
+kubectl describe akkamicroservices shopping-cart-service
+----
+
+The PHASE is `Running` when everything working. It is updated when there is some problem or deployment in progress. For example, before all Pods are ready it is `NotReady`.
+
+[source,shell script]
+----
+kubectl get akkamicroservices shopping-cart-service
+NAME                    PHASE      REPLICAS   DESIRED   AGE   UP
+shopping-cart-service   NotReady   2          2         7h20m 1
+----
+
+If the deployment failed, for example if referencing a missing secret:
+
+[source,shell script]
+----
+kubectl get akkamicroservices shopping-cart-service -o wide
+NAME                    PHASE              REPLICAS   DESIRED   AGE   UP    NON-UP   UNREACHABLE  MESSAGE
+shopping-cart-service   DeploymentFailed   2          2         7h25m 2     0        0            akka.operator.action.ActionException: Action [GetAction] failed: jdbc Secret [shopping-cart-service-jdbc-zecret] doesn't exist
+----
+
+You can often get more information by inspecting the pods:
+
+[source,shell script]
+----
+kubectl get pods
+kubectl describe pod <pod name>
+kubectl logs -f <pod name>
+----
+
+== Operator Events
+
+The operator will create Kubernetes https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.19/#event-v1-core[Events {tab-icon}, window="tab"]] when notable actions take place during its operation. Events may have a type of `Normal`, `Warning`, or `Error`.
+
+They are similar to application logging, but are more coarse grained. A single event may be observed multiple times.
+
+=== Event Reasons
+
+|===
+|Reason |Type |Definition
+
+|`ReconciliationSuccessful`
+|`Normal`
+|The reconciliation of a Microservice has completed successfully.
+
+|`ReconciliationFailure`
+|`Error`
+|The reconciliation of a Microservice has failed.
+|===
+
+=== Viewing Events
+
+An operator event references the Pod of the operator and will appear alongside other Pod events in the `Events` summary table in a `kubectl describe pod` command.
+
+Events from the operator can be identified as from the `akka-platform-operator` source.
+
+
+[source,shell script]
+----
+kubectl describe pod -l app.kubernetes.io/name=akka-operator
+Name:         akka-operator-74fb867bb4-bhtrp
+Namespace:    akka-dev
+Priority:     0
+Node:         minikube/172.17.0.3
+Start Time:   Thu, 03 Dec 2020 14:53:41 -0500
+Labels:       app.kubernetes.io/instance=akka-operator
+              app.kubernetes.io/name=akka-operator
+              pod-template-hash=74fb867bb4
+Annotations:  <none>
+Status:       Running
+IP:           172.18.0.5
+IPs:
+  IP:           172.18.0.5
+Controlled By:  ReplicaSet/akka-operator-74fb867bb4
+Containers:
+  akka-operator:
+    Container ID:   docker://93eb0288363af22ae95e6fe33777693f5cdb49659e6977e40cdd5e427d16af4c
+    Image:          lightbend/akka-operator:latest
+    Image ID:       docker://sha256:330484db906194a55a7bca036911e029d1f7188a3e195dc3bfd63bbb63776572
+...
+Events:
+  Type    Reason                    Age                From                    Message
+  ----    ------                    ----               ----                    -------
+  Normal  Created                   28s                kubelet, minikube       Created container akka-operator
+  Normal  Scheduled                 28s                default-scheduler       Successfully assigned akka-dev/akka-operator-74fb867bb4-bhtrp to minikube
+  Normal  Pulled                    28s                kubelet, minikube       Container image "lightbend/akka-operator:latest" already present on machine
+  Normal  Started                   27s                kubelet, minikube       Started container akka-operator
+  Error   ReconciliationFailure     16s (x3 over 17s)  akka-platform-operator  Reconciliation for [shopping-cart-service] failed with [java.lang.RuntimeException] we have a problem
+  Normal  ReconciliationSuccessful  14s (x2 over 16s)  akka-platform-operator  Reconciliation for [shopping-cart-service] was successful
+  Normal  ReconciliationSuccessful  13s (x3 over 17s)  akka-platform-operator  Reconciliation for [shopping-order-service] was successful
+  Error   ReconciliationFailure     13s (x2 over 14s)  akka-platform-operator  Reconciliation for [shopping-order-service] failed with [java.lang.RuntimeException] we have a problem
+----
+
+Events can also be retrieved by listing the `events` resource itself.
+
+[source,shell script]
+----
+$ kubectl get events --watch --selector app.kubernetes.io/name=akka-platform-operator -n lightbend
+LAST SEEN   TYPE     REASON                     OBJECT                               MESSAGE
+22m         Error    ReconciliationFailure      pod/akka-operator-74fb867bb4-bhtrp   Reconciliation for [shopping-cart-service] failed with [java.lang.RuntimeException] we have a problem
+13m         Error    ReconciliationFailure      pod/akka-operator-74fb867bb4-bhtrp   Reconciliation for [shopping-order-service] failed with [java.lang.RuntimeException] we have a problem
+13m         Normal   ReconciliationSuccessful   pod/akka-operator-74fb867bb4-bhtrp   Reconciliation for [shopping-order-service] was successful
+13m         Normal   ReconciliationSuccessful   pod/akka-operator-74fb867bb4-bhtrp   Reconciliation for [shopping-cart-service] was successful
+----
+
+== Logs
+
+You can view the logs of the Akka Operator or the application Pods with:
+
+[source,shell script]
+----
+kubectl get pods
+kubectl get pods -n lightbend
+----
+
+[source,shell script]
+----
+kubectl logs -f <pod name from above>
+----
+
+The Logback configuration of the application can be reconfigured without building a new image as described in xref:operator-reference.adoc#logback[Configure logback]

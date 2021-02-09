@@ -4,5 +4,6 @@ title: "" # removed title to prevent a double title entry in TOC
 nav:
 - modules/ROOT/nav.adoc
 - modules/microservices-tutorial/nav.adoc
+- modules/deployment/nav.adoc
 - modules/how-to/nav.adoc
 - modules/concepts/nav.adoc

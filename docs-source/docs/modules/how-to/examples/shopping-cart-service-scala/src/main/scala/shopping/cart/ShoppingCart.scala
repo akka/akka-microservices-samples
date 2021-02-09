@@ -38,7 +38,8 @@ object ShoppingCart {
         ShoppingCart(entityContext.entityId, selectedTag)
     }
     ClusterSharding(system).init(
-      Entity(EntityKey)(behaviorFactory).withRole("eventsourcing"))
+      Entity(EntityKey)(behaviorFactory).withRole("entity")
+    ) // <1>
   }
   // end::write-side-with-role[]
 

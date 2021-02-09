@@ -8,8 +8,8 @@ We provide a template so that you don't need to create the shopping cart project
 
 :sectnums:
 
-== Download the empty template
 [#seed-template]
+== Download the empty template
 
 The starting template is available as downloadable zip file with Java or Scala sources. Select your preferred language (Java/Scala):
 
@@ -47,8 +47,8 @@ sbt compile
 
 ifdef::review[REVIEWERS: we should add what they will see if successful and what to do if not.]
 
-== Open the project in IntelliJ
 [#intellij]
+== Open the project in IntelliJ
 
 If you are using IntelliJ, follow these steps to open the project:
 
@@ -68,20 +68,17 @@ Follow these steps to prepare for running shopping cart:
 docker-compose up -d
 ----
 
-. Create the Cassandra keyspace and tables from the CQL script located inside the `ddl-scripts` at the root of the project:
+. Create the PostgresSQL tables from the SQL script located inside the `ddl-scripts` at the root of the project:
 +
+[source,shell script]
 ----
-docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_tables.cql
+docker exec -i shopping-cart-service_postgres-db_1 psql -U shopping-cart -t < ddl-scripts/create_tables.sql
 ----
 +
-include::docker-important.adoc[]
+It creates all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
 +
-It will create the keyspace and all tables needed for Akka Persistence as well as the offset store table for Akka Projection.
+include::partial$docker-important.adoc[]
 +
-[CAUTION]
-====
-The keyspace as created by the script works fine for local development but is probably not what you need in a production environment. 
-====
 
 // # end::docker[]
 

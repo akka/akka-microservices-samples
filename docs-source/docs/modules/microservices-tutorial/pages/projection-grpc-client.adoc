@@ -98,7 +98,7 @@ Scala::
 include::example$shopping-order-service-scala/src/main/scala/shopping/order/ShoppingOrderServer.scala[]
 ----
 
-. Call the `ShoppingOrderServer.init` from `Main`:
+. Call the `ShoppingOrderServer.start` from `Main`:
 +
 [.tabset]
 Java::
@@ -215,7 +215,7 @@ include::example$shopping-cart-service-scala/src/main/resources/local-shared.con
 
 Follow these steps to run locally and exercise the new Projection and service:
 
-. Start Cassandra and Kafka, unless they are already running:
+. Start PostgresSQL and Kafka, unless they are already running:
 +
 [source,shell script]
 ----
@@ -237,13 +237,6 @@ mvn compile exec:exec -DAPP_CONFIG=local1.conf
 sbt -Dconfig.resource=local1.conf run
 ----
 
-. Try the new order service directly with `grpcurl`:
-+
-[source,shell script]
-----
-grpcurl -d '{"cartId":"cart1", "items":[{"itemId":"socks", "quantity":3}, {"itemId":"t-shirt", "quantity":2}]}' -plaintext 127.0.0.1:8301 shoppingorder.ShoppingOrderService.Order
-----
-
 . Keep the `shopping-order-service` running, and in another terminal run the `shopping-cart-service` with:
 +
 [.group-java]
@@ -259,12 +252,26 @@ mvn compile exec:exec -DAPP_CONFIG=local1.conf
 sbt -Dconfig.resource=local1.conf run
 ----
 
+=== Exercise the service
+
+Use `https://github.com/fullstorydev/grpcurl[grpcurl]` to exercise the service:
+
+. Try the new order service directly (on port 8301):
++
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1", "items":[{"itemId":"socks", "quantity":3}, {"itemId":"t-shirt", "quantity":2}]}' -plaintext 127.0.0.1:8301 shoppingorder.ShoppingOrderService.Order
+----
+
 . Use the checkout in the shopping cart service with `grpcurl` (note the different port number):
 +
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart1", "itemId":"scissors", "quantity":1}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
-
+----
++
+[source,shell script]
+----
 grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.Checkout
 ----
 
@@ -280,11 +287,98 @@ When finished:
 
 . Stop the `shopping-cart-service` and `shopping-order-service` with `ctrl-c`. 
 
-. Stop Cassandra and Kafka with:
+. Stop PostgresSQL and Kafka with:
 +
 [source,shell script]
 ----
-docker-compose down
+docker-compose stop
+----
+
+[#kubernetes]
+== Run in Kubernetes
+
+Create a xref:deployment:aws-install.adoc[Kubernetes cluster and install the Akka Operator] if you haven't already.
+
+=== Build Docker image
+
+Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon Elastic Container Registry] if you haven't already.
+
+Build and publish the Docker images for both `shopping-cart-service` and `shopping-order-service`.
+
+include::partial$build-docker-for-kube.adoc[]
+ 
+=== Update the deployment descriptor
+
+Update the `shopping-cart-service/kubernetes/shopping-cart-service-cr.yml` and `shopping-order-service/kubernetes/shopping-order-service-cr.yml` deployment descriptors with the respective image tag produced on the previous step.
+
+=== Apply to Kubernetes
+
+Apply both `shopping-cart-service/kubernetes/shopping-cart-service-cr.yml` and `shopping-order-service/kubernetes/shopping-order-service-cr.yml` to Kubernetes:
+
+[source,shell script]
+----
+kubectl apply -f shopping-cart-service/kubernetes/shopping-cart-service-cr.yml
+----
+[source,shell script]
+----
+kubectl apply -f shopping-order-service/kubernetes/shopping-order-service-cr.yml
+----
+
+You can see progress by viewing the status:
+
+[source,shell script]
+----
+kubectl get akkamicroservices
+----
+
+See xref:deployment:troubleshooting.adoc[troubleshooting deployment status] for more details.
+
+=== Exercise the service in Kubernetes
+
+. You can list the pods with:
++
+[source,shell script]
+----
+kubectl get pods
+----
+
+. Inspect logs from both services from a separate terminal window:
++
+[source,shell script]
+----
+kubectl logs -f <shopping-cart-service pod name from above>
+----
++
+[source,shell script]
+----
+kubectl logs -f <shopping-order-service pod name from above>
+----
+
+. Add port forwarding for the `shopping-cart-service` gRPC endpoint from a separate terminal:
++
+[source,shell script]
+----
+kubectl port-forward svc/shopping-cart-service-grpc 8101:8101
+----
+
+Use `https://github.com/fullstorydev/grpcurl[grpcurl]` to exercise the service:
+
+. Use the checkout in the shopping cart service with `grpcurl`:
++
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1", "itemId":"scissors", "quantity":1}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
+----
++
+[source,shell script]
+----
+grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.Checkout
+----
+
+. In the terminal of the `shopping-order-service` you should see the log of the order:
++
+----
+Order 15 items from cart cart1
 ----
 
 :!sectnums:

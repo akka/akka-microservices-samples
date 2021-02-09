@@ -1,0 +1,147 @@
+= Cassandra - DataStax operator
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+For production usage we recommend using xref:astra.adoc[Datastax Astra] (Cloud-Native Cassandra-as-a-Service).
+
+For development or test environments you may want to manage your own Cassandra cluster with the https://docs.datastax.com/en/cass-operator/doc/cass-operator/cassOperatorTOC.html[DataStax Kubernetes Operator for Apache Cassandra {tab-icon}, window="tab"], which simplifies the process of running Apache Cassandra in a Kubernetes cluster.
+
+== Install Cassandra operator
+
+Read the instructions in the https://docs.datastax.com/en/cass-operator/doc/cass-operator/cassOperatorGettingStarted.html[Get started guide {tab-icon}, window="tab"].
+
+Below is some more specific instructions for Amazon EKS.
+
+Cass Operator manifest's definitions:
+
+[source,yaml]
+----
+kubectl create -f https://raw.githubusercontent.com/datastax/cass-operator/master/docs/user/cass-operator-manifests-v1.17.yaml
+----
+
+Create the storage settings to use for Cassandra nodes:
+
+[source,shell script]
+----
+kubectl create -f https://raw.githubusercontent.com/datastax/cass-operator/master/operator/k8s-flavors/eks/storage.yaml
+----
+
+Define the custom resource for the `CassandraDatacenter`. Example below, or full details can be found in https://github.com/datastax/cass-operator/blob/master/operator/example-cassdc-yaml/cassandra-3.11.x/example-cassdc-full.yaml[example-cassdc-full.yaml {tab-icon}, window="tab"].
+
+.kubernetes/cassdc.yml
+[source,yaml]
+----
+apiVersion: cassandra.datastax.com/v1beta1
+kind: CassandraDatacenter
+metadata:
+  name: dc1
+spec:
+  clusterName: cluster1
+  serverType: cassandra
+  serverVersion: "3.11.7"
+  managementApiAuth:
+    insecure: {}
+  size: 3
+  storageConfig:
+    cassandraDataVolumeClaimSpec:
+      storageClassName: server-storage
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 5Gi
+  resources:
+    requests:
+      memory: 4Gi
+      cpu: 2000m
+    limits:
+      memory: 4Gi
+  config:
+    cassandra-yaml:
+      authenticator: org.apache.cassandra.auth.PasswordAuthenticator
+      authorizer: org.apache.cassandra.auth.CassandraAuthorizer
+      role_manager: org.apache.cassandra.auth.CassandraRoleManager
+    jvm-options:
+      initial_heap_size: "3G"
+      max_heap_size: "3G"
+      additional-jvm-opts:
+        # As the database comes up for the first time, set system keyspaces to RF=3
+        - "-Ddse.system_distributed_replication_dc_names=dc1"
+        - "-Ddse.system_distributed_replication_per_dc=3"
+----
+
+Apply the `CassandraDatacenter` resource to the `cass-operator` namespace:
+
+[source,shell script]
+----
+kubectl -n cass-operator kubernetes/cassdc.yml
+[source,shell script]
+----
+
+== Connect with cqlsh
+
+See the https://docs.datastax.com/en/cass-operator/doc/cass-operator/cassOperatorConnectWithinK8sCluster.html[documentation of credentials and connection instructions for cqlsh {tab-icon}, window="tab"].
+
+Note that the keyspace should be created with `NetworkTopologyStrategy` and `dc1`.
+
+[source,cql]
+----
+CREATE KEYSPACE IF NOT EXISTS akka_testing
+   WITH REPLICATION = { 'class' : 'NetworkTopologyStrategy', 'dc1' : 3 };
+----
+
+== Configure connection
+
+Define the connection details in a config file:
+
+.kubernetes/cassandra/cassandra-config
+[source,conf]
+----
+datastax-java-driver {
+  basic.contact-points = [ "cluster1-dc1-service.cass-operator.svc.cluster.local:9042" ]
+  basic.load-balancing-policy.local-datacenter = "dc1"
+  advanced {
+    reconnect-on-init = true
+    auth-provider {
+      class = PlainTextAuthProvider
+      username = cluster1-superuser
+      password = <from secret>
+    }
+  }
+}
+----
+
+Use the password retrieved from the https://docs.datastax.com/en/cass-operator/doc/cass-operator/cassOperatorConnectWithinK8sCluster.html[secret described in the documentation {tab-icon}, window="tab"].
+
+Create the `cassandra-config` config secret from the config file:
+
+[source,shell script]
+----
+kubectl create secret generic cassandra-config --from-file=kubernetes/cassandra-config.conf
+----
+
+Define the `configSecret` in the deployment descriptor of the application:
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  configSecret:
+    secretName: cassandra-config
+----
+
+Apply the deployment descriptor:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+The Akka Operator will automatically xref:config-secret.adoc#main-conf[provide the configuration] from the Secret when the application starts the `ActorSystem`.
+

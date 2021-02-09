@@ -9,8 +9,8 @@ Memory Image is a programming pattern in which data stored on the database resid
 1. handling concurrent modification attempts, and 
 2. keeping the consistency across nodes running the application.
 
-== Sharded Entities
 [#sharded_entities]
+== Sharded Entities
 
 One way to meet the two requirements above is to ensure only one copy of the data is on memory at any given time. That's also known as {reactive-principles}/patterns/isolate-mutations.html[isolating the mutations {tab-icon}, window="tab"]. Then, because your data may exceed the capacity of your memory, you can shard the data and keep a chunk on each of your application nodes. Finally, each shard of data uses mutual exclusion mechanisms to ensure each mutation happens sequentially.
 

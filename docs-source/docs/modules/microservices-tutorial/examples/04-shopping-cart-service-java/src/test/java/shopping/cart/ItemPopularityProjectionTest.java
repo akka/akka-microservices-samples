@@ -1,6 +1,5 @@
 package shopping.cart;
 
-import static akka.Done.done;
 import static org.junit.Assert.assertEquals;
 
 import akka.Done;
@@ -9,6 +8,7 @@ import akka.actor.testkit.typed.javadsl.TestKitJunitResource;
 import akka.persistence.query.Offset;
 import akka.projection.ProjectionId;
 import akka.projection.eventsourced.EventEnvelope;
+import akka.projection.javadsl.Handler;
 import akka.projection.testkit.javadsl.ProjectionTestKit;
 import akka.projection.testkit.javadsl.TestProjection;
 import akka.projection.testkit.javadsl.TestSourceProvider;
@@ -22,22 +22,22 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 import org.junit.ClassRule;
 import org.junit.Test;
+import shopping.cart.repository.ItemPopularityRepository;
 
 public class ItemPopularityProjectionTest {
   // stub out the db layer and simulate recording item count updates
   static class TestItemPopularityRepository implements ItemPopularityRepository {
-    private final Map<String, Long> counts = new HashMap<>();
+    private final Map<String, ItemPopularity> itemPops = new HashMap<>();
 
     @Override
-    public CompletionStage<Done> update(String itemId, int delta) {
-      long current = counts.getOrDefault(itemId, 0L);
-      counts.put(itemId, current + delta);
-      return CompletableFuture.completedFuture(done());
+    public ItemPopularity save(ItemPopularity itemPopularity) {
+      itemPops.put(itemPopularity.getItemId(), itemPopularity);
+      return itemPopularity;
     }
 
     @Override
-    public CompletionStage<Optional<Long>> getItem(String itemId) {
-      return CompletableFuture.completedFuture(Optional.ofNullable(counts.get(itemId)));
+    public Optional<ItemPopularity> findById(String id) {
+      return Optional.ofNullable(itemPops.get(id));
     }
   }
 
@@ -46,7 +46,26 @@ public class ItemPopularityProjectionTest {
   static final ProjectionTestKit projectionTestKit = ProjectionTestKit.create(testKit.system());
 
   private EventEnvelope<ShoppingCart.Event> createEnvelope(ShoppingCart.Event event, long seqNo) {
-    return new EventEnvelope(Offset.sequence(seqNo), "persistenceId", seqNo, event, 0L);
+    return new EventEnvelope<>(Offset.sequence(seqNo), "persistenceId", seqNo, event, 0L);
+  }
+
+  private Handler<EventEnvelope<ShoppingCart.Event>> toAsyncHandler(
+      ItemPopularityProjectionHandler itemHandler) {
+    return new Handler<EventEnvelope<ShoppingCart.Event>>() {
+      @Override
+      public CompletionStage<Done> process(EventEnvelope<ShoppingCart.Event> eventEventEnvelope)
+          throws Exception {
+        return CompletableFuture.supplyAsync(
+            () -> {
+              itemHandler.process(
+                  // session = null is safe.
+                  // The real handler never uses the session. The connection is provided to the repo
+                  // by Spring itself
+                  null, eventEventEnvelope);
+              return Done.getInstance();
+            });
+      }
+    };
   }
 
   @Test
@@ -69,21 +88,23 @@ public class ItemPopularityProjectionTest {
 
     TestItemPopularityRepository repository = new TestItemPopularityRepository();
     ProjectionId projectionId = ProjectionId.of("item-popularity", "carts-0");
+
     TestSourceProvider<Offset, EventEnvelope<ShoppingCart.Event>> sourceProvider =
         TestSourceProvider.create(events, EventEnvelope::offset);
+
     TestProjection<Offset, EventEnvelope<ShoppingCart.Event>> projection =
         TestProjection.create(
             projectionId,
             sourceProvider,
-            () -> new ItemPopularityProjectionHandler("carts-0", repository));
+            () -> toAsyncHandler(new ItemPopularityProjectionHandler("carts-0", repository)));
 
     projectionTestKit.run(
         projection,
         () -> {
-          assertEquals(3, repository.counts.size());
-          assertEquals(2L, repository.counts.get("bowling shoes").longValue());
-          assertEquals(1L, repository.counts.get("akka t-shirt").longValue());
-          assertEquals(0L, repository.counts.get("skis").longValue());
+          assertEquals(3, repository.itemPops.size());
+          assertEquals(2L, repository.itemPops.get("bowling shoes").getCount());
+          assertEquals(1L, repository.itemPops.get("akka t-shirt").getCount());
+          assertEquals(0L, repository.itemPops.get("skis").getCount());
         });
   }
 }

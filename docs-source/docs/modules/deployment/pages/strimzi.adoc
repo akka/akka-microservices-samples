@@ -1,0 +1,116 @@
+= Kafka - Strimzi operator
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+For production usage we recommend using xref:aws-msk.adoc[Amazon MSK] or xref:confluent-cloud.adoc[Confluent Cloud] (Kafka-as-a-Service).
+
+For development or test environments you may want to manage your own Kafka cluster with Strimzi.
+https://strimzi.io/docs/operators/latest/using.html[Strimzi {tab-icon}, window="tab"] simplifies the process of running Apache Kafka in a Kubernetes cluster.
+
+== Install Strimzi
+
+[source,shell script]
+----
+kubectl create namespace akka-demo
+----
+
+Add the Strimzi Helm repository and update the local index.
+
+[source,shell script]
+----
+helm repo add strimzi https://strimzi.io/charts/
+helm repo update
+----
+
+Install the latest version of Strimzi.
+
+[source,shell script]
+----
+helm install strimzi strimzi/strimzi-kafka-operator --namespace akka-demo
+----
+
+After the install completed, the Strimzi Kafka operator should be running in the given namespace.
+
+[source,shell script]
+----
+kubectl config set-context --current --namespace=akka-demo
+----
+
+[source,shell script]
+----
+kubectl get pods
+----
+
+To create a Kafka cluster using Strimzi, create the custom resource for the Strimzi Kafka operator. See configuration options in the https://strimzi.io/docs/operators/latest/using.html[Strimzi documentation {tab-icon}, window="tab"].
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/strimzi-cr.yml
+----
+
+Retrieve the bootstrap address you can use to access the Kafka cluster from the status of the Kafka resource when all pods are ready:
+
+[source,shell script]
+----
+kubectl describe kafka kafka-strimzi
+
+kubectl get kafka kafka-strimzi -o=jsonpath='{.status.listeners[?(@.type=="plain")].bootstrapServers}{"\n"}'
+----
+
+== Create topic
+
+The Strimzi operator can create topics from a `KafkaTopic` custom resource. See configuration options in the https://strimzi.io/docs/operators/latest/using.html[Strimzi documentation {tab-icon}, window="tab"].
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/strimzi-topic-cr.yml
+----
+
+== Configure connection
+
+Place the connection credentials in a https://kubernetes.io/docs/concepts/configuration/secret/[Secret {tab-icon}, window="tab"]. The Secret must contain:
+
+* `bootstrapServersKey` - the URL to the Kafka bootstrap servers
+
+The Secret can be created with for example:
+
+[source,shell script]
+----
+kubectl create secret generic shopping-cart-service-kafka-secret --from-literal=bootstrapServers=<bootstrap servers connect string>
+----
+
+Use the bootstrap servers retrieved above.
+
+To enable the Kafka integration you define the name of the secret in `kafka` of the deployment descriptor:
+
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  kafka:
+    credentialsSecret: shopping-cart-service-kafka-secret
+----
+
+Apply the deployment descriptor:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+The Akka Operator will automatically xref:config-secret.adoc#main-conf[provide the configuration] for the connection based on the Secret when the application starts the `ActorSystem`.
+
+
+== Uninstall Strimzi
+
+If you want to remove Strimzi, you can do that with the following Helm command:
+
+[source,shell script]
+----
+helm delete strimzi -n akka-demo
+----

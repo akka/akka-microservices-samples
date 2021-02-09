@@ -1,5 +1,4 @@
 name := "cleanup-dependencies-project"
-version := "1.0"
 
 organization := "com.lightbend.akka.samples"
 organizationHomepage := Some(url("https://akka.io"))
@@ -25,26 +24,32 @@ Test / logBuffered := false
 run / fork := false
 Global / cancelable := false // ctrl-c
 
-val AkkaVersion = "2.6.10"
-val AkkaHttpVersion = "10.2.1"
+val AkkaVersion = "2.6.12"
+val AkkaHttpVersion = "10.2.3"
 val AkkaManagementVersion = "1.0.9"
 
 // tag::remove-akka-persistence-cassandra-version[]
 val AkkaPersistenceCassandraVersion = "1.0.4"
 // end::remove-akka-persistence-cassandra-version[]
 // tag::add-akka-persistence-jdbc-version[]
-val AkkaPersistenceJdbcVersion = "4.0.0"
+val AkkaPersistenceJdbcVersion = "5.0.0"
 // end::add-akka-persistence-jdbc-version[]
 // tag::remove-alpakka-kafka-version[]
-val AlpakkaKafkaVersion = "2.0.5"
+val AlpakkaKafkaVersion = "2.0.6"
 // end::remove-alpakka-kafka-version[]
 // tag::remove-akka-projection-version[]
-val AkkaProjectionVersion = "1.0.0"
+val AkkaProjectionVersion = "1.1.0"
 // end::remove-akka-projection-version[]
 
 // tag::remove-grpc-plugin[]
 enablePlugins(AkkaGrpcPlugin)
 // end::remove-grpc-plugin[]
+
+enablePlugins(JavaAppPackaging, DockerPlugin)
+dockerBaseImage := "docker.io/library/adoptopenjdk:11-jre-hotspot"
+dockerUsername := sys.props.get("docker.username")
+dockerRepository := sys.props.get("docker.registry")
+ThisBuild / dynverSeparator := "-"
 
 libraryDependencies ++= Seq(
   "com.typesafe.akka" %% "akka-cluster-sharding-typed" % AkkaVersion,
@@ -79,6 +84,7 @@ libraryDependencies ++= Seq(
   "com.lightbend.akka.management" %% "akka-management" % AkkaManagementVersion,
   "com.lightbend.akka.management" %% "akka-management-cluster-http" % AkkaManagementVersion,
   "com.lightbend.akka.management" %% "akka-management-cluster-bootstrap" % AkkaManagementVersion,
+  "com.lightbend.akka.discovery" %% "akka-discovery-kubernetes-api" % AkkaManagementVersion,
   "com.typesafe.akka" %% "akka-persistence-typed" % AkkaVersion,
   "com.typesafe.akka" %% "akka-serialization-jackson" % AkkaVersion,
   "com.typesafe.akka" %% "akka-discovery" % AkkaVersion,

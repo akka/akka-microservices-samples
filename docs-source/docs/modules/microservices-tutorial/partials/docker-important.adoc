@@ -1,0 +1,6 @@
+[IMPORTANT]
+====
+When loading the SQL script, make sure to use the same name as your running PostgresSQL container name. The container name is not fixed and depends on the parent folder of the docker-compose file. The above example assumes the project was created using the seed template and named `shopping-cart-service`.
+
+If you get a connection error, it means the PostgresSQL container is still starting. Wait a few seconds and re-try the command.
+====

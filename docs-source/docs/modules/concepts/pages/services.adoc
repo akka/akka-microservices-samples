@@ -25,7 +25,7 @@ NOTE: The xref:microservices-tutorial:grpc-service.adoc[] and xref:microservices
 
 === HTTP with JSON / RESTful
 
-The ubiquitous communication protocol is HTTP with text-based messages in JSON. Even though JSON lacks a commonly used schema description, its simplicity, human-readability and support in Javascript has made the de-facto standard for synchronous communication over system boundaries.
+The ubiquitous communication protocol is HTTP with text-based messages in JSON. Even though JSON lacks a commonly used schema description, its simplicity, human-readability and support in JavaScript has made the de-facto standard for synchronous communication over system boundaries.
 
 NOTE: This guide doesn't cover how REST services can be implemented with Akka HTTP.
 
@@ -36,8 +36,8 @@ To ensure delivery of messages asynchronous communication may require extra meas
 
 NOTE: The xref:microservices-tutorial:projection-kafka.adoc[] in the tutorial illustrates how to use Kafka for asynchronous communication between to Microservices.
 
-== Service Discovery
 [#service-discovery]
+== Service Discovery
 
 Service Discovery is the mechanism service clients will use to locate and consume a xref:mobility.adoc[movable] service. Service Discovery is a key building block to {glossary-location-transparency}[Location Transparency {tab-icon}, window="tab"]. Service clients relying on Service Discovery no longer need to have previous knowledge of the address of a service and, instead, use a discovery mechanism any time they need to use that address.
 
@@ -52,4 +52,3 @@ With server-side Service Discovery, on the other hand, the service implementor p
 == Protecting our Service
 
 A Service may experience transient failure or degradation due to excessive load, GC pauses, etc... in that case, clients will retry the failed request, which will increase the load. Instead, in order to let the service recover from the transient failure as fast as possible, clients should use xref:circuit-breakers.adoc[Circuit Breakers].
-

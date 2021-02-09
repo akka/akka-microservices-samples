@@ -1,0 +1,40 @@
+= Kafka - Confluent Cloud
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+To use https://www.confluent.io[Confluent Cloud {tab-icon}, window="tab"] (Cloud-Native Kafka-as-a-Service) you place the connection credentials in a https://kubernetes.io/docs/concepts/configuration/secret/[Secret {tab-icon}, window="tab"]. The Secret must contain three entries:
+
+* `bootstrapServerKey` - the URL to the Kafka bootstrap server, which is shown in Cluster settings in the https://confluent.cloud/[Confluent Cloud console {tab-icon}, window="tab"]
+* `apiKey` - the access key, which can be created in API access in the https://confluent.cloud/[Confluent Cloud console {tab-icon}, window="tab"]
+* `apiSecret` - the secret of the API access key
+
+The Secret can be created with for example:
+
+[source,shell script]
+----
+kubectl create secret generic shopping-cart-service-kafka-secret --from-literal=bootstrapServer=<url> --from-literal=apiKey=<api-key> --from-literal=apiSecret=<api-secret>
+----
+
+To enable the Kafka integration you define the name of the secret in `kafkaConfluentCloud` of the deployment descriptor:
+
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  kafkaConfluentCloud:
+    credentialsSecret: shopping-cart-service-kafka-secret
+----
+
+Apply the deployment descriptor:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+The Akka Operator will automatically xref:config-secret.adoc#main-conf[provide the configuration] for the connection based on the Secret when the application starts the `ActorSystem`.

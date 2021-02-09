@@ -8,11 +8,11 @@ include::partial$include.adoc[]
 
 The Akka Streams API is completely decoupled from the xref:reactive-streams.adoc[] interfaces. While Akka Streams focus on the formulation of transformations on data streams the scope of Reactive Streams is to define a common mechanism of how to move data across an asynchronous boundary without losses, buffering or resource exhaustion.
 
-The relationship between Akka Streams and Reactive Streams is that the Akka Streams API is geared towards end-users while the Akka Streams implementation uses the Reactive Streams interfaces internally to pass data between the different operators. What this means is that you can implement an application where Akka Streams interconnect with other Reactive Streams implementations ina fully compatible way.
+The relationship between Akka Streams and Reactive Streams is that the Akka Streams API is geared towards end-users while the Akka Streams implementation uses the Reactive Streams interfaces internally to pass data between the different operators. What this means is that you can implement an application where Akka Streams interconnect with other Reactive Streams implementations in a fully compatible way.
 
 == Learn more
 
-To learn more, have a look at the {akka}/stream/stream-introduction.html[Akka Streams documentation {tab-icon}, window="tab"] dedicated setions:
+To learn more, have a look at the {akka}/stream/stream-introduction.html[Akka Streams documentation {tab-icon}, window="tab"] dedicated sections:
 
 * Read the {akka}/stream/stream-quickstart.html[Quick Start Guide {tab-icon}, window="tab"] to get a feel for how streams look like and what they can do.
 * Read the {akka}/general/stream/stream-design.html[Design Principles behind Akka Streams {tab-icon}, window="tab"] for a top down learning approach.

@@ -1,5 +1,7 @@
 .How to ...
+* xref:cassandra-alternative.adoc[use Cassandra instead of PostgreSQL]
 * xref:from-crud-to-eventsourcing.adoc[migrate from CRUD to Event Sourcing]
 * xref:scale-independently.adoc[scale command and query-side]
 * xref:enable-TLS.adoc[enable TLS for gRPC]
 * xref:health-checks.adoc[inspect the health]
+* xref:configure-deployments.adoc[customize AkkaMicroservice deployment]

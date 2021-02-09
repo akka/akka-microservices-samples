@@ -6,8 +6,8 @@ include::partial$include.adoc[]
 [quote,'Jonas Bonér, Dave Farley, Roland Kuhn, and Martin Thompson, et al.', '{reactive-manifesto}[Reactive Manifesto {tab-icon}, window="tab"]' ]
 Reactive Systems rely on {glossary-asynchronous}[asynchronous {tab-icon}, window="tab"] {glossary-message-driven}[message-passing {tab-icon}, window="tab"] to establish a boundary between components that ensures loose coupling, isolation and {glossary-location-transparency}[location transparency {tab-icon}, window="tab"]. This boundary also provides the means to delegate {glossary-failure}[failures {tab-icon}, window="tab"] as messages. Employing explicit message-passing enables load management, elasticity, and flow control by shaping and monitoring the message queues in the system and applying {glossary-back-pressure}[back-pressure {tab-icon}, window="tab"] when necessary. Location transparent messaging as a means of communication makes it possible for the management of failure to work with the same constructs and semantics across a cluster or within a single host. {glossary-non-blocking}[Non-blocking {tab-icon}, window="tab"] communication allows recipients to only consume {glossary-resource}[resources {tab-icon}, window="tab"] while active, leading to less system overhead.
 
-== Message vs Event
 [#message_vs_event]
+== Message vs Event
 
 A Message is some data sent to a specific address. In Message Driven systems, each component has a unique address other components can send messages to. Each of these components, or recipients, awaits messages and reacts to them.
 
@@ -17,7 +17,7 @@ An Event is some data emitted from a component for anyone listening to consume.
 
 In traditional programming models, _Component A_ invoking a method in _Component B_ was coupled in time. If _Component B_ was busy or if it was slow when handling the method invocation, then _Component A_ had to wait.
 
-In Message Driven systems, _Component A_ produces a message indicating it must be deliverd to the address of _Component B_. _Component A_ then send the message and gets control back immediately instead of waiting for _Component B_ to complete the handling of the message. Components on a message driven system often have a queue where incoming messages can be stored in case of a load spike. Message passing is a building block for {reactive-principles}/principles/decouple-space.html[space decoupling {tab-icon}, window="tab"].
+In Message Driven systems, _Component A_ produces a message indicating it must be delivered to the address of _Component B_. _Component A_ then send the message and gets control back immediately instead of waiting for _Component B_ to complete the handling of the message. Components on a message driven system often have a queue where incoming messages can be stored in case of a load spike. Message passing is a building block for {reactive-principles}/principles/decouple-space.html[space decoupling {tab-icon}, window="tab"].
 
 In Event Driven systems, components announce a location where they expose their events. So a _Component A_ emitting events will use a well-known location to publish them but not know which components are consuming the events. This well-known location is implemented using an ordered queue. Sometimes the queue is indexable so consumers can keep track of the events already consumed and the events pending.
 

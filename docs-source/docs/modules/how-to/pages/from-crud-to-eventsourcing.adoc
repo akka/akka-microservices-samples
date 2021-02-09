@@ -15,7 +15,7 @@ In xref:concepts:event-sourcing.adoc[Event Sourcing], we will model data as a se
 
 If you are familiar with JPA it is worth noting that an Event Sourced Entity can be used for similar things as a JPA `@Entity` but several aspects are rather different. For example, with JPA you typically only store current state, and the history of how the state was reached is not captured. Or, a JPA `@Entity` is loaded from the database from wherever it is needed, i.e. there may be many Java object instances with the same entity identifier. In contrast, Akka provide mechanisms so there is only one instance of Event Sourced Entity with a given identifier.
 
-The first step to migrate from CRUD to EVent Sourcing is to enrich your business model:
+The first step to migrate from CRUD to Event Sourcing is to enrich your business model:
 
 . identifying what causes a change on the state and
 . modelling this increment.
@@ -62,7 +62,7 @@ A (very) simplified version of a `ShoppingCart` can be modelled using two comman
 include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=howto-crud-to-es-initial]
 ----
 
-Finally, the `ShoppingCart` (that is the `State`) will contain the code to handle a comand, and the code to handle an event.
+Finally, the `ShoppingCart` (that is the `State`) will contain the code to handle a command, and the code to handle an event.
 
 The code to handle the commands will follow two steps:
 

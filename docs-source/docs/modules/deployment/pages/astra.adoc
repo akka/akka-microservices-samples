@@ -1,0 +1,33 @@
+= Cassandra - DataStax Astra
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+To use https://www.datastax.com/products/datastax-astra[DataStax Astra {tab-icon}, window="tab"] (Cloud-Native Cassandra-as-a-Service) you place the connection credentials in a https://kubernetes.io/docs/concepts/configuration/secret/[Secret {tab-icon}, window="tab"]. The Secret must contain three entries:
+
+* `username` - the database username
+* `password` - the database password
+* `secureConnectBundleKey` - the secure connect bundle (zip file) that is downloaded as described in https://docs.astra.datastax.com/docs/obtaining-database-credentials[Obtain database credentials documentation {tab-icon}, window="tab"]
+
+The Secret can be created with for example:
+
+[source,shell script]
+----
+kubectl create secret generic shopping-cart-service-astra-secret --from-literal=username=scott --from-literal=password=tiger --from-file=secureConnectBundle=/path/to/secure-connect.zip
+----
+
+To enable the Astra integration you define the name of the secret in `cassandraDataStaxAstra` of the deployment descriptor:
+
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  cassandraDataStaxAstra:
+    credentialsSecret: shopping-cart-service-astra-secret
+----
+
+The Akka Operator will automatically mount the secure connect bundle in the Pod and xref:config-secret.adoc#main-conf[provide the configuration] for the connection based on the Secret when the application starts the `ActorSystem`.

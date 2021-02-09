@@ -1,39 +1,61 @@
 package shopping.cart
 
+import java.nio.file.Paths
+
+import scala.concurrent.Await
+import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
+import scala.concurrent.duration._
+
+import akka.Done
 import akka.actor.typed.ActorSystem
-import akka.stream.alpakka.cassandra.scaladsl.CassandraSessionRegistry
-import shopping.cart.ItemPopularityRepositoryImpl.popularityTable
+import akka.persistence.jdbc.testkit.scaladsl.SchemaUtils
+import akka.projection.jdbc.scaladsl.JdbcProjection
+import org.slf4j.LoggerFactory
+import shopping.cart.repository.ScalikeJdbcSession
 
 object CreateTableTestUtils {
 
-  def createTables(system: ActorSystem[_]): Unit = {
-    import org.slf4j.LoggerFactory
-    import akka.projection.cassandra.scaladsl.CassandraProjection
-    import scala.concurrent.Await
-    import scala.concurrent.duration._
+  private val createUserTablesFile =
+    Paths.get("ddl-scripts/create_user_tables.sql").toFile
+
+  def dropAndRecreateTables(system: ActorSystem[_]): Unit = {
+    implicit val sys: ActorSystem[_] = system
+    implicit val ec: ExecutionContext = system.executionContext
 
     // ok to block here, main thread
     Await.result(
-      CassandraProjection.createOffsetTableIfNotExists()(system),
+      for {
+        _ <- SchemaUtils.dropIfExists()
+        _ <- SchemaUtils.createIfNotExists()
+        _ <- JdbcProjection.dropOffsetTableIfExists(() =>
+          new ScalikeJdbcSession())
+        _ <- JdbcProjection.createOffsetTableIfNotExists(() =>
+          new ScalikeJdbcSession())
+      } yield Done,
       30.seconds)
-
-    // use same keyspace for the item_popularity table as the offset store
-    val keyspace = system.settings.config
-      .getString("akka.projection.cassandra.offset-store.keyspace")
-    val session =
-      CassandraSessionRegistry(system).sessionFor("akka.persistence.cassandra")
-
-    Await.result(
-      session.executeDDL(
-        s"""CREATE TABLE IF NOT EXISTS $keyspace.$popularityTable (
-      item_id text,
-      count counter,
-      PRIMARY KEY (item_id))
-      """),
-      30.seconds)
-
+    if (createUserTablesFile.exists()) {
+      Await.result(
+        for {
+          _ <- dropUserTables()
+          _ <- SchemaUtils.applyScript(createUserTablesSql)
+        } yield Done,
+        30.seconds)
+    }
     LoggerFactory
       .getLogger("shopping.cart.CreateTableTestUtils")
-      .info("Created keyspace [{}] and tables", keyspace)
+      .info("Created tables")
+  }
+
+  private def dropUserTables()(
+      implicit system: ActorSystem[_]): Future[Done] = {
+    SchemaUtils.applyScript("DROP TABLE IF EXISTS public.item_popularity;")
+  }
+
+  private def createUserTablesSql: String = {
+    val source = scala.io.Source.fromFile(createUserTablesFile)
+    val contents = source.mkString
+    source.close()
+    contents
   }
 }

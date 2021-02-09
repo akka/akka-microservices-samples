@@ -1,9 +1,22 @@
 version: '2.2'
 services:
-  cassandra:
-    image: cassandra:latest
+  postgres-db:
+    image: postgres:latest
     ports:
-      - "9042:9042"
+      - 5432:5432
+    environment:
+      POSTGRES_USER: shopping-cart
+      POSTGRES_PASSWORD: shopping-cart
+
+  # this second PostgresSQL is used when running test
+  postgres-db-test:
+    image: postgres:latest
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_DB: shopping-cart-test
+      POSTGRES_USER: shopping-cart
+      POSTGRES_PASSWORD: shopping-cart
 
 # See dockerhub for different versions of kafka and zookeeper
 # https://hub.docker.com/r/wurstmeister/kafka/

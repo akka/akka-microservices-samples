@@ -15,4 +15,5 @@ The following links provide more information about some of the Akka Platform fea
 * {akka-projection}/[Akka Projections {tab-icon}, window="tab"] to enable CQRS and event based communication with other services
 * {akka-grpc}/[Akka gRPC {tab-icon}, window="tab"] to implement a gRPC service API and communication with other services
 * {akka-management}/[Akka Management {tab-icon}, window="tab"] for Akka Cluster formation and health checks
+* xref:deployment:index.adoc[Kubernetes deployment with the Akka Operator]
 

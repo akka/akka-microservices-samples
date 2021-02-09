@@ -1,0 +1,82 @@
+= Configure Akka Microservices deployments
+
+
+include::partial$include.adoc[]
+
+== Customize AkkaMicroservices deployments
+
+To apply customizations on top of a default deployment descriptor (CR) we recommend using https://kubernetes.io/docs/tasks/manage-kubernetes-objects/kustomization/[Kustomize {tab-icon}, window="tab"], built into `kubectl`.
+
+Prepare a folder called `base` containing the following files:
+
+The default deployment descriptor (CR):
+
+.base/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+----
+
+A basic reference to it for Kustomize:
+
+.base/kustomization.yml
+[source,yaml,title='']
+----
+resources:
+- shopping-cart-service-cr.yml
+----
+
+You can already deploy your default service by running:
+
+[source,shell script]
+----
+kubectl apply -k base
+----
+
+== Apply customizations
+
+If you want to deploy, e.g., to an environment with limited resources you can tweak just a few parameters in the CR.
+
+Create a separate folder along `base` and call it `custom` with this content:
+
+The actual customization:
+
+.custom/custom.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  replicas: 1
+  resources:
+    limits:
+      memory: 512Mi
+    requests:
+      cpu: 500m
+      memory: 512Mi
+----
+
+And a reference to the customization:
+
+.custom/kustomization.yml
+[source,yaml]
+----
+bases:
+- ../base
+patchesStrategicMerge:
+- custom.yaml
+----
+
+You can now deploy to a resource limited environment by running:
+
+[source,shell script]
+----
+kubectl apply -k custom
+----

@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <configuration>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
@@ -5,10 +6,6 @@
             <pattern>[%date{ISO8601}] [%level] [%logger] [%X{akkaAddress}] [%marker] [%thread] - %msg%n</pattern>
         </encoder>
     </appender>
-
-    <logger name="com.datastax.oss.driver" level="WARN"/>
-    <logger name="org.apache.cassandra" level="ERROR"/>
-    <logger name="com.codahale.metrics" level="INFO"/>
 
     <root level="INFO">
         <appender-ref ref="STDOUT"/>

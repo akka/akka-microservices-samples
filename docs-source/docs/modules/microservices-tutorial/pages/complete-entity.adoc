@@ -50,6 +50,7 @@ The following sections show our solution.
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=checkoutCommand]
@@ -57,6 +58,7 @@ include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkoutCommand]
@@ -69,6 +71,7 @@ The corresponding `CheckedOut` event:
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=checkedOutEvent]
@@ -76,6 +79,7 @@ include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEvent]
@@ -88,6 +92,7 @@ The state should include a value for if and when the cart was checked out:
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=state-with-checkout]
@@ -95,6 +100,7 @@ include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=state-with-checkout]
@@ -107,6 +113,7 @@ Add a unit test for the new `Checkout` command in [.group-scala]#`ShoppingCartSp
 [.tabset]
 Java::
 +
+.src/test/java/shopping/cart/ShoppingCartTest.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/test/java/shopping/cart/ShoppingCartTest.java[tag=checkout]
@@ -114,6 +121,7 @@ include::example$03-shopping-cart-service-java/src/test/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/test/scala/shopping/cart/ShoppingCartSpec.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=checkout]
@@ -125,6 +133,7 @@ Commands should be handled differently when the cart has been checked out. `AddI
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=commandHandlers]
@@ -132,6 +141,7 @@ include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=commandHandlers]
@@ -142,6 +152,7 @@ In `checkedOutShoppingCart` the `AddItem` and `Checkout` commands should be reje
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=checkedOutShoppingCart]
@@ -149,6 +160,7 @@ include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutShoppingCart]
@@ -161,6 +173,7 @@ We still need to add the event handler for the `CheckedOut` event  in the `handl
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=checkedOutEventHandler]
@@ -168,6 +181,7 @@ include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=checkedOutEventHandler]
@@ -196,6 +210,7 @@ Add the `Get` command alongside the existing `AddItem` and `Checkout` commands:
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=getCommand]
@@ -203,6 +218,7 @@ include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommand]
@@ -213,6 +229,7 @@ Add a unit test for the new `Get` command in `ShoppingCartSpec`:
 [.tabset]
 Java::
 +
+.src/test/java/shopping/cart/ShoppingCartTest.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/test/java/shopping/cart/ShoppingCartTest.java[tag=get]
@@ -220,6 +237,7 @@ include::example$03-shopping-cart-service-java/src/test/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/test/scala/shopping/cart/ShoppingCartSpec.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/test/scala/shopping/cart/ShoppingCartSpec.scala[tag=get]
@@ -230,6 +248,7 @@ The command handler for `Get` is independent of the `checkedOut` state, [.group-
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCart.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCart.java[tag=getCommandHandler]
@@ -237,6 +256,7 @@ include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCart.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCart.scala[tag=getCommandHandler]
@@ -262,6 +282,7 @@ mvn test
 
 Let's add corresponding operation definitions in `ShoppingCartService.proto`:
 
+.src/main/protobuf/ShoppingCartService.proto
 [source,protobuf]
 ----
 include::example$03-shopping-cart-service-scala/src/main/protobuf/ShoppingCartService.proto[tag=CheckoutAndGet]
@@ -296,6 +317,7 @@ Add implementations of the new operations in `ShoppingCartServiceImpl` in the sa
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCartServiceImpl.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServiceImpl.java[tag=checkoutAndGet]
@@ -303,6 +325,7 @@ include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=checkoutAndGet]
@@ -313,6 +336,7 @@ We also have to include the new `checkedOut` flag when converting from `Shopping
 [.tabset]
 Java::
 +
+.src/main/java/shopping/cart/ShoppingCartServiceImpl.java
 [source,java,indent=0]
 ----
 include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/ShoppingCartServiceImpl.java[tag=toProtoCart]
@@ -320,6 +344,7 @@ include::example$03-shopping-cart-service-java/src/main/java/shopping/cart/Shopp
 
 Scala::
 +
+.src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala
 [source,scala,indent=0]
 ----
 include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/ShoppingCartServiceImpl.scala[tag=toProtoCart]
@@ -329,7 +354,7 @@ include::example$03-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 == Run locally
 
-Start Cassandra, unless it's already running:
+Start the PostgresSQL database, unless it's already running:
 
 [source,shell script]
 ----
@@ -353,35 +378,88 @@ mvn compile exec:exec -DAPP_CONFIG=local1.conf
 
 === Exercise the service
 
-Try it with `grpcurl`.
+// # tag::exercise[]
+Use `https://github.com/fullstorydev/grpcurl[grpcurl]` to exercise the service:
 
-Add an item to the cart:
+. Add an item to the cart:
++
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2", "itemId":"socks", "quantity":3}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.AddItem
 ----
 
-Check the quantity of the cart:
+. Check the quantity of the cart:
++
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
 ----
 
-
-Check out cart:
+. Check out cart:
++
 [source,shell script]
 ----
 grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.Checkout
 ----
+// # end::exercise[]
+
 
 === Stop the service
 
-When finished, stop the service with `ctrl-c`. Leave Cassandra running for the next set of steps, or stop it with:
+When finished, stop the service with `ctrl-c`. Leave PostgresSQL running for the next set of steps, or stop it with:
 
 [source,shell script]
 ----
-docker-compose down
+docker-compose stop
 ----
+
+[#kubernetes]
+== Run in Kubernetes
+
+Create a xref:deployment:aws-install.adoc[Kubernetes cluster and install the Akka Operator] if you haven't already.
+
+=== Create a PostgresSQL database
+
+Make sure you have created your database and loaded the schema as decribed in the previous step.
+
+=== Build Docker image
+
+Create a Docker repository and authenticate Docker as described in xref:deployment:aws-ecr.adoc[Amazon Elastic Container Registry] if you haven't already.
+
+Rebuild the Docker image.
+
+include::partial$build-docker-for-kube.adoc[]
+
+=== Update the deployment descriptor
+
+Update the `kubernetes/shopping-cart-service-cr.yml` deployment descriptor with the new image tag as previously described.
+
+=== Apply to Kubernetes
+
+Re-apply the `shopping-cart-service-cr.yml` to Kubernetes:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+You can see progress by viewing the status:
+
+[source,shell script]
+----
+kubectl get akkamicroservices/shopping-cart-service
+----
+
+See xref:deployment:troubleshooting.adoc[troubleshooting deployment status] for more details.
+
+=== Exercise the service in Kubernetes
+
+include::partial$prepare-to-exercise-in-kube.adoc[]
+
+include::complete-entity.adoc[tag=exercise]
+
+Note the logging from the `ShoppingCartServiceImpl` in the console that is running `kubectl logs -f`.
+
 
 :!sectnums:
 == Optional commands and events
@@ -398,13 +476,13 @@ After adding the optional commands, you can build and run again and try them out
 Update the quantity of an item:
 [source,shell script]
 ----
-grpcurl -d '{"cartId":"cart2", "itemId":"socks", "quantity":5}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.UpdateItem
+grpcurl -d '{"cartId":"cart1", "itemId":"socks", "quantity":6}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.UpdateItem
 ----
 
 Get the cart state again:
 [source,shell script]
 ----
-grpcurl -d '{"cartId":"cart2"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
+grpcurl -d '{"cartId":"cart1"}' -plaintext 127.0.0.1:8101 shoppingcart.ShoppingCartService.GetCart
 ----
 
 

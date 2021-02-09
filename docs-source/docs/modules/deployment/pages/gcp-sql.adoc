@@ -1,0 +1,48 @@
+= Relational database - GCP Cloud SQL
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+https://cloud.google.com/products/databases[GCP Cloud SQL {tab-icon}, window="tab"] provides managed SQL databases of several database engines.
+This describes how to use PostgreSQL because that is what is used in the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] but it would be similar for the other database engines.
+
+Once you've created your Cloud SQL database go back to xref:jdbc.adoc[JDBC integration] to finish the setup.
+
+== Create Cloud SQL PostgreSQL database
+
+Create a new database from https://console.cloud.google.com/sql/instances[GCP CLoud SQL console {tab-icon}, window="tab"]. Select the project you are working in.
+
+The example in the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] is using PostgreSQL.
+
+There is an array of options for creating a Cloud SQL instance with various different network configurations. This guide demonstrates:
+
+- Private Cloud SQL instance, can only be accessed in the same VPC or a peered VPC.
+- For private Cloud SQL instances RFC 1918 IP addresses are automatically authorized.
+- Authentication via username and password
+
+For production consider using the https://cloud.google.com/sql/docs/postgres/connect-overview[Cloud SQL proxy and IAM database authentication].
+Direct connectivity between GKE and Cloud SQL via private IP is only possible if using a https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips[Native VPC cluster] otherwise the CLoud SQL proxy is required.
+
+To create a basic PostgreSQL instance select `Create instance`
+
+- Choose PostgreSQL
+- DB instance identifier: `shopping-cart`
+- Master password: <a password>
+- Location: pick the same region as your GKE cluster (not required, but better for latency)
+
+Expand more configuration options, under connectivity:
+
+- Deselect Public IP
+- Select Private IP
+- Associated network: pick the same network as your GKE cluster
+- Use an automatically allocated IP range. If this has already been done this won't show as an option and then keep any defaults selected.
+
+You may need the help of an admin for your GCP project to get the correct permissions for automatically allocating the IP range. This only needs to be done once per network.
+
+It will take a few minutes to create. After the instance has finished initializing make a note of:
+
+- The password you used when creating the instance
+- The default username is 'postgres'
+- Private IP of database instance, shown in the console after the Cloud SQL instance has been created
+
+Now that you've created your Cloud SQL database go back to xref:jdbc.adoc[JDBC integration] to finish the setup.

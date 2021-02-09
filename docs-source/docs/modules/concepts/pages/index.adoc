@@ -44,9 +44,9 @@ These deployment patterns require xref:mobility.adoc[mobility and addressability
 
 Drilling down into failure scenarios, Reactive Microservices have resilience at both an individual and a system level. A cluster of Microservice instances can deployed in different JVMs, if a single instance fails, the others are still available. If a cluster of a particular Microservice fails, the rest of the system can continue, although possibly with diminished capability. With supervision and coordination, a system can even become self-healing by restarting failed Microservices and clusters. Platforms such as Kubernetes provide cluster services such as scaling and auto restart. However, since the platform cannot be aware of application-specifics, developers are responsible for making sure that Microservices are designed and deployed in a Reactive way.
 
-== Modeling Reactive systems
+== Modelling Reactive systems
 
-Domain-Driven Design (DDD) is a proven modeling pattern in which business and technical experts cooperate to design the system around business needs. DDD offers a realistic way to establish boundaries and contexts for individual Microservices. However, what has proved to be difficult for many is modeling the space in between Microservices.
+Domain-Driven Design (DDD) is a proven modelling pattern in which business and technical experts cooperate to design the system around business needs. DDD offers a realistic way to establish boundaries and contexts for individual Microservices. However, what has proved to be difficult for many is modelling the space in between Microservices.
 
 https://www.oreilly.com/library/view/reactive-microsystems/9781491994368/ch04.html[Events-First Domain Driven Design] has emerged as modification of DDD that makes it easier to model data dependencies and communication across the system. Events are facts, things that happen in the running system. For example, in an ordering system, the finalization of an order is an important event. During https://blog.redelastic.com/corporate-arts-crafts-modelling-reactive-systems-with-event-storming-73c6236f5dd7[Event Storming], you would explore what leads up to that event. That might include, for example, queries about sales tax rates, selection of a shipping method, and validation of payment. This will help you identify the entities involved and draw the correct boundaries around them.
 
@@ -80,7 +80,7 @@ The desired outcome determines how you handle the message. Effectively, you need
 
 In contrast, with asynchronous messaging, the requestor simply sends a message and continues with its business. Since Microservices depend on the health of their host and network connections, asynchronous messaging offers an obvious advantage. The illustration below illustrates how processing requests asynchronously can speed up execution.
 
-image::async-sync.png[Synchronous vs Ascynchronous]
+image::async-sync.png[Synchronous vs Asynchronous]
 
 If the message is important, you need some way of persisting it to make sure it will be dealt with at some point in time. An event-driven architecture offers several ways of handling this. For example, in a Microservices system, you could use a message broker with delivery guarantees, or write such messages to a database or log. If a reply is required, the sender could just wait for an acknowledgement that the request was received and continue its work, expecting the answer to the question later.
 

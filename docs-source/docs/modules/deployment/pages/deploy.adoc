@@ -1,0 +1,81 @@
+= Deployment workflow
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+This page describes the general workflow for deploying an application. Each step of the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] also has instructions of how to run in Kubernetes. The tutorial includes build files for creating Docker images and template deployment descriptors.
+
+The steps below assume that you have already read the xref:deployment:index.adoc[overview of Kubernetes deployment], and have created a xref:deployment:aws-install.adoc[Kubernetes cluster and installed the Akka Operator].
+
+:sectnums:
+== Build Docker image
+
+Build and publish a Docker image of the application as described in xref:deployment:aws-ecr.adoc[Amazon Elastic Container Registry].
+
+== Update the deployment descriptor
+
+Update the deployment descriptor in `kubernetes/shopping-cart-service-cr.yml` of the `AkkaMicroservice` that the Akka Operator will use when deploying the application in Kubernetes.
+
+.kubernetes/shopping-cart-service-cr.yml:
+[source,yaml]
+----
+include::microservices-tutorial:example$01-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
+----
+
+<1> Replace `<docker-registry>` with your docker registry address and update the image reference with the image tag from the output of the Docker build above, for example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201209-135004-363ae2b`.
+
+== Apply to Kubernetes
+
+Deploy the `shopping-cart-service-cr.yml` to Kubernetes:
+
+[source,shell script]
+----
+kubectl apply -f kubernetes/shopping-cart-service-cr.yml
+----
+
+It will also create the namespace `shopping`
+
+It can be convenient to set that namespace as current instead of specifying the `--namespace` parameter in all `kubectl` commands.
+
+[source,shell script]
+----
+kubectl config set-context --current --namespace=shopping
+----
+
+The Akka Operator will notice the deployment descriptor and deploy the `shopping-cart-service`. You can see progress by viewing the status:
+
+[source,shell script]
+----
+kubectl get akkamicroservices
+----
+
+See xref:deployment:troubleshooting.adoc[troubleshooting deployment status] for more details.
+
+You can list the pods with:
+
+[source,shell script]
+----
+kubectl get pods
+----
+
+Inspect logs:
+
+[source,shell script]
+----
+kubectl logs -f <shopping-cart-service pod name from above>
+----
+
+== Repeat
+
+If you change the application, repeat the above steps. Kubernetes will perform a rolling update of the application.
+
+== Delete
+
+You can terminate all Pods of the application by deleting the deployment descriptor:
+
+[source,shell script]
+----
+kubectl delete akkamicroservices/shopping-cart-service
+----
+
+:!Sectnums:
