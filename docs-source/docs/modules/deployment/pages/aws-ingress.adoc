@@ -47,7 +47,7 @@ When the deployment descriptor has been applied the Akka Operator will create an
 
 [source,shell script]
 ----
-kubectl get ingress shopping-order-service-grpc-in
+kubectl get ingress shopping-order-service-grpc-ingress
 ----
 
 To access the public endpoint with grpcurl you use the public address from above, with port 443:
