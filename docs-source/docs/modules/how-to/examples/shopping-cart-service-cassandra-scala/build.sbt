@@ -6,7 +6,14 @@ licenses := Seq(("CC0", url("https://creativecommons.org/publicdomain/zero/1.0")
 
 scalaVersion := "2.13.3"
 
-Compile / scalacOptions ++= Seq("-deprecation", "-feature", "-unchecked", "-Xlog-reflective-calls", "-Xlint")
+Compile / scalacOptions ++= Seq(
+  "-target:11",
+  "-deprecation",
+  "-feature",
+  "-unchecked",
+  "-Xlog-reflective-calls",
+  "-Xlint"
+)
 Compile / javacOptions ++= Seq("-Xlint:unchecked", "-Xlint:deprecation")
 
 Test / parallelExecution := false
