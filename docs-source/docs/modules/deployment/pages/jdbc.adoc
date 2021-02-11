@@ -73,3 +73,16 @@ kubectl apply -f kubernetes/shopping-cart-service-cr.yml
 ----
 
 The Akka Operator will automatically xref:config-secret.adoc#main-conf[provide the configuration] for the connection based on the Secret when the application starts the `ActorSystem`.
+
+=== JDBC configuration details
+
+It can be useful to have access to the database connection settings for additional application specific components in addition to the Akka Persistence journal and snapshot plugins that are automatically set up. The operator sets up the `jdbc-connection-settings` top level config object with the following properties based on the Secret in the config the application is started with:
+
+```
+jdbc-connection-settings {
+  url = "connectionUrl"
+  user = "username"
+  password = "password"
+}
+```
+

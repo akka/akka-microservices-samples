@@ -20,7 +20,7 @@ object ScalikeJdbcSetup {
    * The connection pool will be closed when the actor system terminates.
    */
   def init(system: ActorSystem[_]): Unit = {
-    fromConfig(system.settings.config)
+    initFromConfig(system.settings.config)
     system.whenTerminated.map { _ =>
       ConnectionPool.closeAll()
     }(scala.concurrent.ExecutionContext.Implicits.global)
@@ -31,34 +31,36 @@ object ScalikeJdbcSetup {
    * Builds a Hikari DataSource with values from jdbc-connection-settings.
    * The DataSource is then configured as the 'default' connection pool for ScalikeJDBC.
    */
-  def fromConfig(config: Config): Unit = {
+  private def initFromConfig(config: Config): Unit = {
 
     val dbs = new DBsFromConfig(config)
     dbs.loadGlobalSettings()
 
-    val dataSource = new HikariDataSource()
-
-    dataSource.setPoolName("read-side-connection-pool")
-    dataSource.setMaximumPoolSize(
-      config.getInt("jdbc-connection-settings.connection-pool.max-pool-size"))
-
-    val timeout =
-      config
-        .getDuration("jdbc-connection-settings.connection-pool.timeout")
-        .toMillis
-    dataSource.setConnectionTimeout(timeout)
-
-    dataSource.setDriverClassName(
-      config.getString("jdbc-connection-settings.driver"))
-    dataSource.setJdbcUrl(config.getString("jdbc-connection-settings.url"))
-    dataSource.setUsername(config.getString("jdbc-connection-settings.user"))
-    dataSource.setPassword(
-      config.getString("jdbc-connection-settings.password"))
+    val dataSource = buildDataSource(
+      config.getConfig("jdbc-connection-settings"))
 
     ConnectionPool.singleton(
       new DataSourceConnectionPool(
         dataSource = dataSource,
         closer = HikariCloser(dataSource)))
+  }
+
+  private def buildDataSource(config: Config): HikariDataSource = {
+    val dataSource = new HikariDataSource()
+
+    dataSource.setPoolName("read-side-connection-pool")
+    dataSource.setMaximumPoolSize(
+      config.getInt("connection-pool.max-pool-size"))
+
+    val timeout = config.getDuration("connection-pool.timeout").toMillis
+    dataSource.setConnectionTimeout(timeout)
+
+    dataSource.setDriverClassName(config.getString("driver"))
+    dataSource.setJdbcUrl(config.getString("url"))
+    dataSource.setUsername(config.getString("user"))
+    dataSource.setPassword(config.getString("password"))
+
+    dataSource
   }
 
   /**

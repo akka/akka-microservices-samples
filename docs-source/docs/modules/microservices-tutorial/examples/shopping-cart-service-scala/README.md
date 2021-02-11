@@ -13,11 +13,6 @@
     docker exec -i shopping-cart-service_postgres-db_1 psql -U shopping-cart -t < ddl-scripts/create_user_tables.sql
     ```
 
-    ```shell
-    # creates the user defined projection table.
-    docker exec -i shopping-cart-service_cassandra_1 cqlsh -t < ddl-scripts/create_user_tables.cql
-    ```
-
 2. Start a first node:
 
     ```shell

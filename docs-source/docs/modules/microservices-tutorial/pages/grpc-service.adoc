@@ -209,6 +209,8 @@ The [.group-scala]#`build.sbt and project/plugins.sbt`# [.group-java]#`pom.xml`#
 
 include::partial$build-docker-for-kube.adoc[]
 
+include::deployment:partial$git-init.adoc[]
+
 === Update the deployment descriptor
 
 In `kubernetes/shopping-cart-service-cr.yml` you will find the deployment descriptor of the `AkkaMicroservice` that the Akka Operator will use when deploying the application in Kubernetes.

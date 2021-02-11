@@ -21,7 +21,6 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.time.Span
 import org.scalatest.wordspec.AnyWordSpec
-import scalikejdbc.ConnectionPool
 import shopping.cart.repository.ScalikeJdbcSetup
 
 object IntegrationSpec {
@@ -107,7 +106,7 @@ class IntegrationSpec
 
   override protected def beforeAll(): Unit = {
     super.beforeAll()
-    ScalikeJdbcSetup.fromConfig(IntegrationSpec.sharedConfig)
+    ScalikeJdbcSetup.init(testNode1.system)
     CreateTableTestUtils.dropAndRecreateTables(testNode1.system)
     // avoid concurrent creation of tables
     val timeout = 10.seconds
@@ -120,8 +119,9 @@ class IntegrationSpec
     super.afterAll()
     testNode3.testKit.shutdownTestKit()
     testNode2.testKit.shutdownTestKit()
+    // testNode1 must be the last to shutdown
+    // because responsible to close ScalikeJdbc connections
     testNode1.testKit.shutdownTestKit()
-    ConnectionPool.closeAll()
   }
 
   "Shopping Cart service" should {
