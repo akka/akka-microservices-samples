@@ -44,6 +44,57 @@ kubectl get pods
 
 To create a Kafka cluster using Strimzi, create the custom resource for the Strimzi Kafka operator. See configuration options in the https://strimzi.io/docs/operators/latest/using.html[Strimzi documentation {tab-icon}, window="tab"].
 
+.kubernetes/strimzi-cr.yml
+[source,yaml]
+----
+apiVersion: kafka.strimzi.io/v1beta1
+kind: Kafka
+metadata:
+  name: kafka-strimzi
+spec:
+  kafka:
+    config:
+      auto.create.topics.enable: false
+      log.message.format.version: "2.3"
+      log.retention.bytes: 1073741824
+      log.retention.hours: 1
+      log.retention.check.interval.ms: 300000
+      offsets.topic.replication.factor: 3
+      transaction.state.log.min.isr: 2
+      transaction.state.log.replication.factor: 3
+    listeners:
+      plain: {}
+      tls: {}
+    livenessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    readinessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    replicas: 3
+    resources: {}
+    storage:
+      deleteClaim: false
+      size: 100Gi
+      type: persistent-claim
+    version: 2.5.1
+  zookeeper:
+    livenessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    readinessProbe:
+      initialDelaySeconds: 15
+      timeoutSeconds: 5
+    replicas: 3
+    resources: {}
+    storage:
+      deleteClaim: false
+      size: 10Gi
+      type: persistent-claim
+  entityOperator:
+    topicOperator: {}
+----
+
 [source,shell script]
 ----
 kubectl apply -f kubernetes/strimzi-cr.yml
@@ -61,6 +112,21 @@ kubectl get kafka kafka-strimzi -o=jsonpath='{.status.listeners[?(@.type=="plain
 == Create topic
 
 The Strimzi operator can create topics from a `KafkaTopic` custom resource. See configuration options in the https://strimzi.io/docs/operators/latest/using.html[Strimzi documentation {tab-icon}, window="tab"].
+
+.kubernetes/strimzi-topic-cr.yml
+[source,yaml]
+----
+apiVersion: kafka.strimzi.io/v1beta1
+ kind: KafkaTopic
+ metadata:
+   name: shopping-cart-events
+   labels:
+     strimzi.io/cluster: kafka-strimzi
+ spec:
+   topicName: shopping-cart-events
+   partitions: 4
+   replicas: 2
+----
 
 [source,shell script]
 ----
