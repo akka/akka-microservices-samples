@@ -8,6 +8,8 @@ import akka.grpc.GrpcClientSettings;
 import akka.management.cluster.bootstrap.ClusterBootstrap;
 import akka.management.javadsl.AkkaManagement;
 import com.typesafe.config.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import shopping.cart.proto.ShoppingCartService;
@@ -21,35 +23,43 @@ import shopping.order.proto.ShoppingOrderServiceClient;
 
 public class Main {
 
+  private static final Logger logger = LoggerFactory.getLogger(Main.class);
+
   public static void main(String[] args) {
     ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "ShoppingCartService");
     init(system, orderServiceClient(system));
   }
 
   public static void init(ActorSystem<Void> system, ShoppingOrderService orderService) {
-    AkkaManagement.get(system).start();
-    ClusterBootstrap.get(system).start();
+    try {
+      AkkaManagement.get(system).start();
+      ClusterBootstrap.get(system).start();
 
-    ShoppingCart.init(system);
+      ShoppingCart.init(system);
 
-    ApplicationContext springContext =
-            SpringIntegration.applicationContext(system.settings().config());
-    JpaTransactionManager transactionManager = springContext.getBean(JpaTransactionManager.class);
+      ApplicationContext springContext =
+          SpringIntegration.applicationContext(system.settings().config());
+      JpaTransactionManager transactionManager = springContext.getBean(JpaTransactionManager.class);
 
-    ItemPopularityRepository itemPopularityRepository =
-            springContext.getBean(ItemPopularityRepository.class);
+      ItemPopularityRepository itemPopularityRepository =
+          springContext.getBean(ItemPopularityRepository.class);
 
-    ItemPopularityProjection.init(system, transactionManager, itemPopularityRepository);
+      ItemPopularityProjection.init(system, transactionManager, itemPopularityRepository);
 
-    PublishEventsProjection.init(system, transactionManager);
+      PublishEventsProjection.init(system, transactionManager);
 
-    SendOrderProjection.init(system, transactionManager, orderService);
+      SendOrderProjection.init(system, transactionManager, orderService);
 
-    Config config = system.settings().config();
-    String grpcInterface = config.getString("shopping-cart-service.grpc.interface");
-    int grpcPort = config.getInt("shopping-cart-service.grpc.port");
-    ShoppingCartService grpcService = new ShoppingCartServiceImpl(system, itemPopularityRepository);
-    ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService);
+      Config config = system.settings().config();
+      String grpcInterface = config.getString("shopping-cart-service.grpc.interface");
+      int grpcPort = config.getInt("shopping-cart-service.grpc.port");
+      ShoppingCartService grpcService =
+          new ShoppingCartServiceImpl(system, itemPopularityRepository);
+      ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService);
+    } catch (Exception e) {
+      logger.error("Terminating due to initialization failure.", e);
+      system.terminate();
+    }
   }
 
   // tag::SendOrderProjection[]
