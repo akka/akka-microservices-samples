@@ -19,50 +19,53 @@ import shopping.cart.repository.SpringIntegration;
 import shopping.order.proto.ShoppingOrderService;
 import shopping.order.proto.ShoppingOrderServiceClient;
 
-// end::SendOrderProjection[]
-
 public class Main {
+  // end::SendOrderProjection[]
 
   private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
+  // tag::SendOrderProjection[]
   public static void main(String[] args) {
     ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "ShoppingCartService");
-    init(system, orderServiceClient(system));
-  }
-
-  public static void init(ActorSystem<Void> system, ShoppingOrderService orderService) {
     try {
-      AkkaManagement.get(system).start();
-      ClusterBootstrap.get(system).start();
-
-      ShoppingCart.init(system);
-
-      ApplicationContext springContext =
-          SpringIntegration.applicationContext(system.settings().config());
-      JpaTransactionManager transactionManager = springContext.getBean(JpaTransactionManager.class);
-
-      ItemPopularityRepository itemPopularityRepository =
-          springContext.getBean(ItemPopularityRepository.class);
-
-      ItemPopularityProjection.init(system, transactionManager, itemPopularityRepository);
-
-      PublishEventsProjection.init(system, transactionManager);
-
-      SendOrderProjection.init(system, transactionManager, orderService);
-
-      Config config = system.settings().config();
-      String grpcInterface = config.getString("shopping-cart-service.grpc.interface");
-      int grpcPort = config.getInt("shopping-cart-service.grpc.port");
-      ShoppingCartService grpcService =
-          new ShoppingCartServiceImpl(system, itemPopularityRepository);
-      ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService);
+      init(system, orderServiceClient(system));
     } catch (Exception e) {
       logger.error("Terminating due to initialization failure.", e);
       system.terminate();
     }
   }
 
-  // tag::SendOrderProjection[]
+  public static void init(ActorSystem<Void> system, ShoppingOrderService orderService) {
+    // end::SendOrderProjection[]
+    AkkaManagement.get(system).start();
+    ClusterBootstrap.get(system).start();
+
+    ShoppingCart.init(system);
+
+    ApplicationContext springContext =
+        SpringIntegration.applicationContext(system.settings().config());
+
+    ItemPopularityRepository itemPopularityRepository =
+        springContext.getBean(ItemPopularityRepository.class);
+
+    JpaTransactionManager transactionManager = springContext.getBean(JpaTransactionManager.class);
+
+    ItemPopularityProjection.init(system, transactionManager, itemPopularityRepository);
+
+    PublishEventsProjection.init(system, transactionManager);
+
+    // tag::SendOrderProjection[]
+    SendOrderProjection.init(system, transactionManager, orderService);
+    // end::SendOrderProjection[]
+
+    Config config = system.settings().config();
+    String grpcInterface = config.getString("shopping-cart-service.grpc.interface");
+    int grpcPort = config.getInt("shopping-cart-service.grpc.port");
+    ShoppingCartService grpcService = new ShoppingCartServiceImpl(system, itemPopularityRepository);
+    ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService);
+    // tag::SendOrderProjection[]
+  }
+
   static ShoppingOrderService orderServiceClient(ActorSystem<?> system) {
     GrpcClientSettings orderServiceClientSettings =
         GrpcClientSettings.connectToServiceAt(

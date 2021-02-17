@@ -15,22 +15,22 @@ public class Main {
 
   public static void main(String[] args) throws Exception {
     ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "ShoppingOrderService");
-    init(system);
-  }
-
-  public static void init(ActorSystem<Void> system) {
     try {
-      AkkaManagement.get(system).start();
-      ClusterBootstrap.get(system).start();
-
-      Config config = system.settings().config();
-      String grpcInterface = config.getString("shopping-order-service.grpc.interface");
-      int grpcPort = config.getInt("shopping-order-service.grpc.port");
-      ShoppingOrderService grpcService = new ShoppingOrderServiceImpl();
-      ShoppingOrderServer.start(grpcInterface, grpcPort, system, grpcService);
+      init(system);
     } catch (Exception e) {
       logger.error("Terminating due to initialization failure.", e);
       system.terminate();
     }
+  }
+
+  public static void init(ActorSystem<Void> system) {
+    AkkaManagement.get(system).start();
+    ClusterBootstrap.get(system).start();
+
+    Config config = system.settings().config();
+    String grpcInterface = config.getString("shopping-order-service.grpc.interface");
+    int grpcPort = config.getInt("shopping-order-service.grpc.port");
+    ShoppingOrderService grpcService = new ShoppingOrderServiceImpl();
+    ShoppingOrderServer.start(grpcInterface, grpcPort, system, grpcService);
   }
 }

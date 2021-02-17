@@ -13,18 +13,18 @@ public class Main {
 
   public static void main(String[] args) {
     ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "ShoppingAnalyticsService");
-    init(system);
-  }
-
-  public static void init(ActorSystem<Void> system) {
     try {
-      AkkaManagement.get(system).start();
-      ClusterBootstrap.get(system).start();
-
-      ShoppingCartEventConsumer.init(system);
+      init(system);
     } catch (Exception e) {
       logger.error("Terminating due to initialization failure.", e);
       system.terminate();
     }
+  }
+
+  public static void init(ActorSystem<Void> system) {
+    AkkaManagement.get(system).start();
+    ClusterBootstrap.get(system).start();
+
+    ShoppingCartEventConsumer.init(system);
   }
 }
