@@ -1,12 +1,30 @@
 package shopping.cart
 
-import akka.actor.typed.{ ActorSystem, Behavior }
-import akka.actor.typed.scaladsl.{ AbstractBehavior, ActorContext }
+import akka.actor.typed.scaladsl.Behaviors
+import akka.actor.typed.ActorSystem
 import akka.management.scaladsl.AkkaManagement
+import org.slf4j.LoggerFactory
+import scala.util.control.NonFatal
 
-class Main(context: ActorContext[Nothing]) {
-  val system = context.system
-  // tag::start-akka-management[]
-  AkkaManagement(system).start()
-  // end::start-akka-management[]
+object Main {
+
+  val logger = LoggerFactory.getLogger("shopping.cart.Main")
+
+  def main(args: Array[String]): Unit = {
+    val system = ActorSystem[Nothing](Behaviors.empty, "ShoppingCartService")
+    try {
+      init(system)
+    } catch {
+      case NonFatal(e) =>
+        logger.error("Terminating due to initialization failure.", e)
+        system.terminate()
+    }
+  }
+
+  def init(system: ActorSystem[_]): Unit = {
+    // tag::start-akka-management[]
+    AkkaManagement(system).start()
+    // end::start-akka-management[]
+  }
+
 }

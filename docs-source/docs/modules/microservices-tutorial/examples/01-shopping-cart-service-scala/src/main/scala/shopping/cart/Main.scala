@@ -1,38 +1,43 @@
 package shopping.cart
 
-import akka.actor.typed.scaladsl.AbstractBehavior
-import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.ActorSystem
-import akka.actor.typed.Behavior
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
+import org.slf4j.LoggerFactory
+import scala.util.control.NonFatal
 
 object Main {
 
+  val logger = LoggerFactory.getLogger("shopping.cart.Main")
+
   def main(args: Array[String]): Unit = {
-    ActorSystem[Nothing](Main(), "ShoppingCartService") // <1>
+    val system =
+      ActorSystem[Nothing](Behaviors.empty, "ShoppingCartService") // <1>
+    try {
+      init(system)
+    } catch {
+      case NonFatal(e) =>
+        logger.error("Terminating due to initialization failure.", e)
+        system.terminate()
+    }
   }
 
-  def apply(): Behavior[Nothing] = {
-    Behaviors.setup[Nothing](context => new Main(context))
+  def init(system: ActorSystem[_]): Unit = {
+    AkkaManagement(system).start() // <2>
+    ClusterBootstrap(system).start()
+
+    val grpcInterface =
+      system.settings.config.getString("shopping-cart-service.grpc.interface")
+    val grpcPort =
+      system.settings.config.getInt("shopping-cart-service.grpc.port")
+    val grpcService = new ShoppingCartServiceImpl
+    ShoppingCartServer.start(
+      grpcInterface,
+      grpcPort,
+      system,
+      grpcService
+    ) // <3>
   }
-}
 
-class Main(context: ActorContext[Nothing])
-    extends AbstractBehavior[Nothing](context) {
-  val system = context.system
-
-  AkkaManagement(system).start() // <2>
-  ClusterBootstrap(system).start()
-
-  val grpcInterface =
-    system.settings.config.getString("shopping-cart-service.grpc.interface")
-  val grpcPort =
-    system.settings.config.getInt("shopping-cart-service.grpc.port")
-  val grpcService = new ShoppingCartServiceImpl
-  ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService) // <3>
-
-  override def onMessage(msg: Nothing): Behavior[Nothing] = // <4>
-    this
 }

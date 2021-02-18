@@ -194,6 +194,9 @@ Java::
 ----
 include::example$shopping-cart-service-java/src/main/java/shopping/cart/Main.java[tag=SendOrderProjection]
 ----
++
+<1> This example is only showing the new `SendOrderProjection.init` here, additional initialization from previous steps should be kept.
+<2> The reason for placing the initialization of `orderServiceClient` in a method is that tests can then replace it with a stub implementation.
 
 Scala::
 +
@@ -202,7 +205,8 @@ Scala::
 include::example$shopping-cart-service-scala/src/main/scala/shopping/cart/Main.scala[tag=SendOrderProjection]
 ----
 +
-The reason for placing the initialization of `orderServiceClient` in a `protected` method is that tests can then replace it with a stub implementation.
+<1> This example is only showing the new `SendOrderProjection.init` here, additional initialization from previous steps should be kept.
+<2> The reason for placing the initialization of `orderServiceClient` in a method is that tests can then replace it with a stub implementation.
 
 . The gRPC client is using service discovery to locate the `ShoppingOrderService`. For local development add the following to `src/main/resources/local-shared.conf`, which is loaded when running locally:
 +

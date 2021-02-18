@@ -55,7 +55,7 @@ public class Main {
     PublishEventsProjection.init(system, transactionManager);
 
     // tag::SendOrderProjection[]
-    SendOrderProjection.init(system, transactionManager, orderService);
+    SendOrderProjection.init(system, transactionManager, orderService); // <1>
     // end::SendOrderProjection[]
 
     Config config = system.settings().config();
@@ -66,7 +66,7 @@ public class Main {
     // tag::SendOrderProjection[]
   }
 
-  static ShoppingOrderService orderServiceClient(ActorSystem<?> system) {
+  static ShoppingOrderService orderServiceClient(ActorSystem<?> system) { // <2>
     GrpcClientSettings orderServiceClientSettings =
         GrpcClientSettings.connectToServiceAt(
                 system.settings().config().getString("shopping-order-service.host"),

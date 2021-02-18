@@ -1,67 +1,63 @@
 package shopping.cart
 
-import akka.actor.typed.scaladsl.AbstractBehavior
-import akka.actor.typed.scaladsl.ActorContext
 import akka.actor.typed.scaladsl.Behaviors
 import akka.actor.typed.ActorSystem
-import akka.actor.typed.Behavior
 import akka.management.cluster.bootstrap.ClusterBootstrap
 import akka.management.scaladsl.AkkaManagement
-import shopping.cart.repository.{
-  ItemPopularityRepositoryImpl,
-  ScalikeJdbcSetup
-}
-
+import org.slf4j.LoggerFactory
+import scala.util.control.NonFatal
+import shopping.cart.repository.ItemPopularityRepositoryImpl
+import shopping.cart.repository.ScalikeJdbcSetup
 // tag::SendOrderProjection[]
 import shopping.order.proto.{ ShoppingOrderService, ShoppingOrderServiceClient }
 import akka.grpc.GrpcClientSettings
 
-// end::SendOrderProjection[]
-
 object Main {
 
+  val logger = LoggerFactory.getLogger("shopping.cart.Main")
+
   def main(args: Array[String]): Unit = {
-    ActorSystem[Nothing](Main(), "ShoppingCartService")
+    val system =
+      ActorSystem[Nothing](Behaviors.empty, "ShoppingCartService")
+    try {
+      val orderService = orderServiceClient(system)
+      init(system, orderService)
+    } catch {
+      case NonFatal(e) =>
+        logger.error("Terminating due to initialization failure.", e)
+        system.terminate()
+    }
   }
 
-  def apply(): Behavior[Nothing] = {
-    Behaviors.setup[Nothing](context => new Main(context))
+  def init(system: ActorSystem[_], orderService: ShoppingOrderService): Unit = {
+    // end::SendOrderProjection[]
+    ScalikeJdbcSetup.init(system)
+
+    AkkaManagement(system).start()
+    ClusterBootstrap(system).start()
+
+    ShoppingCart.init(system)
+
+    val itemPopularityRepository = new ItemPopularityRepositoryImpl()
+    ItemPopularityProjection.init(system, itemPopularityRepository)
+
+    PublishEventsProjection.init(system)
+
+    // tag::SendOrderProjection[]
+    SendOrderProjection.init(system, orderService) // <1>
+    // end::SendOrderProjection[]
+
+    val grpcInterface =
+      system.settings.config.getString("shopping-cart-service.grpc.interface")
+    val grpcPort =
+      system.settings.config.getInt("shopping-cart-service.grpc.port")
+    val grpcService =
+      new ShoppingCartServiceImpl(system, itemPopularityRepository)
+    ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService)
+    // tag::SendOrderProjection[]
   }
-}
 
-class Main(context: ActorContext[Nothing])
-    extends AbstractBehavior[Nothing](context) {
-  val system = context.system
-
-  ScalikeJdbcSetup.init(system)
-  AkkaManagement(system).start()
-  ClusterBootstrap(system).start()
-
-  ShoppingCart.init(system)
-
-  // tag::ItemPopularityProjection[]
-  val itemPopularityRepository = new ItemPopularityRepositoryImpl() // <1>
-  ItemPopularityProjection.init(system, itemPopularityRepository) // <2>
-  // end::ItemPopularityProjection[]
-
-  val grpcInterface =
-    system.settings.config.getString("shopping-cart-service.grpc.interface")
-  val grpcPort =
-    system.settings.config.getInt("shopping-cart-service.grpc.port")
-  val grpcService =
-    new ShoppingCartServiceImpl(system, itemPopularityRepository)
-  ShoppingCartServer.start(grpcInterface, grpcPort, system, grpcService)
-
-  // tag::PublishEventsProjection[]
-  PublishEventsProjection.init(system)
-  // end::PublishEventsProjection[]
-
-  // tag::SendOrderProjection[]
-  val orderService = orderServiceClient(system)
-  SendOrderProjection.init(system, orderService)
-
-  // can be overridden in tests
-  protected def orderServiceClient(
+  protected def orderServiceClient( // <2>
       system: ActorSystem[_]): ShoppingOrderService = {
     val orderServiceClientSettings =
       GrpcClientSettings
@@ -75,6 +71,4 @@ class Main(context: ActorContext[Nothing])
   }
   // end::SendOrderProjection[]
 
-  override def onMessage(msg: Nothing): Behavior[Nothing] =
-    this
 }

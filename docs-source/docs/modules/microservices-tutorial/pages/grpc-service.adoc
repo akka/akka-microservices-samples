@@ -141,7 +141,6 @@ include::example$01-shopping-cart-service-scala/src/main/scala/shopping/cart/Mai
 <1> Start an `ActorSystem` with the `Main` actor `Behavior`.
 <2> Initialization of Akka Management that is used for forming the Akka Cluster.
 <3> Initialize the gRPC server. This is the code you should add to the existing `Main`.
-<4> This actor doesn't handle any messages. It is so far only used for initialization of the different components.
 
 The `grpc.port` configuration is defined in `local1.conf`, which is included in the generated template project.
 
