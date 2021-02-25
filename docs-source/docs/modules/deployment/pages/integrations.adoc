@@ -1,4 +1,4 @@
-= Integrations
+= Integrations with databases and message brokers
 :page-toclevels: 3
 
 include::partial$include.adoc[]
@@ -15,6 +15,7 @@ The Akka Operator provides integrations with:
 * xref:aws-rds.adoc[]
 * xref:astra.adoc[]
 * xref:cassandra.adoc[]
+* xref:jdbc.adoc[Databases that support JDBC]
 
 == Message broker integrations
 

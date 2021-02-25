@@ -115,6 +115,7 @@ Scala::
 ----
 include::example$05-shopping-cart-service-scala/src/main/scala/shopping/cart/PublishEventsProjection.scala[]
 ----
+
 +
 The `SendProducer` is initialized using some configuration that we need to add. It defines how to connect to the Kafka broker.
 

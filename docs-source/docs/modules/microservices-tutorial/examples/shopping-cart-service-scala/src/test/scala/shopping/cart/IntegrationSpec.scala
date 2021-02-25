@@ -9,8 +9,6 @@ import scala.concurrent.duration._
 
 import akka.actor.testkit.typed.scaladsl.ActorTestKit
 import akka.actor.typed.ActorSystem
-import akka.actor.typed.Behavior
-import akka.actor.typed.scaladsl.Behaviors
 import akka.cluster.MemberStatus
 import akka.cluster.typed.Cluster
 import akka.grpc.GrpcClientSettings
@@ -129,17 +127,6 @@ class IntegrationSpec
       }
     }
 
-  def mainBehavior(): Behavior[Nothing] = {
-    Behaviors.setup[Nothing] { context =>
-      new Main(context) {
-        override protected def orderServiceClient(
-            system: ActorSystem[_]): ShoppingOrderService = {
-          testOrderService
-        }
-      }
-    }
-  }
-
   override protected def beforeAll(): Unit = {
     super.beforeAll()
     ScalikeJdbcSetup.init(testNode1.system)
@@ -202,9 +189,9 @@ class IntegrationSpec
 
   "Shopping Cart service" should {
     "init and join Cluster" in {
-      testNode1.testKit.spawn[Nothing](mainBehavior(), "guardian")
-      testNode2.testKit.spawn[Nothing](mainBehavior(), "guardian")
-      testNode3.testKit.spawn[Nothing](mainBehavior(), "guardian")
+      Main.init(testNode1.testKit.system, testOrderService)
+      Main.init(testNode2.testKit.system, testOrderService)
+      Main.init(testNode3.testKit.system, testOrderService)
 
       // let the nodes join and become Up
       eventually(PatienceConfiguration.Timeout(15.seconds)) {

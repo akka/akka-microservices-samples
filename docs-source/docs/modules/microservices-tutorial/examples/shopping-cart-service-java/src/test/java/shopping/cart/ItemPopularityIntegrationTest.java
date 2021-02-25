@@ -39,8 +39,7 @@ public class ItemPopularityIntegrationTest {
   @BeforeClass
   public static void beforeClass() throws Exception {
 
-    ApplicationContext springContext =
-        SpringIntegration.applicationContext(system.settings().config());
+    ApplicationContext springContext = SpringIntegration.applicationContext(system);
     itemPopularityRepository = springContext.getBean(ItemPopularityRepository.class);
     JpaTransactionManager transactionManager = springContext.getBean(JpaTransactionManager.class);
     // create schemas
@@ -109,6 +108,49 @@ public class ItemPopularityIntegrationTest {
           Optional<ItemPopularity> item2Popularity = itemPopularityRepository.findById(item2);
           assertTrue(item2Popularity.isPresent());
           assertEquals(5 + 4, item2Popularity.get().getCount());
+          return null;
+        });
+  }
+
+  @Test
+  public void safelyUpdatePopularityCount() throws Exception {
+    ClusterSharding sharding = ClusterSharding.get(system);
+
+    final String item = "concurrent-item";
+    int cartCount = 100;
+    int itemCount = 1;
+    final Duration timeout = Duration.ofSeconds(30);
+
+    // Given `item1` is already on the popularity projection DB...
+    CompletionStage<ShoppingCart.Summary> rep1 =
+        sharding
+            .entityRefFor(ShoppingCart.ENTITY_KEY, "concurrent-cart0")
+            .askWithStatus(replyTo -> new ShoppingCart.AddItem(item, itemCount, replyTo), timeout);
+
+    TestProbe<Object> probe = testKit.createTestProbe();
+    probe.awaitAssert(
+        () -> {
+          Optional<ItemPopularity> item1Popularity = itemPopularityRepository.findById(item);
+          assertTrue(item1Popularity.isPresent());
+          assertEquals(itemCount, item1Popularity.get().getCount());
+          return null;
+        });
+
+    // ... when 99 concurrent carts add `item1`...
+    for (int i = 1; i < cartCount; i++) {
+      sharding
+          .entityRefFor(ShoppingCart.ENTITY_KEY, "concurrent-cart" + i)
+          .<ShoppingCart.Summary>askWithStatus(
+              replyTo -> new ShoppingCart.AddItem(item, itemCount, replyTo), timeout);
+    }
+
+    // ... then the popularity count is 100
+    probe.awaitAssert(
+        timeout,
+        () -> {
+          Optional<ItemPopularity> item1Popularity = itemPopularityRepository.findById(item);
+          assertTrue(item1Popularity.isPresent());
+          assertEquals(cartCount * itemCount, item1Popularity.get().getCount());
           return null;
         });
   }

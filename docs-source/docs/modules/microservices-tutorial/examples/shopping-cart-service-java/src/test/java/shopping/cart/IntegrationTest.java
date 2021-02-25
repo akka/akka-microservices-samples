@@ -7,8 +7,6 @@ import static org.junit.Assert.assertTrue;
 import akka.actor.testkit.typed.javadsl.ActorTestKit;
 import akka.actor.testkit.typed.javadsl.TestProbe;
 import akka.actor.typed.ActorSystem;
-import akka.actor.typed.Behavior;
-import akka.actor.typed.javadsl.Behaviors;
 import akka.cluster.MemberStatus;
 import akka.cluster.typed.Cluster;
 import akka.grpc.GrpcClientSettings;
@@ -170,8 +168,7 @@ public class IntegrationTest {
     testNode3 = new TestNodeFixture(grpcPorts.get(2), managementPorts, 2);
     systems = Arrays.asList(testNode1.system, testNode2.system, testNode3.system);
 
-    ApplicationContext springContext =
-        SpringIntegration.applicationContext(testNode1.system.settings().config());
+    ApplicationContext springContext = SpringIntegration.applicationContext(testNode1.system);
     JpaTransactionManager transactionManager = springContext.getBean(JpaTransactionManager.class);
     // create schemas
     CreateTableTestUtils.createTables(transactionManager, testNode1.system);
@@ -189,9 +186,9 @@ public class IntegrationTest {
           }
         };
 
-    testNode1.testKit.spawn(createMainBehavior(), "guardian");
-    testNode2.testKit.spawn(createMainBehavior(), "guardian");
-    testNode3.testKit.spawn(createMainBehavior(), "guardian");
+    Main.init(testNode1.testKit.system(), testOrderService);
+    Main.init(testNode2.testKit.system(), testOrderService);
+    Main.init(testNode3.testKit.system(), testOrderService);
 
     // wait for all nodes to have joined the cluster, become up and see all other nodes as up
     TestProbe<Object> upProbe = testNode1.testKit.createTestProbe();
@@ -219,17 +216,6 @@ public class IntegrationTest {
     testNode3.testKit.shutdownTestKit();
     testNode2.testKit.shutdownTestKit();
     testNode1.testKit.shutdownTestKit();
-  }
-
-  public static Behavior<Void> createMainBehavior() {
-    return Behaviors.setup(
-        context ->
-            new Main(context) {
-              @Override
-              protected ShoppingOrderService orderServiceClient(ActorSystem<?> system) {
-                return testOrderService;
-              }
-            });
   }
 
   @Test

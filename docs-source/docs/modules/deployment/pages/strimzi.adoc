@@ -42,7 +42,13 @@ kubectl config set-context --current --namespace=akka-demo
 kubectl get pods
 ----
 
-To create a Kafka cluster using Strimzi, create the custom resource for the Strimzi Kafka operator. See configuration options in the https://strimzi.io/docs/operators/latest/using.html[Strimzi documentation {tab-icon}, window="tab"].
+To create a Kafka cluster using Strimzi, create the custom resource for the Strimzi Kafka operator.
+
+Create a file `kubernetes/strimzi-cr.yml` according to one of the examples in https://github.com/strimzi/strimzi-kafka-operator/tree/master/examples/kafka[strimzi-kafka-operator/examples/kafka/ {tab-icon}, window="tab"]. See configuration options in the https://strimzi.io/docs/operators/latest/using.html[Strimzi documentation {tab-icon}, window="tab"].
+
+Note that the `topicOperator` should be included to be able to <<Create topic>>.
+
+Apply the `kubernetes/strimzi-cr.yml` to your Kubernetes cluster:
 
 [source,shell script]
 ----
@@ -60,7 +66,22 @@ kubectl get kafka kafka-strimzi -o=jsonpath='{.status.listeners[?(@.type=="plain
 
 == Create topic
 
-The Strimzi operator can create topics from a `KafkaTopic` custom resource. See configuration options in the https://strimzi.io/docs/operators/latest/using.html[Strimzi documentation {tab-icon}, window="tab"].
+The Strimzi operator can create topics from a `KafkaTopic` custom resource. It's important that the custom resource for the Strimzi Kafka operator included the `topicOperator`. See configuration options in the https://strimzi.io/docs/operators/latest/using.html[Strimzi documentation {tab-icon}, window="tab"].
+
+.kubernetes/strimzi-topic-cr.yml
+[source,yaml]
+----
+apiVersion: kafka.strimzi.io/v1beta1
+ kind: KafkaTopic
+ metadata:
+   name: shopping-cart-events
+   labels:
+     strimzi.io/cluster: kafka-strimzi
+ spec:
+   topicName: shopping-cart-events
+   partitions: 4
+   replicas: 2
+----
 
 [source,shell script]
 ----

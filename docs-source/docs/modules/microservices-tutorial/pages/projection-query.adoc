@@ -104,7 +104,7 @@ Java::
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/Main.java[tag=repo-instance]
 ----
 +
-<1> Initialize a Spring application context using ActorSystem's configuration.
+<1> Initialize a Spring application context using the ActorSystem.
 <2> Get a Spring generated implementation for the `ItemPopularityRepository`.
 
 Scala::
@@ -253,7 +253,7 @@ Java::
 include::example$04-shopping-cart-service-java/src/main/java/shopping/cart/Main.java[tag=ItemPopularityProjection]
 ----
 +
-<1> Initialize a Spring application context using ActorSystem's configuration.
+<1> Initialize a Spring application context using the ActorSystem.
 <2> Get a Spring generated implementation for the `ItemPopularityRepository`.
 <3> Get a Spring `JpaTransactionManager` to pass to the Projection init method.
 <4> Initialize the Projection passing all necessary dependencies.

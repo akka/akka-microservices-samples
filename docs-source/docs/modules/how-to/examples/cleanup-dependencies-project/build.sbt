@@ -6,7 +6,7 @@ licenses := Seq(
   ("CC0", url("https://creativecommons.org/publicdomain/zero/1.0"))
 )
 
-scalaVersion := "2.13.3"
+scalaVersion := "2.13.5"
 
 Compile / scalacOptions ++= Seq(
   "-target:11",
@@ -25,7 +25,7 @@ Test / logBuffered := false
 run / fork := false
 Global / cancelable := false // ctrl-c
 
-val AkkaVersion = "2.6.12"
+val AkkaVersion = "2.6.13"
 val AkkaHttpVersion = "10.2.3"
 val AkkaManagementVersion = "1.0.9"
 

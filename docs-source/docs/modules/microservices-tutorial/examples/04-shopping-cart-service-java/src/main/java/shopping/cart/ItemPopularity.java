@@ -1,6 +1,5 @@
 package shopping.cart;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 
 @Entity
@@ -11,12 +10,13 @@ public class ItemPopularity {
   @Id private final String itemId;
 
   // optimistic locking
-  @Version private final long version;
+  @Version private final Long version;
 
   private final long count;
 
   public ItemPopularity() {
-    this.version = 0;
+    // null version means the entity is not on the DB
+    this.version = null;
     this.itemId = "";
     this.count = 0;
   }
@@ -41,11 +41,5 @@ public class ItemPopularity {
 
   public ItemPopularity changeCount(long delta) {
     return new ItemPopularity(itemId, version, count + delta);
-  }
-
-  @Transient
-  @JsonIgnore
-  boolean isNew() {
-    return itemId.equals("") || version <= 0;
   }
 }

@@ -1,41 +1,36 @@
 package shopping.order;
 
 import akka.actor.typed.ActorSystem;
-import akka.actor.typed.Behavior;
-import akka.actor.typed.javadsl.AbstractBehavior;
-import akka.actor.typed.javadsl.ActorContext;
 import akka.actor.typed.javadsl.Behaviors;
-import akka.actor.typed.javadsl.Receive;
 import akka.management.cluster.bootstrap.ClusterBootstrap;
 import akka.management.javadsl.AkkaManagement;
+import com.typesafe.config.Config;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import shopping.order.proto.ShoppingOrderService;
 
-public class Main extends AbstractBehavior<Void> {
+public class Main {
+
+  private static final Logger logger = LoggerFactory.getLogger(Main.class);
 
   public static void main(String[] args) throws Exception {
-    ActorSystem<Void> system = ActorSystem.create(Main.create(), "ShoppingOrderService");
+    ActorSystem<Void> system = ActorSystem.create(Behaviors.empty(), "ShoppingOrderService");
+    try {
+      init(system);
+    } catch (Exception e) {
+      logger.error("Terminating due to initialization failure.", e);
+      system.terminate();
+    }
   }
 
-  public static Behavior<Void> create() {
-    return Behaviors.setup(Main::new);
-  }
-
-  public Main(ActorContext<Void> context) {
-    super(context);
-
-    ActorSystem<?> system = context.getSystem();
-
+  public static void init(ActorSystem<Void> system) {
     AkkaManagement.get(system).start();
     ClusterBootstrap.get(system).start();
 
-    String grpcInterface =
-        system.settings().config().getString("shopping-order-service.grpc.interface");
-    int grpcPort = system.settings().config().getInt("shopping-order-service.grpc.port");
-    ShoppingOrderServiceImpl grpcService = new ShoppingOrderServiceImpl();
+    Config config = system.settings().config();
+    String grpcInterface = config.getString("shopping-order-service.grpc.interface");
+    int grpcPort = config.getInt("shopping-order-service.grpc.port");
+    ShoppingOrderService grpcService = new ShoppingOrderServiceImpl();
     ShoppingOrderServer.start(grpcInterface, grpcPort, system, grpcService);
-  }
-
-  @Override
-  public Receive<Void> createReceive() {
-    return newReceiveBuilder().build();
   }
 }

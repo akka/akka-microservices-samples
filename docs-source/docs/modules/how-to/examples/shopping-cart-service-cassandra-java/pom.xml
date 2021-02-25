@@ -20,7 +20,7 @@
         <!-- end::akka-persistence-cassandra[] -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <scala.binary.version>2.13</scala.binary.version>
-        <akka.version>2.6.12</akka.version>
+        <akka.version>2.6.13</akka.version>
         <akka-http.version>10.2.2</akka-http.version>
         <akka-management.version>1.0.9</akka-management.version>
         <!-- tag::akka-persistence-cassandra[] -->

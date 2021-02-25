@@ -2,7 +2,7 @@ name: CI
 on:
   pull_request:
   push:
-    branches: [ main, main-with-operator ]
+    branches: [ main ]
 
 jobs:
   copy-identical-files:
