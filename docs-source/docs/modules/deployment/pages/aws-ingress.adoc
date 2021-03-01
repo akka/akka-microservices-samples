@@ -3,19 +3,24 @@
 
 include::partial$include.adoc[]
 
-To expose gRPC or HTTPS publicly to the internet you can use the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/[AWS Load Balancer Controller {tab-icon}, window="tab"] with a https://kubernetes.io/docs/concepts/services-networking/ingress/[Kubernetes Ingress {tab-icon}, window="tab"] created by the Akka Operator. This is useful when external services or clients outside of the EKS cluster need to consume the gRPC or HTTPS endpoints.
+To expose gRPC or HTTPS publicly to the internet you can use the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/[AWS Load Balancer Controller {tab-icon}, window="tab"] with a https://kubernetes.io/docs/concepts/services-networking/ingress/[Kubernetes Ingress {tab-icon}, window="tab"] created by the Akka Operator. This is useful when external services, or clients beyond of the EKS cluster need to consume the gRPC or HTTPS endpoints.
 
 == Install the LoadBalancer Controller
 
 Follow the instructions in the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/deploy/installation/[Load Balancer Controller installation documentation {tab-icon}, window="tab"]
 
+[#_tls_certificate]
 == TLS certificate
 
-You need a TLS certificate for the internet facing load balancer.
+You need a Transport Layer Security (TLS) certificate for the internet facing load balancer. Akka does not manage or create TLS certificates.
 
-Request or import a certificate in https://console.aws.amazon.com/acm/home[Amazon Certificate Manager console {tab-icon}, window="tab"]. Select the region you are working in.
+When you want to expose an akka gRPC service through a Load balancer, you will have to provide the TLS certificate. Request or import a certificate at https://console.aws.amazon.com/acm/home[Amazon Certificate Manager console {tab-icon}, window="tab"].Then, select the region you are working in.
 
-For development and test you can import a self signed certificate, which can be created with for example:
+Further, you will need to provide the Amazon Resource Name (ARN) to the certificate as you create the Akka Microservice Custom Resource.
+
+The Akka Cloud Platform operator will create the `ingress` which references the user's ARN.However, it is not involved in any other part of the process for TLS cert management, including renewals.
+
+For development and testing, you can import a self-signed certificate, which can be created as in the following example:
 
 [source,shell script]
 ----
@@ -43,7 +48,7 @@ spec:
 
 Replace the certificate `arn` with the one assigned by the Amazon Certificate Manager.
 
-When the deployment descriptor has been applied the Akka Operator will create an Ingress and you can retrieve the public address with:
+When the deployment descriptor has been applied, the Akka Operator will create an `ingress`, After that you can retrieve the public address with:
 
 [source,shell script]
 ----
@@ -57,4 +62,4 @@ To access the public endpoint with grpcurl you use the public address from above
 grpcurl -insecure -d '{"cartId":"cart3", "itemId":"hoodie", "quantity":2}' k8s-shopping-shopping-18efcf54bb-2096059642.eu-central-1.elb.amazonaws.com:443 shoppingcart.ShoppingCartService.AddItem
 ----
 
-You have to use the `-insecure` flag if the certificate is self signed.
+You have to use the `-insecure` flag if the certificate is self-signed.
