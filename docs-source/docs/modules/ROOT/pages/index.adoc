@@ -22,6 +22,21 @@ If this is your first experience with Reactive frameworks or with Akka, we prese
 * A summary of Reactive Principles
 * The benefits of using Akka
 
+== Key Information
+The links and info below provide rapid access to some of the more important information used to manage your Akka Cloud Platform.
+
+- Operator — Operator management is key. You will find details on xref:deployment:aws-install.adoc[installing]
+and xref:deployment:aws-install.adoc#_update_akka_operator[updating] the Akka Operator on the Installation in Amazon EKS page.
+
+- TLS Certificates — Users often need information about TLS Certificates. You will find the pertinent information within the xref:deployment:aws-ingress.adoc#_tls_certificate[AWS LoadBalancer Controller] page.
+
+- Support — Support for the Akka Cloud Platform requires registration. https://aws.amazon.com/marketplace/pp/B08TLV16XM#pdp-support[Details] regarding support, and more, can be found on the AWS Marketplace.
+
+- License expiration and renewal — You may have purchased your license from the AWS Marketplace, or  directly from Lightbend. In either case the license expiration and renewal for the Akka Cloud Platform is handled as follows:
+* If the Akka Cloud Platform license expires without being renewed, your current application will continue to run, but you will no longer be able to deploy.
+* If you have acquired a term license directly from Lightbend, and it expires, your license will automatically revert into a pay-as-you-go license.
+* When you need to renew you license, please contact mailto:aws@lightbend.com[] with your request.
+
 == Akka Microservices tutorial
 
 The xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] illustrates how to implement an Event Sourced CQRS application with Akka Persistence and Akka Projections.
@@ -44,27 +59,5 @@ Some development tasks arise from requirements on existing projects. The xref:ho
 
 include::how-to:partial$listing.adoc[]
 
-
-== Some key quick items
-There are a few items that frequently need to be dealt with. The links and info below should help you access that information quickly.
-
-
-=== Operator
-Operator management is key. You will find details on xref:deployment:aws-install.adoc[installing]
-and xref:deployment:aws-install.adoc#_update_akka_operator[updating] the Akka Operator on the Installation in Amazon EKS page.
-
-=== TLS Certificates
-
-Users often need information about TLS Certificates. You will find the pertinent information within the xref:deployment:aws-ingress.adoc#_tls_certificate[AWS LoadBalancer Controller] page.
-
-=== Support
-Support for the Akka Cloud Platform requires registration. https://aws.amazon.com/marketplace/pp/B08TLV16XM#pdp-support[Details] regarding support, and more, can be found on the AWS Marketplace.
-
-== License expiration and renewal
-If your Akka license expires without being renewed, your current application will continue to run, but you will no longer be able to deploy.
-
-If you have acquired a term license, and it expires, your license will automatically revert into a pay-as-you-go license.
-
-When you need to renew you license, please contact mailto:aws@lightbend.com[] with your request.
 
 **This documentation was last published: {localdate}**
