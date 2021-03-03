@@ -14,7 +14,7 @@ Follow the instructions in the https://kubernetes-sigs.github.io/aws-load-balanc
 
 A Transport Layer Security (TLS) certificate provides privacy and data integrity between two or more communicating applications. You will need a TLS certificate for the internet facing load balancer. The Akka Cloud Platform does not manage or create TLS certificates.
 
-When you want to expose an akka gRPC service through a Load balancer, you will have to provide the TLS certificate. Request or import a certificate at https://console.aws.amazon.com/acm/home[Amazon Certificate Manager (ACM) console {tab-icon}, window="tab"]. While in the ACM console, you will need to select the region you are working in. You will need to provide the Amazon Resource Name (ARN) of the certificate as you create the Akka Microservice Custom Resource.
+When you want to expose an Akka gRPC service through a Load balancer, you will have to provide a TLS certificate. Request or import a certificate using the https://console.aws.amazon.com/acm/home[Amazon Certificate Manager (ACM) console {tab-icon}, window="tab"]. While in the ACM console, you will need to select the region you are working in. You will need to provide the Amazon Resource Name (ARN) of the certificate as you create the Akka Microservice Custom Resource.
 
 Alternatively, for development and testing, you can create your own self-signed certificate and then import it.
 You can find additional details regarding self-singed certificates and AWS at https://docs.aws.amazon.com/acm/latest/userguide/import-certificate-prerequisites.html[Prerequisites for Importing Certificates {tab-icon}, window="tab"]
