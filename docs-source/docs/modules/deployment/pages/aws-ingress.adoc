@@ -3,7 +3,7 @@
 
 include::partial$include.adoc[]
 
-To expose gRPC or HTTPS publicly to the internet you can use the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/[AWS Load Balancer Controller {tab-icon}, window="tab"] with a https://kubernetes.io/docs/concepts/services-networking/ingress/[Kubernetes Ingress {tab-icon}, window="tab"] created by the Akka Operator. This is useful when external services, or clients beyond of the EKS cluster need to consume the gRPC or HTTPS endpoints.
+To expose your application's gRPC or HTTPS endpoints publicly to the internet you can use the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/[AWS Load Balancer Controller {tab-icon}, window="tab"] with a https://kubernetes.io/docs/concepts/services-networking/ingress/[Kubernetes Ingress {tab-icon}, window="tab"] created by the Akka Operator. This is useful when external services, or clients beyond the EKS cluster need to consume the gRPC or HTTPS endpoints.
 
 == Install the LoadBalancer Controller
 
@@ -65,4 +65,3 @@ grpcurl -insecure -d '{"cartId":"cart3", "itemId":"hoodie", "quantity":2}' k8s-s
 ----
 
 NOTE: You have to use the `-insecure` flag if the certificate is self-signed.
-
