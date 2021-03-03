@@ -27,7 +27,8 @@ openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:4096 -keyout dummy-key.pe
 ----
 
 
-The Akka Cloud Platform operator will create the `ingress` which references your ARN. However, please remember that it is not involved in any other part of the process for TLS certification management, including renewals.
+The Akka Cloud Platform operator will create the Kubernetes `Ingress` which references your TLS certificate with an https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html[Amazon Resource Name (ARN) {tab-icon}, window="tab"
+]. However, please remember that the operator is not involved in any other part of the process for TLS certification management, including renewals.
 
 == Enable grpcIngress
 
