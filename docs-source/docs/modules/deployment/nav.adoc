@@ -1,6 +1,5 @@
 .xref:index.adoc[Cloud deployment]
 * xref:aws-install.adoc[Installation in Amazon EKS]
-* xref:gcp-install.adoc[Installation in Google GKE]
 * xref:deploy.adoc[Deployment workflow]
 * xref:integrations.adoc[]
 ** xref:gcp-sql.adoc[]
