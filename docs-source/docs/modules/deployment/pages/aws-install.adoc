@@ -168,7 +168,6 @@ eksctl delete iamserviceaccount  \
   --region eu-central-1
 ----
 ====
-
 == Install Akka Operator
 
 Install the Akka Operator with Helm:
@@ -198,9 +197,10 @@ helm install akka-operator akka-operator-helm/akka-operator \
 kubectl get pods --namespace lightbend
 ----
 
-With the Akka Operator running, you can deploy an Akka Microservice. The next page, xref:deploy.adoc[], provides general steps. The  xref:microservices-tutorial:grpc-service.adoc#kubernetes[tutorial] includes examples of build and template files.
+With the Akka Operator running, you can deploy an Akka Microservice. The next page, xref:deploy.adoc[], provides general steps. The xref:microservices-tutorial:grpc-service.adoc#kubernetes[tutorial] includes examples of build and template files.
 
 :!sectnums:
+[#_update_akka_operator]
 == Update Akka Operator
 
 To update the Akka Operator version you have to update the Custom Resource Definition (CRD) separately because Helm will not perform that.

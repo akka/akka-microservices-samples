@@ -22,17 +22,32 @@ If this is your first experience with Reactive frameworks or with Akka, we prese
 * A summary of Reactive Principles
 * The benefits of using Akka
 
+== Key Information for Akka Cloud Platform on AWS
+The links and info below provide rapid access to some of the more important information used to manage your Akka Cloud Platform.
+
+- Kubernetes Akka Platform Operator — Operator management is key. You will find details on xref:deployment:aws-install.adoc[installing]
+and xref:deployment:aws-install.adoc#_update_akka_operator[updating] the Akka Operator on the Installation in Amazon EKS page.
+
+- TLS Certificates — TLS certificates are required for external access to applications managed by Akka Cloud Platform. You will find the pertinent information within the xref:deployment:aws-ingress.adoc#_tls_certificate[AWS LoadBalancer Controller] page.
+
+- Support — Support for the Akka Cloud Platform requires registration. https://aws.amazon.com/marketplace/pp/B08TLV16XM#pdp-support[Details] regarding support, and more, can be found on the AWS Marketplace.
+
+- License expiration and renewal — You may have purchased your license by subscribing to the Akka Cloud Platform product on the AWS Marketplace, or  directly from Lightbend. In either case, the license expiration and renewal for the Akka Cloud Platform is handled as follows:
+* If the Akka Cloud Platform license expires without being renewed, your current application will continue to run, but you will no longer be able to deploy or update.
+* If you have acquired a term license directly from Lightbend, and it expires, your license will automatically revert into a pay-as-you-go license.
+* When you need to renew your license, please contact mailto:aws@lightbend.com[] with your request.
+
 == Akka Microservices tutorial
 
 The xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] illustrates how to implement an Event Sourced CQRS application with Akka Persistence and Akka Projections.
 
-The tutorial shows how to build and run the services step by step:
+The tutorial shows how to build and run each service step by step:
 
 include::microservices-tutorial:partial$listing.adoc[]
 
 == Cloud deployment
 
-Kubernetes has become the defacto platform for deploying in the cloud. The easiest way to deploy and manage Akka Microservices in Kubernetes is to use the Akka Cloud Platform, which is currently available for Amazon Web Services(AWS). The xref:deployment:index.adoc[Cloud deployment] section provides an overview of how the Kubernetes deployment with the Akka Cloud Platform works.
+Kubernetes has become the de facto platform for deploying in the cloud. The easiest way to deploy and manage Akka Microservices in Kubernetes is to use the Akka Cloud Platform, which is currently available for Amazon Web Services(AWS). The xref:deployment:index.adoc[Cloud deployment] section provides an overview of how the Kubernetes deployment with the Akka Cloud Platform works.
 
 Each step of the tutorial has instructions of how to run in Kubernetes using the Akka Cloud Platform.
 
@@ -43,5 +58,6 @@ ifdef::review[REVIEWERS: I removed the link to the first step of the tutorial fr
 Some development tasks arise from requirements on existing projects. The xref:how-to:index.adoc[] section collects guidance for how to introduce a new feature or architectural improvement on an existing codebase.
 
 include::how-to:partial$listing.adoc[]
+
 
 **This documentation was last published: {localdate}**

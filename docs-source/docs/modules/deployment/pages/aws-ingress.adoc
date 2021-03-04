@@ -3,28 +3,39 @@
 
 include::partial$include.adoc[]
 
-To expose gRPC or HTTPS publicly to the internet you can use the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/[AWS Load Balancer Controller {tab-icon}, window="tab"] with a https://kubernetes.io/docs/concepts/services-networking/ingress/[Kubernetes Ingress {tab-icon}, window="tab"] created by the Akka Operator. This is useful when external services or clients outside of the EKS cluster need to consume the gRPC or HTTPS endpoints.
+To expose your application's gRPC or HTTPS endpoints publicly to the internet you can use the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/[AWS Load Balancer Controller {tab-icon}, window="tab"] with a https://kubernetes.io/docs/concepts/services-networking/ingress/[Kubernetes Ingress {tab-icon}, window="tab"] created by the Akka Operator. This is useful when external services, or clients beyond the EKS cluster need to consume the gRPC or HTTPS endpoints.
 
 == Install the LoadBalancer Controller
 
 Follow the instructions in the https://kubernetes-sigs.github.io/aws-load-balancer-controller/latest/deploy/installation/[Load Balancer Controller installation documentation {tab-icon}, window="tab"]
 
+[#_tls_certificate]
 == TLS certificate
 
-You need a TLS certificate for the internet facing load balancer.
+A Transport Layer Security (TLS) certificate provides privacy and data integrity between two or more communicating applications. You will need a TLS certificate for the internet facing load balancer. The Akka Cloud Platform does not manage or create TLS certificates.
 
-Request or import a certificate in https://console.aws.amazon.com/acm/home[Amazon Certificate Manager console {tab-icon}, window="tab"]. Select the region you are working in.
+When you want to expose an Akka gRPC service through a Load balancer, you will have to provide a TLS certificate. Request or import a certificate using the https://console.aws.amazon.com/acm/home[Amazon Certificate Manager (ACM) console {tab-icon}, window="tab"]. While in the ACM console, you will need to select the region you are working in. You will need to provide the Amazon Resource Name (ARN) of the certificate as you create the Akka Microservice Custom Resource.
 
-For development and test you can import a self signed certificate, which can be created with for example:
+
+
+Alternatively, for development and testing, you can create your own self-signed certificate and then import it.
+You can find additional details regarding self-singed certificates and AWS at https://docs.aws.amazon.com/acm/latest/userguide/import-certificate-prerequisites.html[Prerequisites for Importing Certificates {tab-icon}, window="tab"]
+
+A self-singed certificate can be created as in the following example:
 
 [source,shell script]
 ----
 openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:4096 -keyout dummy-key.pem -out dummy-cert.pem -subj "/CN=dummy/O=dummy"
 ----
 
+
+The Akka Cloud Platform operator will create the Kubernetes `Ingress` which references your TLS certificate with an https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html[Amazon Resource Name (ARN) {tab-icon}, window="tab"]
+
+However, please remember that the operator is not involved in any other part of the process for TLS certification management, including renewals.
+
 == Enable grpcIngress
 
-Add the `grpcIngres` section to the deployment descriptor:
+Add the `grpcIngress` section to the deployment descriptor:
 
 .kubernetes/shopping-cart-service-cr.yml:
 [source,yaml]
@@ -43,7 +54,7 @@ spec:
 
 Replace the certificate `arn` with the one assigned by the Amazon Certificate Manager.
 
-When the deployment descriptor has been applied the Akka Operator will create an Ingress and you can retrieve the public address with:
+When the deployment descriptor has been applied, the Akka Operator will create an `Ingress`, After that you can retrieve the public address with:
 
 [source,shell script]
 ----
@@ -57,4 +68,5 @@ To access the public endpoint with grpcurl you use the public address from above
 grpcurl -insecure -d '{"cartId":"cart3", "itemId":"hoodie", "quantity":2}' k8s-shopping-shopping-18efcf54bb-2096059642.eu-central-1.elb.amazonaws.com:443 shoppingcart.ShoppingCartService.AddItem
 ----
 
-You have to use the `-insecure` flag if the certificate is self signed.
+NOTE: You have to use the `-insecure` flag if the certificate is self-signed.
+
