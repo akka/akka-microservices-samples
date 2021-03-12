@@ -28,7 +28,7 @@ val AkkaVersion = "2.6.13"
 val AkkaHttpVersion = "10.2.3"
 val AkkaManagementVersion = "1.0.9"
 // end::dependencies-for-healthchecks[]
-val AkkaPersistenceCassandraVersion = "1.0.4"
+val AkkaPersistenceCassandraVersion = "1.0.5"
 val AlpakkaKafkaVersion = "2.0.6"
 val AkkaProjectionVersion = "1.1.0"
 
