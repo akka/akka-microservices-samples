@@ -24,7 +24,7 @@ jobs:
           git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
 
   java-compile-and-test-part1:
-    name: Compile and Test (Java)
+    name: Compile and Test Part 1 (Java)
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -78,7 +78,7 @@ jobs:
         run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-java
 
   java-compile-and-test-part2:
-    name: Compile and Test (Java)
+    name: Compile and Test Part 2 (Java)
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -108,7 +108,7 @@ jobs:
         run: scripts/mvn-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-cassandra-java
 
   scala-compile-and-test-part1:
-    name: Compile and Test (Scala)
+    name: Compile and Test Part 1 (Scala)
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -159,7 +159,7 @@ jobs:
         run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala
 
   scala-compile-and-test-part2:
-    name: Compile and Test (Scala)
+    name: Compile and Test Part 2 (Scala)
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
