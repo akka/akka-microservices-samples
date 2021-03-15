@@ -1,8 +1,8 @@
 name: CI
 on:
-  # pull_request:
+  pull_request:
   push:
-    # branches: [ main ]
+    branches: [ main ]
 
 jobs:
   copy-identical-files:
