@@ -199,8 +199,9 @@ class IntegrationSpec
       updatedCart1.items.head.quantity should ===(42)
 
       // first may take longer time
-      val published1 =
-        kafkaTopicProbe.expectMessageType[proto.ItemAdded](20.seconds)
+      val published1 = eventually(PatienceConfiguration.Timeout(30.seconds)) {
+        kafkaTopicProbe.expectMessageType[proto.ItemAdded](2.seconds)
+      }
       published1.cartId should ===("cart-1")
       published1.itemId should ===("foo")
       published1.quantity should ===(42)

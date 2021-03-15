@@ -1,8 +1,8 @@
 name: CI
 on:
-  pull_request:
+  # pull_request:
   push:
-    branches: [ main ]
+    # branches: [ main ]
 
 jobs:
   copy-identical-files:
@@ -47,41 +47,41 @@ jobs:
           key: maven-repo-${{ hashFiles('**/pom.xml') }}
           restore-keys: maven-repo-
 
-      - name: "Shopping analytics service (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
+      # - name: "Shopping analytics service (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
 
-      - name: "Shopping cart service (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-java
+      # - name: "Shopping cart service (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-java
 
-      - name: "Shopping order service (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-java
+      # - name: "Shopping order service (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-java
 
-      - name: "00 Shopping analytics service (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-java
+      # - name: "00 Shopping analytics service (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-java
 
-      - name: "00 Shopping cart service (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-java
+      # - name: "00 Shopping cart service (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-java
 
-      - name: "00 Shopping order service (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-java
+      # - name: "00 Shopping order service (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-java
 
-      - name: "01 Shopping cart service (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-java
+      # - name: "01 Shopping cart service (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-java
 
-      - name: "02 Shopping cart service (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-java
+      # - name: "02 Shopping cart service (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-java
 
-      - name: "03 Shopping cart service (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-java
+      # - name: "03 Shopping cart service (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-java
 
-      - name: "04 Shopping cart service (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-java
+      # - name: "04 Shopping cart service (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-java
 
       - name: "05 Shopping cart service (Java)"
         run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-java
 
-      - name: "Howto Cassandra code (Java)"
-        run: scripts/mvn-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-cassandra-java
+      # - name: "Howto Cassandra code (Java)"
+      #   run: scripts/mvn-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-cassandra-java
 
   scala-compile-and-test:
     name: Compile and Test (Scala)
@@ -104,45 +104,45 @@ jobs:
       - name: Cache Coursier cache
         uses: coursier/cache-action@v5
 
-      - name: "Shopping analytics service (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
+      # - name: "Shopping analytics service (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-scala
 
-      - name: "Shopping cart service (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala
+      # - name: "Shopping cart service (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-cart-service-scala
 
-      - name: "Shopping order service (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala
+      # - name: "Shopping order service (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-order-service-scala
 
-      - name: "00 Shopping analytics service (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-scala
+      # - name: "00 Shopping analytics service (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-analytics-service-scala
 
-      - name: "00 Shopping cart service (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-scala
+      # - name: "00 Shopping cart service (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-cart-service-scala
 
-      - name: "00 Shopping order service (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-scala
+      # - name: "00 Shopping order service (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/00-shopping-order-service-scala
 
-      - name: "01 Shopping cart service (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-scala
+      # - name: "01 Shopping cart service (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/01-shopping-cart-service-scala
 
-      - name: "02 Shopping cart service (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-scala
+      # - name: "02 Shopping cart service (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/02-shopping-cart-service-scala
 
-      - name: "03 Shopping cart service (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-scala
+      # - name: "03 Shopping cart service (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/03-shopping-cart-service-scala
 
-      - name: "04 Shopping cart service (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala
+      # - name: "04 Shopping cart service (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala
 
       - name: "05 Shopping cart service (Scala)"
         run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-scala
 
-      - name: "Howto example code"
-        run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-scala
+      # - name: "Howto example code"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-scala
 
-      - name: "Howto cleanup dependencies"
-        run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/cleanup-dependencies-project
+      # - name: "Howto cleanup dependencies"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/cleanup-dependencies-project
 
-      - name: "Howto Cassandra code (Scala)"
-        run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-cassandra-scala
+      # - name: "Howto Cassandra code (Scala)"
+      #   run: scripts/sbt-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-cassandra-scala
 
