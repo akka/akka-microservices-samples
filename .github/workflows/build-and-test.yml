@@ -47,8 +47,7 @@ jobs:
   java-compile-and-test-part1:
     name: Compile and Test Part 1 (Java)
     runs-on: ubuntu-18.04
-    steps:
-      <<: *java_build
+    steps: *java_build
 
       - name: "Shopping analytics service (Java)"
         run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/shopping-analytics-service-java
