@@ -13,7 +13,11 @@ The Secret can be created with for example:
 
 [source,shell script]
 ----
-kubectl create secret generic shopping-cart-service-kafka-secret --from-literal=bootstrapServer=<url> --from-literal=apiKey=<api-key> --from-literal=apiSecret=<api-secret>
+kubectl create secret generic \
+    shopping-cart-service-kafka-secret \
+    --from-literal=bootstrapServer=<url> \
+    --from-literal=apiKey=<api-key> \
+    --from-literal=apiSecret=<api-secret>
 ----
 
 To enable the Kafka integration you define the name of the secret in `kafkaConfluentCloud` of the deployment descriptor:

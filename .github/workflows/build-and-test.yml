@@ -23,8 +23,8 @@ jobs:
           scripts/copy-identical-files.sh
           git diff --exit-code --color || { echo "[error] Found modified file that was expected to be identical. Run scripts/copy-identical-files.sh"; false; }
 
-  java-compile-and-test:
-    name: Compile and Test (Java)
+  java-compile-and-test-part1:
+    name: Compile and Test Part 1 (Java)
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -77,14 +77,38 @@ jobs:
       - name: "04 Shopping cart service (Java)"
         run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-java
 
+  java-compile-and-test-part2:
+    name: Compile and Test Part 2 (Java)
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout GitHub merge
+        if: github.event.pull_request
+        run: |-
+          git fetch origin pull/${{ github.event.pull_request.number }}/merge:scratch
+          git checkout scratch
+
+      - name: Set up JDK 11
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: adopt@1.11.0-9
+
+      - uses: actions/cache@v2.1.3
+        with:
+          path: ~/.m2/repository
+          key: maven-repo-${{ hashFiles('**/pom.xml') }}
+          restore-keys: maven-repo-
+
       - name: "05 Shopping cart service (Java)"
         run: scripts/mvn-test.sh docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-java
 
       - name: "Howto Cassandra code (Java)"
         run: scripts/mvn-test.sh docs-source/docs/modules/how-to/examples/shopping-cart-service-cassandra-java
 
-  scala-compile-and-test:
-    name: Compile and Test (Scala)
+  scala-compile-and-test-part1:
+    name: Compile and Test Part 1 (Scala)
     runs-on: ubuntu-18.04
     steps:
       - name: Checkout
@@ -133,6 +157,27 @@ jobs:
 
       - name: "04 Shopping cart service (Scala)"
         run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/04-shopping-cart-service-scala
+
+  scala-compile-and-test-part2:
+    name: Compile and Test Part 2 (Scala)
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Checkout GitHub merge
+        if: github.event.pull_request
+        run: |-
+          git fetch origin pull/${{ github.event.pull_request.number }}/merge:scratch
+          git checkout scratch
+
+      - name: Set up JDK 11
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: adopt@1.11.0-9
+
+      - name: Cache Coursier cache
+        uses: coursier/cache-action@v5
 
       - name: "05 Shopping cart service (Scala)"
         run: scripts/sbt-test.sh docs-source/docs/modules/microservices-tutorial/examples/05-shopping-cart-service-scala

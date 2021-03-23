@@ -1,0 +1,51 @@
+= Improve SBR's decision process
+
+
+include::partial$include.adoc[]
+
+Deploying on Kubernetes opens the door to use Kubernetes-provided mechanisms for decision-making. The Akka {akka}/split-brain-resolver.html[Split-Brain Resolver {tab-icon}, window="tab"] can use a {akka-management}/kubernetes-lease.html[Lease {tab-icon}, window="tab"] backed by Kubernetes to control  which side of a cluster may remain up during a split-brain scenario.
+
+NOTE: This How-To guide assumes you are developing an application based on Akka Cluster and already enabled and configured xref:concepts:akka-cluster.adoc#_split_brain_resolver[Akka Cluster's Split-Brain Resolver].
+
+== Add the Kubernetes Lease dependency
+
+First make sure your application includes the SBR and the Kubernetes Lease dependencies on the build:
+
+[.tabset]
+Java::
++
+.pom.xml:
+[source,xml,indent=0]
+----
+include::example$shopping-cart-service-java/pom.xml[tag=akka-sbr-kubernetes-lease]
+----
+
+Scala::
++
+.build.sbt:
+[source,scala,indent=0]
+----
+include::example$shopping-cart-service-scala/build.sbt[tag=akka-sbr-kubernetes-lease]
+----
+
+== Setup your Kubernetes Cluster and AkkaMicroservice
+
+When xref:deployment:aws-install.adoc#_install_akka_operator[installing the Akka Operator] on your Kubernetes cluster using the Helm chart you will also install the Akka Kubernetes Lease CRD.
+
+Once the CRD is installed, you can configure your Akka Microservice to back the SBR implementation with a Kubernetes Lease enabling it on the AkkaMicroservice CR:
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  image: <image>
+  splitBrainResolver:
+    useKubernetesLease: true # <1>
+
+----
+
+<1> When using a kubernetes lease as a backend for the Split-Brain Resolver, the operator will name the lease `<metadata.name>-akka-sbr`. In the example above, the lease will be named `shopping-cart-service-akka-sbr`.

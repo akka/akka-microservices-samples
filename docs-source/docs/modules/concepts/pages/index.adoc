@@ -7,6 +7,8 @@ This section explains the concepts that motivate Akka's take on how to implement
 Sourcing and CQRS. Microservices built using Event Sourcing and CQRS adhere to the properties of a
 {reactive-manifesto}[Reactive System {tab-icon}, window="tab"] and are often called Reactive Microsystems.
 
+If you prefer a more interactive learning mode, Lightbend Academy provides a free, in-depth course called https://academy.lightbend.com/courses/course-v1:lightbend+LRA-IntroToReactive+v1/about[Reactive Architecture {tab-icon}, window="tab"].
+
 == Introduction
 
 Enterprise development has changed drastically from the early days of public internet use. Now, instead of satisfying the needs of thousands or tens of thousands, applications can serve millions of users — and potentially even more devices. To remain competitive, businesses must innovate in ever shorter cycles. This rapid increase in the pace and volume of demand motivates a different approach; one that takes full advantage of cloud and hybrid environments and enables nimble development response to changing business needs.

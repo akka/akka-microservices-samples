@@ -117,7 +117,7 @@ public class ItemPopularityIntegrationTest {
     ClusterSharding sharding = ClusterSharding.get(system);
 
     final String item = "concurrent-item";
-    int cartCount = 100;
+    int cartCount = 30;
     int itemCount = 1;
     final Duration timeout = Duration.ofSeconds(30);
 
@@ -136,7 +136,7 @@ public class ItemPopularityIntegrationTest {
           return null;
         });
 
-    // ... when 99 concurrent carts add `item1`...
+    // ... when 29 concurrent carts add `item1`...
     for (int i = 1; i < cartCount; i++) {
       sharding
           .entityRefFor(ShoppingCart.ENTITY_KEY, "concurrent-cart" + i)
@@ -144,7 +144,7 @@ public class ItemPopularityIntegrationTest {
               replyTo -> new ShoppingCart.AddItem(item, itemCount, replyTo), timeout);
     }
 
-    // ... then the popularity count is 100
+    // ... then the popularity count is 30
     probe.awaitAssert(
         timeout,
         () -> {

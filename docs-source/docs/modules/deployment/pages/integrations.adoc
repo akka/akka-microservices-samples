@@ -3,24 +3,24 @@
 
 include::partial$include.adoc[]
 
-Stateful services need a datastore. You can store state using xref:concepts:event-sourcing.adoc[Event Sourcing] or CRUD. The example in the tutorial uses PostgreSQL for xref:microservices-tutorial:entity.adoc[storing the events] and xref:microservices-tutorial:entity.adoc[and creating a Projection for queries]. An alternative is described in xref:how-to:cassandra-alternative.adoc[]
+Stateful services need a datastore. You can store state using xref:concepts:event-sourcing.adoc[Event Sourcing] or CRUD (Create, Read, Update, Delete). The example in the tutorial demonstrates the Event Sourcing option. The tutorial uses PostgreSQL for xref:microservices-tutorial:entity.adoc[storing the events] and xref:microservices-tutorial:entity.adoc[and creating a Projection for queries]. An alternative is described in xref:how-to:cassandra-alternative.adoc[]. For more details on migrating your model from CRUD to Event Sourcing review xref:how-to:from-crud-to-eventsourcing.adoc[]. 
 
-To decouple communication between different Microservices, we can publish messages to a broker, such as Apache Kafka. The tutorial illustrates how to use Apache Kafka in xref:microservices-tutorial:projection-kafka.adoc[Projection publishing to Kafka]. See xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts] for more information.
+To decouple communication between different Microservices, you can publish messages to a broker, such as Apache Kafka. The tutorial illustrates how to use Apache Kafka in xref:microservices-tutorial:projection-kafka.adoc[a projection publishing to Kafka]. See xref:concepts:internal-and-external-communication.adoc[Internal and External Communication concepts] for more information.
 
 == Data store integrations
 
-The Akka Operator provides integrations with:
+You can find examples of data store integrations on the following pages:
 
-* xref:gcp-sql.adoc[]
-* xref:aws-rds.adoc[]
+* xref:aws-rds.adoc[Using the Amazon Relational Database Service (RDS)]
+* xref:gcp-sql.adoc[Using GCP Cloud SQL]
 * xref:astra.adoc[]
 * xref:cassandra.adoc[]
 * xref:jdbc.adoc[Databases that support JDBC]
 
 == Message broker integrations
 
-The Akka Operator provides integrations with:
+You can find examples of message broker integrations on the following pages:
 
-* xref:aws-msk.adoc[]
+* xref:aws-msk.adoc[Using Amazon Managed Streaming for Apache Kafka (Amazon MSK)]
 * xref:confluent-cloud.adoc[]
 * xref:strimzi.adoc[]

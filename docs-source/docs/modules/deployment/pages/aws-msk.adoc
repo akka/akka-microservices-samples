@@ -90,7 +90,9 @@ The Secret can be created with for example:
 
 [source,shell script]
 ----
-kubectl create secret generic shopping-cart-service-kafka-secret --from-literal=bootstrapServers=<copied bootstrap servers connect string>
+kubectl create secret generic \
+    shopping-cart-service-kafka-secret \
+    --from-literal=bootstrapServers=<copied bootstrap servers connect string>
 ----
 
 To enable the Kafka integration you define the name of the secret in `kafka` of the deployment descriptor:

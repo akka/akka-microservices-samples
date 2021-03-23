@@ -27,7 +27,7 @@ val AkkaVersion = "2.6.13"
 val AkkaHttpVersion = "10.2.3"
 val AkkaManagementVersion = "1.0.9"
 // tag::akka-persistence-cassandra[]
-val AkkaPersistenceCassandraVersion = "1.0.4"
+val AkkaPersistenceCassandraVersion = "1.0.5"
 
 // end::akka-persistence-cassandra[]
 val AlpakkaKafkaVersion = "2.0.6"

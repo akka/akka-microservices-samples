@@ -170,6 +170,14 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- tag::akka-sbr-kubernetes-lease[] -->
+        <dependency>
+            <groupId>com.lightbend.akka.management</groupId>
+            <artifactId>akka-lease-kubernetes_${scala.binary.version}</artifactId>
+            <version>${akka-management.version}</version>
+        </dependency>
+        <!-- end::akka-sbr-kubernetes-lease[] -->
+
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

@@ -1,0 +1,87 @@
+= GKE Ingress
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+The Akka Platform Operator supports creating two ingresses. These ingresses are meant to serve HTTP and gRPC traffic. Both ingresses are implemented using the https://cloud.google.com/kubernetes-engine/docs/concepts/ingress[GKE Ingress Controller {tab-icon}, window="tab"].
+
+== Container native load balancing
+
+Exposing the Akka Management port, as opposed to the gRPC and HTTP ports, is only possible using the  https://cloud.google.com/kubernetes-engine/docs/how-to/container-native-load-balancing[container-native load balancing {tab-icon}, window="tab"].
+
+If you override the readiness probe to a path on your HTTP port, this will also be used for the load balancer health check.
+
+== TLS certificate
+
+1. Internet traffic
++
+You need a TLS certificate for the internet facing load balancer. For development and test you can import a self-signed certificate, which can be created with for example:
++
+[source,shell script]
+----
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:4096 -keyout dummy-key.pem -out dummy-cert.pem -subj "/CN=dummy/O=dummy"
+----
++
+// TODO support uploading to GCP as well
+Create a secret for the certificate:
++
+[source, shell script]
+----
+kubectl create secret tls my-ingress-secret --cert dummy-cert.pem  --key dummy-key.pem
+----
++
+This secret will be referenced from the Akka Microservice (see example below).
++
+2. Internal traffic
++
+The traffic from the intern-facing  LoadBalancer to your application may or may not require TLS. On the `httpIngress` you don't need an SSL certificate and private key. When serving gRPC, though, you need a certificate for the traffic from the load balancer to your pod as GKE load balancer for HTTP/2 only works over SSL. Therefore, Akka gRPC needs to be configured with a certificate. The certificate between the load balancer and the pod can be any self-signed certificate as no validation is done. The xref:how-to:enable-TLS.adoc[] section will help you set up your Akka HTTP server to serve TLS traffic.
+
+== Enable an ingress
+
+Add the `grpcIngress` or `httpIngress` section to the deployment descriptor with the class attribute set to `gce`:
+
+.kubernetes/shopping-cart-service-cr.yml:
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+  namespace: "shopping"
+spec:
+  image: <docker-image>
+  httpIngress:
+    enabled: true
+    certificate: "my-ingress-secret" # <1>
+    class: "gce"
+  grpcIngress:
+    enabled: true
+    certificate: "my-ingress-secret" # <1>
+    class: "gce"
+----
+
+<1> See the section  <<TLS Certificate>> above.
+
+When the deployment descriptor has been applied the Akka Operator will create:
+
+* an `Ingress` with the appropriate GKE annotations
+* a `ClusterIP` service
+* a `BackendConfig` to configure a health check to match the readiness check
+
+NOTE: The GKE Ingress instance takes a few minutes to be ready. Then, even when the ingress is listed as `OK` it will take a few more minutes to be `HEALTHY` and usable.
+
+You can retrieve the public address with:
+
+[source,shell script]
+----
+kubectl get ingress shopping-order-service-grpc-ingress
+----
+
+To access the public endpoint with grpcurl you use the public address from above, with port 443:
+
+[source,shell script]
+----
+grpcurl -insecure -d '{"cartId":"cart3", "itemId":"hoodie", "quantity":2}' <ingress ip>:443 shoppingcart.ShoppingCartService.AddItem
+----
+
+You have to use the `-insecure` flag if the certificate is self-signed.

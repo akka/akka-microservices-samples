@@ -24,7 +24,7 @@
         <akka-http.version>10.2.2</akka-http.version>
         <akka-management.version>1.0.9</akka-management.version>
         <!-- tag::akka-persistence-cassandra[] -->
-        <akka-persistence-cassandra.version>1.0.4</akka-persistence-cassandra.version>
+        <akka-persistence-cassandra.version>1.0.5</akka-persistence-cassandra.version>
         <!-- end::akka-persistence-cassandra[] -->
         <alpakka-kafka.version>2.0.6</alpakka-kafka.version>
         <akka-projection.version>1.1.0</akka-projection.version>

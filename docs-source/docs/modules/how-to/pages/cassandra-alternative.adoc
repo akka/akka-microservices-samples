@@ -1,4 +1,4 @@
-= How to use Cassandra instead of PostgreSQL
+= Use Cassandra instead of PostgreSQL
 :page-supergroup-java-scala: Language
 
 include::partial$include.adoc[]

@@ -98,7 +98,9 @@ The Secret can be created with for example:
 
 [source,shell script]
 ----
-kubectl create secret generic shopping-cart-service-kafka-secret --from-literal=bootstrapServers=<bootstrap servers connect string>
+kubectl create secret generic \
+    shopping-cart-service-kafka-secret \
+    --from-literal=bootstrapServers=<bootstrap servers connect string>
 ----
 
 Use the bootstrap servers retrieved above.

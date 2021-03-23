@@ -1,4 +1,4 @@
-= JDBC (custom, Amazon RDS, GCP Cloud SQL)
+= JDBC (Custom, Amazon RDS, GCP Cloud SQL)
 :page-toclevels: 3
 
 include::partial$include.adoc[]
@@ -54,7 +54,11 @@ The Secret can be created with the following `kubectl` command, replacing the va
 
 [source,shell script]
 ----
-kubectl create secret generic shopping-cart-service-jdbc-secret --from-literal=username=postgres --from-literal=password=tiger --from-literal=connectionUrl="<connection url>"
+kubectl create secret generic \
+    shopping-cart-service-jdbc-secret \
+    --from-literal=username=postgres \
+    --from-literal=password=tiger \
+    --from-literal=connectionUrl="<connection url>"
 ----
 
 To enable the JDBC integration you define the name of the secret in `jdbc` section of the deployment descriptor:
@@ -78,11 +82,11 @@ The Akka Operator will automatically xref:config-secret.adoc#main-conf[provide t
 
 It can be useful to have access to the database connection settings for additional application specific components in addition to the Akka Persistence journal and snapshot plugins that are automatically set up. The operator sets up the `jdbc-connection-settings` top level config object with the following properties based on the Secret in the config the application is started with:
 
-```
+[source]
+----
 jdbc-connection-settings {
   url = "connectionUrl"
   user = "username"
   password = "password"
 }
-```
-
+----

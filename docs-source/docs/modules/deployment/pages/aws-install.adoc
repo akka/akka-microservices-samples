@@ -1,9 +1,27 @@
-= Installation in Amazon EKS
+= Installation on Amazon EKS
 :page-toclevels: 3
 
 include::partial$include.adoc[]
 
-To install Akka Cloud Platform on Amazon Elastic Kubernetes Service (EKS), you must have an Amazon account and subscribe to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Akka Cloud Platform {tab-icon}, window="tab"].
+To install Akka Cloud Platform on Amazon Elastic Kubernetes Service (EKS), you must have an Amazon account and a subscription to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Akka Cloud Platform {tab-icon}, window="tab"].
+
+== Pre-requisite Skills
+
+A familiarity with the following services and skillsets is recommended before installation.
+
+* https://kubernetes.io/docs/setup/[Basic Kubernetes knowledge {tab-icon}, window="tab"] and experience with resources such as `ServiceAccounts`,  `Roles`, and `Deployments`.
+* https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html[Amazon EKS {tab-icon}, window="tab"] and its command line tool https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html[`eksctl` {tab-icon}, window="tab"].
+* https://docs.aws.amazon.com/iam/[AWS IAM {tab-icon}, window="tab"] and https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html[IAM security best practices {tab-icon}, window="tab"].
+* https://helm.sh/docs/intro/quickstart/[Helm {tab-icon}, window="tab"] command line tool `helm`.
+* https://yaml.org/spec/1.2/spec.html[YAML {tab-icon}, window="tab"] to define configuration for Akka Microservices deployment descriptors.
+
+== Expected Time to Install
+
+A new installation will take approximately _40 minutes_.
+
+* Provision Amazon EKS cluster - _30 minutes_ - Depends on how many nodes are provisioned and what instance types are chosen. It is also variable based on day-to-day AWS region conditions. This estimate is for the cluster parameters described in this guide.
+* Install pre-requisities into Amazon EKS - _5 minutes_ - Subscribe to product, install a Kubernetes `metrics-server`, and set up a service account.
+* Install Akka Cloud Platform - _5 minutes_ - Installation of the Akka Cloud Platform helm chart with minimal configuration.
 
 :sectnums:
 == Verify Prerequisites
@@ -70,7 +88,7 @@ After the cluster is available, configure `kubectl` to connect to the cluster
 
 [source, shell script]
 ----
- aws eks update-kubeconfig --region eu-central-1 --name eks-akka-demo
+aws eks update-kubeconfig --region eu-central-1 --name eks-akka-demo
 ----
 
 == Install the Kubernetes Metrics Server
@@ -84,15 +102,15 @@ You can install the latest version with:
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 ----
 
-== Amazon Marketplace
+== AWS Marketplace
 
-If you have not already done it, subscribe to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Akka Cloud Platform {tab-icon}, window="tab"].
+If you have not already done it, subscribe to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Akka Cloud Platform {tab-icon}, window="tab"] by clicking the Subscribe button on the product page and accepting the terms and conditions.
 
 == Create a service account for the Akka Operator
 
-The Akka Operator requires a https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html[service account with IAM roles {tab-icon}, window="tab"]
+The Akka Operator requires a https://docs.aws.amazon.com/eks/latest/userguide/iam-roles-for-service-accounts.html[service account with IAM roles {tab-icon}, window="tab"] in order to access the Amazon Marketplace usage metering API.
 
-. If your EKS cluster has not been created with https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html[IAM OIDC provider {tab-icon}, window="tab"] (e.g. with the `--with-oidc` option with `eksctl`), enable it with:
+. If your Amazon EKS cluster has not been created with https://docs.aws.amazon.com/eks/latest/userguide/enable-iam-roles-for-service-accounts.html[IAM OIDC provider {tab-icon}, window="tab"] (e.g. with the `--with-oidc` option with `eksctl`), enable it with:
 +
 [source,shell script]
 ----
@@ -197,6 +215,8 @@ helm install akka-operator akka-operator-helm/akka-operator \
 kubectl get pods --namespace lightbend
 ----
 
+The Akka Cloud Platform Helm chart adheres to the https://en.wikipedia.org/wiki/Principle_of_least_privilege[Principle of least privilege {tab-icon}, window="tab"] with the Kubernetes cluster roles that are granted to the operator. For a complete list of Kubernetes cluster roles required by Akka Cloud Platform you may review the https://github.com/lightbend/akka-operator-helm/blob/master/akka-operator/templates/020-clusterrole.yaml[`ClusterRole` template found in the Helm Chart {tab-icon}, window="tab"].
+
 With the Akka Operator running, you can deploy an Akka Microservice. The next page, xref:deploy.adoc[], provides general steps. The xref:microservices-tutorial:grpc-service.adoc#kubernetes[tutorial] includes examples of build and template files.
 
 :!sectnums:
@@ -270,3 +290,13 @@ eksctl delete cluster --region eu-central-1 --name eks-akka-demo
 ----
 
 NOTE: Deleting the cluster from the https://console.aws.amazon.com/eks/home[Amazon EKS console {tab-icon}, window="tab"] requires several steps and therefore it's easiest to use `eksctl` for this.
+
+== Troubleshooting
+
+_Cluster creation fails with "Cannot create cluster '<CLUSTER_NAME>' because <AWS_REGION>, the targeted availability zone does not currently have sufficient capacity_
+
+Creating an Amazon EKS cluster will provision many underlying AWS resources such as VPCs, Security Groups, EC2 instances, Elastic IPs, etc. All AWS accounts have default quotas for the number of resources that can be created per region. If you already have an EKS cluster or other AWS resources deployed in a region you may receive this error while creating an Amazon EKS cluster. To resolve you can pick a different region, clean up existing resources, or make a request to AWS https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-resource-limits.html[for a higher resource quota {tab-icon}, window="tab"].
+
+_Akka Operator pod in `ImagePullBackoff` status_
+
+After the Akka Cloud Platform Helm chart is installed you observe an `ImagePullBackOff` status on a pod for the `akka-operator` `Deployment`. When you describe the pod you find a `Failed` event with a docker pull error message that mentions _"You are not entitled to pull this AWS Marketplace product image"_. This will occur when your AWS account is not subscribed to the Akka Cloud Platform on AWS Marketplace. To resolve you must xref:deployment:aws-install.adoc#_amazon_marketplace[subscribe to the product] and then wait for the `akka-operator` pod to restart and attempt to pull the image again.

@@ -27,7 +27,7 @@ In CRUD, your only modelling concern is the `State` representing your business. 
 
 An initial trick to help you in this mindset shift is to separate the CRUD code into:
 
-* `Retrieve` operations: actions on the database that only select data
+* `Read` operations: actions on the database that only select data
 * `Create`, `Update` and `Delete` operations: operations that mutate the data
 
 Once you've made that distinction you are on track to model your commands. Each operation mutating your data can be tracked back to a user intent demanding the state to change.

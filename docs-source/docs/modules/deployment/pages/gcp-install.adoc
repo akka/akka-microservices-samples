@@ -1,0 +1,33 @@
+= Installation on Google Kubernetes Engine (GKE)
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+To install Akka Cloud Platform on Google Kubernetes Engine (GKE), you must have a Google Cloud Platform account and a project.
+
+If you are a first time GCP user, please follow these steps:
+
+. Create your Google account at https://console.cloud.google.com[https://console.cloud.google.com {tab-icon}, window="tab"].
+.  Create a project.
+
+== Deploy from marketplace
+
+With your account and project ready, open the https://console.cloud.google.com/marketplace/details/lightbend-public/akka-cloud-platform[Akka Cloud Platform {tab-icon}], or go to https://console.cloud.google.com/kubernetes/application[Kubernetes Engine Applications {tab-icon}, window="tab"] and search for "Akka Cloud Platform”. When you are on the product page, go ahead and purchase a plan.
+
+Once you've purchased a plan to use the Akka Cloud Platform, proceed to configure it. Make sure you have a project selected on the GUI or the options to purchase and configure will be disabled.
+
+To completely configure and use the Akka Cloud Platform you need to fill in a few fields:
+
+. The GKE cluster — This is the cluster where you are installing the operator. Use "Create a new cluster" if you don't have one.
+. A Namespace — Keeping the Marketplace offering in a specific namespace will ease follow up operations and will enforce separation of concerns.
+. An App instance name — Select a unique name. We recommend using the default or `akka-platform-operator-1`.
+. The akka-operator.serviceAccount.name — This is the name of the service account used by the operator to access Kubernetes resources.
+. The Reporting Service Account — This is the service account used for reporting data to Google.
+
+Finally, take a moment to review all the permissions the Akka Clout Platform operator will use in order to operate your applications.
+
+Click `Deploy`.
+
+== Delete a Kubernetes cluster
+
+You can use the https://console.cloud.google.com/kubernetes/list[GCP GUI {tab-icon}, window="tab"] to delete the cluster.

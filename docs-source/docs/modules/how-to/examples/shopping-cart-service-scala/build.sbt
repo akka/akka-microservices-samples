@@ -28,7 +28,7 @@ val AkkaVersion = "2.6.13"
 val AkkaHttpVersion = "10.2.3"
 val AkkaManagementVersion = "1.0.9"
 // end::dependencies-for-healthchecks[]
-val AkkaPersistenceCassandraVersion = "1.0.4"
+val AkkaPersistenceCassandraVersion = "1.0.5"
 val AlpakkaKafkaVersion = "2.0.6"
 val AkkaProjectionVersion = "1.1.0"
 
@@ -83,6 +83,11 @@ libraryDependencies ++= Seq(
   "com.lightbend.akka" %% "akka-projection-cassandra" % AkkaProjectionVersion,
   "com.typesafe.akka" %% "akka-stream-kafka" % AlpakkaKafkaVersion,
   "com.lightbend.akka" %% "akka-projection-testkit" % AkkaProjectionVersion % Test,
+
+  // 5. Kubernetes Lease (used by SBR)
+  // tag::akka-sbr-kubernetes-lease[]
+  "com.lightbend.akka.management" %% "akka-lease-kubernetes" % AkkaManagementVersion
+  // end::akka-sbr-kubernetes-lease[]
 
 // tag::dependencies-for-healthchecks[]
 )

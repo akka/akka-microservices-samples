@@ -1,0 +1,55 @@
+= Cloud deployment
+
+include::ROOT:partial$include.adoc[]
+
+The Akka Cloud Platform is currently available for deploying Akka applications. It is available through the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[AWS Marketplace {tab-icon}, window="tab"] to install on your Amazon EKS cluster.
+
+An Akka Cloud Platform subscription includes access to Lightbend Telemetry, Lightbend Academy, and basic support. Through the Akka Operator, the Akka Cloud Platform provides the following high level features:
+
+* convenient deployment without the need to define detailed Kubernetes manifests
+* integration with Akka Cluster Bootstrap
+* integration with Akka Management health checks
+* integration with Relational Databases
+* integration with Cassandra
+* integration with Kafka
+* support for gRPC and HTTP services and internet-facing ingress
+* insights into deployment status
+
+[#deployment_procedure]
+== Overview of deployment
+
+To use the Akka Cloud Platform, you first need to install prerequisites and install the Akka Operator in an Amazon EKS cluster. The Akka Operator manages Akka Microservices in all namespaces of the Kubernetes cluster, which means that you should only install the operator once. It is possible to configure the operator to only manage a specific namespace, if required.
+
+=== Deployment example
+
+The following image shows the components required to deploy an Akka Microservice using Akka Cloud Platform. The steps you are responsible for include:
+
+* Creating and publishing the Docker image
+* Updating the deployment descriptor and applying it to the Kubernetes cluster
+
+image::deployment-overview1.png[Deployment 1]
+
+The call-outs in the illustration highlight the following:
+
+. A https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes Custom Resource Definition {tab-icon}, window="tab"] named `akkamicroservices.akka.lightbend.com` defines the deployment descriptor resource for Akka Microservices applications that the Akka Cloud Platform will deploy.
+. The installed Akka Operator runs continuously in the Kubernetes cluster.
+. You publish a Docker image containing the Akka Microservices application.
+. You define the deployment descriptor for the Akka Microservice in a yaml file. It refers to the Docker published image and specifies other operational properties. You apply the `.yaml` file to the Kubernetes cluster with `kubectl` (Kubernetes standard command-line tool).
+. The Akka Operator sees the new deployment descriptor and creates a https://kubernetes.io/docs/concepts/extend-kubernetes/api-extension/custom-resources/[Kubernetes Deployment {tab-icon}, window="tab"]
+. Kubernetes downloads the application image and starts the Akka Microservices application. The Akka Operator automatically provides additional configuration to the application.
+
+To update the Akka Microservices application, you repeat steps 3 - 6. The Akka Operator sees the changes to the deployment descriptor and updates the Kubernetes Deployment accordingly. Kubernetes performs a rolling update of the application as shown in the illustration below.
+
+image::deployment-overview2.png[Deployment 2]
+
+. Build and publish Docker image.
+. Apply deployment descriptor.
+. The operator creates a separate Kubernetes Deployment for the other Microservice.
+. Pods and application is started.
+
+== Learn more
+
+* Each step of the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] has instructions of how to use Akka Cloud Platform to run the Microservices on Kubernetes.
+* xref:aws-install.adoc[Installation in Amazon EKS]
+* {akka-management}/[Akka Management {tab-icon}, window="tab"] for Akka Cluster formation and health checks
+* {akka-management}/kubernetes-deployment/index.html[Deploying Akka Cluster to Kubernetes without the Akka Operator {tab-icon}, window="tab"]

@@ -325,14 +325,18 @@ Create two secrets for it, one for the `shopping-cart-service`:
 
 [source,shell script]
 ----
-kubectl create secret generic shopping-cart-service-kafka-secret --from-literal=bootstrapServers=<copied bootstrap servers connect string>
+kubectl create secret generic \
+    shopping-cart-service-kafka-secret \
+    --from-literal=bootstrapServers=<copied bootstrap servers connect string>
 ----
 
 and another secret (with same content) for the `shopping-analytics-service`:
 
 [source,shell script]
 ----
-kubectl create secret generic shopping-analytics-service-kafka-secret --from-literal=bootstrapServers=<copied bootstrap servers connect string>
+kubectl create secret generic \
+    shopping-analytics-service-kafka-secret 
+    --from-literal=bootstrapServers=<copied bootstrap servers connect string>
 ----
 
 The xref:deployment:aws-msk.adoc#create-topic[Amazon MSK] page also covers how to create the `shopping-cart-events` topic.

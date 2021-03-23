@@ -1,7 +1,8 @@
 :page-partial:
-
-* xref:how-to:cassandra-alternative.adoc[]
-* xref:how-to:health-checks.adoc[]
-* xref:how-to:enable-TLS.adoc[]
-* xref:how-to:scale-independently.adoc[]
-* xref:how-to:from-crud-to-eventsourcing.adoc[]
+* xref:cassandra-alternative.adoc[Use Cassandra instead of PostgreSQL]
+* xref:from-crud-to-eventsourcing.adoc[Migrate from CRUD to Event Sourcing]
+* xref:scale-independently.adoc[Scale command and query-side]
+* xref:sbr-kubernetes-lease.adoc[Improve SBR's decision process]
+* xref:enable-TLS.adoc[Enable TLS for gRPC]
+* xref:health-checks.adoc[Inspect the health]
+* xref:configure-deployments.adoc[Customize AkkaMicroservice deployment]
