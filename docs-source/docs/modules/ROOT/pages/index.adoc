@@ -5,22 +5,43 @@ include::ROOT:partial$include.adoc[]
 
 Welcome to the _Akka Platform Guide_!
 
-Akka is a toolkit for building highly concurrent, distributed, and resilient message-driven applications.
+This guide intends to help you get started with the array of technologies provided with the Akka Platform. Akka is a toolkit for building highly concurrent, distributed, and resilient message-driven applications.
 
-Both beginners getting started with _Reactive_ principles and active Akka users will find this guide useful to improve their understanding of how Akka fits into _Reactive_ and how Reactive concepts apply to Akka. The guide complements the {akka}[Akka reference documentation {tab-icon}, window="tab"], which presents all Akka features in detail.
+If you are a beginner just getting started with Reactive principles or an active Akka user, you will find this guide helpful for understanding Akka and Reactive’s relation. The guide complements the {akka}[Akka reference documentation {tab-icon}, window="tab"], which presents all Akka features in detail.
 
-The tutorials in this guide show end-to-end use-cases implemented in Akka with the Reactive principles in mind. The tutorials go through implementing a system step-by-step to illustrate how the Akka APIs apply together.
+The tutorial structure in this guide follows end-to-end use-cases implemented in Akka with the Reactive principles in mind. The tutorials go through implementing a system step-by-step to illustrate how the Akka APIs apply together.
+
+== Akka Cloud Platform
+Akka Cloud Platform helps to leverage Akka and take it to the next level. It is a subscription that enables you to quickly build and deploy cloud-native Microservices on your preferred cloud service provider. Akka Cloud Platform provides frameworks and runtimes for building cloud-native applications that easily integrate with other services in your chosen ecosystem.
+
+*Why use Akka Cloud Platform?*
+
+* Satisfy easy-to-deploy and operational needs for Development and SRE teams
+* Reduce implementation time for integrating with cloud services
+* Zero business barriers for getting started
+
+*What does Akka Cloud Platform provide?*
+
+* Simple deployment and scaling of Kubernetes-powered Akka applications
+* Integrated Telemetry & Ops/DevOps tooling
+* Simple integration paths for relevant cloud services (e.g., Kafka, Cassandra, data stores)
+* Pay-as-you-go and custom pricing available through popular Cloud Marketplaces
+* Legal, purchasing, and billing integrated into these marketplaces
 
 == How to get the most out of this guide
+For a code-first experience, have a look at the Implementing Microservices with Akka tutorial, which walks you through an example project and explains how features from the Akka ecosystem fit together to build Reactive Systems. The tutorial will point you to the relevant concepts where applicable.
 
-For a code-first experience, have a look at the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] which walks you through an example project and explains how features from the Akka ecosystem fit together to build Reactive Systems. The tutorial will point you to the relevant xref:concepts:index.adoc[concepts] where applicable.
-
-If this is your first experience with Reactive frameworks or with Akka, we present some background and ideas behind _Reactive_ in the xref:concepts:index.adoc[Concepts section]. You can read those when they are introduced in the tutorial, or read them first if you prefer a more theoretical overview before diving into the code. There you will learn for example:
+If this is your first experience with Reactive frameworks or Akka, we recommend reviewing the Concepts section. This section presents some background and ideas behind Reactive. You can read about those concepts when introduced in the tutorial, or read them first if you prefer a more theoretical overview before diving into the code. There you will learn, for example:
 
 * The challenges that Reactive Architecture can help you overcome
 * A summary of Reactive Principles
 * The benefits of using Akka
 
+== Cloud deployment
+
+Each section of the tutorial provides for both running locally or deploying to the cloud. The cloud deployment steps use the Akka Cloud Platform. If you are working through the cloud deployment steps, we recommend reviewing the xref:deployment:index.adoc[Akka Cloud Platform] section of this guide and the details for xref:deployment:cloud-deployment.adoc[] and your specific platform.
+
+Kubernetes has become the de-facto platform for deploying in the cloud. The Cloud deployment page provides an overview of how the Kubernetes deployment works with the Akka Cloud Platform. Each cloud deployment section of the tutorial details how to run in Kubernetes using the Akka Cloud Platform.
 
 == Akka Microservices tutorial
 
@@ -30,19 +51,10 @@ The tutorial shows how to build and run each service step by step:
 
 include::microservices-tutorial:partial$listing.adoc[]
 
-== Cloud deployment
-
-Kubernetes has become the de facto platform for deploying in the cloud. The easiest way to deploy and manage Akka Microservices in Kubernetes is to use the Akka Cloud Platform, which is currently available for Amazon Web Services(AWS). The xref:deployment:index.adoc[Cloud deployment] section provides an overview of how the Kubernetes deployment with the Akka Cloud Platform works.
-
-Each step of the tutorial has instructions of how to run in Kubernetes using the Akka Cloud Platform.
-
-ifdef::review[REVIEWERS: I removed the link to the first step of the tutorial from here because it is a circular reference, that is, that page just links to another page in the deployment section.]
-
 == How to...
 
-Some development tasks arise from requirements on existing projects. The xref:how-to:index.adoc[] section collects guidance for how to introduce a new feature or architectural improvement on an existing codebase.
+Some development tasks arise from requirements on existing projects. The xref:how-to:index.adoc[] section contains guidance on introducing new features or architectural improvements to an existing codebase.
 
-include::how-to:partial$listing.adoc[]
 
 
 **This documentation was last published: {localdate}**

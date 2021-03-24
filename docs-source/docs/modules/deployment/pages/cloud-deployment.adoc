@@ -2,25 +2,11 @@
 
 include::ROOT:partial$include.adoc[]
 
-The Akka Cloud Platform is currently available for deploying Akka applications. It is available through the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[AWS Marketplace {tab-icon}, window="tab"] to install on your Amazon EKS cluster.
-
-An Akka Cloud Platform subscription includes access to Lightbend Telemetry, Lightbend Academy, and basic support. Through the Akka Operator, the Akka Cloud Platform provides the following high level features:
-
-* convenient deployment without the need to define detailed Kubernetes manifests
-* integration with Akka Cluster Bootstrap
-* integration with Akka Management health checks
-* integration with Relational Databases
-* integration with Cassandra
-* integration with Kafka
-* support for gRPC and HTTP services and internet-facing ingress
-* insights into deployment status
-
 [#deployment_procedure]
-== Overview of deployment
 
 To use the Akka Cloud Platform, you first need to install prerequisites and install the Akka Operator in an Amazon EKS cluster. The Akka Operator manages Akka Microservices in all namespaces of the Kubernetes cluster, which means that you should only install the operator once. It is possible to configure the operator to only manage a specific namespace, if required.
 
-=== Deployment example
+== Deployment example
 
 The following image shows the components required to deploy an Akka Microservice using Akka Cloud Platform. The steps you are responsible for include:
 

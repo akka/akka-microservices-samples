@@ -1,4 +1,5 @@
 :page-partial:
+
 * xref:cassandra-alternative.adoc[Use Cassandra instead of PostgreSQL]
 * xref:from-crud-to-eventsourcing.adoc[Migrate from CRUD to Event Sourcing]
 * xref:scale-independently.adoc[Scale command and query-side]
