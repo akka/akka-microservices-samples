@@ -14,7 +14,7 @@ services:
     ports:
       - 5433:5432
     environment:
-      POSTGRES_DB: shopping-cart-test
+      POSTGRES_DB: shopping-cart
       POSTGRES_USER: shopping-cart
       POSTGRES_PASSWORD: shopping-cart
 
