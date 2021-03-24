@@ -1,18 +1,31 @@
 = Akka Platform Guide
 :description: Guided documentation of Akka for specific use cases
 
-include::ROOT:partial$include.adoc[]
+include::partial$include.adoc[]
 
-Welcome to the _Akka Platform Guide_!
+This guide provides information on using the Akka Platform and Akka Cloud Platform for developers, administrators, and dev/ops. It focuses on getting you up and running by covering the basics of Microservices and Cloud deployment, as well as the fundamental concepts that underlay _Reactive_ development.
 
-This guide intends to help you get started with the array of technologies provided with the Akka Platform. Akka is a toolkit for building highly concurrent, distributed, and resilient message-driven applications.
+Akka Platform is a toolkit for building highly concurrent systems that are scalable, highly efficient, and resilient by using _Reactive Principles_. The Akka Platform is available from Lightbend as https://akka.io/[Akka Open Source software (Akka OSS) {tab-icon}, window="tab"], as Akka Cloud Platform, or as a https://www.lightbend.com/lightbend-subscription[Direct Subscription or Private Offer {tab-icon}, window="tab"].
 
-If you are a beginner just getting started with Reactive principles or an active Akka user, you will find this guide helpful for understanding Akka and Reactive’s relation. The guide complements the {akka}[Akka reference documentation {tab-icon}, window="tab"], which presents all Akka features in detail.
+Akka Cloud Platform adds tooling for deployment on Kubernetes and is available from https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Amazon Web Services (AWS) {tab-icon}, window="tab"] and https://console.cloud.google.com/marketplace/details/lightbend-public/akka-cloud-platform[Google Cloud Platform (GCP) {tab-icon}].
 
-The tutorial structure in this guide follows end-to-end use-cases implemented in Akka with the Reactive principles in mind. The tutorials go through implementing a system step-by-step to illustrate how the Akka APIs apply together.
+Whether you are new to _Reactive principles_, or an experienced Akka user, you will find something of use in this guide. The guide complements the {akka}[Akka reference documentation {tab-icon}, window="tab"], which presents all Akka features in detail.
+
+
+== Akka Platform
+Akka is a platform for designing scalable, resilient systems that span processor cores and networks. Akka allows you to focus on meeting business needs instead of writing low-level code to provide reliable behavior, fault tolerance, and high performance.
+
+*Akka provides:*
+
+* Multi-threaded behavior — without the use of low-level concurrency constructs like atomics or locks; relieving you from even thinking about memory visibility issues.
+* Transparent remote communication between systems and their components — relieving you from writing and maintaining difficult networking code.
+* A clustered, high-availability architecture that is elastic, scales in or out, on demand — enabling you to deliver a truly reactive system.
+
+Akka’s use of the actor model provides a level of abstraction that makes it easier to write correct concurrent, parallel and distributed systems. The actor model spans the full set of Akka libraries, providing you with a consistent way of understanding and using them.
+
 
 == Akka Cloud Platform
-Akka Cloud Platform helps to leverage Akka and take it to the next level. It is a subscription that enables you to quickly build and deploy cloud-native Microservices on your preferred cloud service provider. Akka Cloud Platform provides frameworks and runtimes for building cloud-native applications that easily integrate with other services in your chosen ecosystem.
+Akka Cloud Platform enhances Akka by adding operational tooling, services, and support. It is easily accessible from marketplaces, such as AWS and GCP.
 
 *Why use Akka Cloud Platform?*
 
