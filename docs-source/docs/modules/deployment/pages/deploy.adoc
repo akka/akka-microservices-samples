@@ -75,7 +75,7 @@ You can terminate all Pods of the application by deleting the deployment descrip
 
 [source,shell script]
 ----
-kubectl delete akkamicroservices/shopping-cart-service
+kubectl delete akkamicroservices/shopping-cart-service --namespace=shopping
 ----
 
 :!Sectnums:
