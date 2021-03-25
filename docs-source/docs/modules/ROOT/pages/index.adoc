@@ -31,15 +31,16 @@ Akka Cloud Platform enhances Akka by adding operational tooling, services, and s
 
 * Satisfy easy-to-deploy and operational needs for Development and SRE teams
 * Reduce implementation time for integrating with cloud services
-* Zero business barriers for getting started
+* Get started without business barriers
 
 *What does Akka Cloud Platform provide?*
 
-* Simple deployment and scaling of Kubernetes-powered Akka applications
-* Integrated Telemetry & Ops/DevOps tooling
+* Integrated Telemetry — provides insight into applications built with Lightbend technologies and integrates with popular monitoring tools
+* Ops/DevOps tooling — Simple deployment and scaling of Kubernetes-powered Akka applications
 * Simple integration paths for relevant cloud services (e.g., Kafka, Cassandra, data stores)
-* Pay-as-you-go and custom pricing available through popular Cloud Marketplaces
-* Legal, purchasing, and billing integrated into these marketplaces
+* Available through popular Cloud Marketplaces:
+** Optional Pay-as-you-go, or custom pricing
+** Integrated legal, purchasing, and billing with the marketplaces
 
 == How to get the most out of this guide
 For a code-first experience, have a look at the Implementing Microservices with Akka tutorial, which walks you through an example project and explains how features from the Akka ecosystem fit together to build Reactive Systems. The tutorial will point you to the relevant concepts where applicable.
@@ -54,7 +55,7 @@ If this is your first experience with Reactive frameworks or Akka, we recommend 
 
 Each section of the tutorial provides for both running locally or deploying to the cloud. The cloud deployment steps use the Akka Cloud Platform. If you are working through the cloud deployment steps, we recommend reviewing the xref:deployment:index.adoc[Akka Cloud Platform] section of this guide and the details for xref:deployment:cloud-deployment.adoc[] and your specific platform.
 
-Kubernetes has become the de-facto platform for deploying in the cloud. The Cloud deployment page provides an overview of how the Kubernetes deployment works with the Akka Cloud Platform. Each cloud deployment section of the tutorial details how to run in Kubernetes using the Akka Cloud Platform.
+You can deploy your applications anywhere you choose, it can be on your own data centers, or in the cloud. However, the cloud deployment sections of the tutorial specifically describe how to run in Kubernetes.
 
 == Akka Microservices tutorial
 
