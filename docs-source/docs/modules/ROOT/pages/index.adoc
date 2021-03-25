@@ -5,7 +5,7 @@ include::partial$include.adoc[]
 
 This guide provides information on using the Akka Platform and Akka Cloud Platform for developers, administrators, and dev/ops. It focuses on getting you up and running by covering the basics of Microservices and Cloud deployment, as well as the fundamental concepts that underlay _Reactive_ development.
 
-Akka Platform is a toolkit for building highly concurrent systems that are scalable, highly efficient, and resilient by using _Reactive Principles_. The Akka Platform is available from Lightbend as https://akka.io/[Akka Open Source software (Akka OSS) {tab-icon}, window="tab"], as Akka Cloud Platform, or as a https://www.lightbend.com/lightbend-subscription[Direct Subscription or Private Offer {tab-icon}, window="tab"].
+Akka Platform is a toolkit for building highly concurrent systems that are scalable, highly efficient, and resilient by using _Reactive Principles_. The Akka Platform includes support for Akka, additional commercial components, and is available from Lightbend as a https://www.lightbend.com/lightbend-subscription[subscription {tab-icon}, window="tab"].
 
 Akka Cloud Platform adds tooling for deployment on Kubernetes and is available from https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Amazon Web Services (AWS) {tab-icon}, window="tab"] and https://console.cloud.google.com/marketplace/details/lightbend-public/akka-cloud-platform[Google Cloud Platform (GCP) {tab-icon}].
 
