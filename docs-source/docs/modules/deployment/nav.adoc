@@ -4,13 +4,13 @@
 // ** xref:getting-started-with-cloud-deployment.adoc[Getting Started with Cloud Deployment]
 ** xref:deploy.adoc[Deployment workflow]
 ** xref:integrations.adoc[Integrations with databases and message brokers]
-** Deploying with Amazon Web Services (AWS)
+** xref:aws-index.adoc[Deploying with Amazon Web Services (AWS)]
 *** xref:aws-install.adoc[Installing on Amazon Elastic Kubernetes Service (EKS)]
 *** xref:aws-ecr.adoc[Using the Amazon Elastic Container Registry (ECR)]
 *** xref:aws-rds.adoc[Using the Amazon Relational Database Service (RDS)]
 *** xref:aws-msk.adoc[Using Amazon Managed Streaming for Apache Kafka (Amazon MSK)]
 *** xref:aws-ingress.adoc[Using the AWS LoadBalancer Controller and TLS Certificates]
-** Deploying with Google Cloud Platform (GCP)
+** xref:gcp-install.adoc[Deploying with Google Cloud Platform (GCP)]
 *** xref:gcp-install.adoc[Installing on Google Kubernetes Engine (GKE)]
 *** xref:gcp-sql.adoc[Using GCP Cloud SQL]
 *** xref:gcp-ingress.adoc[Using the GKE Ingress Controller and TLS Certificates]

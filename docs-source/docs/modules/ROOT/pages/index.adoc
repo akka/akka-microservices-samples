@@ -7,7 +7,7 @@ This guide provides information on using the Akka Platform and Akka Cloud Platfo
 
 Akka Platform is a toolkit for building highly concurrent systems that are scalable, highly efficient, and resilient by using _Reactive Principles_. The Akka Platform includes support for Akka, additional commercial components, and is available from Lightbend as a https://www.lightbend.com/lightbend-subscription[subscription {tab-icon}, window="tab"].
 
-Akka Cloud Platform adds tooling for deployment on Kubernetes and is available from https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Amazon Web Services (AWS) {tab-icon}, window="tab"] and https://console.cloud.google.com/marketplace/details/lightbend-public/akka-cloud-platform[Google Cloud Platform (GCP) {tab-icon}].
+Akka Cloud Platform adds tooling for deployment on Kubernetes and is available from {aws-marketplace}[Amazon Web Services (AWS) {tab-icon}, window="tab"] and {gcp-marketplace}[Google Cloud Platform (GCP) {tab-icon}].
 
 Whether you are new to _Reactive principles_, or an experienced Akka user, you will find something of use in this guide. The guide complements the {akka}[Akka reference documentation {tab-icon}, window="tab"], which presents all Akka features in detail.
 

@@ -3,18 +3,7 @@
 
 include::partial$include.adoc[]
 
-To install Akka Cloud Platform on Amazon Elastic Kubernetes Service (EKS), you must have an Amazon account and a subscription to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Akka Cloud Platform {tab-icon}, window="tab"].
-
-
-== Pre-requisite Skills
-
-A familiarity with the following services and skillsets is recommended before installation.
-
-* https://kubernetes.io/docs/setup/[Basic Kubernetes knowledge {tab-icon}, window="tab"] and experience with resources such as `ServiceAccounts`,  `Roles`, and `Deployments`.
-* https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html[Amazon EKS {tab-icon}, window="tab"] and its command line tool https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html[`eksctl` {tab-icon}, window="tab"].
-* https://docs.aws.amazon.com/iam/[AWS IAM {tab-icon}, window="tab"] and https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html[IAM security best practices {tab-icon}, window="tab"].
-* https://helm.sh/docs/intro/quickstart/[Helm {tab-icon}, window="tab"] command line tool `helm`.
-* https://yaml.org/spec/1.2/spec.html[YAML {tab-icon}, window="tab"] to define configuration for Akka Microservices deployment descriptors.
+NOTE: To install Akka Cloud Platform on Amazon Elastic Kubernetes Service (EKS), you must have an Amazon account and a subscription to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Akka Cloud Platform {tab-icon}, window="tab"].
 
 == Expected Time to Install
 
@@ -105,7 +94,7 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/late
 
 == AWS Marketplace
 
-If you have not already done it, subscribe to the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[Akka Cloud Platform {tab-icon}, window="tab"] by clicking the Subscribe button on the product page and accepting the terms and conditions.
+If you have not already done it, subscribe to the {aws-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"] by clicking the Subscribe button on the product page and accepting the terms and conditions.
 
 == Create a service account for the Akka Operator
 

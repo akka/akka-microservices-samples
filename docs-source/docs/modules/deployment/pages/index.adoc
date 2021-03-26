@@ -1,10 +1,8 @@
 = Akka Cloud Platform
 
-include::ROOT:partial$include.adoc[]
+include::partial$include.adoc[]
 
 The Akka Cloud Platform enables developers to quickly build and deploy cloud-native Microservices on their cloud service provider of choice. It provides frameworks and runtimes for building cloud-native applications that easily integrate with other services in your chosen ecosystem.
-
-The Akka Cloud Platform is currently available for deploying Akka applications. It is available through the https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf[AWS Marketplace {tab-icon}, window="tab"] to install on your Amazon EKS cluster.
 
 An Akka Cloud Platform subscription includes access to Lightbend Telemetry, Lightbend Academy, and basic support. Through the Akka Operator, the Akka Cloud Platform provides the following high level features:
 
@@ -17,13 +15,14 @@ An Akka Cloud Platform subscription includes access to Lightbend Telemetry, Ligh
 * support for gRPC and HTTP services and internet-facing ingress
 * insights into deployment status
 
+The Akka Cloud Platform is currently available in xref:gcp-install.adoc[Google Cloud Platform (GCP)] and xref:aws-index.adoc[Amazon Web Services (AWS)]
 
 == Getting Started with Cloud Deployment
 Before you can get started with cloud deployment you should:
 
 . Determine which platform you will be using (Google Cloud Platform, for example).
 . Have an active account with your chosen platform.
-. Subscribe to the Akka Cloud Platform with xref:gcp-install.adoc[GCP] or xref:aws-install.adoc[AWS].
+. Subscribe to the Akka Cloud Platform with xref:gcp-install.adoc[GCP] or xref:aws-index.adoc[AWS].
 . Set up your xref:microservices-tutorial:dev-env.adoc[environment].
 
 Once you have these in hand review the xref:cloud-deployment.adoc[] page and then proceed to the section appropriate to your platform.
@@ -31,18 +30,3 @@ Once you have these in hand review the xref:cloud-deployment.adoc[] page and the
 * xref:gcp-install.adoc[]
 * xref:aws-install.adoc[]
 
-
-== Key Information for Akka Cloud Platform on AWS
-The links and info below provide rapid access to some of the more important information used to manage your Akka Cloud Platform.
-
-- Kubernetes Akka Platform Operator — Operator management is key. You will find details on xref:deployment:aws-install.adoc[installing]
-and xref:deployment:aws-install.adoc#_update_akka_operator[updating] the Akka Operator on the Installation in Amazon EKS page.
-
-- TLS Certificates — TLS certificates are required for external access to applications managed by Akka Cloud Platform. You will find the pertinent information within the xref:deployment:aws-ingress.adoc#_tls_certificate[AWS LoadBalancer Controller] page.
-
-- Support — Support for the Akka Cloud Platform requires registration. https://aws.amazon.com/marketplace/pp/B08TLV16XM#pdp-support[Details] regarding support, and more, can be found on the AWS Marketplace.
-
-- License expiration and renewal — You may have purchased your license by subscribing to the Akka Cloud Platform product on the AWS Marketplace, or  directly from Lightbend. In either case, the license expiration and renewal for the Akka Cloud Platform is handled as follows:
-* If the Akka Cloud Platform license expires without being renewed, your current application will continue to run, but you will no longer be able to deploy or update.
-* If you have acquired a term license directly from Lightbend, and it expires, your license will automatically revert into a pay-as-you-go license.
-* When you need to renew your license, please contact mailto:aws@lightbend.com[] with your request.
