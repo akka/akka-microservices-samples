@@ -25,7 +25,7 @@ Akka’s use of the actor model provides a level of abstraction that makes it ea
 
 
 == Akka Cloud Platform
-Akka Cloud Platform enhances Akka by adding operational tooling, services, and support. It is easily accessible from marketplaces, such as AWS and GCP.
+Akka Cloud Platform enhances Akka by adding operational tooling, services, and support. It is easily accessible from marketplaces, such as xref:deployment:aws-index.adoc[AWS] and xref:deployment:gcp-install.adoc[GCP].
 
 *Why use Akka Cloud Platform?*
 
