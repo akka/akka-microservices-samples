@@ -309,7 +309,7 @@ cinnamon.prometheus {
 }
 ----
 
-In the examples above, the `telemetry.conf` configures the port to `9008`. It also configures a conditional overwrite using the `${NAME}` syntax: if the `HTTP_PROMETHEUS_PORT` environment variable exists, then use that value. When deploying the application using the Akka Operator, the `HTTP_PROMETHEUS_PORT` environment variable will exist and the value is set to `9005` (see snippet above) so the Telemetry agent will start Prometheus's `http-server` on port `9005`.
+In the examples above, the `telemetry.conf` configures the port to `9008`. It also configures a conditional overwrite using the `pass:[${NAME}]` syntax: if the `HTTP_PROMETHEUS_PORT` environment variable exists, then use that value. When deploying the application using the Akka Operator, the `HTTP_PROMETHEUS_PORT` environment variable will exist and the value is set to `9005` (see snippet above) so the Telemetry agent will start Prometheus's `http-server` on port `9005`.
 
 == Namespaces
 
