@@ -104,7 +104,10 @@ The Akka Operator requires a https://docs.aws.amazon.com/eks/latest/userguide/ia
 +
 [source,shell script]
 ----
-eksctl utils associate-iam-oidc-provider --cluster eks-akka-demo --region eu-central-1 --approve
+eksctl utils associate-iam-oidc-provider \
+    --cluster eks-akka-demo \
+    --region eu-central-1 \
+    --approve
 ----
 
 . Create an IAM policy for the service account:
@@ -131,7 +134,9 @@ eksctl utils associate-iam-oidc-provider --cluster eks-akka-demo --region eu-cen
 +
 [source,shell script]
 ----
-aws iam create-policy --policy-name AkkaPlatformOperator --policy-document file://policy.json
+aws iam create-policy \
+    --policy-name AkkaPlatformOperator \
+    --policy-document file://policy.json
 ----
 +
 Make a note of the policy ARN for the next step.
@@ -171,9 +176,9 @@ To delete the service account, run the following:
 [source, shell script]
 ----
 eksctl delete iamserviceaccount  \
-  --name akka-operator \
-  --cluster eks-akka-demo \
-  --region eu-central-1
+    --name akka-operator \
+    --cluster eks-akka-demo \
+    --region eu-central-1
 ----
 ====
 == Install Akka Operator
@@ -276,7 +281,9 @@ kubectl delete customresourcedefinition akkamicroservices.akka.lightbend.com
 
 [source,shell script]
 ----
-eksctl delete cluster --region eu-central-1 --name eks-akka-demo
+eksctl delete cluster \
+    --region eu-central-1 \
+    --name eks-akka-demo
 ----
 
 NOTE: Deleting the cluster from the https://console.aws.amazon.com/eks/home[Amazon EKS console {tab-icon}, window="tab"] requires several steps and therefore it's easiest to use `eksctl` for this.
