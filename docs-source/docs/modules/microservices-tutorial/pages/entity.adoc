@@ -1,4 +1,4 @@
-= IV: Create the Event Sourced Cart entity
+= Section 4: Create the Event Sourced Cart entity
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
@@ -432,7 +432,7 @@ When finished, stop the service with `ctrl-c`. Leave the PostgresSQL running for
 ----
 docker-compose down
 ----
-
+NOTE: The following steps for cloud deployment are optional. If you are only running locally, you can skip to the next section of the tutorial.
 [#kubernetes]
 == Run in Kubernetes
 

@@ -281,6 +281,36 @@ Additionally to Up and Non-Up, there is also Unreachable. This is the number of 
 
 These numbers can be useful to watch the Akka cluster state during rolling updates to make sure it is in a normal state. See xref:troubleshooting.adoc[troubleshooting deployment status] for some examples.
 
+== Reporting Metrics to Prometheus
+
+Exporting metrics to Prometheus requires opening a port on your Pods. The https://prometheus.io/docs/introduction/overview/#architecture[Prometheus Architecture documentation  {tab-icon}, window="tab"] explains all the components of Prometheus and how data is extracted from your process: for Prometheus to gather the metrics from your process you have to expose an HTTP server. The Akka Operator assumes your application uses {cinnamon-docs}/plugins/prometheus/prometheus.html#prometheus[Lightbend Telemetry's support for Prometheus]. Once you configure the build of your application following the Lightbend Telemetry docs, you should have the `http-server` exporter enabled on your configuration. That `cinnamon.prometheus.exporters += http-server` setting binds, by default, to the port `9001`. Then, you need to configure the Kubernetes resource to open the Prometheus port:
+
+.kubernetes/shopping-cart-service-cr.yml
+[source,yaml]
+----
+apiVersion: akka.lightbend.com/v1
+kind: AkkaMicroservice
+metadata:
+  name: shopping-cart-service
+spec:
+  prometheusPort: "9005"
+---- 
+
+Specifying the Prometheus port instructs the Akka Operator to open the port on the Pods and annotate the pods appropriately. These annotations allow Prometheus workers on the cluster to locate your pods and scrape them. The Akka operator will also create and inject an environment variable named `HTTP_PROMETHEUS_PORT` with the port value you configure in the resource manifest. Use that environment variable to set up your configuration:
+
+.src/main/resources/telemetry.conf
+[source,hocon]
+----
+cinnamon.prometheus {
+  http-server {
+    port = 9008
+    port = ${HTTP_PROMETHEUS_PORT}
+  }
+}
+----
+
+In the examples above, the `telemetry.conf` configures the port to `9008`. It also configures a conditional overwrite using the `${NAME}` syntax: if the `HTTP_PROMETHEUS_PORT` environment variable exists, then use that value. When deploying the application using the Akka Operator, the `HTTP_PROMETHEUS_PORT` environment variable will exist and the value is set to `9005` (see snippet above) so the Telemetry agent will start Prometheus's `http-server` on port `9005`.
+
 == Namespaces
 
 The Akka Operator manages Akka Microservices in all namespaces of the Kubernetes cluster, which means that you should only install the operator once. It is possible to configure the operator to only manage a specific namespace if that would be needed.
@@ -289,7 +319,10 @@ You can define a specific namespace that the operator should manage with the fol
 
 [source,shell script]
 ----
---set java_tool_options="-Dakka.operator.application-namespace=the-app-ns -Xlog:gc -XX:InitialRAMPercentage=75 -XX:MaxRAMPercentage=75"
+--set java_tool_options="\
+   -Dakka.operator.application-namespace=the-app-ns \
+   -Xlog:gc -XX:InitialRAMPercentage=75 \
+   -XX:MaxRAMPercentage=75"
 ----
 
 The operator itself can still be installed in a different namespace, or in the same namespace.

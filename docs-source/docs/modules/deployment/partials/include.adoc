@@ -3,3 +3,5 @@ include::ROOT:partial$include.adoc[]
 
 :docker-docs: https://docs.docker.com
 :helm-site: https://helm.sh
+
+:cinnamon-docs: https://developer.lightbend.com/docs/telemetry/current

@@ -1,4 +1,4 @@
-= VIII: Projection calling gRPC service
+= Section 8: Projection calling gRPC service
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
@@ -297,6 +297,7 @@ When finished:
 ----
 docker-compose stop
 ----
+NOTE: The following steps for cloud deployment are optional. If you are only running locally, you have completed the tutorial Congratulations.
 
 [#kubernetes]
 == Run in Kubernetes

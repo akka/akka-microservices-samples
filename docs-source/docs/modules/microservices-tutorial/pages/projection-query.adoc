@@ -1,4 +1,4 @@
-= VI: Projection for queries
+= Section 6: Projection for queries
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
@@ -429,6 +429,7 @@ When finished, stop the service with `ctrl-c`. Leave PostgresSQL running for the
 ----
 docker-compose stop
 ----
+NOTE: The following steps for cloud deployment are optional. If you are only running locally, you can skip to the next section of the tutorial.
 
 [#kubernetes]
 == Run in Kubernetes

@@ -17,14 +17,9 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <akka-platform.version>0.1.1</akka-platform.version>
+        <akka-grpc-maven-plugin.version>1.1.1</akka-grpc-maven-plugin.version>
         <scala.binary.version>2.13</scala.binary.version>
-        <akka.version>2.6.13</akka.version>
-        <akka-http.version>10.2.2</akka-http.version>
-        <akka-management.version>1.0.9</akka-management.version>
-        <alpakka-kafka.version>2.0.6</alpakka-kafka.version>
-        <akka-projection.version>1.1.0</akka-projection.version>
-        <akka-persistence-jdbc.version>5.0.0</akka-persistence-jdbc.version>
-        <akka-grpc.version>1.0.2</akka-grpc.version>
         <!-- needs to be defined to allow for overriding through mvn exec:exec -DAPP_CONFIG=local1.conf -->
         <APP_CONFIG>application.conf</APP_CONFIG>
         <!-- Version of the Docker image is derived from git commit.
@@ -35,16 +30,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>com.typesafe.akka</groupId>
-                <artifactId>akka-bom_${scala.binary.version}</artifactId>
-                <version>${akka.version}</version>
-                <type>pom</type>
-                <scope>import</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.typesafe.akka</groupId>
-                <artifactId>akka-http-bom_${scala.binary.version}</artifactId>
-                <version>${akka-http.version}</version>
+                <groupId>com.lightbend.akka</groupId>
+                <artifactId>akka-platform-dependencies_${scala.binary.version}</artifactId>
+                <version>${akka-platform.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -86,42 +74,34 @@
         <dependency>
             <groupId>com.lightbend.akka</groupId>
             <artifactId>akka-persistence-jdbc_${scala.binary.version}</artifactId>
-            <version>${akka-persistence-jdbc.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightbend.akka</groupId>
             <artifactId>akka-projection-eventsourced_${scala.binary.version}</artifactId>
-            <version>${akka-projection.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightbend.akka</groupId>
             <artifactId>akka-projection-jdbc_${scala.binary.version}</artifactId>
-            <version>${akka-projection.version}</version>
         </dependency>
         <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-stream-kafka_${scala.binary.version}</artifactId>
-            <version>${alpakka-kafka.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightbend.akka.management</groupId>
             <artifactId>akka-management-cluster-http_${scala.binary.version}</artifactId>
-            <version>${akka-management.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightbend.akka.management</groupId>
             <artifactId>akka-management-cluster-bootstrap_${scala.binary.version}</artifactId>
-            <version>${akka-management.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightbend.akka.discovery</groupId>
             <artifactId>akka-discovery-kubernetes-api_${scala.binary.version}</artifactId>
-            <version>${akka-management.version}</version>
         </dependency>
         <dependency>
             <groupId>com.lightbend.akka.grpc</groupId>
             <artifactId>akka-grpc-runtime_${scala.binary.version}</artifactId>
-            <version>${akka-grpc.version}</version>
         </dependency>
 
         <dependency>
@@ -148,25 +128,21 @@
         <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-actor-testkit-typed_${scala.binary.version}</artifactId>
-            <version>${akka.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-persistence-testkit_${scala.binary.version}</artifactId>
-            <version>${akka.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.lightbend.akka</groupId>
             <artifactId>akka-projection-testkit_${scala.binary.version}</artifactId>
-            <version>${akka-projection.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>com.typesafe.akka</groupId>
             <artifactId>akka-stream-testkit_${scala.binary.version}</artifactId>
-            <version>${akka.version}</version>
             <scope>test</scope>
         </dependency>
 
@@ -174,7 +150,6 @@
         <dependency>
             <groupId>com.lightbend.akka.management</groupId>
             <artifactId>akka-lease-kubernetes_${scala.binary.version}</artifactId>
-            <version>${akka-management.version}</version>
         </dependency>
         <!-- end::akka-sbr-kubernetes-lease[] -->
 
@@ -228,7 +203,7 @@
             <plugin>
                 <groupId>com.lightbend.akka.grpc</groupId>
                 <artifactId>akka-grpc-maven-plugin</artifactId>
-                <version>${akka-grpc.version}</version>
+                <version>${akka-grpc-maven-plugin.version}</version>
                 <configuration>
                     <language>Java</language>
                 </configuration>

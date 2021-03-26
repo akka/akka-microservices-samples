@@ -1,4 +1,4 @@
-= V: Complete Event Sourced entity
+= Section 5: Complete Event Sourced entity
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
@@ -412,7 +412,7 @@ When finished, stop the service with `ctrl-c`. Leave PostgresSQL running for the
 ----
 docker-compose stop
 ----
-
+NOTE: The following steps for cloud deployment are optional. If you are only running locally, you can skip to the next section of the tutorial.
 [#kubernetes]
 == Run in Kubernetes
 

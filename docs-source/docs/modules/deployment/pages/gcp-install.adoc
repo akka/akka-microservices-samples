@@ -7,14 +7,20 @@ To install Akka Cloud Platform on Google Kubernetes Engine (GKE), you must have 
 
 If you are a first time GCP user, please follow these steps:
 
-. Create your Google account at https://console.cloud.google.com[https://console.cloud.google.com {tab-icon}, window="tab"].
-.  Create a project.
+. Get started with Google Cloud Platform here: https://cloud.google.com/gcp/getting-started[https://cloud.google.com/gcp/getting-started {tab-icon}, window="tab"].
+. Create your Google account at https://console.cloud.google.com[https://console.cloud.google.com {tab-icon}, window="tab"]. 
+. Sign up for an active plan and setup billing. You can start with Free tier, follow instructions at https://cloud.google.com/free[https://cloud.google.com/free {tab-icon}, window="tab"]. 
+. Create a project. 
+. Link your billing account to the project at https://console.cloud.google.com/billing/projects[https://console.cloud.google.com/billing/projects {tab-icon}, window="tab"].
+. Install the Google Cloud SDK from https://cloud.google.com/sdk/docs/install[https://cloud.google.com/sdk/docs/install {tab-icon}, window="tab"] which contains the `gcloud` CLI.  
+
+See https://cloud.google.com/compute/docs/console[https://cloud.google.com/compute/docs/console {tab-icon}, window="tab"] for more information about the the browser-based Google Cloud Console tool. Documentation for the `gcloud` CLI can be found here: https://cloud.google.com/compute/docs/gcloud-compute[https://cloud.google.com/compute/docs/gcloud-compute {tab-icon}, window="tab"].
 
 == Deploy from marketplace
 
-With your account and project ready, open the https://console.cloud.google.com/marketplace/details/lightbend-public/akka-cloud-platform[Akka Cloud Platform {tab-icon}], or go to https://console.cloud.google.com/kubernetes/application[Kubernetes Engine Applications {tab-icon}, window="tab"] and search for "Akka Cloud Platform”. When you are on the product page, go ahead and purchase a plan.
+With your account and project ready, open the {gcp-marketplace}[Akka Cloud Platform {tab-icon}], or go to https://console.cloud.google.com/kubernetes/application[Kubernetes Engine Applications {tab-icon}, window="tab"] and search for "Akka Cloud Platform”. When you are on the product page, go ahead and purchase a plan.
 
-Once you've purchased a plan to use the Akka Cloud Platform, proceed to configure it. Make sure you have a project selected on the GUI or the options to purchase and configure will be disabled.
+Once you've purchased a plan to use the Akka Cloud Platform, proceed to configure it, click `Configure`. Make sure you have a project selected on the GUI or the options to purchase and configure will be disabled.
 
 To completely configure and use the Akka Cloud Platform you need to fill in a few fields:
 
@@ -24,9 +30,21 @@ To completely configure and use the Akka Cloud Platform you need to fill in a fe
 . The akka-operator.serviceAccount.name — This is the name of the service account used by the operator to access Kubernetes resources.
 . The Reporting Service Account — This is the service account used for reporting data to Google.
 
-Finally, take a moment to review all the permissions the Akka Clout Platform operator will use in order to operate your applications.
+. Take a moment to review all the permissions the Akka Cloud Platform operator will use in order to operate your applications.
 
-Click `Deploy`.
+. Click `Deploy`.
+
+. After clicking `Deploy` the Google console navigates to the `Application starting` page. Wait for the application components to deploy.
+. From a terminal, login to your project using the `gcloud` CLI, you can find quick-start instructions at https://cloud.google.com/sdk/docs/quickstart[https://cloud.google.com/sdk/docs/quickstart {tab-icon}, window="tab"].
+. Navigate to https://console.cloud.google.com/kubernetes/application, click on the cluster name for the Akka Cloud Platform application, click on the `CONNECT` button, copy the gcloud command for command line access, an example of it is shown below:
+
+[source,shell script]
+----
+gcloud container clusters get-credentials acp-cluster-1 \
+  --zone us-west1-a \
+  --project shopping-cart
+----
+Paste the command you copied from the Google console into a terminal to connect to the Kubernetes cluster. You are now ready to start using the Akka Cloud Platform. 
 
 == Delete a Kubernetes cluster
 

@@ -5,12 +5,21 @@ include::partial$include.adoc[]
 
 This page describes the general workflow for deploying an application. Each step of the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] also has instructions of how to run in Kubernetes. The tutorial includes build files for creating Docker images and template deployment descriptors.
 
-The steps below assume that you have already read the xref:deployment:index.adoc[overview of Kubernetes deployment], and have created a xref:deployment:aws-install.adoc[Kubernetes cluster and installed the Akka Operator].
+The steps below assume that you have already read the xref:deployment:index.adoc[overview of Kubernetes deployment], and have created a Kubernetes cluster and installed the Akka Operator (in xref:deployment:aws-install.adoc[AWS] or xref:deployment:gcp-install.adoc[GCP]).
 
 :sectnums:
 == Build Docker image
 
-Build and publish a Docker image of the application as described in xref:deployment:aws-ecr.adoc[Amazon Elastic Container Registry].
+Build and publish a Docker image of the application.
+
+[.tabset]
+AWS::
++
+Follow the instructions in xref:deployment:aws-ecr.adoc[Amazon Elastic Container Registry] to deploy Docker images on AWS's container registry.
+
+GCP::
++
+Follow the instructions in https://cloud.google.com/container-registry/docs/using-with-google-cloud-platform[Using Container Registry with Google Cloud {tab-icon}, window="tab"] to deploy Docker images on GCP's container registry.
 
 == Update the deployment descriptor
 
@@ -22,7 +31,7 @@ Update the deployment descriptor in `kubernetes/shopping-cart-service-cr.yml` of
 include::microservices-tutorial:example$01-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
 ----
 
-<1> Replace `<docker-registry>` with your docker registry address and update the image reference with the image tag from the output of the Docker build above, for example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201209-135004-363ae2b`.
+<1> Replace `<docker-registry>` with your docker registry address and update the image reference with the image tag you just created. The specific value and syntax of the `<docker-registry>` can vary depending on the registry you used. the most popular registries include https://hub.docker.com/[DockerHub] and https://quay.io/[Quay.io] but you are probably publishing your images to AWS's xref:aws-ecr.adoc[ECR] or the Container Registry in GCP. If you published to AWS's ECR, the final value of the `image:` property will look similar to: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201209-135004-363ae2b`.  If you are using the container registry in GCP, the `image:` property will be similar to `eu.gcr.io/earthly-project-41643/shopping-cart-service:20201209-135004-363ae2b`.
 
 == Apply to Kubernetes
 
@@ -75,7 +84,7 @@ You can terminate all Pods of the application by deleting the deployment descrip
 
 [source,shell script]
 ----
-kubectl delete akkamicroservices/shopping-cart-service
+kubectl delete akkamicroservices/shopping-cart-service --namespace=shopping
 ----
 
 :!Sectnums:

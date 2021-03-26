@@ -1,4 +1,4 @@
-= II: Start a project
+= Section 2: Start a project
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]

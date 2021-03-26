@@ -1,4 +1,4 @@
-= VII: Projection publishing to Kafka
+= Section 7: Projection publishing to Kafka
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
@@ -311,6 +311,7 @@ When finished, stop the `shopping-cart-service` and `shopping-analytics-service`
 ----
 docker-compose stop
 ----
+NOTE: The following steps for cloud deployment are optional. If you are only running locally, you can skip to the next section of the tutorial.
 
 [#kubernetes]
 == Run in Kubernetes

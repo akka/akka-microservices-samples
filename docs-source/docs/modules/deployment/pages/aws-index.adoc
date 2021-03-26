@@ -1,0 +1,32 @@
+= Deploying with Amazon Web Services (AWS)
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+To install Akka Cloud Platform on Amazon Elastic Kubernetes Service (EKS), you must have an Amazon account and a subscription to the {aws-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"].
+
+== Key Information for Akka Cloud Platform on AWS
+The links and info below provide rapid access to some of the more important information used to manage your Akka Cloud Platform.
+
+- Kubernetes Akka Platform Operator — Operator management is key. You will find details on xref:deployment:aws-install.adoc[installing]
+and xref:deployment:aws-install.adoc#_update_akka_operator[updating] the Akka Operator on the Installation in Amazon EKS page.
+
+- TLS Certificates — TLS certificates are required for external access to applications managed by Akka Cloud Platform. You will find the pertinent information within the xref:deployment:aws-ingress.adoc#_tls_certificate[AWS LoadBalancer Controller] page.
+
+- Support — Support for the Akka Cloud Platform requires registration. https://aws.amazon.com/marketplace/pp/B08TLV16XM#pdp-support[Details] regarding support, and more, can be found on the AWS Marketplace.
+
+- License expiration and renewal — You may have purchased your license by subscribing to the Akka Cloud Platform product on the AWS Marketplace, or  directly from Lightbend. In either case, the license expiration and renewal for the Akka Cloud Platform is handled as follows:
+* If the Akka Cloud Platform license expires without being renewed, your current application will continue to run, but you will no longer be able to deploy or update.
+* If you have acquired a term license directly from Lightbend, and it expires, your license will automatically revert into a pay-as-you-go license.
+* When you need to renew your license, please contact mailto:aws@lightbend.com[] with your request.
+
+== Pre-requisite Skills
+
+A familiarity with the following services and skillsets is recommended before installation.
+
+* https://kubernetes.io/docs/setup/[Basic Kubernetes knowledge {tab-icon}, window="tab"] and experience with resources such as `ServiceAccounts`,  `Roles`, and `Deployments`.
+* https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html[Amazon EKS {tab-icon}, window="tab"] and its command line tool https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html[`eksctl` {tab-icon}, window="tab"].
+* https://docs.aws.amazon.com/iam/[AWS IAM {tab-icon}, window="tab"] and https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html[IAM security best practices {tab-icon}, window="tab"].
+* https://helm.sh/docs/intro/quickstart/[Helm {tab-icon}, window="tab"] command line tool `helm`.
+* https://yaml.org/spec/1.2/spec.html[YAML {tab-icon}, window="tab"] to define configuration for Akka Microservices deployment descriptors.
+

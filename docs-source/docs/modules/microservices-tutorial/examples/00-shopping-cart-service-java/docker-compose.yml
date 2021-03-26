@@ -18,16 +18,16 @@ services:
       POSTGRES_USER: shopping-cart
       POSTGRES_PASSWORD: shopping-cart
 
-  # See dockerhub for different versions of kafka and zookeeper
-  # https://hub.docker.com/r/wurstmeister/kafka/
-  # https://hub.docker.com/r/wurstmeister/zookeeper/
+# See dockerhub for different versions of kafka and zookeeper
+# https://hub.docker.com/r/wurstmeister/kafka/
+# https://hub.docker.com/r/wurstmeister/zookeeper/
   zookeeper:
-    image: wurstmeister/zookeeper:3.4.6
+    image: zookeeper:3.6.2
     ports:
       - "2181:2181"
 
   kafka:
-    image: wurstmeister/kafka:2.13-2.6.0
+    image: wurstmeister/kafka:2.13-2.7.0
     ports:
       - "9092:9092"
     environment:
@@ -35,3 +35,21 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+  kafka-consumer:
+    image: wurstmeister/kafka:2.13-2.7.0
+    command: bash -c "mkdir -vp /tmp/kafka-logs && /opt/kafka_2.13-2.7.0/bin/kafk-console-consumer.sh --zookeeper zookeeper:2181 --from-beginning --topic-name > /tmp/kafka-logs/topic-name.log"
+    ports:
+      - "9094:9092"
+    links:
+      - zookeeper
+      - kafka
+    volumes:
+      - ./kafka-1-logs:/tmp/kafka-logs
+
+  wait-for-kafka:
+    image: waisbrot/wait
+    links:
+      - kafka
+    environment:
+      - TARGETS=kafka:9092

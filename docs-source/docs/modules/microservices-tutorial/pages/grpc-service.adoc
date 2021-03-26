@@ -1,4 +1,4 @@
-= III: Create the gRPC Cart service
+= Section 3: Create the gRPC Cart service
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
@@ -192,6 +192,8 @@ Note the logging from the `ShoppingCartServiceImpl` in the console.
 === Stop the service
 
 You can stop the service with `ctrl-c`.
+
+NOTE: The following steps for cloud deployment are optional. If you are only running locally, you can skip to the next section of the tutorial.
 
 [#kubernetes]
 == Run in Kubernetes

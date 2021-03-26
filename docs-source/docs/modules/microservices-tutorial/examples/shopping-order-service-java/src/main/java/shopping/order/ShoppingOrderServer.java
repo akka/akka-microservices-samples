@@ -7,7 +7,7 @@ import akka.http.javadsl.Http;
 import akka.http.javadsl.ServerBinding;
 import akka.http.javadsl.model.HttpRequest;
 import akka.http.javadsl.model.HttpResponse;
-import akka.japi.Function;
+import akka.japi.function.Function;
 import java.net.InetSocketAddress;
 import java.time.Duration;
 import java.util.Collections;

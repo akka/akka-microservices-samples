@@ -2,7 +2,7 @@
 
 include::ROOT:partial$include.adoc[]
 
-This tutorial illustrates how Microservices can interact to implement a shopping cart system. The topics listed below show how to build the services piece by piece, from scratch.
+This tutorial illustrates how Microservices can interact to implement a shopping cart system. The sections listed below show how to build the services piece by piece, from scratch.
 
 include::partial$listing.adoc[]
 

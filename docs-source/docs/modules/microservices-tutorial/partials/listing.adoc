@@ -1,19 +1,19 @@
 :page-partial:
 
-xref:microservices-tutorial:overview.adoc[]
+* xref:microservices-tutorial:overview.adoc[]
 
-xref:microservices-tutorial:dev-env.adoc[]
+* xref:microservices-tutorial:dev-env.adoc[]
 
-xref:microservices-tutorial:template.adoc[]
+* xref:microservices-tutorial:template.adoc[]
 
-xref:microservices-tutorial:grpc-service.adoc[]
+* xref:microservices-tutorial:grpc-service.adoc[]
 
-xref:microservices-tutorial:entity.adoc[]
+* xref:microservices-tutorial:entity.adoc[]
 
-xref:microservices-tutorial:complete-entity.adoc[]
+* xref:microservices-tutorial:complete-entity.adoc[]
 
-xref:microservices-tutorial:projection-query.adoc[]
+* xref:microservices-tutorial:projection-query.adoc[]
 
-xref:microservices-tutorial:projection-kafka.adoc[]
+* xref:microservices-tutorial:projection-kafka.adoc[]
 
-xref:microservices-tutorial:projection-grpc-client.adoc[]
+* xref:microservices-tutorial:projection-grpc-client.adoc[]

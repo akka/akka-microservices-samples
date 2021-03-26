@@ -41,7 +41,11 @@ You can create a temporary Pod for this with:
 
 [source,shell script]
 ----
-kubectl run -i --tty msk-mgmt --image=adoptopenjdk:11-jre-hotspot --restart=Never --rm -- bash
+kubectl run -i \
+    --tty msk-mgmt \
+    --image=adoptopenjdk:11-jre-hotspot \
+    --restart=Never \
+    --rm -- bash
 ----
 
 Then install the Kafka command line tools with:
@@ -68,7 +72,12 @@ Create a Kafka `shopping-cart-events` topic with:
 
 [source,shell script]
 ----
-bin/kafka-topics.sh --zookeeper ${ZOOKEEPER_CONNECT_STRING} --create --topic shopping-cart-events --replication-factor 3 --partitions 4
+bin/kafka-topics.sh \
+    --zookeeper ${ZOOKEEPER_CONNECT_STRING} \
+    --create \
+    --topic shopping-cart-events \
+    --replication-factor 3 \
+    --partitions 4
 ----
 
 Exit the temporary Pod:

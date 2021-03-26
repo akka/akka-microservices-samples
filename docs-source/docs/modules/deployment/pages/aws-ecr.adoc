@@ -12,7 +12,9 @@ You need one repository for each application that you will deploy, with the same
 +
 [source,shell script]
 ----
-aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 803424716218.dkr.ecr.eu-central-1.amazonaws.com
+aws ecr get-login-password --region eu-central-1 | docker login \
+   --username AWS \
+   --password-stdin 803424716218.dkr.ecr.eu-central-1.amazonaws.com
 ----
 
 . Build the Docker image and publish to ECR with the following (The [.group-scala]#`build.sbt and project/plugins.sbt`# [.group-java]#`pom.xml`# contains build plugin settings for building a Docker image.):
@@ -21,13 +23,16 @@ aws ecr get-login-password --region eu-central-1 | docker login --username AWS -
 Java::
 +
 ----
-mvn -DskipTests -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com clean package docker:push
+mvn -DskipTests \
+    -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com \
+      clean package docker:push
 ----
 
 Scala::
 +
 ----
-sbt -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com docker:publish
+sbt -Ddocker.registry=803424716218.dkr.ecr.eu-central-1.amazonaws.com \
+      docker:publish
 ----
 
 include::partial$git-init.adoc[]

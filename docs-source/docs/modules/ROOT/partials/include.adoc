@@ -18,3 +18,7 @@
 :tab-icon: image:ROOT:new-tab.svg[width=12]
 
 :akka-blog:  https://akka.io/blog
+
+// Marketplace URLs
+:aws-marketplace: https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf
+:gcp-marketplace: https://console.cloud.google.com/marketplace/details/lightbend-public/akka-cloud-platform

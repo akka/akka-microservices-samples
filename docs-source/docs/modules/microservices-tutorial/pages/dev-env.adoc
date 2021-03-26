@@ -1,4 +1,4 @@
-= I: Set up your development environment
+= Section 1: Set up your development environment
 :page-supergroup-java-scala: Language
 
 include::ROOT:partial$include.adoc[]
