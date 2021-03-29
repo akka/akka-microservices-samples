@@ -24,7 +24,7 @@ Once you've purchased a plan to use the Akka Cloud Platform, proceed to configur
 
 To completely configure and use the Akka Cloud Platform you need to fill in a few fields:
 
-. The GKE cluster — This is the cluster where you are installing the operator. Use "Create a new cluster" if you don't have one.
+. The GKE cluster — This is the cluster where you are installing the operator. The Akka operator requires Alias IP ranges for setting up ingress, so please setup a VPC-native cluster. Please find instructions at https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips[https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips {tab-icon}, window="tab"] to setup a VPC-native cluster. You can read about the benefits of a VPC-native cluster at https://cloud.google.com/kubernetes-engine/docs/concepts/alias-ips[https://cloud.google.com/kubernetes-engine/docs/concepts/alias-ips {tab-icon}, window="tab].
 . A Namespace — Keeping the Marketplace offering in a specific namespace will ease follow up operations and will enforce separation of concerns.
 . An App instance name — Select a unique name. We recommend using the default or `akka-platform-operator-1`.
 . The akka-operator.serviceAccount.name — This is the name of the service account used by the operator to access Kubernetes resources.
