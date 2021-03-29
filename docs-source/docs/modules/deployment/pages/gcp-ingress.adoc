@@ -19,7 +19,7 @@ You need a TLS certificate for the internet facing load balancer. For developmen
 +
 [source,shell script]
 ----
-openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:4096 -keyout dummy-key.pem -out dummy-cert.pem -subj "/CN=dummy/O=dummy"
+openssl req -x509 -sha256 -nodes -days 365 -newkey rsa:2048 -keyout dummy-key.pem -out dummy-cert.pem -subj "/CN=dummy/O=dummy"
 ----
 +
 // TODO support uploading to GCP as well
