@@ -10,7 +10,7 @@ Once you've created your Cloud SQL database go back to xref:jdbc.adoc[JDBC integ
 
 == Create Cloud SQL PostgreSQL database
 
-Create a new database from https://console.cloud.google.com/sql/instances[GCP CLoud SQL console {tab-icon}, window="tab"]. Select the project you are working in.
+Create a new database from https://console.cloud.google.com/sql/instances[GCP Cloud SQL console {tab-icon}, window="tab"]. Select the project you are working in.
 
 The example in the xref:microservices-tutorial:index.adoc[Implementing Microservices with Akka tutorial] is using PostgreSQL.
 
@@ -21,7 +21,7 @@ There is an array of options for creating a Cloud SQL instance with various diff
 - Authentication via username and password
 
 For production consider using the https://cloud.google.com/sql/docs/postgres/connect-overview[Cloud SQL proxy and IAM database authentication].
-Direct connectivity between GKE and Cloud SQL via private IP is only possible if using a https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips[Native VPC cluster] otherwise the CLoud SQL proxy is required.
+Direct connectivity between GKE and Cloud SQL via private IP is only possible if using a https://cloud.google.com/kubernetes-engine/docs/how-to/alias-ips[Native VPC cluster] otherwise the Cloud SQL proxy is required.
 
 To create a basic PostgreSQL instance select `Create instance`
 
