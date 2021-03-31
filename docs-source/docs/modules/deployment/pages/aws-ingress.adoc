@@ -44,7 +44,9 @@ aws iam upload-server-certificate \
     --private-key file://MyKey.key
 ----
 
-When the preceding command is successful, it returns metadata about the uploaded certificate, including its Amazon Resource Name (ARN). Save the ARN for the next step.
+When the preceding command is successful, it returns metadata about the uploaded certificate, including its Amazon Resource Name (ARN). 
+
+Make a note of the policy ARN for the next step.
 
 You can verify of the certificate was imported successfully by listing the certificates with the following command:
 
@@ -75,7 +77,7 @@ spec:
   image: <image>
   grpcIngress:
     enabled: true
-    certificate: "arn:aws:iam:eu-central-1:803424716218:server-certificate/MyCertificate"
+    certificate: <certificate_arn>
     class: "alb"
 ----
 
