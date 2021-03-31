@@ -17,7 +17,7 @@ A Transport Layer Security (TLS) certificate provides privacy and data integrity
 When you want to expose an Akka gRPC service through a Load balancer, you will have to provide a TLS certificate. Request or import a certificate using the https://console.aws.amazon.com/acm/home[Amazon Certificate Manager (ACM) console {tab-icon}, window="tab"]. While in the ACM console, you will need to select the region you are working in. You will need to provide the Amazon Resource Name (ARN) of the certificate as you create the Akka Microservice Custom Resource.
 
 Alternatively, for development and testing, you can create your own self-signed certificate and then import it.
-You can find additional details regarding self-singed certificates and AWS at https://docs.aws.amazon.com/acm/latest/userguide/import-certificate-prerequisites.html[Prerequisites for Importing Certificates {tab-icon}, window="tab"]
+You can find additional details regarding self-singed certificates and AWS at https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_server-certs.html[Managing server certificates in IAM {tab-icon}, window="tab"] and https://docs.aws.amazon.com/acm/latest/userguide/import-certificate-prerequisites.html[Prerequisites for Importing Certificates {tab-icon}, window="tab"]
 
 A self-singed certificate can be created as in the following example:
 
@@ -33,21 +33,24 @@ openssl req -new \
 
 NOTE: When creating a self-signed certificate, make sure you use a domain name for the 'Common Name', for instance, "example.com". If you do not use a domain name, but just any non-empty name for the 'Common Name', the ingress controller will not be able to find the certificate and the ingress will fail to get an IP address, which shows up as a `CertificateNotFound` error in the events for the ingress.
 
-You can import the cert into ACM with the following command:
+You can import the cert with the following command:
 
 [source,shell script]
 ----
-aws acm import-certificate \
-    --certificate fileb://MyCertificate.crt \
-    --private-key fileb://MyKey.key \
-    --region
+aws iam upload-server-certificate \
+    --server-certificate-name MyCertificate \
+    --certificate-body file://MyCertificate.crt \
+    --certificate-chain file://MyCertificate.crt \
+    --private-key file://MyKey.key
 ----
+
+When the preceding command is successful, it returns metadata about the uploaded certificate, including its Amazon Resource Name (ARN). Save the ARN for the next step.
 
 You can verify of the certificate was imported successfully by listing the certificates with the following command:
 
 [source,shell script]
 ----
-aws acm list-certificates
+aws iam list-server-certificates
 ----
 
 The Akka Cloud Platform operator will create the Kubernetes `Ingress` which references your TLS certificate with an https://docs.aws.amazon.com/general/latest/gr/aws-arns-and-namespaces.html[Amazon Resource Name (ARN) {tab-icon}, window="tab"]
@@ -72,11 +75,11 @@ spec:
   image: <image>
   grpcIngress:
     enabled: true
-    certificate: "arn:aws:acm:eu-central-1:803424765458:certificate/fc44186b-1e4c-4c44-be9b-07a44601019f"
+    certificate: "arn:aws:iam:eu-central-1:803424716218:server-certificate/MyCertificate"
     class: "alb"
 ----
 
-Replace the certificate `arn` with the one assigned by the Amazon Certificate Manager.
+Replace the certificate `arn` with the one from the previous step.
 
 When the deployment descriptor has been applied, the Akka Operator will create an Ingress with the appropriate ALB annotations and `NodePort` service.
 You can retrieve the public address with:
