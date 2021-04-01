@@ -7,7 +7,7 @@ To expose your application's gRPC or HTTPS endpoints publicly to the internet yo
 
 == Install the LoadBalancer Controller
 
-Follow the instructions in the https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html[AWS Load Balancer Controller installation documentation {tab-icon}, window="tab"]
+Follow the instructions in the https://docs.aws.amazon.com/eks/latest/userguide/aws-load-balancer-controller.html[AWS Load Balancer Controller installation documentation {tab-icon}, window="tab"]. Additional information and resources can be found in the https://github.com/aws/eks-charts/tree/master/stable/aws-load-balancer-controller[AWS Load Balancer Controller Helm chart for Kubernetes Github Repo {tab-icon}, window="tab"]
 
 [#_tls_certificate]
 == TLS certificate
