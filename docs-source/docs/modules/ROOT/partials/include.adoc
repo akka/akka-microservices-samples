@@ -21,5 +21,5 @@
 :akka-blog:  https://akka.io/blog
 
 // Marketplace URLs
-:aws-marketplace: https://aws.amazon.com/marketplace/pp?sku=7hhouu843kzmgqs6besqjjsbf
+:aws-marketplace: https://aws.amazon.com/marketplace/pp/B08TLV16XM
 :gcp-marketplace: https://console.cloud.google.com/marketplace/details/lightbend-public/akka-cloud-platform

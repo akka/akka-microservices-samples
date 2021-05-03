@@ -44,7 +44,7 @@ kubectl get pods
 
 To create a Kafka cluster using Strimzi, create the custom resource for the Strimzi Kafka operator.
 
-Create a file `kubernetes/strimzi-cr.yml` according to one of the examples in https://github.com/strimzi/strimzi-kafka-operator/tree/master/examples/kafka[strimzi-kafka-operator/examples/kafka/ {tab-icon}, window="tab"]. See configuration options in the https://strimzi.io/docs/operators/latest/using.html[Strimzi documentation {tab-icon}, window="tab"].
+Create a file `kubernetes/strimzi-cr.yml` according to one of the examples in https://github.com/strimzi/strimzi-kafka-operator/tree/main/examples/kafka[strimzi-kafka-operator/examples/kafka/ {tab-icon}, window="tab"]. See configuration options in the https://strimzi.io/docs/operators/latest/using.html[Strimzi documentation {tab-icon}, window="tab"].
 
 Note that the `topicOperator` should be included to be able to <<Create topic>>.
 

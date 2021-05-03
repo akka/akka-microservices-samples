@@ -12,7 +12,7 @@ Lightbend provides two essential pieces for Monitoring your deployments; Telemet
 
 == Subscriptions and credentials
 
-Use of Lightbend Telemetry requires a subscription and credentials. A Lightbend subscription includes open source components that are distributed from the https://maven.apache.org/repository/[Maven Central Repository], as well as the commercial components which are distributed from a private repository. A https://www.lightbend.com/lightbend-platform-subscription[Lightbend Subscription] entitles you to use all commercial features and includes https://www.lightbend.com/lightbend-platform-subscription[support] and access to https://academy.lightbend.com/dashboard/[Lightbend Academy].
+Use of Lightbend Telemetry requires a subscription and credentials. A Lightbend subscription includes open source components that are distributed from the https://maven.apache.org/repository/[Maven Central Repository], as well as the commercial components which are distributed from a private repository. A https://www.lightbend.com/lightbend-subscription[Lightbend Subscription] entitles you to use all commercial features and includes https://www.lightbend.com/lightbend-subscription[support] and access to https://academy.lightbend.com/[Lightbend Academy].
 
 Lightbend Telemetry is also available by subscription to the Akka Cloud Platform which is via {aws-marketplace}[Amazon Web Services (AWS) {tab-icon}, window="tab"] or {gcp-marketplace}[Google Cloud Platform (GCP) {tab-icon}].
 
@@ -202,7 +202,7 @@ include::example$telemetry-sample/build.sbt[tag=telemetry-javaagent-docker]
 
 == Telemetry Configuration
 
-Lightbend Telemetry supports a {cinnamon-docs}/plugins/chmetrics/reporters.html#reporters[reporter {tab-icon}, window="tab"] that can be used to see the metrics locally in your terminal. 
+Lightbend Telemetry supports a {cinnamon-docs}/plugins/chmetrics/reporters.html#reporters[reporter {tab-icon}, window="tab"] that can be used to see the metrics locally in your terminal.
 
 .src/main/resources/telemetry.conf
 [source,hocon]

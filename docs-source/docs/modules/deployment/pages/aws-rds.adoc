@@ -26,7 +26,7 @@ For a trial PostgreSQL you can select the following aside from defaults:
 
 The security group will automatically have one role added to it which allows traffic from your current IP to the PostgreSQL port. If your IP changes then you'll need to update the security group.
 
-You find more detailed instructions in the https://aws.amazon.com/getting-started/tutorials/create-connect-postgresql-db/[Amazon RDS PostgreSQL documentation {tab-icon}, window="tab"]
+You can find more detailed instructions in the https://aws.amazon.com/getting-started/hands-on/create-connect-postgresql-db/[Amazon RDS PostgreSQL documentation {tab-icon}, window="tab"]
 
 == Allow EKS security group
 

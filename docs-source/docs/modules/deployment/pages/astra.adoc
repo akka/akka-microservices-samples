@@ -7,7 +7,7 @@ To use https://www.datastax.com/products/datastax-astra[DataStax Astra {tab-icon
 
 * `username` - the database username
 * `password` - the database password
-* `secureConnectBundleKey` - the secure connect bundle (zip file) that is downloaded as described in https://docs.astra.datastax.com/docs/obtaining-database-credentials[Obtain database credentials documentation {tab-icon}, window="tab"]
+* `secureConnectBundleKey` - the secure connect bundle (zip file) that is downloaded as described in https://docs.datastax.com/en/astra/docs/obtaining-database-credentials.html[Obtain database credentials documentation {tab-icon}, window="tab"]
 
 The Secret can be created with for example:
 
