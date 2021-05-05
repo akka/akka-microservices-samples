@@ -8,8 +8,8 @@ To install Akka Cloud Platform on Amazon Elastic Kubernetes Service (EKS), you m
 == Key Information for Akka Cloud Platform on AWS
 The links and info below provide rapid access to some of the more important information used to manage your Akka Cloud Platform.
 
-- Kubernetes Akka Platform Operator — Operator management is key. You will find details on xref:deployment:aws-install.adoc[installing]
-and xref:deployment:aws-install.adoc#_update_akka_operator[updating] the Akka Operator on the Installation in Amazon EKS page.
+- Kubernetes Akka Platform Operator — Operator management is key. You can find a quickstart guide in the xref:deployment:aws-install-quickstart.adoc[quick start].
+For AWS installation details see the xref:deployment:aws-install.adoc[installing] and xref:deployment:aws-install.adoc#_update_akka_operator[updating] the Akka Operator sections on the Installation in Amazon EKS page.
 
 - TLS Certificates — TLS certificates are required for external access to applications managed by Akka Cloud Platform. You will find the pertinent information within the xref:deployment:aws-ingress.adoc#_tls_certificate[AWS LoadBalancer Controller] page.
 
@@ -25,8 +25,14 @@ and xref:deployment:aws-install.adoc#_update_akka_operator[updating] the Akka Op
 A familiarity with the following services and skillsets is recommended before installation.
 
 * https://kubernetes.io/docs/setup/[Basic Kubernetes knowledge {tab-icon}, window="tab"] and experience with resources such as `ServiceAccounts`,  `Roles`, and `Deployments`.
+* https://aws.amazon.com/cli/[AWS Command Line Tool] to manage AWS IAM policies.
 * https://docs.aws.amazon.com/eks/latest/userguide/getting-started.html[Amazon EKS {tab-icon}, window="tab"] and its command line tool https://docs.aws.amazon.com/eks/latest/userguide/getting-started-eksctl.html[`eksctl` {tab-icon}, window="tab"].
 * https://docs.aws.amazon.com/iam/[AWS IAM {tab-icon}, window="tab"] and https://docs.aws.amazon.com/IAM/latest/UserGuide/best-practices.html[IAM security best practices {tab-icon}, window="tab"].
 * https://helm.sh/docs/intro/quickstart/[Helm {tab-icon}, window="tab"] command line tool `helm`.
 * https://yaml.org/spec/1.2/spec.html[YAML {tab-icon}, window="tab"] to define configuration for Akka Microservices deployment descriptors.
 
+If using the Quick start guide then you will also need require familiarity with the following.
+
+* https://www.pulumi.com/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool.
+* https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[`git` {tab-icon}, window="tab"] command line tool.
+* https://docs.npmjs.com/downloading-and-installing-node-js-and-npm[`npm` {tab-icon}, window="tab"] command line tool.

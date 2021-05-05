@@ -1,0 +1,124 @@
+= Installation on Amazon Elastic Kubernetes Service (EKS) Quick Start
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+NOTE: To install Akka Cloud Platform on Amazon Elastic Kubernetes Service (EKS), you must have an Amazon account and a subscription to the {aws-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"].
+
+== Expected Time to Install
+
+A new installation will take approximately _40 minutes_ to _1 hour_ depending on which components are installed.
+By default the following components will be provisioned.
+
+1. Create an Amazon EKS cluster
+2. Install the Kubernetes Metrics Server
+3. Install the Akka Cloud Platform Helm chart
+4. (Optional) Setup an Amazon MSK cluster
+5. (Optional) Setup an Amazon Aurora RDS cluster
+
+:sectnums:
+
+== Verify Prerequisites
+
+Before installation you must subscribe to the {aws-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"] on AWS Marketplace by clicking the Subscribe button on the product page and accepting the terms and conditions.
+
+To install and use the Akka Cloud Platform, you must have the following tools installed. We recommend using the latest versions of these tools. If you do not have them yet or need to update, we provide links to installation instructions:
+
+* The https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[`git` {tab-icon}, window="tab"] command-line tool to clone the Pulumi Playbook.
+
+* The https://docs.npmjs.com/downloading-and-installing-node-js-and-npm[`npm` {tab-icon}, window="tab"] command-line tool to download and setup the NPM dependencies of the Pulumi Playbook.
+
+* The https://www.pulumi.com/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool to run the Playbook.
+
+In addition in order to actually operate the cluster you should also setup:
+
+* The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters. Follow the instructions in the https://kubernetes.io/docs/tasks/tools/#kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
+
+== Quick Start with Pulumi Playbook
+
+Pulumi is a cloud provisioning tool that can be used to setup cloud infrastructure and Kubernetes cluster resources.
+The fastest way to get started with Akka Cloud Platform is to run the Akka Cloud Platform Deployment Pulumi playbook.
+
+To begin, download and install the https://www.pulumi.com/docs/get-started/install/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool for your platform.
+
+Download (clone) the https://github.com/lightbend/akka-cloud-platform-deploy[Akka Cloud Platform Deployment Pulumi Playbook {tab-icon}, window="tab"] with https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[`git` {tab-icon}, window="tab"].
+
+Navigate to the base directory of the cloned repository in a terminal.
+
+Install `npm` dependencies
+
+[source,shell script]
+----
+npm install
+----
+
+Initialize a new Pulumi stack configuration.
+
+[source,shell script]
+----
+pulumi stack init
+----
+
+Choose an AWS region to use.
+
+[source,shell script]
+----
+pulumi config set aws:region eu-central-1
+----
+
+Preview and provision the playbook:
+
+[source,shell script]
+----
+pulumi up
+----
+
+If the provisioning is successful then all the pertinent details of the cluster will be output to the console (except for passwords).
+You can copy & paste this configuration, or access it at the command line with `pulumi stack output <OUTPUT KEY>`.
+
+== Connect to the Amazon EKS Cluster
+
+To setup your local `kubectl` configuration you can obtain the Pulumi `kubeconfig` output by exporting it to a file and defining the `KUBE_CONFIG` environment variable:
+
+[source,shell script]
+----
+pulumi stack output kubeconfig > kubeconfig.yml
+export KUBECONFIG=./kubeconfig.yml
+----
+
+Or, if you have the `aws` command line tool you can use `aws eks update-kubeconfig` to update your `~/.kube/config`.
+
+[source,shell script]
+----
+aws eks update-kubeconfig --region $(pulumi config get "aws:region") --name $(pulumi stack output clusterName)
+----
+
+== Pulumi Playbook Outputs
+
+The following output variables are available:
+
+Amazon EKS
+
+* `clusterName` - Cluster name
+* `kubeconfig` - Complete contents of a `KUBE_CONFIG` configuration for the provisioned cluster
+* `operatorNamespace` - Kubernetes namespace where the Akka Cloud Platform operator is running
+
+Amazon Aurora Cluster
+
+* `dbClusterId` - Cluster ID
+* `dbName` - Default database created for Akka Cloud Platform
+* `dbUsername` - Master username
+* `dbPassword` - Master password. This is redacted in standard console output. To retrieve the value use the `pulumi stack output` command. For example, to assign the password to an environment variable: `DB_PASSWD=$(pulumi stack output dbPassword --show-secrets)`
+* `dbEndpoint` - Database writer endpoint hostname
+* `dbReaderEndpoint` - Database reader endpoint hostname.
+
+AWS MSK Kafka Cluster
+
+* `kafkaBootstrapBrokers` - Kafka bootstrap servers for `PLAINTEXT` connection (no TLS encryption)
+* `kafkaBootstrapBrokersTls` - Kafka bootstrap servers for `TLS` connection
+* `kafkaBootstrapServerSecret` - The Kubernetes Secret (in `operatorNamespace` namespace) containing the `PLAINTEXT` Kafka bootstrap servers connection string.
+* `kafkaZookeeperConnectString` - The Kafka ZooKeeper quorum connection string
+
+== Pulumi Playbook configuration
+
+_TODO_
