@@ -52,7 +52,7 @@ aws configure
 == Quick Start with Pulumi Playbook
 
 Pulumi is a cloud provisioning tool that can be used to setup cloud infrastructure and Kubernetes cluster resources.
-The fastest way to get started with Akka Cloud Platform is to run the Akka Cloud Platform Deployment Pulumi playbook.
+The fastest way to get started with Akka Cloud Platform on EKS is to run the Akka Cloud Platform Deployment Pulumi playbook.
 
 To begin, download and install the https://www.pulumi.com/docs/get-started/install/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool for your platform.
 

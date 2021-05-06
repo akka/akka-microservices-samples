@@ -31,7 +31,7 @@ A familiarity with the following services and skillsets is recommended before in
 * https://helm.sh/docs/intro/quickstart/[Helm {tab-icon}, window="tab"] command line tool `helm`.
 * https://yaml.org/spec/1.2/spec.html[YAML {tab-icon}, window="tab"] to define configuration for Akka Microservices deployment descriptors.
 
-If using the Quick start guide then you will also need require familiarity with the following.
+When using the Quick Start guide then you will also need familiarity with the following.
 
 * https://www.pulumi.com/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool.
 * https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[`git` {tab-icon}, window="tab"] command line tool.
