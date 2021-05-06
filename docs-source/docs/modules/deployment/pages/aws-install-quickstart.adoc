@@ -91,7 +91,23 @@ pulumi up
 If the provisioning is successful then all the pertinent details of the cluster will be output to the console (except for passwords).
 You can copy & paste this configuration, or access it at the command line with `pulumi stack output <OUTPUT KEY>`.
 
-== Connect to the Amazon EKS Cluster
+[NOTE]
+====
+Kafka and JDBC Kubernetes secrets are created in the Akka Cloud Platform Operator namespace.
+These must be copied to each microservice namespace that references them.
+Here is one way to copy a resource from one namespace to another:
+
+[source,shell script]
+----
+OPERATOR_NAMESPACE=$(pulumi stack output operatorNamespace)
+KAFKA_SECRET=$(pulumi stack output kafkaBootstrapServerSecret)
+kubectl get secret $KAFKA_SECRET -n $OPERATOR_NAMESPACE -o yaml | \
+	sed s/"namespace: $OPERATOR_NAMESPACE"/"namespace: <DESTINATION NAMESPACE>"/ | \
+	kubectl apply -n <DESTINATION NAMESPACE> -f -
+----
+====
+
+=== Connect to the Amazon EKS Cluster
 
 To setup your local `kubectl` configuration you can obtain the Pulumi `kubeconfig` output by exporting it to a file and defining the `KUBECONFIG` environment variable:
 
@@ -132,8 +148,17 @@ To open a Postgres interactive shell with the Aurora DB:
 [source,shell script]
 ----
 kubectl run -i --tty rds-mgmt --image=postgres --restart=Never --rm \
-  --env=PGPASSWORD=$(pulumi stack output dbPassword --show-secrets) -- \
-  psql -h $(pulumi stack output dbEndpoint) -U acpadmin -d acp
+  --env=PGPASSWORD=$(pulumi stack output jdbcPassword --show-secrets) -- \
+  psql -h $(pulumi stack output jdbcEndpoint) -U acpadmin -d acp
+----
+
+To import a DDL script:
+
+[source,shell script]
+----
+kubectl run -i rds-mgmt --image=postgres --restart=Never --rm \
+  --env=PGPASSWORD=$(pulumi stack output jdbcPassword --show-secrets) -- \
+  psql -h $(pulumi stack output jdbcEndpoint) -U acpadmin -d acp -t < create_tables.sql
 ----
 
 == Pulumi Playbook Outputs
@@ -163,13 +188,13 @@ Amazon EKS
 
 Amazon Aurora Cluster
 
-* `dbClusterId` - Cluster ID
-* `dbName` - Default database created for Akka Cloud Platform
-* `dbUsername` - Master username
-* `dbPassword` - Master password. This is redacted in standard console output. To retrieve the value use the `pulumi stack output` command. For example, to assign the password to an environment variable: `DB_PASSWD=$(pulumi stack output dbPassword --show-secrets)`.
-* `dbEndpoint` - Database writer endpoint hostname
-* `dbReaderEndpoint` - Database reader endpoint hostname
-* `dbSecret` - The Kubernetes Secret (in `operatorNamespace` namespace) containing relational database connection details.
+* `jdbcClusterId` - Cluster ID
+* `jdbcDbName` - Default database created for Akka Cloud Platform
+* `jdbcUsername` - Master username
+* `jdbcPassword` - Master password. This is redacted in standard console output. To retrieve the value use the `pulumi stack output` command. For example, to assign the password to an environment variable: `DB_PASSWD=$(pulumi stack output jdbcPassword --show-secrets)`.
+* `jdbcEndpoint` - Database writer endpoint hostname
+* `jdbcReaderEndpoint` - Database reader endpoint hostname
+* `jdbcSecret` - The Kubernetes Secret (in `operatorNamespace` namespace) containing relational database connection details.
 
 AWS MSK Kafka Cluster
 
