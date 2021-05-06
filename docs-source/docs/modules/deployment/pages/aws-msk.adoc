@@ -61,30 +61,18 @@ cd kafka_2.12-2.8.0
 
 From https://console.aws.amazon.com/msk/home[Amazon MSK console {tab-icon}, window="tab"] you find the connection URL in the "View client information". Copy the list of Broker host/port pairs.
 
-Save the connect string in an environment variable at the bash prompt of the Pod you started with `kubectl run`.
+Save the connect string in an environment variable `BOOTSTRAP_SERVERS` and create a Kafka `shopping-cart-events` topic with:
 
 [source,shell script]
 ----
-BOOTSTRAP_SERVERS="<copied Bootstrap servers connect string>"
-----
-
-Create a Kafka `shopping-cart-events` topic with:
-
-[source,shell script]
-----
-bin/kafka-topics.sh \
-    --bootstrap-server ${BOOTSTRAP_SERVERS} \
+BOOTSTRAP_SERVERS="<copied Bootstrap servers connect string>" && \
+kubectl run -i --tty kafka-mgmt --image=confluentinc/cp-kafka --restart=Never --rm -- \
+    kafka-topics \
+    --bootstrap-server="$BOOTSTRAP_SERVERS" \
     --create \
     --topic shopping-cart-events \
     --replication-factor 2 \
     --partitions 4
-----
-
-Exit the temporary Pod:
-
-[source,shell script]
-----
-exit
 ----
 
 == Kafka configuration
