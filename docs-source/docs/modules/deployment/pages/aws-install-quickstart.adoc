@@ -86,11 +86,26 @@ pulumi stack output kubeconfig > kubeconfig.yml
 export KUBECONFIG=./kubeconfig.yml
 ----
 
-Or, if you have the `aws` command line tool you can use `aws eks update-kubeconfig` to update your `~/.kube/config`.
+Or, if you have the `aws` command line tool you can use `aws eks update-kubeconfig` to update your `.kube/config`.
 
 [source,shell script]
 ----
 aws eks update-kubeconfig --region $(pulumi config get "aws:region") --name $(pulumi stack output clusterName)
+----
+
+=== Connect to MSK Kafka cluster
+
+_TODO_
+
+=== Connect to Aurora RDS
+
+To open a Postgres interactive shell with the Aurora DB:
+
+[source,shell script]
+----
+kubectl run -i --tty rds-mgmt --image=postgres --restart=Never --rm \
+  --env=PGPASSWORD=$(pulumi stack output dbPassword --show-secrets) -- \
+  psql -h $(pulumi stack output dbEndpoint) -U acpadmin -d acp
 ----
 
 == Pulumi Playbook Outputs
@@ -108,16 +123,17 @@ Amazon Aurora Cluster
 * `dbClusterId` - Cluster ID
 * `dbName` - Default database created for Akka Cloud Platform
 * `dbUsername` - Master username
-* `dbPassword` - Master password. This is redacted in standard console output. To retrieve the value use the `pulumi stack output` command. For example, to assign the password to an environment variable: `DB_PASSWD=$(pulumi stack output dbPassword --show-secrets)`
+* `dbPassword` - Master password. This is redacted in standard console output. To retrieve the value use the `pulumi stack output` command. For example, to assign the password to an environment variable: `DB_PASSWD=$(pulumi stack output dbPassword --show-secrets)`.
 * `dbEndpoint` - Database writer endpoint hostname
-* `dbReaderEndpoint` - Database reader endpoint hostname.
+* `dbReaderEndpoint` - Database reader endpoint hostname
+* `dbSecret` - The Kubernetes Secret (in `operatorNamespace` namespace) containing relational database connection details.
 
 AWS MSK Kafka Cluster
 
 * `kafkaBootstrapBrokers` - Kafka bootstrap servers for `PLAINTEXT` connection (no TLS encryption)
 * `kafkaBootstrapBrokersTls` - Kafka bootstrap servers for `TLS` connection
+* `kafkaZookeeperConnectString` - Kafka ZooKeeper quorum connection string
 * `kafkaBootstrapServerSecret` - The Kubernetes Secret (in `operatorNamespace` namespace) containing the `PLAINTEXT` Kafka bootstrap servers connection string.
-* `kafkaZookeeperConnectString` - The Kafka ZooKeeper quorum connection string
 
 == Pulumi Playbook configuration
 
