@@ -28,13 +28,13 @@ To install and use the Akka Cloud Platform, you must have the following tools in
 
 == Login to your AWS account
 
-For first time AWS user, please register your account at https://aws.amazon.com/[https://aws.amazon.com/ {tab-icon}, window="tab"].
+If you are a first time AWS user, please register your account at https://aws.amazon.com/[https://aws.amazon.com/ {tab-icon}, window="tab"].
 
 ifdef::review[REVIEWERS: I was confused whether the following steps need to be done only by the first time user, or by all?]
 
 . Navigate to https://console.aws.amazon.com/iam/home?#/users[AWS Identity and Access Management (IAM) console {tab-icon}, window="tab"] to create a user and create access keys under Security Credential tab.
 
-. From a command prompt, use the `aws` tool to install the credentials:
+. Open a terminal and from a command prompt use the `aws` tool to install the credentials:
 
 [source,shell script]
 ----

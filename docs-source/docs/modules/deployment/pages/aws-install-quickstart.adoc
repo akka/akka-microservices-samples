@@ -7,7 +7,7 @@ NOTE: To install Akka Cloud Platform on Amazon Elastic Kubernetes Service (EKS),
 
 == Expected Time to Install
 
-A new installation will take approximately _40 minutes_ to _1 hour_ depending on which components are installed.
+A new installation will take approximately _from 40 minutes_ to _1 hour_ depending on which components are installed.
 By default the following components will be provisioned.
 
 1. Create an Amazon EKS cluster
@@ -30,19 +30,19 @@ To install and use the Akka Cloud Platform, you must have the following tools in
 
 * The https://www.pulumi.com/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool to run the Playbook.
 
-In addition, in order to actually operate the cluster, you should also setup:
+In addition, in order to operate the cluster, you need to setup:
 
 * The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters. Follow the instructions in the https://kubernetes.io/docs/tasks/tools/#kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
 
 == Login to your AWS account
 
-For first time AWS user, please register your account at https://aws.amazon.com/[https://aws.amazon.com/ {tab-icon}, window="tab"].
+If you are a first time AWS user, please register your account at https://aws.amazon.com/[https://aws.amazon.com/ {tab-icon}, window="tab"].
 
 ifdef::review[REVIEWERS: I was confused whether the following steps need to be done only by the first time user, or by all?]
 
 . Navigate to https://console.aws.amazon.com/iam/home?#/users[AWS Identity and Access Management (IAM) console {tab-icon}, window="tab"] to create a user and create access keys under Security Credential tab.
 
-. From a command prompt, use the `aws` tool to install the credentials:
+. Open a terminal and from a command prompt use the `aws` tool to install the credentials:
 
 [source,shell script]
 ----
@@ -51,7 +51,7 @@ aws configure
 
 == Quick Start with Pulumi Playbook
 
-Pulumi is a cloud provisioning tool that can be used to setup cloud infrastructure and Kubernetes cluster resources.
+Pulumi is a cloud provisioning tool used to set up cloud infrastructure and Kubernetes cluster resources.
 The fastest way to get started with Akka Cloud Platform on EKS is to run the Akka Cloud Platform Deployment Pulumi playbook.
 
 To begin, download and install the https://www.pulumi.com/docs/get-started/install/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool for your platform.
@@ -107,6 +107,13 @@ kubectl get secret $KAFKA_SECRET -n $OPERATOR_NAMESPACE -o yaml | \
 ----
 ====
 
+To destroy the cluster and all its dependencies:
+
+[source,shell script]
+----
+pulumi destroy
+----
+
 === Connect to the Amazon EKS Cluster
 
 To setup your local `kubectl` configuration you can obtain the Pulumi `kubeconfig` output by exporting it to a file and defining the `KUBECONFIG` environment variable:
@@ -124,7 +131,7 @@ Or, if you have the `aws` command line tool you can use `aws eks update-kubeconf
 aws eks update-kubeconfig --region $(pulumi config get "aws:region") --name $(pulumi stack output clusterName)
 ----
 
-=== Connect to MSK Kafka cluster
+=== Connect to the MSK Kafka cluster
 
 The `confluentinc/cp-kafka` Docker image can be used to manage Kafka state.
 
@@ -141,7 +148,7 @@ kubectl run -i --tty kafka-mgmt --image=confluentinc/cp-kafka --restart=Never --
     --partitions 4
 ----
 
-=== Connect to Aurora RDS
+=== Connect to the Aurora RDS database
 
 To open a Postgres interactive shell with the Aurora DB:
 
@@ -205,4 +212,45 @@ AWS MSK Kafka Cluster
 
 == Pulumi Playbook configuration
 
-_TODO_
+You can configure the playbook with the following syntax at the command line:
+
+[source,shell script]
+----
+pulumi config set <CONFIG KEY> <CONFIG VALUE>`
+----
+
+Or by populating the stack's `Pulumi.<STACK NAME>.yaml`.
+
+.Table Configuration
+|===
+|Configuration Key | Description | Required | Default value
+
+| `aws:region`
+| The AWS region for the Amazon EKS cluster and other services.
+| Yes
+| `-`
+
+| `cloud`
+| The cloud vendor to deploy.
+| No
+| `"aws"`
+
+| `operator-namespace`
+| The Kubernetes namespace to install the Akka Cloud Platform operator into.
+| No
+| `"lightbend"`
+
+| `install-metrics-server`
+| Install the Kubernetes Metrics Server.
+| No
+| `true`
+
+| `deploy-kafka-cluster`
+| Deploy a Kafka cluster (MSK) via a cloud provider managed service.
+| No
+| `true`
+
+| `deploy-jdbc-database`
+| Deploy a JDBC database (Aurora RDS) via a cloud provider managed service.
+| No
+| `true`
