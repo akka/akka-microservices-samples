@@ -13,8 +13,8 @@ By default the following components will be provisioned.
 1. Create an Amazon EKS cluster
 2. Install the Kubernetes Metrics Server
 3. Install the Akka Cloud Platform Helm chart
-4. (Optional) Setup an Amazon Managed Streaming for Apache Kafka (MSK) cluster
-5. (Optional) Setup an Amazon Aurora Relational Database Service (RDS) cluster
+4. Setup an Amazon Managed Streaming for Apache Kafka (MSK) cluster
+5. Setup an Amazon Aurora Relational Database Service (RDS) cluster
 
 :sectnums:
 
