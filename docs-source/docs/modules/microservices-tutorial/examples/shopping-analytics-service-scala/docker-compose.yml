@@ -33,8 +33,6 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: localhost
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
 
   kafka-consumer:
     image: wurstmeister/kafka:2.13-2.7.0
