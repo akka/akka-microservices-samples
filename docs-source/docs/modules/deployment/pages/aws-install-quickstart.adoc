@@ -58,7 +58,17 @@ To begin, download and install the https://www.pulumi.com/docs/get-started/insta
 
 Download (clone) the https://github.com/lightbend/akka-cloud-platform-deploy[Akka Cloud Platform Deployment Pulumi Playbook {tab-icon}, window="tab"] with https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[`git` {tab-icon}, window="tab"].
 
+[source,shell script]
+----
+git clone https://github.com/lightbend/akka-cloud-platform-deploy
+----
+
 Navigate to the base directory of the cloned repository in a terminal.
+
+[source,shell script]
+----
+cd akka-cloud-platform-deploy
+----
 
 Install `npm` dependencies:
 
@@ -67,7 +77,13 @@ Install `npm` dependencies:
 npm install
 ----
 
-Initialize a new Pulumi stack configuration:
+A stack is an instance of the deployed Pulumi playbook and its associated state.
+For example, you might use different instances to represent different environments such as `dev`, `testing`, `staging`.
+By default state is managed using Pulumi's state management service (a remote service), but you can choose other a https://www.pulumi.com/docs/intro/concepts/state/#backends[self-managed backend {tab-icon}, window="tab"] if you like.
+Using Pulumi's service is the fastest way to get started and provides several other benefits such as sharing state with others, view progress of deployment, view output variables and resulting cloud resources that were created.
+To learn more about https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"] and https://www.pulumi.com/docs/intro/concepts/state/[Pulumi State Management {tab-icon}, window="tab"] see the Pulumi documentation.
+
+Initialize a new Pulumi stack configuration.
 
 [source,shell script]
 ----
@@ -81,31 +97,100 @@ Choose an AWS region to use:
 pulumi config set aws:region eu-central-1
 ----
 
-Preview and provision the playbook:
+Pulumi will reconcile state from the playbook to your desired target environment.
+When you run a `pulumi up` (update) all the resources defined in the playbook will be provisioned.
+In almost all cases resources will start with a prefix `acp-<STACK NAME>`, where `acp` stands for "Akka Cloud Platform" and `<STACK NAME>` is the name you chose for the Pulumi stack.
+Most resource names will end with a randomly generated alphanumeric string.
+
+When you run `pulumi up` you will be prompted with a list of resources that the playbook will create.
+Select `yes` to deploy the stack to AWS.
+Preview and provision the playbook.
 
 [source,shell script]
 ----
 pulumi up
 ----
 
-If the provisioning is successful then all the pertinent details of the cluster will be output to the console (except for passwords).
-You can copy & paste this configuration, or access it at the command line with `pulumi stack output <OUTPUT KEY>`.
+While the cluster is provisioning you will be informed at the terminal about which resources are being created or are created.
+If using the the Pulumi service for state then the `pulumi up` command will include a link to "View Live" the progress of the deployment.
+The `pulumi up` command will exit when all resources are fully deployed and online.
+If a failure occurs then the command will exit early and inform you of the reason.
+If this occurs and you can correct the issue yourself then rerun `pulumi up` to resume updating where you left off.
+If the error can't be resolved then you can use the `pulumi destroy` command to rollback any partially deployed resources.
 
-[NOTE]
-====
-Kafka and JDBC Kubernetes secrets are created in the Akka Cloud Platform Operator namespace.
-These must be copied to each microservice namespace that references them.
-Here is one way to copy a resource from one namespace to another:
+If the deployment is successful then all the pertinent details of the cluster will be output to the console (except for passwords).
+
+Deploy the stack:
 
 [source,shell script]
 ----
-OPERATOR_NAMESPACE=$(pulumi stack output operatorNamespace)
-KAFKA_SECRET=$(pulumi stack output kafkaBootstrapServerSecret)
-kubectl get secret $KAFKA_SECRET -n $OPERATOR_NAMESPACE -o yaml | \
-	sed s/"namespace: $OPERATOR_NAMESPACE"/"namespace: <DESTINATION NAMESPACE>"/ | \
-	kubectl apply -n <DESTINATION NAMESPACE> -f -
+pulumi up
 ----
-====
+
+After executing `pulumi up` you will see something like the following:
+
+[source,shell script]
+----
+$ pulumi up
+Previewing update (seglo)
+
+View Live: https://app.pulumi.com/<STACK NAME>/akka-cloud-platform-deploy/<STACK NAME>/previews/7d82583e-17db-4d80-be58-49d266029998
+
+     Type                                                                 Name                                                                                        Plan
+ +   pulumi:pulumi:Stack                                                  akka-cloud-platform-deploy-<STACK NAME>                                                     create
+
+...
+
+Resources:
+    + 96 to create
+
+Do you want to perform this update? yes
+
+     Type                                                                 Name                                                                                        Status
+ +   pulumi:pulumi:Stack                                                  akka-cloud-platform-deploy-seglo                                                            created
+
+...
+----
+
+When the stack is deployed successfully you will have a list of outputs presented. For example:
+
+[source,shell script]
+----
+Outputs:
+    clusterName                : "acp-<STACK NAME>-eks-eksCluster-1550877"
+    jdbcClusterId              : "cluster-BJIXQZTDAWWPDSGOZP3ZPBMLII"
+    jdbcDbName                 : "acp"
+    jdbcEndpoint               : "acp-<STACK NAME>-rds.cluster-c4wajgyncibh.us-west-2.rds.amazonaws.com"
+    jdbcPassword               : "[secret]"
+    jdbcReaderEndpoint         : "acp-<STACK NAME>-rds.cluster-ro-c4wajgyncibh.us-west-2.rds.amazonaws.com"
+    jdbcSecret                 : "acp-<STACK NAME>-jdbc-secret"
+    jdbcUsername               : "acpadmin"
+    kafkaBootstrapBrokers      : "b-1.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9092,b-2.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9092"
+    kafkaBootstrapBrokersTls   : "b-1.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9094,b-2.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9094"
+    kafkaBootstrapServerSecret : "acp-<STACK NAME>-kafka-secret"
+    kafkaZookeeperConnectString: "z-1.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:2181,z-2.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:2181,z-3.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:2181"
+    kubeconfig                 : {
+		...
+    }
+    operatorNamespace          : "lightbend"
+
+Resources:
+    + 96 created
+
+Duration: 42m39s
+----
+
+These output variables are required to access your cluster and associated resources.
+You can reference variables manually, or access their values at the command line with `pulumi stack output <OUTPUT KEY>`.
+A full list of xref:deployment:aws-install-quickstart.adoc#output-variables[output variables].
+
+For example, to return the Kubernetes namespace that the Akka Cloud Platform Operator is installed in:
+
+[source, shell script]
+----
+$ pulumi stack output operatorNamespace
+lightbend
+----
 
 To destroy the cluster and all its dependencies:
 
@@ -148,6 +233,23 @@ kubectl run -i --tty kafka-mgmt --image=confluentinc/cp-kafka --restart=Never --
     --partitions 4
 ----
 
+[NOTE]
+====
+Kafka Kubernetes secrets are created in the Akka Cloud Platform Operator namespace.
+These must be copied to each microservice namespace that references them.
+Here is one way to copy a resource from one namespace to another:
+
+[source,shell script]
+----
+OPERATOR_NAMESPACE=$(pulumi stack output operatorNamespace)
+SERVICE_NAMESPACE=<SERVICE NAMESPACE>
+KAFKA_SECRET=$(pulumi stack output kafkaBootstrapServerSecret)
+kubectl get secret $KAFKA_SECRET -n $OPERATOR_NAMESPACE -o yaml | \
+	sed s/"namespace: $OPERATOR_NAMESPACE"/"namespace: $SERVICE_NAMESPACE"/ | \
+	kubectl apply -n $SERVICE_NAMESPACE -f -
+----
+====
+
 === Connect to the Aurora RDS database
 
 To open a Postgres interactive shell with the Aurora DB:
@@ -168,7 +270,25 @@ kubectl run -i rds-mgmt --image=postgres --restart=Never --rm \
   psql -h $(pulumi stack output jdbcEndpoint) -U acpadmin -d acp -t < create_tables.sql
 ----
 
-== Pulumi Playbook Outputs
+[NOTE]
+====
+JDBC (RDS) Kubernetes secrets are created in the Akka Cloud Platform Operator namespace.
+These must be copied to each microservice namespace that references them.
+Here is one way to copy a resource from one namespace to another:
+
+[source,shell script]
+----
+OPERATOR_NAMESPACE=$(pulumi stack output operatorNamespace)
+SERVICE_NAMESPACE=<SERVICE NAMESPACE>
+KAFKA_SECRET=$(pulumi stack output jdbcSecret)
+kubectl get secret $KAFKA_SECRET -n $OPERATOR_NAMESPACE -o yaml | \
+	sed s/"namespace: $OPERATOR_NAMESPACE"/"namespace: $SERVICE_NAMESPACE"/ | \
+	kubectl apply -n $SERVICE_NAMESPACE -f -
+----
+====
+
+[#output-variables]
+== Output Variables
 
 To print all output variables for a deployed stack you can run the following command:
 
