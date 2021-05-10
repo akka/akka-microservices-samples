@@ -97,7 +97,7 @@ Choose an AWS region to use:
 pulumi config set aws:region eu-central-1
 ----
 
-Pulumi will reconcile state from the playbook to your desired target environment.
+Pulumi will reconcile the state from the playbook to your desired target environment.
 When you run a `pulumi up` (update) all the resources defined in the playbook will be provisioned.
 In almost all cases resources will start with a prefix `acp-<STACK NAME>`, where `acp` stands for "Akka Cloud Platform" and `<STACK NAME>` is the name you chose for the Pulumi stack.
 Most resource names will end with a randomly generated alphanumeric string.
@@ -112,15 +112,15 @@ Preview and provision the playbook.
 pulumi up
 ----
 
-While the cluster is provisioning you will be informed in the terminal about which resources are in the process of being created or have been created.
-If using the the Pulumi service for state then the `pulumi up` command will include a link to "View Live" the progress of the deployment.
+While the cluster is provisioning you will be informed, in the terminal, about which resources are in the process of being created or have been created.
+If you are using the Pulumi service for the state then the `pulumi up` command will include a link to "View Live" the progress of the deployment.
 The `pulumi up` command will exit when all resources are fully deployed and online.
 
-If a failure occurs then the command will exit early and inform you of the reason.
+If a failure occurs, the command will exit early and inform you of the reason.
 When this occurs and you can correct the issue yourself then rerun `pulumi up` to resume updating where you left off.
-If the error can't be resolved then you can use the `pulumi destroy` command to rollback any partially deployed resources.
+If the error can't be resolved, you can use the `pulumi destroy` command to roll back any partially deployed resources.
 
-If the deployment is successful then all the pertinent details of the cluster will be output to the console (except for passwords).
+If the deployment is successful, all of the pertinent details of the cluster will be output to the console (except for passwords).
 
 After executing `pulumi up` you will see something like the following:
 
