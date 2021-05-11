@@ -275,8 +275,8 @@ Here is one way to copy a resource from one namespace to another:
 ----
 OPERATOR_NAMESPACE=$(pulumi stack output operatorNamespace)
 SERVICE_NAMESPACE=<SERVICE NAMESPACE>
-KAFKA_SECRET=$(pulumi stack output jdbcSecret)
-kubectl get secret $KAFKA_SECRET -n $OPERATOR_NAMESPACE -o yaml | \
+JDBC_SECRET=$(pulumi stack output jdbcSecret)
+kubectl get secret $JDBC_SECRET -n $OPERATOR_NAMESPACE -o yaml | \
 	sed s/"namespace: $OPERATOR_NAMESPACE"/"namespace: $SERVICE_NAMESPACE"/ | \
 	kubectl apply -n $SERVICE_NAMESPACE -f -
 ----
