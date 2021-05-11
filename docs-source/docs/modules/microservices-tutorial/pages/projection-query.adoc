@@ -43,7 +43,7 @@ Scala::
 :sectnums:
 == Process events in a Projection
 
-To process events in a projection, we will: 
+To process events in a projection, we will:
 
 * encapsulate database access with `ItemPopularityRepository`, which can have a stubbed implementation for tests
 * add Repository implementation for JDBC
@@ -449,6 +449,12 @@ kubectl run -i rds-mgmt --image=postgres \
 
 Make sure that `ddl-scripts/create_tables.sql` is also loaded as previously described.
 
+[NOTE]
+====
+If you created your database with the xref:deployment:aws-install-quickstart.adoc[] then you can reference the postgres username, password, and hostname using the `pulumi output` command (you must be in the Pulumi working directory for this to work), and reference the ddl script with an absolute path.
+See the xref:deployment:aws-install-quickstart.adoc#connect-aurora-database[Connect to the Aurora RDS database {tab-icon}, window="tab"] section of the quick start for an example.
+====
+
 Before following the steps below, create Kubernetes cluster and install the Akka Operator. Used the instructions below for:
 
 === Build Docker image
@@ -468,7 +474,7 @@ Follow the instructions in xref:deployment:aws-ecr.adoc[Amazon Elastic Container
 
 If you are using AWS, you will also need to complete the following procedures.
 
-Rebuild the Docker image. 
+Rebuild the Docker image.
 
 include::partial$build-docker-for-kube.adoc[]
 

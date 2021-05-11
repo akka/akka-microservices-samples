@@ -112,7 +112,7 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 
 == Implement a command handler
 
-The Cart entity will receive commands that request changes to Cart state. We will implement a command handler to process these commands and emit a reply. Our business logic allows only items to be added which are not in the cart yet and require a positive quantity. 
+The Cart entity will receive commands that request changes to Cart state. We will implement a command handler to process these commands and emit a reply. Our business logic allows only items to be added which are not in the cart yet and require a positive quantity.
 
 
 [.group-scala]#Implement the Event Sourced entity with the `EventSourcedBehavior`. Define the command handlers:#
@@ -174,7 +174,7 @@ include::example$02-shopping-cart-service-scala/src/main/scala/shopping/cart/Sho
 [#initialization]
 == Add initialization
 
-To glue the command handler, event handler, and state together, we need some initialization code. Our code will distribute the Cart entities over nodes in the Akka Cluster with https://doc.akka.io/docs/akka/current/cluster-sharding.html[Cluster Sharding {tab-icon}, window="tab"], enable snapshots to reduce recovery time when the entity is started, and restart with backoff in the case of failure. 
+To glue the command handler, event handler, and state together, we need some initialization code. Our code will distribute the Cart entities over nodes in the Akka Cluster with https://doc.akka.io/docs/akka/current/cluster-sharding.html[Cluster Sharding {tab-icon}, window="tab"], enable snapshots to reduce recovery time when the entity is started, and restart with backoff in the case of failure.
 
 [.tabset]
 Java::
@@ -454,6 +454,12 @@ kubectl run -i rds-mgmt --image=postgres \
   psql -h <db hostname> -U postgres -t < ddl-scripts/create_tables.sql
 ----
 
+[NOTE]
+====
+If you created your database with the xref:deployment:aws-install-quickstart.adoc[] then you can reference the postgres username, password, and hostname using the `pulumi output` command (you must be in the Pulumi working directory for this to work), and reference the ddl script with an absolute path.
+See the xref:deployment:aws-install-quickstart.adoc#connect-aurora-database[Connect to the Aurora RDS database {tab-icon}, window="tab"] section of the quick start for an example.
+====
+
 === Build Docker image
 
 Create a Docker repository and authenticate Docker.
@@ -485,7 +491,7 @@ Update the `kubernetes/shopping-cart-service-cr.yml` deployment descriptor with 
 include::example$02-shopping-cart-service-scala/kubernetes/shopping-cart-service-cr.yml[]
 ----
 
-<1> Replace `<docker-registry>` with your docker registry address and update the image reference with the image tag from the output of the Docker build above, for example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201209-135004-363ae2b`. 
+<1> Replace `<docker-registry>` with your docker registry address and update the image reference with the image tag from the output of the Docker build above, for example: `803424716218.dkr.ecr.eu-central-1.amazonaws.com/shopping-cart-service:20201209-135004-363ae2b`.
 <2> Add a `jdbc.credentialsSecret` section pointing to the secret created in the xref:deployment:jdbc.adoc[JDBC] instructions.
 
 

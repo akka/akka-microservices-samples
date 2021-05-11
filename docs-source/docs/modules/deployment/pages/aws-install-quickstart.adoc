@@ -154,12 +154,11 @@ When the stack is deployed successfully you will have a list of outputs presente
 Outputs:
     clusterName                : "acp-dev-eks-eksCluster-1550877"
     jdbcClusterId              : "cluster-BJIXQZTDAWWPDSGOZP3ZPBMLII"
-    jdbcDbName                 : "public"
     jdbcEndpoint               : "acp-dev-rds.cluster-c4wajgyncibh.us-west-2.rds.amazonaws.com"
     jdbcPassword               : "[secret]"
     jdbcReaderEndpoint         : "acp-dev-rds.cluster-ro-c4wajgyncibh.us-west-2.rds.amazonaws.com"
     jdbcSecret                 : "acp-dev-jdbc-secret"
-    jdbcUsername               : "acpadmin"
+    jdbcUsername               : "postgres"
     kafkaBootstrapBrokers      : "b-1.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9092,b-2.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9092"
     kafkaBootstrapBrokersTls   : "b-1.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9094,b-2.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9094"
     kafkaBootstrapServerSecret : "acp-dev-kafka-secret"
@@ -247,6 +246,7 @@ kubectl get secret $KAFKA_SECRET -n $OPERATOR_NAMESPACE -o yaml | \
 ----
 ====
 
+[#connect-aurora-database]
 === Connect to the Aurora RDS database
 
 To open a Postgres interactive shell with the Aurora DB:
@@ -255,7 +255,7 @@ To open a Postgres interactive shell with the Aurora DB:
 ----
 kubectl run -i --tty rds-mgmt --image=postgres --restart=Never --rm \
   --env=PGPASSWORD=$(pulumi stack output jdbcPassword --show-secrets) -- \
-  psql -h $(pulumi stack output jdbcEndpoint) -U acpadmin -d public
+  psql -h $(pulumi stack output jdbcEndpoint) -U postgres
 ----
 
 To import a DDL script:
@@ -264,7 +264,7 @@ To import a DDL script:
 ----
 kubectl run -i rds-mgmt --image=postgres --restart=Never --rm \
   --env=PGPASSWORD=$(pulumi stack output jdbcPassword --show-secrets) -- \
-  psql -h $(pulumi stack output jdbcEndpoint) -U acpadmin -d public -t < create_tables.sql
+  psql -h $(pulumi stack output jdbcEndpoint) -U postgres -t < create_tables.sql
 ----
 
 [NOTE]
