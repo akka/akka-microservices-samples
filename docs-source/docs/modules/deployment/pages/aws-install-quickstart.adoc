@@ -154,7 +154,7 @@ When the stack is deployed successfully you will have a list of outputs presente
 Outputs:
     clusterName                : "acp-dev-eks-eksCluster-1550877"
     jdbcClusterId              : "cluster-BJIXQZTDAWWPDSGOZP3ZPBMLII"
-    jdbcDbName                 : "acp"
+    jdbcDbName                 : "public"
     jdbcEndpoint               : "acp-dev-rds.cluster-c4wajgyncibh.us-west-2.rds.amazonaws.com"
     jdbcPassword               : "[secret]"
     jdbcReaderEndpoint         : "acp-dev-rds.cluster-ro-c4wajgyncibh.us-west-2.rds.amazonaws.com"
