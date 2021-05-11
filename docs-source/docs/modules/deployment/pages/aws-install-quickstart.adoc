@@ -77,7 +77,8 @@ Install `npm` dependencies:
 npm install
 ----
 
-A https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"]  is an instance of the deployed Pulumi playbook and its associated state.
+Next you will initialize a https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"].
+A stack is an instance of the deployed Pulumi playbook and its associated state.
 For example, you might use different stacks to represent different environments such as `dev`, `testing`, and `staging`.
 By default state is managed using Pulumi's state management service (a remote service), but you can choose a https://www.pulumi.com/docs/intro/concepts/state/#backends[self-managed state backend {tab-icon}, window="tab"] if you like.
 Using Pulumi's service is the fastest way to get started and provides several other benefits such as sharing state with others, view progress of a deployment, and view output variables and the resulting cloud resources that were created.
@@ -97,8 +98,7 @@ Choose an AWS region to use:
 pulumi config set aws:region eu-central-1
 ----
 
-Pulumi will reconcile the state from the playbook to your desired target environment.
-When you run a `pulumi up` (update) all the resources defined in the playbook will be provisioned.
+When you run a `pulumi up` (deploy) all the resources defined in the playbook will be provisioned to your target environment.
 In almost all cases resources will start with a prefix `acp-<STACK NAME>`, where `acp` stands for "Akka Cloud Platform" and `<STACK NAME>` is the name you chose for the Pulumi stack.
 Most resource names will end with a randomly generated alphanumeric string.
 
@@ -142,28 +142,28 @@ Resources:
 Do you want to perform this update? yes
 
      Type                                                                 Name                                                                                        Status
- +   pulumi:pulumi:Stack                                                  akka-cloud-platform-deploy-seglo                                                            created
+ +   pulumi:pulumi:Stack                                                  akka-cloud-platform-deploy-<STACK NAME>                                                     created
 
 ...
 ----
 
-When the stack is deployed successfully you will have a list of outputs presented. For example:
+When the stack is deployed successfully you will have a list of outputs presented. Example outputs for a stack named `dev`:
 
 [source,shell script]
 ----
 Outputs:
-    clusterName                : "acp-<STACK NAME>-eks-eksCluster-1550877"
+    clusterName                : "acp-dev-eks-eksCluster-1550877"
     jdbcClusterId              : "cluster-BJIXQZTDAWWPDSGOZP3ZPBMLII"
     jdbcDbName                 : "acp"
-    jdbcEndpoint               : "acp-<STACK NAME>-rds.cluster-c4wajgyncibh.us-west-2.rds.amazonaws.com"
+    jdbcEndpoint               : "acp-dev-rds.cluster-c4wajgyncibh.us-west-2.rds.amazonaws.com"
     jdbcPassword               : "[secret]"
-    jdbcReaderEndpoint         : "acp-<STACK NAME>-rds.cluster-ro-c4wajgyncibh.us-west-2.rds.amazonaws.com"
-    jdbcSecret                 : "acp-<STACK NAME>-jdbc-secret"
+    jdbcReaderEndpoint         : "acp-dev-rds.cluster-ro-c4wajgyncibh.us-west-2.rds.amazonaws.com"
+    jdbcSecret                 : "acp-dev-jdbc-secret"
     jdbcUsername               : "acpadmin"
-    kafkaBootstrapBrokers      : "b-1.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9092,b-2.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9092"
-    kafkaBootstrapBrokersTls   : "b-1.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9094,b-2.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9094"
-    kafkaBootstrapServerSecret : "acp-<STACK NAME>-kafka-secret"
-    kafkaZookeeperConnectString: "z-1.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:2181,z-2.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:2181,z-3.acp-<STACK NAME>-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:2181"
+    kafkaBootstrapBrokers      : "b-1.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9092,b-2.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9092"
+    kafkaBootstrapBrokersTls   : "b-1.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9094,b-2.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:9094"
+    kafkaBootstrapServerSecret : "acp-dev-kafka-secret"
+    kafkaZookeeperConnectString: "z-1.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:2181,z-2.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:2181,z-3.acp-dev-msk-b59fc25.fx64yv.c5.kafka.us-west-2.amazonaws.com:2181"
     kubeconfig                 : {
 		...
     }
