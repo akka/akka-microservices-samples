@@ -237,11 +237,13 @@ Here is one way to copy a resource from one namespace to another:
 [source,shell script]
 ----
 OPERATOR_NAMESPACE=$(pulumi stack output operatorNamespace)
-SERVICE_NAMESPACE=<SERVICE NAMESPACE>
 KAFKA_SECRET=$(pulumi stack output kafkaBootstrapServerSecret)
+APP_NAMESPACE=<APP NAMESPACE>
+APP_KAKFA_SECRET=<APP SECRET NAME>
 kubectl get secret $KAFKA_SECRET -n $OPERATOR_NAMESPACE -o yaml | \
-	sed s/"namespace: $OPERATOR_NAMESPACE"/"namespace: $SERVICE_NAMESPACE"/ | \
-	kubectl apply -n $SERVICE_NAMESPACE -f -
+	sed s/"namespace: $OPERATOR_NAMESPACE"/"namespace: $APP_NAMESPACE"/ | \
+	sed s/"name: $KAFKA_SECRET"/"name: $APP_KAKFA_SECRET"/ | \
+	kubectl apply -n $APP_NAMESPACE -f -
 ----
 ====
 
@@ -253,7 +255,7 @@ To open a Postgres interactive shell with the Aurora DB:
 ----
 kubectl run -i --tty rds-mgmt --image=postgres --restart=Never --rm \
   --env=PGPASSWORD=$(pulumi stack output jdbcPassword --show-secrets) -- \
-  psql -h $(pulumi stack output jdbcEndpoint) -U acpadmin -d acp
+  psql -h $(pulumi stack output jdbcEndpoint) -U acpadmin -d public
 ----
 
 To import a DDL script:
@@ -262,7 +264,7 @@ To import a DDL script:
 ----
 kubectl run -i rds-mgmt --image=postgres --restart=Never --rm \
   --env=PGPASSWORD=$(pulumi stack output jdbcPassword --show-secrets) -- \
-  psql -h $(pulumi stack output jdbcEndpoint) -U acpadmin -d acp -t < create_tables.sql
+  psql -h $(pulumi stack output jdbcEndpoint) -U acpadmin -d public -t < create_tables.sql
 ----
 
 [NOTE]
@@ -274,11 +276,13 @@ Here is one way to copy a resource from one namespace to another:
 [source,shell script]
 ----
 OPERATOR_NAMESPACE=$(pulumi stack output operatorNamespace)
-SERVICE_NAMESPACE=<SERVICE NAMESPACE>
 JDBC_SECRET=$(pulumi stack output jdbcSecret)
+APP_NAMESPACE=<APP NAMESPACE>
+APP_JDBC_SECRET=<APP SECRET NAME>
 kubectl get secret $JDBC_SECRET -n $OPERATOR_NAMESPACE -o yaml | \
-	sed s/"namespace: $OPERATOR_NAMESPACE"/"namespace: $SERVICE_NAMESPACE"/ | \
-	kubectl apply -n $SERVICE_NAMESPACE -f -
+	sed s/"namespace: $OPERATOR_NAMESPACE"/"namespace: $APP_NAMESPACE"/ | \
+	sed s/"name: $JDBC_SECRET"/"name: $APP_JDBC_SECRET"/ | \
+	kubectl apply -n $APP_NAMESPACE -f -
 ----
 ====
 
@@ -311,7 +315,6 @@ Amazon EKS
 Amazon Aurora Cluster
 
 * `jdbcClusterId` - Cluster ID
-* `jdbcDbName` - Default database created for Akka Cloud Platform
 * `jdbcUsername` - Master username
 * `jdbcPassword` - Master password. This is redacted in standard console output. To retrieve the value use the `pulumi stack output` command. For example, to assign the password to an environment variable: `DB_PASSWD=$(pulumi stack output jdbcPassword --show-secrets)`.
 * `jdbcEndpoint` - Database writer endpoint hostname
