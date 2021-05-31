@@ -25,11 +25,11 @@ To install and use the Akka Cloud Platform, you must have the following tools in
 
 * The https://docs.npmjs.com/downloading-and-installing-node-js-and-npm[`npm` {tab-icon}, window="tab"] command-line tool to download and setup the NPM dependencies of the Pulumi Playbook.
 
-* The https://www.pulumi.com/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool to run the Playbook.
+* The https://www.pulumi.com/[pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool to run the Playbook.
 
 In addition, in order to operate the cluster, you need to setup:
 
-* The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters. Follow the instructions in the https://kubernetes.io/docs/tasks/tools/#kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
+* The Kubernetes command-line tool, `kubectl`, which allows you to run commands against Kubernetes clusters. Follow the instructions in the https://kubernetes.io/docs/tasks/tools/#kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
 
 == Setup your Google Cloud Platform (GCP)
 
@@ -51,7 +51,7 @@ gcloud config set project <YOUR_GCP_PROJECT_ID>
 gcloud auth application-default login
 ----
 
-* Some optional settings can be done for ready defaults. The following environment variables can be set to provide optional configurations to Pulumi Google Cloud Platform provider:
+* Some optional settings can be done to provide ready defaults. The following environment variables can be set to provide optional configurations to Pulumi Google Cloud Platform provider:
   . GOOGLE_PROJECT - The default project for new resources, if one is not specified when creating a resource
   . GOOGLE_REGION - The default region for new resources, if one is not specified when creating a resource
   . GOOGLE_ZONE - The default zone for new resources, if one is not specified when creating a resource.
@@ -104,7 +104,7 @@ npm install
 Next you will initialize a https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"].
 A stack is an instance of the deployed Pulumi playbook and its associated state.
 For example, you might use different stacks to represent different environments such as `dev`, `testing`, and `staging`.
-By default state is managed using Pulumi's state management service (a remote service), but you can choose a https://www.pulumi.com/docs/intro/concepts/state/#backends[self-managed state backend {tab-icon}, window="tab"] if you like.
+State is managed by default using Pulumi's state management service (a remote service), but you can choose a https://www.pulumi.com/docs/intro/concepts/state/#backends[self-managed state backend {tab-icon}, window="tab"] if you like.
 Using Pulumi's service is the fastest way to get started and provides several other benefits such as sharing state with others, view progress of a deployment, and view output variables and the resulting cloud resources that were created.
 To learn more about https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"] and https://www.pulumi.com/docs/intro/concepts/state/[Pulumi State Management {tab-icon}, window="tab"] see the Pulumi documentation.
 
@@ -124,7 +124,7 @@ pulumi config set gcp:zone europe-west1-b
 pulumi config set gcp:region europe-west1
 ----
 
-Setup the license key file path. This is required to be set in config before you run the playbook. This sets up the license key file path which will be passed to the operator deployment process. If you are deploying from local environment you need to download the license file once from GCP Marketplace as per instructions in the xref:gcp-install.adoc[installation guide].
+Setup the license key file path. This is required to be set before you run the playbook. This sets up the license key file path which will be passed to the operator deployment process. If you are deploying from local environment you need to download the license file once from GCP Marketplace as per instructions in the xref:gcp-install.adoc[installation guide]. In the {gcp-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"] for GCP page, click on __Configure__ and then go to the tab __Deploy via command line__ and click on __Generate license key__. A `license.yaml` will be generated on your local system.
 
 [source,shell script]
 ----
@@ -212,7 +212,7 @@ $ pulumi stack output operatorNamespace
 lightbend
 ----
 
-NOTE: Pulumi has a bug in tracking ready status for containiners with sidecars. In GCP implementation of akka platform operator, ubbagent (the billing agent)
+NOTE: Pulumi has a bug in tracking ready status for containers with sidecars. In GCP implementation of akka platform operator, ubbagent (the billing agent)
 is implemented as a sidecar. Hence you may see the following failure in `pulumi up` where the update of the stack fails for akka-operator:
 
 [source,shell script]
@@ -296,3 +296,70 @@ kubectl run -i --tty rds-mgmt --image=postgres --restart=Never --rm \
   psql -h $(pulumi stack output postgreSQLEndpoint) -U postgres
 ----
 
+
+[#output-variables]
+== Output Variables
+
+To print all output variables for a deployed stack you can run the following command:
+
+[source,shell script]
+----
+pulumi stack output
+----
+
+To output the value of only one variable use the same command and include the variable. For example, to return the clusterName.
+
+
+[source,shell script]
+----
+pulumi stack output clusterName
+----
+
+The following output variables are available:
+
+GCP GKE
+
+* `clusterName` - Cluster name
+* `kubeconfig` - Complete contents of a `KUBECONFIG` configuration for the provisioned cluster as a secret. Need to use `pulumi stack output kubeconfig --show-secrets` to get the list.
+* `operatorNamespace` - Kubernetes namespace where the Akka Cloud Platform operator is running
+
+Cloud SQL Instance
+
+* `postgreSQLEndpoint` - The private IP through which direct connectivity between GKE and Cloud SQL instance is set up
+* `postgreSQLInstanceConnectionName` - The Postgresql instance connection name
+* `postgreSQLInstanceName` - The Postgresql instance name 
+
+== Pulumi Playbook configuration
+
+You can configure the playbook with the following syntax at the command line:
+
+[source,shell script]
+----
+pulumi config set <CONFIG KEY> <CONFIG VALUE>`
+----
+
+Or by populating the stack's `Pulumi.<STACK NAME>.yaml`.
+
+.Table Configuration
+|===
+|Configuration Key | Description | Required | Default value
+
+| `gcp:region`
+| The AWS region for the Google GKE cluster and other services.
+| Yes
+| `"europe-west1"`
+
+| `gcp:zone`
+| The AWS region for the Google GKE cluster and other services.
+| Yes
+| `"europe-west1-b"`
+
+| `cloud`
+| The cloud vendor to deploy.
+| No
+| `"gcp"`
+
+| `operator-namespace`
+| The Kubernetes namespace to install the Akka Cloud Platform operator into.
+| No
+| `"lightbend"`
