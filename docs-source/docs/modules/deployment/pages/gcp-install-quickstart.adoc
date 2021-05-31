@@ -1,0 +1,273 @@
+= Installation on Google Kubernetes Engine (GKE) Quick Start
+:page-toclevels: 3
+
+include::partial$include.adoc[]
+
+NOTE: To install Akka Cloud Platform on Google Kubernetes Engine (GKE), you must have a Google account and a subscription to the {gcp-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"].
+
+== Expected Time to Install
+
+A new installation will take approximately  _20 minutes_ and the following components will be provisioned:
+
+1. Create a Google GKE cluster
+2. Install the Akka Cloud Platform Helm chart
+3. Install a PostgreSQL Database Instance
+
+:sectnums:
+
+== Verify Prerequisites
+
+Before installation, you must subscribe to the {gcp-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"] on GCP Marketplace by clicking the Subscribe button on the product page and accepting the terms and conditions.
+
+To install and use the Akka Cloud Platform, you must have the following tools installed. We recommend using the latest versions of these tools. If you do not have them yet or need to update, we provide links to installation instructions:
+
+* The https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[`git` {tab-icon}, window="tab"] command-line tool to clone the Pulumi Playbook.
+
+* The https://docs.npmjs.com/downloading-and-installing-node-js-and-npm[`npm` {tab-icon}, window="tab"] command-line tool to download and setup the NPM dependencies of the Pulumi Playbook.
+
+* The https://www.pulumi.com/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool to run the Playbook.
+
+In addition, in order to operate the cluster, you need to setup:
+
+* The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters. Follow the instructions in the https://kubernetes.io/docs/tasks/tools/#kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
+
+== Setup your Google Cloud Platform (GCP)
+
+The https://www.pulumi.com/docs/intro/cloud-providers/gcp[Pulumi Google Cloud Platform Provider {tab-icon}, window="tab"] needs to be configured with Google credentials before it can be used to create resources. Ensure the following steps are done before going ahead with creation of the cluster:
+
+* Install the https://cloud.google.com/sdk/install[Google Cloud SDK {tab-icon}, window="tab"] and then https://cloud.google.com/sdk/docs/authorizing#authorizing_with_a_user_account[authorize access with a user account {tab-icon}, window="tab].
+
+* Configure `gcloud` to interact with your Google Cloud project using the `config` command:
+
+[source, shell script]
+----
+gcloud config set project <YOUR_GCP_PROJECT_ID>
+----
+
+* Setup default application credentials to interact with your Google Cloud resources. Pulumi requires this.
+
+[source, shell script]
+----
+gcloud auth application-default login
+----
+
+* Some optional settings can be done for ready defaults. The following environment variables can be set to provide optional configurations to Pulumi Google Cloud Platform provider:
+  . GOOGLE_PROJECT - The default project for new resources, if one is not specified when creating a resource
+  . GOOGLE_REGION - The default region for new resources, if one is not specified when creating a resource
+  . GOOGLE_ZONE - The default zone for new resources, if one is not specified when creating a resource.
+
+Alternatively these can also be set through `pulumi config` to make them defaults for newly created resources:
+
+[source, shell script]
+----
+pulumi config set gcp:project <your-project-here>
+pulumi config set gcp:region <your-region-here>
+pulumi config set gcp:zone <your-zone-here>
+----
+
+
+== Quick Start with Pulumi Playbook
+
+Pulumi is a cloud provisioning tool used to set up cloud infrastructure and Kubernetes cluster resources.
+The fastest way to get started with Akka Cloud Platform on GCP is to run the Akka Cloud Platform Deployment Pulumi playbook.
+
+To begin, download and install the https://www.pulumi.com/docs/get-started/install/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool for your platform.
+
+Download (clone) the https://github.com/lightbend/akka-cloud-platform-deploy[Akka Cloud Platform Deployment Pulumi Playbook {tab-icon}, window="tab"] with https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[`git` {tab-icon}, window="tab"].
+
+[source,shell script]
+----
+git clone https://github.com/lightbend/akka-cloud-platform-deploy
+----
+
+Navigate to the base directory of the cloned repository in a terminal.
+
+[source,shell script]
+----
+cd akka-cloud-platform-deploy
+----
+
+The same repository contains the scripts for AWS and GCP deployment. Navigate to the gcp folder.
+
+[source,shell script]
+----
+cd gcp
+----
+
+Install `npm` dependencies:
+
+[source,shell script]
+----
+npm install
+----
+
+Next you will initialize a https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"].
+A stack is an instance of the deployed Pulumi playbook and its associated state.
+For example, you might use different stacks to represent different environments such as `dev`, `testing`, and `staging`.
+By default state is managed using Pulumi's state management service (a remote service), but you can choose a https://www.pulumi.com/docs/intro/concepts/state/#backends[self-managed state backend {tab-icon}, window="tab"] if you like.
+Using Pulumi's service is the fastest way to get started and provides several other benefits such as sharing state with others, view progress of a deployment, and view output variables and the resulting cloud resources that were created.
+To learn more about https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"] and https://www.pulumi.com/docs/intro/concepts/state/[Pulumi State Management {tab-icon}, window="tab"] see the Pulumi documentation.
+
+Initialize a new Pulumi stack.
+
+[source,shell script]
+----
+pulumi stack init
+----
+
+Choose Google Project Id, zone and region to use:
+
+[source,shell script]
+----
+pulumi config set gcp:project <google project id>
+pulumi config set gcp:zone europe-west1-b
+pulumi config set gcp:region europe-west1
+----
+
+Setup the license key file path. This is required to be set in config before you run the playbook. This sets up the license key file path which will be passed to the operator deployment process. If you are deploying from local environment you need to download the license file once from GCP Marketplace as per instructions in the xref:gcp-install.adoc[installation guide].
+
+[source,shell script]
+----
+pulumi config set akka-cloud-platform-gcp-deploy:license-file-path "/<path>/<to>/license.yaml"
+----
+
+However if you forget to set this up, the playbook will give you a gentle reminder to set the value of the license file path:
+
+When you run a `pulumi up` (deploy) all the resources defined in the playbook will be provisioned to your target environment.
+In almost all cases resources will start with a prefix `acp-<STACK NAME>`, where `acp` stands for "Akka Cloud Platform" and `<STACK NAME>` is the name you chose for the Pulumi stack.
+Most resource names will end with a randomly generated alphanumeric string.
+
+When you run `pulumi up` you will be prompted with a list of resources that the playbook will create.
+Select `yes` to deploy the stack to GCP.
+
+Preview and provision the playbook.
+
+[source,shell script]
+----
+pulumi up
+----
+
+While the cluster is provisioning you will be informed, in the terminal, about which resources are in the process of being created or have been created.
+If you are using the Pulumi service for the state then the `pulumi up` command will include a link to "View Live" the progress of the deployment.
+The `pulumi up` command will exit when all resources are fully deployed and online.
+
+If a failure occurs, the command will exit early and inform you of the reason.
+When this occurs and you can correct the issue yourself then rerun `pulumi up` to resume updating where you left off.
+If the error can't be resolved, you can use the `pulumi destroy` command to roll back any partially deployed resources.
+
+If the deployment is successful, all of the pertinent details of the cluster will be output to the console (except for passwords).
+
+After executing `pulumi up` you will see something like the following:
+
+[source,shell script]
+----
+$ pulumi up
+Previewing update (dev)
+
+View Live: https://app.pulumi.com/<STACK NAME>/akka-cloud-platform-gcp-deploy/<STACK NAME>/previews/7d82583e-17db-4d80-be58-49d266029998
+
+     Type                                                                 Name                                                                                        Plan
+ +   pulumi:pulumi:Stack                                                  akka-cloud-platform-gcp-deploy-<STACK NAME>                                                 create
+
+...
+
+Resources:
+    + 23 to create
+
+Do you want to perform this update? yes
+
+     Type                                                                 Name                                                                                        Status
+ +   pulumi:pulumi:Stack                                                  akka-cloud-platform-gcp-deploy-<STACK NAME>                                                 created
+
+...
+----
+
+When the stack is deployed successfully you will have a list of outputs presented. Example outputs for a stack named `dev`:
+
+[source,shell script]
+----
+Outputs:
+    clusterName                       : "projects/bubbly-observer-178213/locations/europe-west1-b/clusters/acp-dev-gke-111241b"
+    kubeconfig                        : "[secret]"
+    operatorNamespace                 : "lightbend"
+    postgreSQLEndpoint                : "10.10.0.3"
+    postgreSQLInstanceConnectionName  : "bubbly-observer-178213:europe-west1:instance-b787e55"
+    postgreSQLInstanceName            : "instance-b787e55"
+
+Resources:
+    + 23 created
+
+Duration: 22m39s
+----
+
+These output variables are required to access your cluster and associated resources.
+You can reference variables manually, or access their values at the command line with `pulumi stack output <OUTPUT KEY>`.
+Later in this documentation page you can find the full list of xref:deployment:gcp-install-quickstart.adoc#output-variables[output variables].
+
+For example, to return the Kubernetes namespace that the Akka Cloud Platform Operator is installed in:
+
+[source, shell script]
+----
+$ pulumi stack output operatorNamespace
+lightbend
+----
+
+NOTE: Pulumi has a bug in tracking ready status for containiners with sidecars. In GCP implementation of akka platform operator, ubbagent (the billing agent)
+is implemented as a sidecar. Hence you may see the following failure in `pulumi up` where the update of the stack fails for akka-operator:
+
+[source,shell script]
+----
+Diagnostics:
+  kubernetes:apps/v1:Deployment (lightbend/akka-operator):
+    error: 4 errors occurred:
+    	* resource lightbend/akka-operator was successfully created, but the Kubernetes API server reported that it failed to fully initialize or become live: 'akka-operator' timed out waiting to be Ready
+    	* [MinimumReplicasUnavailable] Deployment does not have minimum availability.
+    	* Minimum number of live Pods was not attained
+    	* [Pod lightbend/akka-operator-9b6f567cc-psqhh]: containers with unready status: [akka-operator ubbagent]
+ 
+  pulumi:pulumi:Stack (akka-cloud-platform-gcp-deploy-dev):
+    error: update failed
+----
+
+Just run `pulumi up` again which is basically a noop but the stack gets updated fully.
+
+To destroy the cluster and all its dependencies:
+
+[source,shell script]
+----
+pulumi destroy
+----
+
+=== Connect to the GKE Cluster
+
+To setup your local `kubectl` configuration you can obtain the Pulumi `kubeconfig` output by exporting it to a file and defining the `KUBECONFIG` environment variable:
+
+[source,shell script]
+----
+pulumi stack output kubeconfig --show-secrets > kubeconfig.yml
+export KUBECONFIG=./kubeconfig.yml
+----
+
+[#connect-cloudsql-database]
+=== Connect to the Cloud SQL database
+
+To open a Postgres interactive shell with the Cloud SQL database instance:
+
+First you may want to set up a password for the Postgres user that you will be using. Here's how to do that for the default user `postgres`
+
+
+[source,shell script]
+----
+gcloud sql users set-password postgres --instance=$(pulumi stack output postgreSQLInstanceName) --prompt-for-password
+----
+
+Once the password is set, use `kubectl run` to set up an interactive `psql` session on a temporary pod:
+
+
+[source,shell script]
+----
+kubectl run -i --tty rds-mgmt --image=postgres --restart=Never --rm \
+  --env=PGPASSWORD=<password> -- \
+  psql -h $(pulumi stack output postgreSQLEndpoint) -U postgres
+----
+
