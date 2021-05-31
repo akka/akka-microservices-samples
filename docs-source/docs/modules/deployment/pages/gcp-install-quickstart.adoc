@@ -346,13 +346,13 @@ Or by populating the stack's `Pulumi.<STACK NAME>.yaml`.
 
 | `gcp:region`
 | The AWS region for the Google GKE cluster and other services.
-| Yes
-| `"europe-west1"`
+| No
+| `-`
 
 | `gcp:zone`
 | The AWS region for the Google GKE cluster and other services.
-| Yes
-| `"europe-west1-b"`
+| Yes (if not set at the provider level)
+| `-`
 
 | `cloud`
 | The cloud vendor to deploy.
