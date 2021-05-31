@@ -231,6 +231,31 @@ Diagnostics:
 
 Just run `pulumi up` again which is basically a noop but the stack gets updated fully.
 
+NOTE: Another documented bug in Pulumi is a problem in concurrency control where an operation fails with the following message. This is also documented in https://www.pulumi.com/docs/troubleshooting/#conflict[pulumi troubleshooting section {tab-icon}, window="tab"]
+
+[source,shell script]
+----
+gcp:sql:DatabaseInstance (pg12instance):
+  error: 1 error occurred:
+  	* updating urn:pulumi:dev::akka-cloud-platform-gcp-deploy::gcp:sql/databaseInstance:DatabaseInstance::pg12instance: 1 error occurred:
+  	* Error, failed to update instance settings for : googleapi: Error 409: Operation failed because another operation was already in progress., operationInProgress
+ 
+ pulumi:pulumi:Stack (akka-cloud-platform-gcp-deploy-dev):
+  error: update failed
+----
+
+Doing a `pulumi cancel` will cancel the running update. However in some cases the update might have gone ok despite the above message. In that case `pulumi cancel` gives the following message __The Update has already completed__.
+
+
+[source,shell script]
+----
+pulumi cancel
+
+This will irreversibly cancel the currently running update for 'dev'!
+Please confirm that this is what you'd like to do by typing ("dev"): dev
+error: [409] Conflict: The Update has already completed
+----
+
 To destroy the cluster and all its dependencies:
 
 [source,shell script]
