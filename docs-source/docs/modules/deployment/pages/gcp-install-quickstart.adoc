@@ -124,6 +124,10 @@ pulumi config set gcp:zone europe-west1-b
 pulumi config set gcp:region europe-west1
 ----
 
+Alternately they can also be set up using the environment variables as mentioned above in an earlier section.
+
+NOTE: The setting of project id and zone are mandatory for a GCP installation. In case these are not set, the installation will be aborted with appropriate error messages.
+
 Setup the license key file path. This is required to be set before you run the playbook. This sets up the license key file path which will be passed to the operator deployment process. If you are deploying from local environment you need to download the license file once from GCP Marketplace as per instructions in the xref:gcp-install.adoc[installation guide]. In the {gcp-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"] for GCP page, click on __Configure__ and then go to the tab __Deploy via command line__ and click on __Generate license key__. A `license.yaml` will be generated on your local system.
 
 [source,shell script]
@@ -131,7 +135,14 @@ Setup the license key file path. This is required to be set before you run the p
 pulumi config set akka-cloud-platform-gcp-deploy:license-file-path "/<path>/<to>/license.yaml"
 ----
 
-However if you forget to set this up, the playbook will give you a gentle reminder to set the value of the license file path:
+Setup the version of the operator.
+
+[source,shell script,subs="attributes+"]
+----
+pulumi config set akka-cloud-platform-gcp-deploy:operator-version {akka-cloud-platform-version}
+----
+
+NOTE: If you forget to set these up, the playbook will give you a gentle reminder to set the values appropriately.
 
 When you run a `pulumi up` (deploy) all the resources defined in the playbook will be provisioned to your target environment.
 In almost all cases resources will start with a prefix `acp-<STACK NAME>`, where `acp` stands for "Akka Cloud Platform" and `<STACK NAME>` is the name you chose for the Pulumi stack.
