@@ -9,9 +9,9 @@ NOTE: To install Akka Cloud Platform on Google Kubernetes Engine (GKE), you must
 
 A new installation will take approximately  _20 minutes_ and the following components will be provisioned:
 
-1. Create a Google GKE cluster
-2. Install the Akka Cloud Platform Helm chart
-3. Install a PostgreSQL Database Instance
+1. Create a Google GKE cluster.
+2. Install the Akka Cloud Platform Helm chart.
+3. Install a PostgreSQL Database Instance.
 
 :sectnums:
 
@@ -29,11 +29,11 @@ To install and use the Akka Cloud Platform, you must have the following tools in
 
 In addition, in order to operate the cluster, you need to setup:
 
-* The Kubernetes command-line tool, `kubectl`, which allows you to run commands against Kubernetes clusters. Follow the instructions in the https://kubernetes.io/docs/tasks/tools/#kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
+* The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters. Follow the instructions in the https://kubernetes.io/docs/tasks/tools/#kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
 
 == Setup your Google Cloud Platform (GCP)
 
-The https://www.pulumi.com/docs/intro/cloud-providers/gcp[Pulumi Google Cloud Platform Provider {tab-icon}, window="tab"] needs to be configured with Google credentials before it can be used to create resources. Ensure the following steps are done before going ahead with creation of the cluster:
+The https://www.pulumi.com/docs/intro/cloud-providers/gcp[Pulumi Google Cloud Platform Provider {tab-icon}, window="tab"] needs to be configured with Google credentials before it can be used to create resources. Ensure the following steps are complete before proceeding with the creation of the cluster:
 
 * Install the https://cloud.google.com/sdk/install[Google Cloud SDK {tab-icon}, window="tab"] and then https://cloud.google.com/sdk/docs/authorizing#authorizing_with_a_user_account[authorize access with a user account {tab-icon}, window="tab].
 
@@ -44,14 +44,14 @@ The https://www.pulumi.com/docs/intro/cloud-providers/gcp[Pulumi Google Cloud Pl
 gcloud config set project <YOUR_GCP_PROJECT_ID>
 ----
 
-* Setup default application credentials to interact with your Google Cloud resources. Pulumi requires this.
+* Pulumi requires that you setup default application credentials in order to interact with your Google Cloud resources. Pulumi requires this.
 
 [source, shell script]
 ----
 gcloud auth application-default login
 ----
 
-* Some optional settings can be done to provide ready defaults. The following environment variables can be set to provide optional configurations to Pulumi Google Cloud Platform provider:
+* Some optional settings can be set up to provide ready defaults. The following environment variables can be set to provide optional configurations to the Pulumi Google Cloud Platform provider:
   . GOOGLE_PROJECT - The default project for new resources, if one is not specified when creating a resource
   . GOOGLE_REGION - The default region for new resources, if one is not specified when creating a resource
   . GOOGLE_ZONE - The default zone for new resources, if one is not specified when creating a resource.
@@ -69,53 +69,53 @@ pulumi config set gcp:zone <your-zone-here>
 == Quick Start with Pulumi Playbook
 
 Pulumi is a cloud provisioning tool used to set up cloud infrastructure and Kubernetes cluster resources.
-The fastest way to get started with Akka Cloud Platform on GCP is to run the Akka Cloud Platform Deployment Pulumi playbook.
+The fastest way to get started with Akka Cloud Platform on GCP is to run the Akka Cloud Platform Deployment Pulumi playbook, which contains a bunch of instructions that plays like a book when run and on successful completion provisions the cluster and all the appropriate artifacts.
+Here are the steps to follow to have your playbook up 'n running:
 
-To begin, download and install the https://www.pulumi.com/docs/get-started/install/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool for your platform.
+* Download and install the https://www.pulumi.com/docs/get-started/install/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool for your platform.
 
-Download (clone) the https://github.com/lightbend/akka-cloud-platform-deploy[Akka Cloud Platform Deployment Pulumi Playbook {tab-icon}, window="tab"] with https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[`git` {tab-icon}, window="tab"].
+* Download (clone) the https://github.com/lightbend/akka-cloud-platform-deploy[Akka Cloud Platform Deployment Pulumi Playbook {tab-icon}, window="tab"] with https://git-scm.com/book/en/v2/Getting-Started-Installing-Git[`git` {tab-icon}, window="tab"].
 
 [source,shell script]
 ----
 git clone https://github.com/lightbend/akka-cloud-platform-deploy
 ----
 
-Navigate to the base directory of the cloned repository in a terminal.
+* Navigate to the base directory of the cloned repository in a terminal.
 
 [source,shell script]
 ----
 cd akka-cloud-platform-deploy
 ----
 
-The same repository contains the scripts for AWS and GCP deployment. Navigate to the gcp folder.
+* The same repository contains the scripts for AWS and GCP deployment. Navigate to the `gcp` folder.
 
 [source,shell script]
 ----
 cd gcp
 ----
 
-Install `npm` dependencies:
+* Install `npm` dependencies:
 
 [source,shell script]
 ----
 npm install
 ----
 
-Next you will initialize a https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"].
+* Initialize a https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"].
 A stack is an instance of the deployed Pulumi playbook and its associated state.
 For example, you might use different stacks to represent different environments such as `dev`, `testing`, and `staging`.
 State is managed by default using Pulumi's state management service (a remote service), but you can choose a https://www.pulumi.com/docs/intro/concepts/state/#backends[self-managed state backend {tab-icon}, window="tab"] if you like.
 Using Pulumi's service is the fastest way to get started and provides several other benefits such as sharing state with others, view progress of a deployment, and view output variables and the resulting cloud resources that were created.
 To learn more about https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"] and https://www.pulumi.com/docs/intro/concepts/state/[Pulumi State Management {tab-icon}, window="tab"] see the Pulumi documentation.
 
-Initialize a new Pulumi stack.
 
 [source,shell script]
 ----
 pulumi stack init
 ----
 
-Choose Google Project Id, zone and region to use:
+* Choose Google Project Id, zone and region to use:
 
 [source,shell script]
 ----
@@ -128,21 +128,21 @@ Alternately they can also be set up using the environment variables as mentioned
 
 NOTE: The setting of project id and zone are mandatory for a GCP installation. In case these are not set, the installation will be aborted with appropriate error messages.
 
-Setup the license key file path. This is required to be set before you run the playbook. This sets up the license key file path which will be passed to the operator deployment process. If you are deploying from local environment you need to download the license file once from GCP Marketplace as per instructions in the xref:gcp-install.adoc[installation guide]. In the {gcp-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"] for GCP page, click on __Configure__ and then go to the tab __Deploy via command line__ and click on __Generate license key__. A `license.yaml` will be generated on your local system.
+* Setup the license key file path. This is required to be set before you run the playbook. This sets up the license key file path which will be passed to the operator deployment process. If you are deploying from local environment you need to download the license file once from GCP Marketplace as per instructions in the xref:gcp-install.adoc[installation guide]. In the {gcp-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"] for GCP page, click on __Configure__ and then go to the tab __Deploy via command line__ and click on __Generate license key__. A `license.yaml` will be generated on your local system.
 
 [source,shell script]
 ----
 pulumi config set akka-cloud-platform-gcp-deploy:license-file-path "/<path>/<to>/license.yaml"
 ----
 
-Setup the version of the operator.
+* Setup the version of the operator.
 
 [source,shell script,subs="attributes+"]
 ----
 pulumi config set akka-cloud-platform-gcp-deploy:operator-version {akka-cloud-platform-version}
 ----
 
-NOTE: If you forget to set these up, the playbook will give you a gentle reminder to set the values appropriately.
+NOTE: If you forget to set the license key file path and operator version up, the playbook will give you a gentle reminder to set the values appropriately.
 
 When you run a `pulumi up` (deploy) all the resources defined in the playbook will be provisioned to your target environment.
 In almost all cases resources will start with a prefix `acp-<STACK NAME>`, where `acp` stands for "Akka Cloud Platform" and `<STACK NAME>` is the name you chose for the Pulumi stack.
@@ -200,6 +200,7 @@ When the stack is deployed successfully you will have a list of outputs presente
 Outputs:
     clusterName                       : "projects/bubbly-observer-178213/locations/europe-west1-b/clusters/acp-dev-gke-111241b"
     kubeconfig                        : "[secret]"
+    network                           : "projects/bubbly-observer-178213/global/networks/default"
     operatorNamespace                 : "lightbend"
     postgreSQLEndpoint                : "10.10.0.3"
     postgreSQLInstanceConnectionName  : "bubbly-observer-178213:europe-west1:instance-b787e55"
@@ -213,7 +214,7 @@ Duration: 22m39s
 
 These output variables are required to access your cluster and associated resources.
 You can reference variables manually, or access their values at the command line with `pulumi stack output <OUTPUT KEY>`.
-Later in this documentation page you can find the full list of xref:deployment:gcp-install-quickstart.adoc#output-variables[output variables].
+Later on this page you can find the full list of xref:deployment:gcp-install-quickstart.adoc#output-variables[output variables].
 
 For example, to return the Kubernetes namespace that the Akka Cloud Platform Operator is installed in:
 
@@ -223,7 +224,7 @@ $ pulumi stack output operatorNamespace
 lightbend
 ----
 
-NOTE: Pulumi has a bug in tracking ready status for containers with sidecars. In GCP implementation of akka platform operator, ubbagent (the billing agent)
+NOTE: Pulumi has an issue with tracking ready status for containers with sidecars. In GCP implementation of the akka platform operator, ubbagent (the billing agent)
 is implemented as a sidecar. Hence you may see the following failure in `pulumi up` where the update of the stack fails for akka-operator:
 
 [source,shell script]
@@ -242,7 +243,7 @@ Diagnostics:
 
 Just run `pulumi up` again which is basically a noop but the stack gets updated fully.
 
-NOTE: Another documented bug in Pulumi is a problem in concurrency control where an operation fails with the following message. This is also documented in https://www.pulumi.com/docs/troubleshooting/#conflict[pulumi troubleshooting section {tab-icon}, window="tab"]
+NOTE: Another documented issue in Pulumi is a problem in concurrency control. In this case, an operation fails with the following message. This is also documented in https://www.pulumi.com/docs/troubleshooting/#conflict[pulumi troubleshooting section {tab-icon}, window="tab"]
 
 [source,shell script]
 ----
@@ -255,7 +256,7 @@ gcp:sql:DatabaseInstance (pg12instance):
   error: update failed
 ----
 
-Doing a `pulumi cancel` will cancel the running update. However in some cases the update might have gone ok despite the above message. In that case `pulumi cancel` gives the following message __The Update has already completed__.
+Doing a `pulumi cancel` will cancel the running update. However in some cases the update might have gone __'OK'__ despite the message mentioned above. In that case, `pulumi cancel` gives the following message __The Update has already completed__.
 
 
 [source,shell script]
@@ -276,7 +277,7 @@ pulumi destroy
 
 === Connect to the GKE Cluster
 
-To setup your local `kubectl` configuration you can obtain the Pulumi `kubeconfig` output by exporting it to a file and defining the `KUBECONFIG` environment variable:
+To set up your local `kubectl` configuration, you can obtain the Pulumi `kubeconfig` output by exporting it to a file, and defining the `KUBECONFIG` environment variable:
 
 [source,shell script]
 ----
@@ -289,7 +290,7 @@ export KUBECONFIG=./kubeconfig.yml
 
 To open a Postgres interactive shell with the Cloud SQL database instance:
 
-First you may want to set up a password for the Postgres user that you will be using. Here's how to do that for the default user `postgres`
+First, you may want to set up a password for the Postgres user that you will be using. Here's how to do that for the default user `postgres`
 
 
 [source,shell script]
@@ -311,14 +312,14 @@ kubectl run -i --tty rds-mgmt --image=postgres --restart=Never --rm \
 [#output-variables]
 == Output Variables
 
-To print all output variables for a deployed stack you can run the following command:
+To print all output variables for a deployed stack, you can run the following command:
 
 [source,shell script]
 ----
 pulumi stack output
 ----
 
-To output the value of only one variable use the same command and include the variable. For example, to return the clusterName.
+To output the value of only one variable, use the same command and include the variable. For example, to return the clusterName.
 
 
 [source,shell script]
@@ -332,6 +333,7 @@ GCP GKE
 
 * `clusterName` - Cluster name
 * `kubeconfig` - Complete contents of a `KUBECONFIG` configuration for the provisioned cluster as a secret. Need to use `pulumi stack output kubeconfig --show-secrets` to get the list.
+* `network` - The name or self_link of the Google Compute Engine network to which the cluster is connected.
 * `operatorNamespace` - Kubernetes namespace where the Akka Cloud Platform operator is running
 
 Cloud SQL Instance

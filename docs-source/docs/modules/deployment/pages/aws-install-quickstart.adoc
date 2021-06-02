@@ -70,6 +70,13 @@ Navigate to the base directory of the cloned repository in a terminal.
 cd akka-cloud-platform-deploy
 ----
 
+The same repository contains the scripts for AWS and GCP deployment. Navigate to the `aws` folder.
+
+[source,shell script]
+----
+cd aws
+----
+
 Install `npm` dependencies:
 
 [source,shell script]
