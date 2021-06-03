@@ -17,7 +17,7 @@ A new installation will take approximately  _20 minutes_ and the following compo
 
 == Verify Prerequisites
 
-Before installation, you must subscribe to the {gcp-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"] on GCP Marketplace by clicking the Subscribe button on the product page and accepting the terms and conditions.
+Before installation, you must subscribe to the {gcp-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"] on GCP Marketplace by clicking the Purchase button on the product page and accepting the terms and conditions.
 
 To install and use the Akka Cloud Platform, you must have the following tools installed. We recommend using the latest versions of these tools. If you do not have them yet or need to update, we provide links to installation instructions:
 
@@ -26,6 +26,8 @@ To install and use the Akka Cloud Platform, you must have the following tools in
 * The https://docs.npmjs.com/downloading-and-installing-node-js-and-npm[`npm` {tab-icon}, window="tab"] command-line tool to download and setup the NPM dependencies of the Pulumi Playbook.
 
 * The https://www.pulumi.com/[pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool to run the Playbook.
+
+* The https://cloud.google.com/sdk/install[Google Cloud SDK {tab-icon}, window="tab"] 
 
 In addition, in order to operate the cluster, you need to setup:
 
@@ -145,13 +147,13 @@ pulumi config set akka-cloud-platform-gcp-deploy:operator-version {akka-cloud-pl
 NOTE: If you forget to set the license key file path and operator version up, the playbook will give you a gentle reminder to set the values appropriately.
 
 When you run a `pulumi up` (deploy) all the resources defined in the playbook will be provisioned to your target environment.
-In almost all cases resources will start with a prefix `acp-<STACK NAME>`, where `acp` stands for "Akka Cloud Platform" and `<STACK NAME>` is the name you chose for the Pulumi stack.
+In almost all cases resources will start with the prefix `acp-<STACK NAME>`, where `acp` stands for "Akka Cloud Platform" and `<STACK NAME>` is the name you chose for the Pulumi stack.
 Most resource names will end with a randomly generated alphanumeric string.
 
 When you run `pulumi up` you will be prompted with a list of resources that the playbook will create.
 Select `yes` to deploy the stack to GCP.
 
-Preview and provision the playbook.
+* Preview and provision the playbook.
 
 [source,shell script]
 ----
@@ -159,16 +161,16 @@ pulumi up
 ----
 
 While the cluster is provisioning you will be informed, in the terminal, about which resources are in the process of being created or have been created.
-If you are using the Pulumi service for the state then the `pulumi up` command will include a link to "View Live" the progress of the deployment.
+If you are using the Pulumi service for the state, then the `pulumi up` command will include a link to "View Live" the progress of the deployment.
 The `pulumi up` command will exit when all resources are fully deployed and online.
 
 If a failure occurs, the command will exit early and inform you of the reason.
-When this occurs and you can correct the issue yourself then rerun `pulumi up` to resume updating where you left off.
+When this occurs, and it is possible to correct the issue yourself, you can then rerun `pulumi up` to resume updating where you left off.
 If the error can't be resolved, you can use the `pulumi destroy` command to roll back any partially deployed resources.
 
 If the deployment is successful, all of the pertinent details of the cluster will be output to the console (except for passwords).
 
-After executing `pulumi up` you will see something like the following:
+After executing `pulumi up`, you will see something like the following:
 
 [source,shell script]
 ----
@@ -224,7 +226,7 @@ $ pulumi stack output operatorNamespace
 lightbend
 ----
 
-NOTE: Pulumi has an issue with tracking ready status for containers with sidecars. In GCP implementation of the akka platform operator, ubbagent (the billing agent)
+NOTE: Pulumi has an issue with tracking ready status for containers with sidecars. In GCP implementation of the Akka Platform Operator, Usage-based Billing Agent (ubbagent)
 is implemented as a sidecar. Hence you may see the following failure in `pulumi up` where the update of the stack fails for akka-operator:
 
 [source,shell script]
@@ -241,7 +243,7 @@ Diagnostics:
     error: update failed
 ----
 
-Just run `pulumi up` again which is basically a noop but the stack gets updated fully.
+Just run `pulumi up` again, which is basically a noop, but the stack gets updated fully.
 
 NOTE: Another documented issue in Pulumi is a problem in concurrency control. In this case, an operation fails with the following message. This is also documented in https://www.pulumi.com/docs/troubleshooting/#conflict[pulumi troubleshooting section {tab-icon}, window="tab"]
 
@@ -256,7 +258,7 @@ gcp:sql:DatabaseInstance (pg12instance):
   error: update failed
 ----
 
-Doing a `pulumi cancel` will cancel the running update. However in some cases the update might have gone __'OK'__ despite the message mentioned above. In that case, `pulumi cancel` gives the following message __The Update has already completed__.
+Doing a `pulumi cancel` will cancel the running update. However, in some cases, the update might have gone __'OK'__ despite the message mentioned above. In that case, `pulumi cancel` gives the following message: __The Update has already completed__.
 
 
 [source,shell script]
