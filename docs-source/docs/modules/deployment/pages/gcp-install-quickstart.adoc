@@ -9,9 +9,9 @@ NOTE: To install Akka Cloud Platform on Google Kubernetes Engine (GKE), you must
 
 A new installation will take approximately  _20 minutes_ and the following components will be provisioned:
 
-1. Create a Google GKE cluster.
-2. Install the Akka Cloud Platform Helm chart.
-3. Install a PostgreSQL Database Instance.
+* A Google GKE cluster
+* The Akka Cloud Platform Helm chart
+* A PostgreSQL Database Instance
 
 :sectnums:
 
@@ -29,7 +29,7 @@ To install and use the Akka Cloud Platform, you must have the following tools in
 
 * The https://cloud.google.com/sdk/install[Google Cloud SDK {tab-icon}, window="tab"] 
 
-In addition, in order to operate the cluster, you need to setup:
+In addition, in order to operate the cluster, you need to set up:
 
 * The Kubernetes command-line tool, `kubectl`, allows you to run commands against Kubernetes clusters. Follow the instructions in the https://kubernetes.io/docs/tasks/tools/#kubectl[Kubernetes documentation {tab-icon}, window="tab"]  to install `kubectl`.
 
@@ -46,14 +46,14 @@ The https://www.pulumi.com/docs/intro/cloud-providers/gcp[Pulumi Google Cloud Pl
 gcloud config set project <YOUR_GCP_PROJECT_ID>
 ----
 
-* Pulumi requires that you setup default application credentials in order to interact with your Google Cloud resources. Pulumi requires this.
+* You are required to set up default application credentials in order to interact with your Google Cloud resources. 
 
 [source, shell script]
 ----
 gcloud auth application-default login
 ----
 
-* Some optional settings can be set up to provide ready defaults. The following environment variables can be set to provide optional configurations to the Pulumi Google Cloud Platform provider:
+* Optionally you can set the following environment variables to provide preset default configurations for the Pulumi Google Cloud Platform provider:
   . GOOGLE_PROJECT - The default project for new resources, if one is not specified when creating a resource
   . GOOGLE_REGION - The default region for new resources, if one is not specified when creating a resource
   . GOOGLE_ZONE - The default zone for new resources, if one is not specified when creating a resource.
@@ -71,8 +71,8 @@ pulumi config set gcp:zone <your-zone-here>
 == Quick Start with Pulumi Playbook
 
 Pulumi is a cloud provisioning tool used to set up cloud infrastructure and Kubernetes cluster resources.
-The fastest way to get started with Akka Cloud Platform on GCP is to run the Akka Cloud Platform Deployment Pulumi playbook, which contains a bunch of instructions that plays like a book when run and on successful completion provisions the cluster and all the appropriate artifacts.
-Here are the steps to follow to have your playbook up 'n running:
+The fastest way to get started with Akka Cloud Platform on GCP is to run the Akka Cloud Platform Deployment Pulumi playbook. The playbook contains a set of instructions that, when run, will provision the cluster and all the appropriate artifacts.
+Here are the steps to follow to have your playbook up and running:
 
 * Download and install the https://www.pulumi.com/docs/get-started/install/[Pulumi {tab-icon}, window="tab"] cloud engineering (provisioning) tool for your platform.
 
@@ -90,7 +90,7 @@ git clone https://github.com/lightbend/akka-cloud-platform-deploy
 cd akka-cloud-platform-deploy
 ----
 
-* The same repository contains the scripts for AWS and GCP deployment. Navigate to the `gcp` folder.
+* The repository contains scripts for both AWS and GCP deployment. Navigate to the `gcp` folder.
 
 [source,shell script]
 ----
@@ -105,7 +105,7 @@ npm install
 ----
 
 * Initialize a https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Stack {tab-icon}, window="tab"].
-A stack is an instance of the deployed Pulumi playbook and its associated state.
+A stack is the cluster and its artifacts with associated state, as provisioned by a Pulumi playbook.
 For example, you might use different stacks to represent different environments such as `dev`, `testing`, and `staging`.
 State is managed by default using Pulumi's state management service (a remote service), but you can choose a https://www.pulumi.com/docs/intro/concepts/state/#backends[self-managed state backend {tab-icon}, window="tab"] if you like.
 Using Pulumi's service is the fastest way to get started and provides several other benefits such as sharing state with others, view progress of a deployment, and view output variables and the resulting cloud resources that were created.
@@ -117,7 +117,7 @@ To learn more about https://www.pulumi.com/docs/intro/concepts/stack/[Pulumi Sta
 pulumi stack init
 ----
 
-* Choose Google Project Id, zone and region to use:
+* Choose the Google Project Id, zone and region to use:
 
 [source,shell script]
 ----
@@ -130,14 +130,14 @@ Alternately they can also be set up using the environment variables as mentioned
 
 NOTE: The setting of project id and zone are mandatory for a GCP installation. In case these are not set, the installation will be aborted with appropriate error messages.
 
-* Setup the license key file path. This is required to be set before you run the playbook. This sets up the license key file path which will be passed to the operator deployment process. If you are deploying from local environment you need to download the license file once from GCP Marketplace as per instructions in the xref:gcp-install.adoc[installation guide]. In the {gcp-marketplace}[Akka Cloud Platform {tab-icon}, window="tab"] for GCP page, click on __Configure__ and then go to the tab __Deploy via command line__ and click on __Generate license key__. A `license.yaml` will be generated on your local system.
+* Set up the license key file path. This is required to be set before you run the playbook. It will be passed to the operator deployment process. If you are deploying from your local environment you need to download the license file once from GCP Marketplace following the instructions in the xref:gcp-install.adoc[installation guide]. In the https://console.cloud.google.com/marketplace/kubernetes/config/lightbend-public/akka-cloud-platform[Akka Cloud Platform {tab-icon}, window="tab"] for GCP page, click on __Configure__ and then go to the tab __Deploy via command line__ and click on __Generate license key__. A `license.yaml` will be generated on your local system.
 
 [source,shell script]
 ----
 pulumi config set akka-cloud-platform-gcp-deploy:license-file-path "/<path>/<to>/license.yaml"
 ----
 
-* Setup the version of the operator.
+* Set the version of the operator.
 
 [source,shell script,subs="attributes+"]
 ----
@@ -147,7 +147,7 @@ pulumi config set akka-cloud-platform-gcp-deploy:operator-version {akka-cloud-pl
 NOTE: If you forget to set the license key file path and operator version up, the playbook will give you a gentle reminder to set the values appropriately.
 
 When you run a `pulumi up` (deploy) all the resources defined in the playbook will be provisioned to your target environment.
-In almost all cases resources will start with the prefix `acp-<STACK NAME>`, where `acp` stands for "Akka Cloud Platform" and `<STACK NAME>` is the name you chose for the Pulumi stack.
+In almost all cases, resources will start with the prefix `acp-<STACK NAME>`, where `acp` stands for "Akka Cloud Platform" and `<STACK NAME>` is the name you chose for the Pulumi stack.
 Most resource names will end with a randomly generated alphanumeric string.
 
 When you run `pulumi up` you will be prompted with a list of resources that the playbook will create.
@@ -258,7 +258,7 @@ gcp:sql:DatabaseInstance (pg12instance):
   error: update failed
 ----
 
-Doing a `pulumi cancel` will cancel the running update. However, in some cases, the update might have gone __'OK'__ despite the message mentioned above. In that case, `pulumi cancel` gives the following message: __The Update has already completed__.
+Entering `pulumi cancel` will cancel the running update. However, in some cases, the update might have a status of __'OK'__, contrary to the message mentioned above. In that case, `pulumi cancel` gives the following message: `The Update has already completed`.
 
 
 [source,shell script]
