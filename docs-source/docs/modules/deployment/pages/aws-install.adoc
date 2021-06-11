@@ -13,6 +13,8 @@ A new installation will take approximately _40 minutes_.
 * Install pre-requisities into Amazon EKS - _5 minutes_ - Subscribe to product, install a Kubernetes `metrics-server`, and set up a service account.
 * Install Akka Cloud Platform - _5 minutes_ - Installation of the Akka Cloud Platform helm chart with minimal configuration.
 
+NOTE: Akka Cloud Platform supports `metrics-server` up to 0.4.4. Installing newer versions will result in an error when using Akka Cloud Platform operator.
+
 == Pre-requisite Skills
 
 A familiarity with the following services and skillsets is recommended before installation.
@@ -95,11 +97,11 @@ aws eks update-kubeconfig --region eu-central-1 --name eks-akka-demo
 
 The Akka Operator depends on the https://github.com/kubernetes-sigs/metrics-server[Kubernetes Metrics Server {tab-icon}, window="tab"] being installed. It is used for usage metering and billing.
 
-You can install the latest version with:
+You can install version 0.4.4 with:
 
 [source, shell script]
 ----
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/download/v0.4.4/components.yaml
 ----
 
 == AWS Marketplace
