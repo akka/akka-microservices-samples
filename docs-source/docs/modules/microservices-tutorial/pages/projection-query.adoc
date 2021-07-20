@@ -361,9 +361,16 @@ docker-compose up -d
 
 . Create the item popularity table by creating a `ddl-scripts/create_user_tables.sql` file and adding the SQL statement below.
 +
+[.group-java]
 [source,sql,indent=0]
 ----
 include::example$04-shopping-cart-service-java/ddl-scripts/create_user_tables.sql[]
+----
+
+[.group-scala]
+[source,sql,indent=0]
+----
+include::example$04-shopping-cart-service-scala/ddl-scripts/create_user_tables.sql[]
 ----
 
 . Load the file into Postgres:
